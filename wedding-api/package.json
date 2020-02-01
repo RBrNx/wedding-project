@@ -1,0 +1,11 @@
+{
+  "name": "wedding-api",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "RBrNx",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server-lambda": "^2.9.16",
+    "graphql": "^14.6.0"
+  }
+}
