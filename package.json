@@ -1,0 +1,14 @@
+{
+  "name": "wedding-project",
+  "version": "0.0.1",
+  "description": "Monorepo containing all the pieces of my wedding project",
+  "main": "index.js",
+  "repository": "https://github.com/RBrNx/wedding-project",
+  "author": "RBrNx",
+  "private": true,
+  "workspaces": [
+    "web-client",
+    "mobile-client",
+    "api"
+  ]
+}
