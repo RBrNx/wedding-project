@@ -1,4 +1,23 @@
 'use strict';
+import { graphqlLambda, graphiqlLambda } from 'apollo-server-lambda';
+import { makeExecutableSchema } from 'graphql-tools';
+import { schema } from './schema';
+import { resolvers } from './resolvers';
+
+const graphQLSchema = makeExecutableSchema({
+  typeDefs: schema,
+  resolvers,
+});
+
+exports.graphqlHandler = (event, context, callback) => {
+  callbackWithHeaders = (error, output) => {
+    output.headers['Access-Control-Allow-Origin'] = '*';
+    callback(error, output);
+  };
+
+  const handler = graphqlLambda({ schema: graphQLSchema });
+  return handler(event, context, callbackWithHeaders);
+};
 
 module.exports.hello = async event => {
   return {
@@ -9,7 +28,7 @@ module.exports.hello = async event => {
         input: event,
       },
       null,
-      2
+      2,
     ),
   };
 
