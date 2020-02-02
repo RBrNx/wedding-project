@@ -9,6 +9,6 @@
   "workspaces": [
     "web-client",
     "mobile-client",
-    "api"
+    "wedding-api"
   ]
 }
