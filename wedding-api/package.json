@@ -34,6 +34,7 @@
     "babel-runtime": "^6.26.0",
     "graphql": "^14.3.0",
     "jsonfile": "^5.0.0",
+    "mongoose": "^5.8.11",
     "source-map-support": "^0.4.18"
   }
 }
