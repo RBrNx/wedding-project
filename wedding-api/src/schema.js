@@ -1,14 +1,8 @@
 const schema = `
+  type Query {
+    hello: String!
+    getAllGuests: [String!]
+  }
+`;
 
-
-
-"""
-A hello world Query
-"""
-type Query {
-     hello: String!
-}
-
-`
-
-export {schema}
+export default schema;
