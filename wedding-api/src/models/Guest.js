@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 const GuestSchema = new Schema({
   name: String,
@@ -7,6 +7,4 @@ const GuestSchema = new Schema({
   mainCourse: String,
 });
 
-const Guest = conn => conn.model('guests', GuestSchema);
-
-export default Guest;
+export default model('Guests', GuestSchema);
