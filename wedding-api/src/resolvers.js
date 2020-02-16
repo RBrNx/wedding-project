@@ -6,8 +6,11 @@ const hello = (args, context) => {
 
 const getAllGuests = async (args, context) => {
   const db = await connectToDatabase();
+  const Guest = db.model('Guest');
 
-  return ['Hello', 'There'];
+  const guests = await Guest.find().exec();
+  
+  return guests;
 };
 
 export default {
