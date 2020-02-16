@@ -4,7 +4,7 @@ import resolvers from './resolvers';
 
 const server = new ApolloServer({
   typeDefs: schema,
-  resolvers: resolvers,
+  resolvers,
   formatError: error => {
     return error;
   },
@@ -21,14 +21,16 @@ const server = new ApolloServer({
   playground: true,
 });
 
-exports.graphqlHandler = (event, context, callback) => {
-  const handler = server.createHandler({
-    cors: {
-      origin: '*',
-      credentials: true,
-      methods: ['POST', 'GET'],
-      allowedHeaders: ['Content-Type', 'Origin', 'Accept'],
-    },
-  });
-  return handler(event, context, callback);
-};
+export default server.createHandler({ path: '/api/graphql' })
+
+// exports.graphqlHandler = (event, context, callback) => {
+//   const handler = server.createHandler({
+//     cors: {
+//       origin: '*',
+//       credentials: true,
+//       methods: ['POST', 'GET'],
+//       allowedHeaders: ['Content-Type', 'Origin', 'Accept'],
+//     },
+//   });
+//   return handler(event, context, callback);
+// };
