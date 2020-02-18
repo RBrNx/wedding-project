@@ -31,7 +31,7 @@ provider:
 
 functions:
   graphql:
-    handler: src/graphql.graphqlHandler
+    handler: src/index.graphqlHandler
     environment:
       SLS_DEBUG: true
     events:
