@@ -6,16 +6,28 @@ const hello = (args, context) => {
 
 const getAllGuests = async (args, context) => {
   const db = await connectToDatabase();
-  const Guest = db.model('Guest');
+  const GuestSchema = db.model('Guest');
 
-  const guests = await Guest.find().exec();
-  
+  const guests = await GuestSchema.find().exec();
+
   return guests;
+};
+
+const getAllInvitations = async (args, context) => {
+  const db = await connectToDatabase();
+  const InvitationSchema = db.model('Invitation');
+
+  const invitations = await InvitationSchema.find()
+    .populate('Guest')
+    .exec();
+
+  return invitations;
 };
 
 export default {
   Query: {
     hello,
     getAllGuests,
+    getAllInvitations,
   },
 };
