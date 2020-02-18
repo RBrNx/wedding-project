@@ -22,6 +22,7 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: eu-west-2
+  memorySize: 128
   # To load environment variables externally
   # rename env.example to env.yml and uncomment
   # the following line. Also, make sure to not
