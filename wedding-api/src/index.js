@@ -17,7 +17,7 @@ const server = new ApolloServer({
     event,
     context,
   }),
-  tracing: true,
+  tracing: false,
   playground: false,
 });
 
