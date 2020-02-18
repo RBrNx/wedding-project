@@ -1,9 +1,9 @@
 import { ApolloServer } from 'apollo-server-lambda';
-import schema from './typeDefs';
+import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
 const server = new ApolloServer({
-  typeDefs: schema,
+  typeDefs,
   resolvers,
   formatError: error => {
     return error;
