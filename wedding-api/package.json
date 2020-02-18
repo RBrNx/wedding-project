@@ -7,7 +7,7 @@
     "offline": "sls offline",
     "deploy": "sls deploy",
     "test": "jest",
-    "generate-data": "node ./src/lib/createSeedData.js"
+    "generate-data": "node -r esm ./src/lib/createSeedData.js"
   },
   "author": "",
   "license": "MIT",
@@ -32,9 +32,12 @@
   "dependencies": {
     "apollo-server-lambda": "^2.5.0",
     "babel-runtime": "^6.26.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
     "graphql": "^14.3.0",
     "jsonfile": "^5.0.0",
     "mongoose": "^5.8.11",
+    "serverless-dotenv-plugin": "^2.3.2",
     "source-map-support": "^0.4.18"
   }
 }
