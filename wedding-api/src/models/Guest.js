@@ -7,4 +7,4 @@ const GuestSchema = new Schema({
   mainCourse: String,
 });
 
-export default model('Guests', GuestSchema);
+export default GuestSchema;
