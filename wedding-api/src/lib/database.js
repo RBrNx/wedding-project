@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import {GuestSchema, InvitationSchema} from '../models'
+import { GuestSchema, InvitationSchema } from '../models';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
