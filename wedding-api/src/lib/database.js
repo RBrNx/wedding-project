@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import GuestSchema from '../models/Guest'
+import {GuestSchema, InvitationSchema} from '../models'
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -20,6 +20,7 @@ const connectToDatabase = async () => {
       });
 
       cachedDb.model('Guest', GuestSchema);
+      cachedDb.model('Invitation', InvitationSchema);
     }
     return cachedDb;
   } catch (error) {
