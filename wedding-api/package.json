@@ -7,7 +7,7 @@
     "offline": "sls offline",
     "deploy": "sls deploy",
     "test": "jest",
-    "generate-data": "node ./src/createSeedData.js"
+    "generate-data": "node ./src/lib/createSeedData.js"
   },
   "author": "",
   "license": "MIT",

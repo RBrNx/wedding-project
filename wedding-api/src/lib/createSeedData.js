@@ -4,17 +4,31 @@ const jsonfile = require('jsonfile');
 faker.seed(100);
 
 const guests = [];
-const numberOfGuests = 50;
+const invitations = [];
+const numOfInvitations = 75;
 
-for (let i = 0; i < numberOfGuests; i++) {
-  const person = {
-    name: faker.name.findName(),
-    email: faker.internet.email(),
-    attending: faker.random.boolean(),
-    mainCourse: faker.random.word(),
-  };
+for (let i = 0; i < numOfInvitations; i++) {
+  const numOfGuests = faker.random.number({ min: 1, max: 3 });
+  const invitation = {
+    uniqueCode: faker.random.alphaNumeric(6),
+    guests: [],
+  }
 
-  guests.push(person);
+  for(let g = 0; g < numOfGuests; g++){
+    const person = {
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      attending: faker.random.boolean(),
+      mainCourse: faker.random.word(),
+      id: faker.random.uuid(),
+    };
+    
+    invitation.guests.push(person.id);
+    guests.push(person);
+  }
+
+  invitations.push(invitation);
 }
 
 jsonfile.writeFileSync('Guests.json', guests);
+jsonfile.writeFileSync('Invitations.json', invitations);
