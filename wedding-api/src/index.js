@@ -18,7 +18,7 @@ const server = new ApolloServer({
     context,
   }),
   tracing: true,
-  playground: true,
+  playground: false,
 });
 
 exports.graphqlHandler = (event, context, callback) => {
