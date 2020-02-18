@@ -27,11 +27,11 @@ provider:
   # the following line. Also, make sure to not
   # commit your env.yml.
   #
-  #environment: ${file(env.yml):${self:provider.stage}}
+  environment: ${file(env.yml):${self:provider.stage}}
 
 functions:
   graphql:
-    handler: src/graphql.graphqlHandler
+    handler: src/index.graphqlHandler
     environment:
       SLS_DEBUG: true
     events:
