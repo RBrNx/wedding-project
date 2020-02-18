@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import GuestSchema from '../models/Guest'
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -17,6 +18,8 @@ const connectToDatabase = async () => {
         poolSize: 10,
         useUnifiedTopology: true,
       });
+
+      cachedDb.model('Guest', GuestSchema);
     }
     return cachedDb;
   } catch (error) {
