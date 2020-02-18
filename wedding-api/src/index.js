@@ -21,16 +21,14 @@ const server = new ApolloServer({
   playground: true,
 });
 
-export default server.createHandler({ path: '/api/graphql' })
-
-// exports.graphqlHandler = (event, context, callback) => {
-//   const handler = server.createHandler({
-//     cors: {
-//       origin: '*',
-//       credentials: true,
-//       methods: ['POST', 'GET'],
-//       allowedHeaders: ['Content-Type', 'Origin', 'Accept'],
-//     },
-//   });
-//   return handler(event, context, callback);
-// };
+exports.graphqlHandler = (event, context, callback) => {
+  const handler = server.createHandler({
+    cors: {
+      origin: '*',
+      credentials: true,
+      methods: ['POST', 'GET'],
+      allowedHeaders: ['Content-Type', 'Origin', 'Accept'],
+    },
+  });
+  return handler(event, context, callback);
+};
