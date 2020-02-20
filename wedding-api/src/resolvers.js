@@ -18,7 +18,7 @@ const getAllInvitations = async (args, context) => {
   const InvitationSchema = db.model('Invitation');
 
   const invitations = await InvitationSchema.find()
-    .populate('Guest')
+    .populate('guests')
     .exec();
 
   return invitations;
