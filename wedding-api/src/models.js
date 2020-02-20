@@ -1,5 +1,7 @@
 import { Schema } from 'mongoose';
 
+const { ObjectId } = Schema.Types;
+
 const GuestSchema = new Schema({
   name: String,
   email: String,
@@ -9,7 +11,6 @@ const GuestSchema = new Schema({
 
 const InvitationSchema = new Schema({
   uniqueCode: String,
-  guests: [GuestSchema]
+  guests: [{ type: ObjectId, ref: 'Guest' }]
 })
-
 export { GuestSchema, InvitationSchema };
