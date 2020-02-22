@@ -17,6 +17,7 @@ const schema = gql`
     hello: String!
     getAllGuests: [Guest]
     getAllInvitations: [Invitation]
+    getInvitation(uniqueCode: String!): Invitation
   }
 `;
 

@@ -13,4 +13,5 @@ const InvitationSchema = new Schema({
   uniqueCode: String,
   guests: [{ type: ObjectId, ref: 'Guest' }]
 })
+
 export { GuestSchema, InvitationSchema };
