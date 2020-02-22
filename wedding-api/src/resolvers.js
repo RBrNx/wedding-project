@@ -47,6 +47,23 @@ const getInvitation = async (parent, args, context) => {
   }
 }
 
+const updateGuest = async (parent, args, context) => {
+  try{
+    const { input } = args;
+    const {  guestId, attending, mainCourse, email } = input;
+    const db = await connectToDatabase();
+    const GuestSchema = db.model('Guest');
+
+    const guest = await GuestSchema.findOneAndUpdate({ _id: input.guestId }, { attending, mainCourse, email }, { new: true }).exec();
+
+    if(guest) return { success: true }
+    return { success: false }
+  }
+  catch(error){
+    return error;
+  }
+}
+
 export default {
   Query: {
     hello,
@@ -54,4 +71,7 @@ export default {
     getAllInvitations,
     getInvitation
   },
+  Mutation: {
+    updateGuest
+  }
 };
