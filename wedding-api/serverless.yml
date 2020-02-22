@@ -7,6 +7,7 @@ service: wedding-api
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-dotenv-plugin
 
 # serverless-webpack configuration
 # Enable auto-packing of external modules
@@ -22,12 +23,13 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: eu-west-2
+  memorySize: 128
   # To load environment variables externally
   # rename env.example to env.yml and uncomment
   # the following line. Also, make sure to not
   # commit your env.yml.
   #
-  environment: ${file(env.yml):${self:provider.stage}}
+  #environment: ${file(env.yml):${self:provider.stage}}
 
 functions:
   graphql:

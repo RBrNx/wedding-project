@@ -5,17 +5,53 @@ const hello = (args, context) => {
 };
 
 const getAllGuests = async (args, context) => {
-  const db = await connectToDatabase();
-  const Guest = db.model('Guest');
-
-  const guests = await Guest.find().exec();
+  try {
+    const db = await connectToDatabase();
+    const GuestSchema = db.model('Guest');
   
-  return guests;
+    const guests = await GuestSchema.find().exec();
+  
+    return guests;
+  } catch (error) {
+    return error;
+  }
 };
+
+const getAllInvitations = async (args, context) => {
+  try {
+    const db = await connectToDatabase();
+    const InvitationSchema = db.model('Invitation');
+  
+    const invitations = await InvitationSchema.find()
+      .populate('guests')
+      .exec();
+  
+    return invitations;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getInvitation = async (parent, args, context) => {
+  try {
+    const { uniqueCode } = args;
+    const db = await connectToDatabase();
+    const InvitationSchema = db.model('Invitation');
+  
+    const invitation = await InvitationSchema.findOne({ uniqueCode }).populate('guests').exec()
+  
+    return invitation;
+  }
+  catch(error){
+    return error;
+  }
+}
 
 export default {
   Query: {
     hello,
     getAllGuests,
+    getAllInvitations,
+    getInvitation
   },
 };
