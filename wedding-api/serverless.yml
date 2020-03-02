@@ -23,6 +23,7 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: eu-west-2
+  profile: terminal-admin
   memorySize: 128
   # To load environment variables externally
   # rename env.example to env.yml and uncomment
