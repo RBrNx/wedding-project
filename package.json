@@ -8,7 +8,6 @@
   "private": true,
   "workspaces": [
     "web-client",
-    "mobile-client",
     "wedding-api"
   ]
 }
