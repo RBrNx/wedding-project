@@ -1,0 +1,8 @@
+query ALL_GUESTS_QUERY {
+  getAllGuests {
+    _id
+    name
+    attending
+    email
+  }
+}
