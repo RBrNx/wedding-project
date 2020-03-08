@@ -19,6 +19,9 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
+    },
+    "extra": {
+      "API_URL": "https://xiey9y60ej.execute-api.eu-west-2.amazonaws.com/dev/graphql"
     }
   }
 }
