@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
+import GuestCard from '../components/GuestCard';
 
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
@@ -14,9 +15,9 @@ const GuestsScreen = () => {
   const guests = data.getAllGuests;
 
   return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center', paddingHorizontal: '4%', backgroundColor: '#fff' }}>
       {guests.map(guest => {
-        return <Text key={guest._id}>{guest.name}</Text>;
+        return <GuestCard key={guest._id} guest={guest} />;
       })}
     </View>
   );
