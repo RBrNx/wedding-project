@@ -15,6 +15,7 @@ const Tab = createBottomTabNavigator();
 const screenOptions = {
   headerTitleAlign: 'center',
   headerBackTitleVisible: false,
+  headerShown: false,
 };
 
 const HomeNavigator = () => {
