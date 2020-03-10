@@ -17,8 +17,8 @@ const GuestsScreen = () => {
       {error && <Text>Error</Text>}
       {!loading && !error && (
         <View style={styles.cardContainer}>
-          {data.getAllGuests.map(guest => {
-            return <GuestCard key={guest._id} guest={guest} />;
+          {data.getAllGuests.map((guest, index) => {
+            return <GuestCard key={guest._id} guest={guest} index={index} />;
           })}
         </View>
       )}
