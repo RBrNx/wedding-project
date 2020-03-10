@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   statusLine: {
     width: 5,
     borderRadius: 2.5,
-    backgroundColor: '#5f88fe',
+    backgroundColor: '#2991cc',
   },
   textContainer: {
     flex: 1,
