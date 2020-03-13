@@ -1,55 +1,52 @@
-import React, { useState } from 'react';
-import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Text, StatusBar, View, Dimensions } from 'react-native';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
+
+const { height } = Dimensions.get('window');
 
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const ScrollViewAnimatedHeader = ({ children, title, imageSource }) => {
-  const [scrollY] = useState(new Animated.Value(0));
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
-  const imageOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-    outputRange: [1, 1, 0],
+  const imageOpacity = Animated.interpolate(scrollY, {
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 1, 1],
     extrapolate: 'clamp',
   });
 
-  const imageScale = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [1, 0.2],
+  const imageScale = Animated.interpolate(scrollY, {
+    inputRange: [0, 1],
+    outputRange: [0.2, 1],
     extrapolate: 'clamp',
   });
 
-  const titleOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE * 0.75, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, 0.5, 1],
+  const titleOpacity = Animated.interpolate(scrollY, {
+    inputRange: [0, 0.75, 1],
+    outputRange: [1, 0.5, 0],
     extrapolate: 'clamp',
   });
+
+  const renderContent = () => {
+    return children;
+  };
 
   return (
     <View style={styles.container}>
+      <BottomSheet
+        snapPoints={[height - HEADER_MIN_HEIGHT - 15, 400]}
+        initialSnap={1}
+        renderContent={renderContent}
+        enabledInnerScrolling
+        borderRadius={15}
+        callbackNode={scrollY}
+      />
       <Animated.View pointerEvents='none' style={styles.header}>
         <Animated.Image style={[styles.image, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]} source={imageSource} />
         <Text style={styles.title}>{title}</Text>
       </Animated.View>
-      <Animated.ScrollView
-        style={styles.scrollview}
-        contentContainerStyle={{ marginTop: HEADER_MAX_HEIGHT, backgroundColor: '#14233c' }}
-        scrollEventThrottle={1}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            progressViewOffset={HEADER_MAX_HEIGHT}
-            onRefresh={() => {
-              setIsRefreshing(true);
-            }}
-          />
-        }
-      >
-        {children}
-      </Animated.ScrollView>
       <Animated.View style={[styles.bar, { opacity: titleOpacity }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
