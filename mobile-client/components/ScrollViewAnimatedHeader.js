@@ -35,14 +35,6 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource }) => {
 
   return (
     <View style={styles.container}>
-      <BottomSheet
-        snapPoints={[height - HEADER_MIN_HEIGHT - 15, 400]}
-        initialSnap={1}
-        renderContent={renderContent}
-        enabledInnerScrolling
-        borderRadius={15}
-        callbackNode={scrollY}
-      />
       <Animated.View pointerEvents='none' style={styles.header}>
         <Animated.Image style={[styles.image, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]} source={imageSource} />
         <Text style={styles.title}>{title}</Text>
@@ -50,6 +42,14 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource }) => {
       <Animated.View style={[styles.bar, { opacity: titleOpacity }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
+      <BottomSheet
+        snapPoints={[height - HEADER_MIN_HEIGHT - 15, height - HEADER_MAX_HEIGHT]}
+        initialSnap={1}
+        renderContent={renderContent}
+        enabledInnerScrolling
+        borderRadius={15}
+        callbackNode={scrollY}
+      />
     </View>
   );
 };
