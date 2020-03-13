@@ -28,13 +28,10 @@ const GuestsScreen = () => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1,
     alignItems: 'center',
     paddingHorizontal: '4%',
     backgroundColor: '#fff',
     paddingTop: 20,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
   },
 });
 
