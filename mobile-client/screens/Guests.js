@@ -9,19 +9,19 @@ import GuestImage from '../assets/party.png';
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
 const GuestsScreen = () => {
-  const { loading, error, data } = useQuery(ALL_GUESTS_QUERY);
+  const { loading, error, data, refetch } = useQuery(ALL_GUESTS_QUERY);
 
   return (
-    <ScrollViewAnimatedHeader title='Guests' imageSource={GuestImage}>
-      {loading && <Text>Loading...</Text>}
-      {error && <Text>Error</Text>}
-      {!loading && !error && (
-        <View style={styles.cardContainer}>
-          {data.getAllGuests.map((guest, index) => {
+    <ScrollViewAnimatedHeader title='Guests' imageSource={GuestImage} onRefresh={async () => await refetch()}>
+      <View style={styles.cardContainer}>
+        {loading && <Text>Loading...</Text>}
+        {error && <Text>Error</Text>}
+        {!loading &&
+          !error &&
+          data.getAllGuests.map((guest, index) => {
             return <GuestCard key={guest._id} guest={guest} index={index} />;
           })}
-        </View>
-      )}
+      </View>
     </ScrollViewAnimatedHeader>
   );
 };
