@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
 import ScrollViewAnimatedHeader from '../components/ScrollViewAnimatedHeader';
 import GuestImage from '../assets/party.png';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
@@ -14,9 +15,9 @@ const GuestsScreen = () => {
   return (
     <ScrollViewAnimatedHeader title='Guests' imageSource={GuestImage} onRefresh={async () => await refetch()}>
       <View style={styles.cardContainer}>
-        {loading && <Text>Loading...</Text>}
+        {true && <LoadingIndicator />}
         {error && <Text>Error</Text>}
-        {!loading &&
+        {!true &&
           !error &&
           data.getAllGuests.map((guest, index) => {
             return <GuestCard key={guest._id} guest={guest} index={index} />;
