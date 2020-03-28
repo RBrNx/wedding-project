@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: '#14233c',
     height: HEADER_MIN_HEIGHT,
-    paddingTop: StatusBar.currentHeight,
+    paddingTop: StatusBar.currentHeight || HEADER_MIN_HEIGHT / 2 - 12,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
