@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View } from 'react-native';
+import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View, Dimensions } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
@@ -50,7 +52,7 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource, onRefresh }) =
           />
         }
       >
-        {children}
+        <View style={{ minHeight: height - HEADER_MAX_HEIGHT, flex: 1 }}>{children}</View>
       </Animated.ScrollView>
       <Animated.View style={[styles.bar, { opacity: titleOpacity }]}>
         <Text style={styles.barTitle}>{title}</Text>
