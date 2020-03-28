@@ -43,12 +43,14 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource, onRefresh }) =
         refreshControl={
           <RefreshControl
             refreshing={isRefreshing}
-            progressViewOffset={HEADER_MAX_HEIGHT}
+            progressViewOffset={HEADER_MAX_HEIGHT + 15}
             onRefresh={async () => {
               setIsRefreshing(true);
               await onRefresh();
               setIsRefreshing(false);
             }}
+            progressBackgroundColor='#14233c'
+            tintColor='#2991cc'
           />
         }
       >
