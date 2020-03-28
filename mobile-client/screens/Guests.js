@@ -6,6 +6,7 @@ import GuestCard from '../components/GuestCard';
 import ScrollViewAnimatedHeader from '../components/ScrollViewAnimatedHeader';
 import GuestImage from '../assets/party.png';
 import LoadingIndicator from '../components/LoadingIndicator';
+import ErrorMessage from '../components/ErrorMessage';
 
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
@@ -15,9 +16,9 @@ const GuestsScreen = () => {
   return (
     <ScrollViewAnimatedHeader title='Guests' imageSource={GuestImage} onRefresh={async () => await refetch()}>
       <View style={styles.cardContainer}>
-        {true && <LoadingIndicator />}
-        {error && <Text>Error</Text>}
-        {!true &&
+        {loading && <LoadingIndicator />}
+        {error && <ErrorMessage message='We encountered an error when loading your Guests, please try again.' />}
+        {!loading &&
           !error &&
           data.getAllGuests.map((guest, index) => {
             return <GuestCard key={guest._id} guest={guest} index={index} />;
