@@ -5,7 +5,7 @@ const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const ScrollViewAnimatedHeader = ({ children, title, imageSource }) => {
+const ScrollViewAnimatedHeader = ({ children, title, imageSource, onRefresh }) => {
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -42,8 +42,10 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource }) => {
           <RefreshControl
             refreshing={isRefreshing}
             progressViewOffset={HEADER_MAX_HEIGHT}
-            onRefresh={() => {
+            onRefresh={async () => {
               setIsRefreshing(true);
+              await onRefresh();
+              setIsRefreshing(false);
             }}
           />
         }
