@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { Feather } from '@expo/vector-icons';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
@@ -20,8 +21,18 @@ const screenOptions = {
 
 const HomeNavigator = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name='Guests' component={GuestsScreen} />
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#2991cc',
+      }}
+    >
+      <Tab.Screen
+        name='Guests'
+        component={GuestsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name='users' color={color} size={size} />,
+        }}
+      />
       <Tab.Screen name='Invitations' component={InvitationsScreen} />
       <Tab.Screen name='Settings' component={SettingsScreen} />
     </Tab.Navigator>
