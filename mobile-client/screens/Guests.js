@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
@@ -11,16 +11,27 @@ import EmptyMessage from '../components/EmptyMessage';
 
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
+const GuestRow = ({ guest, index }) => {
+  const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
+
+  useEffect(() => {
+    Animated.timing(translateY, {
+      toValue: 0,
+      duration: 400 + index * 150,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.ease),
+    }).start();
+  }, []);
+
+  return (
+    <Animated.View style={[styles.cardContainer, { transform: [{ translateY }] }]}>
+      <GuestCard guest={guest} index={index} />
+    </Animated.View>
+  );
+};
+
 const GuestsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_GUESTS_QUERY);
-
-  const renderItem = ({ item, index }) => {
-    return (
-      <View style={styles.cardContainer}>
-        <GuestCard key={item._id} guest={item} index={index} />
-      </View>
-    );
-  };
 
   return (
     <FlatListAnimatedHeader
@@ -29,7 +40,7 @@ const GuestsScreen = () => {
       onRefresh={async () => {
         await refetch();
       }}
-      renderItem={renderItem}
+      renderItem={({ item, index }) => <GuestRow guest={item} index={index} />}
       data={data?.getAllGuests}
       ListEmptyComponent={() => (
         <View style={styles.emptyContainer}>
