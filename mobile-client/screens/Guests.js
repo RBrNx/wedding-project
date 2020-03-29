@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
-import ScrollViewAnimatedHeader from '../components/ScrollViewAnimatedHeader';
+import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import GuestImage from '../assets/party.png';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
@@ -13,30 +13,40 @@ const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 const GuestsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_GUESTS_QUERY);
 
-  return (
-    <ScrollViewAnimatedHeader title='Guests' imageSource={GuestImage} onRefresh={async () => await refetch()}>
+  const renderItem = ({ item, index }) => {
+    return (
       <View style={styles.cardContainer}>
-        {loading && <LoadingIndicator />}
-        {error && <ErrorMessage message='We encountered an error when loading your Guests, please try again.' />}
-        {!loading &&
-          !error &&
-          data.getAllGuests.map((guest, index) => {
-            return <GuestCard key={guest._id} guest={guest} index={index} />;
-          })}
+        <GuestCard key={item._id} guest={item} index={index} />
       </View>
-    </ScrollViewAnimatedHeader>
+    );
+  };
+
+  return (
+    <FlatListAnimatedHeader
+      title='Guests'
+      imageSource={GuestImage}
+      onRefresh={async () => {
+        await refetch();
+      }}
+      renderItem={renderItem}
+      data={data?.getAllGuests}
+      ListEmptyComponent={() => (
+        <View style={styles.emptyContainer}>
+          {loading && <LoadingIndicator />}
+          {error && <ErrorMessage message='We encountered an error when loading your Guests, please try again.' />}
+        </View>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1,
-    alignItems: 'center',
     paddingHorizontal: '4%',
-    backgroundColor: '#fff',
-    paddingTop: 20,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
+  },
+  emptyContainer: {
+    flex: 1,
+    marginTop: -50,
   },
 });
 
