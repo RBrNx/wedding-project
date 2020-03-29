@@ -5,7 +5,7 @@ const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const ScrollViewAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, data }) => {
+const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, data }) => {
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -33,31 +33,28 @@ const ScrollViewAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, d
     extrapolate: 'clamp',
   });
 
+  const renderListHandle = () => {
+    return (
+      <Animated.View style={[styles.handleContainer, { transform: [{ translateY }] }]}>
+        <View style={styles.handleBackgound} />
+      </Animated.View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Animated.View pointerEvents='none' style={styles.header}>
-        <Animated.Image style={[styles.image, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]} source={imageSource} />
-        <Text style={styles.title}>{title}</Text>
+      <Animated.View style={styles.headerContainer} spointerEvents='none'>
+        <Animated.Image style={[styles.headerImage, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]} source={imageSource} />
+        <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
       <Animated.FlatList
-        style={styles.scrollview}
-        contentContainerStyle={{
-          backgroundColor: '#fff',
-          marginTop: HEADER_MAX_HEIGHT,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
-          overflow: 'hidden',
-        }}
+        contentContainerStyle={styles.flatlistContent}
         scrollEventThrottle={1}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
         renderItem={renderItem}
         data={data}
         keyExtractor={item => item._id}
-        ListHeaderComponent={() => (
-          <Animated.View style={{ transform: [{ translateY }], backgroundColor: '#14233c' }}>
-            <View style={{ backgroundColor: '#fff', borderTopLeftRadius: 15, borderTopRightRadius: 15, width: '100%', height: 20 }} />
-          </Animated.View>
-        )}
+        ListHeaderComponent={renderListHandle}
         stickyHeaderIndices={[0]}
         refreshControl={
           <RefreshControl
@@ -74,7 +71,7 @@ const ScrollViewAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, d
           />
         }
       />
-      <Animated.View style={[styles.bar, { opacity: titleOpacity }]}>
+      <Animated.View style={[styles.navigationBar, { opacity: titleOpacity }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
     </View>
@@ -86,10 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#14233c',
   },
-  scrollview: {
-    flex: 1,
-  },
-  header: {
+  headerContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -101,11 +95,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  image: {
+  headerImage: {
     width: '100%',
     resizeMode: 'contain',
   },
-  title: {
+  headerTitle: {
     position: 'absolute',
     fontSize: 36,
     color: '#fff',
@@ -114,7 +108,21 @@ const styles = StyleSheet.create({
     textShadowColor: '#000',
     bottom: 15,
   },
-  bar: {
+  flatlistContent: {
+    backgroundColor: '#fff',
+    marginTop: HEADER_MAX_HEIGHT,
+  },
+  handleContainer: {
+    backgroundColor: '#14233c',
+  },
+  handleBackgound: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    width: '100%',
+    height: 20,
+  },
+  navigationBar: {
     backgroundColor: '#14233c',
     height: HEADER_MIN_HEIGHT,
     paddingTop: StatusBar.currentHeight || HEADER_MIN_HEIGHT / 2 - 12,
@@ -131,4 +139,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScrollViewAnimatedHeader;
+export default FlatListAnimatedHeader;
