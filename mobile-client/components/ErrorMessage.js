@@ -1,16 +1,25 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, Animated } from 'react-native';
 import LottieView from 'lottie-react-native';
 import ErrorAnimation from '../assets/animations/space.json';
 
 const ErrorMessage = ({ message }) => {
+  const [opacity] = useState(new Animated.Value(0));
   const errorMessage = message || 'Whoops, something has went wrong!';
 
+  useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [opacity]);
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity }]}>
       <LottieView source={ErrorAnimation} autoPlay style={styles.animation} />
       <Text style={styles.text}>{errorMessage}</Text>
-    </View>
+    </Animated.View>
   );
 };
 
