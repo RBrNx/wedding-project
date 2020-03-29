@@ -38,7 +38,9 @@ const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, dat
   const renderListHandle = () => {
     return (
       <Animated.View style={[styles.handleContainer, { transform: [{ translateY }] }]}>
-        <View style={styles.handleBackgound} />
+        <View style={styles.handleBackgound}>
+          <View style={styles.handle} />
+        </View>
       </Animated.View>
     );
   };
@@ -130,6 +132,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     width: '100%',
     height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  handle: {
+    width: 30,
+    height: 5,
+    borderRadius: 5,
+    backgroundColor: '#aaa',
   },
   navigationBar: {
     backgroundColor: '#14233c',
