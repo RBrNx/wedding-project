@@ -58,6 +58,7 @@ const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, dat
         renderItem={renderItem}
         data={data}
         keyExtractor={item => item._id}
+        initialNumToRender={20}
         ListHeaderComponent={renderListHandle}
         ListEmptyComponent={() => {
           return (
