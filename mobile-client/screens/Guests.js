@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
@@ -7,6 +7,7 @@ import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import GuestImage from '../assets/party.png';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
+import EmptyMessage from '../components/EmptyMessage';
 
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
@@ -34,6 +35,7 @@ const GuestsScreen = () => {
         <View style={styles.emptyContainer}>
           {loading && <LoadingIndicator />}
           {error && <ErrorMessage message='We encountered an error when loading your Guests, please try again.' />}
+          {!error && !loading && <EmptyMessage />}
         </View>
       )}
     />
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     flex: 1,
-    marginTop: -50,
+    paddingHorizontal: '4%',
   },
 });
 
