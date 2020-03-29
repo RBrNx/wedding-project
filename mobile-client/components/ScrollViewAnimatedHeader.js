@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View, Dimensions } from 'react-native';
-
-const { height } = Dimensions.get('window');
+import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View } from 'react-native';
 
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const ScrollViewAnimatedHeader = ({ children, title, imageSource, onRefresh }) => {
+const ScrollViewAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, data }) => {
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -29,17 +27,38 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource, onRefresh }) =
     extrapolate: 'clamp',
   });
 
+  const translateY = scrollY.interpolate({
+    inputRange: [0, HEADER_SCROLL_DISTANCE],
+    outputRange: [0, -HEADER_SCROLL_DISTANCE],
+    extrapolate: 'clamp',
+  });
+
   return (
     <View style={styles.container}>
       <Animated.View pointerEvents='none' style={styles.header}>
         <Animated.Image style={[styles.image, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]} source={imageSource} />
         <Text style={styles.title}>{title}</Text>
       </Animated.View>
-      <Animated.ScrollView
+      <Animated.FlatList
         style={styles.scrollview}
-        contentContainerStyle={{ marginTop: HEADER_MAX_HEIGHT, backgroundColor: '#14233c' }}
+        contentContainerStyle={{
+          backgroundColor: '#fff',
+          marginTop: HEADER_MAX_HEIGHT,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          overflow: 'hidden',
+        }}
         scrollEventThrottle={1}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
+        renderItem={renderItem}
+        data={data}
+        keyExtractor={item => item._id}
+        ListHeaderComponent={() => (
+          <Animated.View style={{ transform: [{ translateY }], backgroundColor: '#14233c' }}>
+            <View style={{ backgroundColor: '#fff', borderTopLeftRadius: 15, borderTopRightRadius: 15, width: '100%', height: 20 }} />
+          </Animated.View>
+        )}
+        stickyHeaderIndices={[0]}
         refreshControl={
           <RefreshControl
             refreshing={isRefreshing}
@@ -50,12 +69,11 @@ const ScrollViewAnimatedHeader = ({ children, title, imageSource, onRefresh }) =
               setIsRefreshing(false);
             }}
             progressBackgroundColor='#14233c'
+            colors={['#fff']}
             tintColor='#2991cc'
           />
         }
-      >
-        <View style={{ minHeight: height - HEADER_MAX_HEIGHT, flex: 1 }}>{children}</View>
-      </Animated.ScrollView>
+      />
       <Animated.View style={[styles.bar, { opacity: titleOpacity }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
