@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View } from 'react-native';
+import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View, Dimensions } from 'react-native';
+
+const { height } = Dimensions.get('window');
 
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, data }) => {
+const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, data, ListEmptyComponent }) => {
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -55,6 +57,13 @@ const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, dat
         data={data}
         keyExtractor={item => item._id}
         ListHeaderComponent={renderListHandle}
+        ListEmptyComponent={() => {
+          return (
+            <View style={{ minHeight: height - HEADER_MAX_HEIGHT }}>
+              <ListEmptyComponent />
+            </View>
+          );
+        }}
         stickyHeaderIndices={[0]}
         refreshControl={
           <RefreshControl
