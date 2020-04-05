@@ -7,7 +7,7 @@ const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, data, ListEmptyComponent }) => {
+const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, data, ListEmptyComponent }) => {
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -47,8 +47,10 @@ const FlatListAnimatedHeader = ({ title, imageSource, onRefresh, renderItem, dat
 
   return (
     <View style={styles.container}>
-      <Animated.View style={styles.headerContainer} spointerEvents='none'>
-        <Animated.Image style={[styles.headerImage, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]} source={imageSource} />
+      <Animated.View style={styles.headerContainer} pointerEvents='none'>
+        <Animated.View style={[styles.headerImage, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]}>
+          {renderImage && renderImage()}
+        </Animated.View>
         <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
       <Animated.FlatList
