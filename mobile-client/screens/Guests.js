@@ -8,6 +8,7 @@ import GuestImage from '../assets/party.png';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
+import PartyIllustration from '../components/SVG/Party';
 
 const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
 
@@ -42,6 +43,7 @@ const GuestsScreen = () => {
       }}
       renderItem={({ item, index }) => <GuestRow guest={item} index={index} />}
       data={data?.getAllGuests}
+      renderImage={() => <PartyIllustration size='100%' />}
       ListEmptyComponent={() => (
         <View style={styles.emptyContainer}>
           {loading && <LoadingIndicator />}
