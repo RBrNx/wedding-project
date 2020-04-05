@@ -2,10 +2,13 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { Feather } from '@expo/vector-icons';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
 import SettingsScreen from './screens/SettingsScreen';
+import client from './utils/apiClient';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,12 +16,23 @@ const Tab = createBottomTabNavigator();
 const screenOptions = {
   headerTitleAlign: 'center',
   headerBackTitleVisible: false,
+  headerShown: false,
 };
 
 const HomeNavigator = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name='Guests' component={GuestsScreen} />
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#2991cc',
+      }}
+    >
+      <Tab.Screen
+        name='Guests'
+        component={GuestsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name='users' color={color} size={size} />,
+        }}
+      />
       <Tab.Screen name='Invitations' component={InvitationsScreen} />
       <Tab.Screen name='Settings' component={SettingsScreen} />
     </Tab.Navigator>
@@ -27,12 +41,14 @@ const HomeNavigator = () => {
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={screenOptions}>
-        <Stack.Screen name='SignIn' component={SignInScreen} />
-        <Stack.Screen name='Home' component={HomeNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen name='SignIn' component={SignInScreen} />
+          <Stack.Screen name='Home' component={HomeNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApolloProvider>
   );
 };
 
