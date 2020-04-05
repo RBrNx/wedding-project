@@ -1,9 +1,10 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { Feather } from '@expo/vector-icons';
+import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
@@ -40,15 +41,19 @@ const HomeNavigator = () => {
 };
 
 const App = () => {
+  const scheme = useColorScheme();
+
   return (
-    <ApolloProvider client={client}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={screenOptions}>
-          <Stack.Screen name='SignIn' component={SignInScreen} />
-          <Stack.Screen name='Home' component={HomeNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ApolloProvider>
+    <AppearanceProvider>
+      <ApolloProvider client={client}>
+        <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen name='SignIn' component={SignInScreen} />
+            <Stack.Screen name='Home' component={HomeNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ApolloProvider>
+    </AppearanceProvider>
   );
 };
 
