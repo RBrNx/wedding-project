@@ -18,7 +18,7 @@ const GuestRow = ({ guest, index }) => {
   useEffect(() => {
     Animated.timing(translateY, {
       toValue: 0,
-      duration: 400 + index * 150,
+      duration: 350 + index * 100,
       useNativeDriver: true,
       easing: Easing.out(Easing.ease),
     }).start();
