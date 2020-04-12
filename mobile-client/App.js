@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -49,6 +49,7 @@ const HomeNavigator = () => {
 };
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const scheme = useColorScheme();
 
   return (
@@ -56,8 +57,11 @@ const App = () => {
       <ApolloProvider client={client}>
         <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen name='SignIn' component={SignInScreen} />
-            <Stack.Screen name='Home' component={HomeNavigator} />
+            {!isAuthenticated ? (
+              <Stack.Screen name='SignIn' component={SignInScreen} initialParams={{ setIsAuthenticated }} />
+            ) : (
+              <Stack.Screen name='Home' component={HomeNavigator} />
+            )}
           </Stack.Navigator>
         </NavigationContainer>
       </ApolloProvider>
