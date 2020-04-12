@@ -8,7 +8,7 @@ import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
-import SettingsScreen from './screens/SettingsScreen';
+import SettingsScreen from './screens/Settings';
 import client from './utils/apiClient';
 
 const Stack = createStackNavigator();
@@ -35,7 +35,15 @@ const HomeNavigator = () => {
         }}
       />
       <Tab.Screen name='Invitations' component={InvitationsScreen} />
-      <Tab.Screen name='Settings' component={SettingsScreen} />
+      <Tab.Screen
+        name='Settings'
+        component={SettingsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name='settings' color={color} size={size} />,
+          headerShown: true,
+          title: 'Settings',
+        }}
+      />
     </Tab.Navigator>
   );
 };
