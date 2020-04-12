@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
   headerImage: {
     width: '100%',
     resizeMode: 'contain',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     position: 'absolute',
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
   flatlistContent: {
     backgroundColor: '#fff',
     marginTop: HEADER_MAX_HEIGHT,
+    minHeight: height - HEADER_MAX_HEIGHT,
   },
   handleContainer: {
     backgroundColor: '#14233c',
