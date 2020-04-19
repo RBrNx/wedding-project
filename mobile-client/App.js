@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { Feather } from '@expo/vector-icons';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
+import { AsyncStorage } from 'react-native';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
@@ -53,6 +54,17 @@ const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userSettings, setUserSettings] = useState({ theme: 'system' });
   const systemLevelTheme = useColorScheme();
+
+  useEffect(() => {
+    const getSavedSettings = async () => {
+      const savedSettings = await AsyncStorage.getItem('userSettings');
+      setUserSettings(currSettings => {
+        return { ...currSettings, ...JSON.parse(savedSettings) };
+      });
+    };
+
+    getSavedSettings();
+  }, []);
 
   const getTheme = themeSetting => {
     if (themeSetting === 'system') return systemLevelTheme;
