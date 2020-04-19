@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+import { AsyncStorage } from 'react-native';
 
 const SettingsContext = createContext([{ theme: 'system' }, () => {}]);
 
@@ -7,9 +8,15 @@ const SettingsProvider = ({ children, value }) => {
 };
 
 const useSettings = () => {
-  const context = useContext(SettingsContext);
+  const [userSettings, setUserSettings] = useContext(SettingsContext);
 
-  return context;
+  const saveUserSetting = (setting, value) => {
+    const newSettings = { ...userSettings, [setting]: value };
+    setUserSettings(newSettings);
+    AsyncStorage.setItem('userSettings', JSON.stringify(newSettings));
+  };
+
+  return { userSettings, saveUserSetting };
 };
 
 export { SettingsProvider, useSettings };
