@@ -6,6 +6,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { Feather } from '@expo/vector-icons';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import { AsyncStorage } from 'react-native';
+import { SplashScreen } from 'expo';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
@@ -56,11 +57,14 @@ const App = () => {
   const systemLevelTheme = useColorScheme();
 
   useEffect(() => {
+    SplashScreen.preventAutoHide();
+
     const getSavedSettings = async () => {
       const savedSettings = await AsyncStorage.getItem('userSettings');
       setUserSettings(currSettings => {
         return { ...currSettings, ...JSON.parse(savedSettings) };
       });
+      SplashScreen.hide();
     };
 
     getSavedSettings();
