@@ -1,34 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, AsyncStorage, TouchableNativeFeedback } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import Modal from 'react-native-modal';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
+import { useSettings } from '../components/SettingsContext';
+
+const settings = [
+  {
+    _id: 'theme',
+    title: 'Theme',
+    options: [
+      { label: 'Dark', value: 'dark' },
+      { label: 'Light', value: 'light' },
+      { label: 'System', value: 'system' },
+    ],
+  },
+];
 
 const SettingsScreen = () => {
-  const [userSettings, setUserSettings] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
-
-  useEffect(() => {
-    const loadSettings = async () => {
-      const savedSettings = await AsyncStorage.getItem('userSettings');
-      setUserSettings({ ...savedSettings, ...{ theme: 'system' } });
-    };
-
-    loadSettings();
-  }, []);
-
-  const settings = [
-    {
-      _id: 'theme',
-      title: 'Theme',
-      options: [
-        { label: 'Dark', value: 'dark' },
-        { label: 'Light', value: 'light' },
-        { label: 'System', value: 'system' },
-      ],
-    },
-  ];
+  const [userSettings, setUserSettings] = useSettings();
 
   const renderItem = ({ item }) => {
     const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
@@ -56,11 +48,12 @@ const SettingsScreen = () => {
           {selectedSetting?.options?.map(option => (
             <TouchableNativeFeedback
               onPress={() => {
-                setUserSettings({ ...userSettings, [selectedSetting._id]: option.value });
                 setShowModal(false);
+                setUserSettings({ ...userSettings, [selectedSetting._id]: option.value });
               }}
+              key={option.value}
             >
-              <View key={option._id} style={styles.optionRow}>
+              <View style={styles.optionRow}>
                 <Text>{option.label}</Text>
               </View>
             </TouchableNativeFeedback>
