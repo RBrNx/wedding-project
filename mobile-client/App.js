@@ -10,6 +10,7 @@ import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
 import SettingsScreen from './screens/Settings';
 import client from './utils/apiClient';
+import { SettingsProvider } from './components/SettingsContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,20 +51,28 @@ const HomeNavigator = () => {
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const scheme = useColorScheme();
+  const [userSettings, setUserSettings] = useState({ theme: 'system' });
+  const systemLevelTheme = useColorScheme();
+
+  const getTheme = themeSetting => {
+    if (themeSetting === 'system') return systemLevelTheme;
+    return themeSetting;
+  };
 
   return (
     <AppearanceProvider>
       <ApolloProvider client={client}>
-        <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack.Navigator screenOptions={screenOptions}>
-            {!isAuthenticated ? (
-              <Stack.Screen name='SignIn' component={SignInScreen} initialParams={{ setIsAuthenticated }} />
-            ) : (
-              <Stack.Screen name='Home' component={HomeNavigator} />
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
+        <SettingsProvider value={[userSettings, setUserSettings]}>
+          <NavigationContainer theme={getTheme(userSettings.theme) === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack.Navigator screenOptions={screenOptions}>
+              {!isAuthenticated ? (
+                <Stack.Screen name='SignIn' component={SignInScreen} initialParams={{ setIsAuthenticated }} />
+              ) : (
+                <Stack.Screen name='Home' component={HomeNavigator} />
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SettingsProvider>
       </ApolloProvider>
     </AppearanceProvider>
   );
