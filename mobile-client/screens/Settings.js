@@ -20,7 +20,7 @@ const settings = [
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
-  const [userSettings, setUserSettings] = useSettings();
+  const { userSettings, saveUserSetting } = useSettings();
 
   const renderItem = ({ item }) => {
     const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
@@ -49,7 +49,7 @@ const SettingsScreen = () => {
             <TouchableNativeFeedback
               onPress={() => {
                 setShowModal(false);
-                setUserSettings({ ...userSettings, [selectedSetting._id]: option.value });
+                saveUserSetting(selectedSetting._id, option.value);
               }}
               key={option.value}
             >
