@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import Modal from 'react-native-modal';
+import { useTheme } from '@react-navigation/native';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
 import { useSettings } from '../components/SettingsContext';
@@ -21,6 +22,7 @@ const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
   const { userSettings, saveUserSetting } = useSettings();
+  const { colors } = useTheme();
 
   const renderItem = ({ item }) => {
     const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
@@ -44,7 +46,7 @@ const SettingsScreen = () => {
     <>
       <FlatListAnimatedHeader title='Settings' renderImage={() => <SettingsIllustration size='90%' />} data={settings} renderItem={renderItem} />
       <Modal isVisible={showModal} onBackdropPress={() => setShowModal(false)} useNativeDriver animationIn='fadeIn' animationOut='fadeOut'>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
           {selectedSetting?.options?.map(option => (
             <TouchableNativeFeedback
               onPress={() => {
@@ -72,7 +74,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContainer: {
-    backgroundColor: 'white',
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
