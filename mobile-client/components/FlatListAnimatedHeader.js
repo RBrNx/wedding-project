@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   },
   handleContainer: {
     backgroundColor: '#14233c',
+    marginBottom: 5,
   },
   handleBackgound: {
     backgroundColor: '#fff',
