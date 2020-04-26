@@ -1,7 +1,9 @@
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 
+const black = '#000';
 const white = '#fff';
 const lightGrey = '#f5f5f5';
+const darkGrey = '#1d1d1d';
 const darkBlue = '#14233c';
 const lightBlue = '#2991cc';
 
@@ -15,10 +17,23 @@ const lightTheme = {
     card: white,
     componentBackground: lightGrey,
     bodyText: '#444',
+    headerText: '#000',
   },
 };
 
-const darkTheme = { ...DarkTheme };
+const darkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: darkBlue,
+    secondary: lightBlue,
+    background: darkBlue,
+    card: darkGrey,
+    componentBackground: black,
+    bodyText: '#eee',
+    headerText: '#fff'
+  },
+};
 
 const constantStyles = {
   cardShadow: {

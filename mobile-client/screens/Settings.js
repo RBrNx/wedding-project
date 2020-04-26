@@ -35,8 +35,8 @@ const SettingsScreen = () => {
         }}
       >
         <View style={styles.settingsRow}>
-          <Text>{item.title}</Text>
-          <Text>{selectedOption?.label}</Text>
+          <Text style={{ color: colors.headerText }}>{item.title}</Text>
+          <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
         </View>
       </TouchableNativeFeedback>
     );
