@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -13,6 +13,7 @@ import InvitationsScreen from './screens/Invitations';
 import SettingsScreen from './screens/Settings';
 import client from './utils/apiClient';
 import { SettingsProvider } from './components/SettingsContext';
+import { darkTheme, lightTheme } from './styles/theming';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,6 +29,7 @@ const HomeNavigator = () => {
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: '#2991cc',
+        style: { borderTopWidth: 0 },
       }}
     >
       <Tab.Screen
@@ -79,7 +81,7 @@ const App = () => {
     <AppearanceProvider>
       <ApolloProvider client={client}>
         <SettingsProvider value={[userSettings, setUserSettings]}>
-          <NavigationContainer theme={getTheme(userSettings.theme) === 'dark' ? DarkTheme : DefaultTheme}>
+          <NavigationContainer theme={getTheme(userSettings.theme) === 'dark' ? darkTheme : lightTheme}>
             <Stack.Navigator screenOptions={screenOptions}>
               {!isAuthenticated ? (
                 <Stack.Screen name='SignIn' component={SignInScreen} initialParams={{ setIsAuthenticated }} />
