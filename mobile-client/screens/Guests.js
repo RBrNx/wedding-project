@@ -4,7 +4,6 @@ import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
-import GuestImage from '../assets/party.png';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
@@ -37,7 +36,6 @@ const GuestsScreen = () => {
   return (
     <FlatListAnimatedHeader
       title='Guests'
-      imageSource={GuestImage}
       onRefresh={async () => {
         await refetch();
       }}

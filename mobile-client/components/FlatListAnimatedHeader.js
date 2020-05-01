@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Animated, StyleSheet, Text, RefreshControl, StatusBar, View, Dimensions } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 const { height } = Dimensions.get('window');
 
@@ -8,6 +9,7 @@ const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, data, ListEmptyComponent }) => {
+  const { colors } = useTheme();
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -37,8 +39,8 @@ const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, dat
 
   const renderListHandle = () => {
     return (
-      <Animated.View style={[styles.handleContainer, { transform: [{ translateY }] }]}>
-        <View style={styles.handleBackgound}>
+      <Animated.View style={[styles.handleContainer, { transform: [{ translateY }], backgroundColor: colors.background }]}>
+        <View style={[styles.handleBackgound, { backgroundColor: colors.componentBackground }]}>
           <View style={styles.handle} />
         </View>
       </Animated.View>
@@ -54,7 +56,7 @@ const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, dat
         <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
       <Animated.FlatList
-        contentContainerStyle={styles.flatlistContent}
+        contentContainerStyle={[styles.flatlistContent, { backgroundColor: colors.componentBackground }]}
         scrollEventThrottle={1}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
         renderItem={renderItem}
@@ -85,7 +87,7 @@ const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, dat
           />
         }
       />
-      <Animated.View style={[styles.navigationBar, { opacity: titleOpacity }]}>
+      <Animated.View style={[styles.navigationBar, { opacity: titleOpacity, backgroundColor: colors.background }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
     </View>
@@ -95,14 +97,12 @@ const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, dat
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#14233c',
   },
   headerContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#14233c',
     overflow: 'hidden',
     height: HEADER_MAX_HEIGHT,
     padding: 40,
@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
   headerImage: {
     width: '100%',
     resizeMode: 'contain',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     position: 'absolute',
@@ -123,14 +125,13 @@ const styles = StyleSheet.create({
     bottom: 15,
   },
   flatlistContent: {
-    backgroundColor: '#fff',
     marginTop: HEADER_MAX_HEIGHT,
+    minHeight: height - HEADER_MAX_HEIGHT,
   },
   handleContainer: {
-    backgroundColor: '#14233c',
+    marginBottom: 5,
   },
   handleBackgound: {
-    backgroundColor: '#fff',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     width: '100%',
@@ -145,7 +146,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#aaa',
   },
   navigationBar: {
-    backgroundColor: '#14233c',
     height: HEADER_MIN_HEIGHT,
     paddingTop: StatusBar.currentHeight || HEADER_MIN_HEIGHT / 2 - 12,
     alignItems: 'center',

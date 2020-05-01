@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, Animated } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { useTheme } from '@react-navigation/native';
 import EmptyAnimation from '../assets/animations/moon.json';
 
 const EmptyMessage = ({ message }) => {
+  const { colors } = useTheme();
   const [opacity] = useState(new Animated.Value(0));
   const emptyMessage = message || "There doesn't seem to be anything here";
 
@@ -18,7 +20,7 @@ const EmptyMessage = ({ message }) => {
   return (
     <Animated.View style={[styles.container, { opacity }]}>
       <LottieView source={EmptyAnimation} autoPlay style={styles.animation} speed={0.65} />
-      <Text style={styles.text}>{emptyMessage}</Text>
+      <Text style={[styles.text, { color: colors.bodyText }]}>{emptyMessage}</Text>
     </Animated.View>
   );
 };
@@ -36,7 +38,6 @@ const styles = StyleSheet.create({
     marginTop: 100,
     textAlign: 'center',
     fontSize: 16,
-    color: '#8C8C8C',
   },
 });
 
