@@ -1,22 +1,36 @@
 import { gql } from 'apollo-server-lambda';
 
 const schema = gql`
+  enum GuestResponseEnum {
+    AWAITING_RSVP
+    ATTENDING
+    NOT_ATTENDING
+  }
+
+  enum InvitationTypeEnum {
+    DAYTIME
+    EVENING
+  }
+
   type Guest {
     _id: ID
-    name: String
+    firstName: String
+    lastName: String
     email: String
-    attending: Boolean
+    attending: GuestResponseEnum
     mainCourse: String
   }
 
   type Invitation {
+    _id: ID
     uniqueCode: String
     guests: [Guest]
+    type: InvitationTypeEnum
   }
 
   input GuestInput {
-    guestId: ID!,
-    attending: Boolean!
+    guestId: ID!
+    attending: GuestResponseEnum!
     mainCourse: String
     email: String
   }
