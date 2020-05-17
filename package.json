@@ -6,6 +6,13 @@
   "repository": "https://github.com/RBrNx/wedding-project",
   "author": "RBrNx",
   "private": true,
+  "scripts": {
+    "start:wedding-api": "yarn workspace wedding-api start:offline",
+    "start:web-client": "yarn workspace web-client start",
+    "start:mobile-client": "cd mobile-client && yarn start",
+    "build:mobile-client": "cd mobile-client && build",
+    "deploy:wedding-api": "yarn workspace wedding-api deploy"
+  },
   "workspaces": [
     "web-client",
     "wedding-api"
