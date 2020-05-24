@@ -5,14 +5,17 @@ import SunIcon from './SVG/SunIcon';
 import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
 
-const InvitationCard = ({ guests, uniqueCode, index }) => {
+const typeIcons = { DAYTIME: SunIcon, EVENING: MoonIcon };
+
+const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
+  const TypeIcon = typeIcons[type];
 
   return (
     <View style={styles.card}>
       <View style={[styles.invitationRow, { backgroundColor: colors.card }]}>
         <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
-        {index % 2 === 0 ? <MoonIcon style={styles.icon} /> : <SunIcon style={styles.icon} />}
+        <TypeIcon style={styles.icon} />
       </View>
       <View style={[styles.guestContainer, { backgroundColor: colors.card }]}>
         {guests.map((guest, guestIndex) => {

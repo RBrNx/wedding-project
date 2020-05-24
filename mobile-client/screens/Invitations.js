@@ -13,6 +13,7 @@ const ALL_INVITATIONS_QUERY = loader('../graphql/allInvitationsQuery.graphql');
 
 const InvitationRow = ({ invitation, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
+  const { guests, uniqueCode, type } = invitation;
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -25,7 +26,7 @@ const InvitationRow = ({ invitation, index }) => {
 
   return (
     <Animated.View style={[styles.cardContainer, { transform: [{ translateY }] }]}>
-      <InvitationCard guests={invitation.guests} uniqueCode={invitation.uniqueCode} index={index} />
+      <InvitationCard guests={guests} uniqueCode={uniqueCode} type={type} index={index} />
     </Animated.View>
   );
 };
