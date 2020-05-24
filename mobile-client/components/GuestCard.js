@@ -1,13 +1,12 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import SunIcon from './SVG/SunIcon';
-import MoonIcon from './SVG/MoonIcon';
+import { Feather } from '@expo/vector-icons';
 import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
 import { GuestResponseEnum } from '../library/enums';
 
-const GuestCard = ({ guest, index }) => {
+const GuestCard = ({ guest }) => {
   const { firstName, lastName, attending } = guest;
   const { text: guestStatus } = GuestResponseEnum[attending];
   const { colors } = useTheme();
@@ -21,7 +20,7 @@ const GuestCard = ({ guest, index }) => {
         </Text>
         <Text style={[styles.status, { color: colors.bodyText }]}>{guestStatus}</Text>
       </View>
-      {index % 2 === 0 ? <MoonIcon style={styles.icon} /> : <SunIcon style={styles.icon} />}
+      <Feather name='chevron-right' color={colors.componentBackground} size={30} />
     </View>
   );
 };
