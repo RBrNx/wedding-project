@@ -5,9 +5,11 @@ import SunIcon from './SVG/SunIcon';
 import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
+import { GuestResponseEnum } from '../library/enums';
 
 const GuestCard = ({ guest, index }) => {
   const { firstName, lastName, attending } = guest;
+  const { text: guestStatus } = GuestResponseEnum[attending];
   const { colors } = useTheme();
 
   return (
@@ -17,7 +19,7 @@ const GuestCard = ({ guest, index }) => {
         <Text style={[styles.name, { color: colors.headerText }]}>
           {firstName} {lastName}
         </Text>
-        <Text style={[styles.status, { color: colors.bodyText }]}>Awaiting RSVP</Text>
+        <Text style={[styles.status, { color: colors.bodyText }]}>{guestStatus}</Text>
       </View>
       {index % 2 === 0 ? <MoonIcon style={styles.icon} /> : <SunIcon style={styles.icon} />}
     </View>
