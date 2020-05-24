@@ -2,17 +2,14 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
-import SunIcon from './SVG/SunIcon';
-import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
 import TouchableNative from './TouchableNative';
-
-const typeIcons = Object.freeze({ DAYTIME: SunIcon, EVENING: MoonIcon });
+import { InvitationTypeEnum } from '../library/enums';
 
 const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
-  const TypeIcon = typeIcons[type];
+  const { icon: TypeIcon } = InvitationTypeEnum[type];
 
   return (
     <TouchableNative style={[styles.card, { backgroundColor: colors.card }]} onPress={() => console.log(type)}>
