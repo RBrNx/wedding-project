@@ -5,20 +5,21 @@ import SunIcon from './SVG/SunIcon';
 import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
+import TouchableNative from './TouchableNative';
 
-const typeIcons = { DAYTIME: SunIcon, EVENING: MoonIcon };
+const typeIcons = Object.freeze({ DAYTIME: SunIcon, EVENING: MoonIcon });
 
 const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
   const TypeIcon = typeIcons[type];
 
   return (
-    <View style={styles.card}>
-      <View style={[styles.invitationRow, { backgroundColor: colors.card }]}>
+    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]} onPress={() => console.log(type)}>
+      <View style={[styles.invitationRow, { borderBottomColor: colors.componentBackground }]}>
         <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
         <TypeIcon style={styles.icon} />
       </View>
-      <View style={[styles.guestContainer, { backgroundColor: colors.card }]}>
+      <View style={styles.guestContainer}>
         {guests.map((guest, guestIndex) => {
           const { firstName, lastName, attending } = guest;
           const isFirst = guestIndex === 0;
@@ -34,33 +35,34 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
           );
         })}
       </View>
-    </View>
+    </TouchableNative>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    width: '100%',
     marginBottom: 15,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    padding: 10,
     ...constantStyles.cardShadow,
   },
   invitationRow: {
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 1,
-    padding: 10,
+    borderBottomWidth: 1,
+    paddingBottom: 10,
   },
   guestContainer: {
-    paddingVertical: 12,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
+    paddingTop: 12,
   },
   guestRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 15,
+    paddingLeft: 5,
     marginVertical: 2,
   },
   textContainer: {
