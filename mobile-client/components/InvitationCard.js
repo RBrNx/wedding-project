@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import SunIcon from './SVG/SunIcon';
 import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
+import StatusLine from './StatusLine';
 
 const typeIcons = { DAYTIME: SunIcon, EVENING: MoonIcon };
 
@@ -19,25 +20,15 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
       </View>
       <View style={[styles.guestContainer, { backgroundColor: colors.card }]}>
         {guests.map((guest, guestIndex) => {
+          const { firstName, lastName, attending } = guest;
           const isFirst = guestIndex === 0;
           const isLast = guestIndex === guests.length - 1;
 
           return (
             <View key={guest._id} style={styles.guestRow}>
-              <View
-                style={[
-                  styles.statusLine,
-                  {
-                    backgroundColor: colors.secondary,
-                    borderTopRightRadius: isFirst ? 2.5 : 0,
-                    borderTopLeftRadius: isFirst ? 2.5 : 0,
-                    borderBottomLeftRadius: isLast ? 2.5 : 0,
-                    borderBottomRightRadius: isLast ? 2.5 : 0,
-                  },
-                ]}
-              />
+              <StatusLine status={attending} isFirst={isFirst} isLast={isLast} />
               <Text style={[styles.name, { color: colors.headerText }]}>
-                {guest.firstName} {guest.lastName}
+                {firstName} {lastName}
               </Text>
             </View>
           );
@@ -71,10 +62,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 15,
     marginVertical: 2,
-  },
-  statusLine: {
-    width: 5,
-    height: '100%',
   },
   textContainer: {
     flex: 1,
