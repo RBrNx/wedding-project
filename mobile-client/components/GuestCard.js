@@ -4,14 +4,15 @@ import { useTheme } from '@react-navigation/native';
 import SunIcon from './SVG/SunIcon';
 import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
+import StatusLine from './StatusLine';
 
 const GuestCard = ({ guest, index }) => {
-  const { firstName, lastName } = guest;
+  const { firstName, lastName, attending } = guest;
   const { colors } = useTheme();
 
   return (
     <View style={[styles.card, { backgroundColor: colors.card }]}>
-      <View style={[styles.statusLine, { backgroundColor: colors.secondary }]} />
+      <StatusLine status={attending} />
       <View style={styles.textContainer}>
         <Text style={[styles.name, { color: colors.headerText }]}>
           {firstName} {lastName}
