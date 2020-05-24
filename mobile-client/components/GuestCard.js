@@ -6,13 +6,16 @@ import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
 
 const GuestCard = ({ guest, index }) => {
+  const { firstName, lastName } = guest;
   const { colors } = useTheme();
 
   return (
     <View style={[styles.card, { backgroundColor: colors.card }]}>
       <View style={[styles.statusLine, { backgroundColor: colors.secondary }]} />
       <View style={styles.textContainer}>
-        <Text style={[styles.name, { color: colors.headerText }]}>{guest.name}</Text>
+        <Text style={[styles.name, { color: colors.headerText }]}>
+          {firstName} {lastName}
+        </Text>
         <Text style={[styles.status, { color: colors.bodyText }]}>Awaiting RSVP</Text>
       </View>
       {index % 2 === 0 ? <MoonIcon style={styles.icon} /> : <SunIcon style={styles.icon} />}
