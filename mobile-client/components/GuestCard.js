@@ -5,6 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
 import { GuestResponseEnum } from '../library/enums';
+import TouchableNative from './TouchableNative';
 
 const GuestCard = ({ guest }) => {
   const { firstName, lastName, attending } = guest;
@@ -12,7 +13,7 @@ const GuestCard = ({ guest }) => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.card }]}>
+    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]}>
       <StatusLine status={attending} />
       <View style={styles.textContainer}>
         <Text style={[styles.name, { color: colors.headerText }]}>
@@ -21,7 +22,7 @@ const GuestCard = ({ guest }) => {
         <Text style={[styles.status, { color: colors.bodyText }]}>{guestStatus}</Text>
       </View>
       <Feather name='chevron-right' color={colors.componentBackground} size={30} />
-    </View>
+    </TouchableNative>
   );
 };
 
