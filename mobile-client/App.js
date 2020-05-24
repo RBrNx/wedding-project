@@ -39,7 +39,13 @@ const HomeNavigator = () => {
           tabBarIcon: ({ color, size }) => <Feather name='users' color={color} size={size} />,
         }}
       />
-      <Tab.Screen name='Invitations' component={InvitationsScreen} />
+      <Tab.Screen
+        name='Invitations'
+        component={InvitationsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name='mail' color={color} size={size} />,
+        }}
+      />
       <Tab.Screen
         name='Settings'
         component={SettingsScreen}
