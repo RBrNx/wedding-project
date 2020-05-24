@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
 import SunIcon from './SVG/SunIcon';
 import MoonIcon from './SVG/MoonIcon';
 import { constantStyles } from '../styles/theming';
@@ -15,25 +16,28 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
 
   return (
     <TouchableNative style={[styles.card, { backgroundColor: colors.card }]} onPress={() => console.log(type)}>
-      <View style={[styles.invitationRow, { borderBottomColor: colors.componentBackground }]}>
-        <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
+      <View style={[styles.headerRow, { borderBottomColor: colors.componentBackground }]}>
         <TypeIcon style={styles.icon} />
+        <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
       </View>
-      <View style={styles.guestContainer}>
-        {guests.map((guest, guestIndex) => {
-          const { firstName, lastName, attending } = guest;
-          const isFirst = guestIndex === 0;
-          const isLast = guestIndex === guests.length - 1;
+      <View style={styles.bodyRow}>
+        <View style={styles.guestContainer}>
+          {guests.map((guest, guestIndex) => {
+            const { firstName, lastName, attending } = guest;
+            const isFirst = guestIndex === 0;
+            const isLast = guestIndex === guests.length - 1;
 
-          return (
-            <View key={guest._id} style={styles.guestRow}>
-              <StatusLine status={attending} isFirst={isFirst} isLast={isLast} />
-              <Text style={[styles.name, { color: colors.headerText }]}>
-                {firstName} {lastName}
-              </Text>
-            </View>
-          );
-        })}
+            return (
+              <View key={guest._id} style={styles.guestRow}>
+                <StatusLine status={attending} isFirst={isFirst} isLast={isLast} />
+                <Text style={[styles.name, { color: colors.headerText }]}>
+                  {firstName} {lastName}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+        <Feather name='chevron-right' color={colors.componentBackground} size={30} />
       </View>
     </TouchableNative>
   );
@@ -49,15 +53,20 @@ const styles = StyleSheet.create({
     padding: 10,
     ...constantStyles.cardShadow,
   },
-  invitationRow: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 1,
     borderBottomWidth: 1,
     paddingBottom: 10,
   },
+  bodyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   guestContainer: {
     paddingTop: 12,
+    flex: 1,
   },
   guestRow: {
     flexDirection: 'row',
