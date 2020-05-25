@@ -1,22 +1,28 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import SunIcon from './SVG/SunIcon';
-import MoonIcon from './SVG/MoonIcon';
+import { Feather } from '@expo/vector-icons';
 import { constantStyles } from '../styles/theming';
+import StatusLine from './StatusLine';
+import { GuestResponseEnum } from '../library/enums';
+import TouchableNative from './TouchableNative';
 
-const GuestCard = ({ guest, index }) => {
+const GuestCard = ({ guest }) => {
+  const { firstName, lastName, attending } = guest;
+  const { text: guestStatus } = GuestResponseEnum[attending];
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.card }]}>
-      <View style={[styles.statusLine, { backgroundColor: colors.secondary }]} />
+    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]}>
+      <StatusLine status={attending} />
       <View style={styles.textContainer}>
-        <Text style={[styles.name, { color: colors.headerText }]}>{guest.name}</Text>
-        <Text style={[styles.status, { color: colors.bodyText }]}>Awaiting RSVP</Text>
+        <Text style={[styles.name, { color: colors.headerText }]}>
+          {firstName} {lastName}
+        </Text>
+        <Text style={[styles.status, { color: colors.bodyText }]}>{guestStatus}</Text>
       </View>
-      {index % 2 === 0 ? <MoonIcon style={styles.icon} /> : <SunIcon style={styles.icon} />}
-    </View>
+      <Feather name='chevron-right' color={colors.componentBackground} size={30} />
+    </TouchableNative>
   );
 };
 

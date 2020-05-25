@@ -8,18 +8,24 @@ const NUM_INVITATIONS = 75;
 const invitations = [];
 
 const generateGuest = () => {
+  const attendingState = ['AWAITING_RSVP', 'ATTENDING', 'NOT_ATTENDING'];
+
   return {
-    name: faker.name.findName(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
     email: faker.internet.email(),
-    attending: faker.random.boolean(),
+    attending: faker.random.arrayElement(attendingState),
     mainCourse: faker.random.word(),
   };
 };
 
-const generateInvitation = guests => {
+const generateInvitation = (guests) => {
+  const invitationType = ['DAYTIME', 'EVENING'];
+
   return {
     uniqueCode: faker.random.alphaNumeric(6),
-    guests: guests.map(guest => guest._id),
+    guests: guests.map((guest) => guest._id),
+    type: faker.random.arrayElement(invitationType),
   };
 };
 
@@ -50,3 +56,4 @@ const createWeddingGuests = async () => {
 };
 
 createWeddingGuests();
+process.exit(1);
