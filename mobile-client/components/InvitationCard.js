@@ -14,7 +14,7 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
   return (
     <TouchableNative style={[styles.card, { backgroundColor: colors.card }]} onPress={() => console.log(type)}>
       <View style={[styles.headerRow, { borderBottomColor: colors.componentBackground }]}>
-        <TypeIcon style={styles.icon} />
+        <TypeIcon style={styles.icon} size={40} />
         <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
       </View>
       <View style={styles.bodyRow}>
