@@ -33,19 +33,35 @@ provider:
   #environment: ${file(env.yml):${self:provider.stage}}
 
 functions:
-  graphql:
-    handler: src/index.graphqlHandler
+  unauthenticated:
+    handler: src/index.unauthenticatedGQLHandler
     environment:
       SLS_DEBUG: true
     events:
       - http:
-          path: graphql
+          path: api
           method: post
           cors: true
           integration: lambda-proxy
 
       - http:
-          path: graphql
+          path: api
+          method: get
+          cors: true
+          integration: lambda-proxy
+  authenticated:
+    handler: src/index.authenticatedGQLHandler
+    environment:
+      SLS_DEBUG: true
+    events:
+      - http:
+          path: admin
+          method: post
+          cors: true
+          integration: lambda-proxy
+
+      - http:
+          path: admin
           method: get
           cors: true
           integration: lambda-proxy
