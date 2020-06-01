@@ -49,3 +49,7 @@ functions:
           method: get
           cors: true
           integration: lambda-proxy
+
+resources:
+  # Cognito
+  - ${file(resources/cognito-user-pool.yml)}
