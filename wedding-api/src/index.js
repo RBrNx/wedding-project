@@ -4,7 +4,7 @@ import coreResolvers from './coreResolvers';
 import authenticatedTypeDefs from './authenticatedTypeDefs';
 import authenticatedResolvers from './authenticatedResolvers';
 
-const generateApolloServer = ({ authenticated = false }) => {
+const generateApolloServer = ({ authenticated }) => {
   const typeDefs = [coreTypeDefs];
   if (authenticated) typeDefs.push(authenticatedTypeDefs);
 
@@ -33,7 +33,7 @@ const generateApolloServer = ({ authenticated = false }) => {
   return server;
 };
 
-const unauthenticatedServer = generateApolloServer();
+const unauthenticatedServer = generateApolloServer({ authenticated: false });
 const authenticatedServer = generateApolloServer({ authenticated: true });
 
 exports.unauthenticatedGQLHandler = (event, context, callback) => {
