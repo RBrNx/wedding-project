@@ -1,3 +1,5 @@
+import { gql } from 'apollo-server-lambda';
+
 const schema = gql`
   enum GuestResponseEnum {
     AWAITING_RSVP
