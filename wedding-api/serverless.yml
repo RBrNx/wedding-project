@@ -43,12 +43,14 @@ functions:
           method: post
           cors: true
           integration: lambda-proxy
+          authorizer: aws_iam
 
       - http:
           path: api
           method: get
           cors: true
           integration: lambda-proxy
+          authorizer: aws_iam
   authenticated:
     handler: src/index.authenticatedGQLHandler
     environment:
@@ -59,13 +61,16 @@ functions:
           method: post
           cors: true
           integration: lambda-proxy
+          authorizer: aws_iam
 
       - http:
           path: admin
           method: get
           cors: true
           integration: lambda-proxy
+          authorizer: aws_iam
 
 resources:
   # Cognito
   - ${file(resources/cognito-user-pool.yml)}
+  - ${file(resources/cognito-identity-pool.yml)}
