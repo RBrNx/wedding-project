@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import { AsyncStorage } from 'react-native';
 import { SplashScreen } from 'expo';
+import Amplify from 'aws-amplify';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
@@ -14,9 +15,19 @@ import SettingsScreen from './screens/Settings';
 import client from './utils/apiClient';
 import { SettingsProvider } from './components/SettingsContext';
 import { darkTheme, lightTheme } from './styles/theming';
+import awsConfig from './awsExports';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+Amplify.configure({
+  Auth: {
+    region: awsConfig.cognito.REGION,
+    userPoolId: awsConfig.cognito.USER_POOL_ID,
+    identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
+    userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID,
+  },
+});
 
 const screenOptions = {
   headerTitleAlign: 'center',
