@@ -27,21 +27,10 @@ sigV4Client.newClient = function(config) {
   }
 
   function buildCanonicalRequest(method, path, queryParams, headers, payload) {
-    console.log({
-      method,
-      canonicalUri: buildCanonicalUri(path),
-      canonicalQueryString: buildCanonicalQueryString(queryParams),
-      canonicalHeaders: buildCanonicalHeaders(headers),
-      canonicalSignedHeaders: buildCanonicalSignedHeaders(headers),
-      hash: hexEncode(hash(payload)),
-      payload,
-    });
-
     return (
       method +
       '\n' +
-      // buildCanonicalUri(path) +
-      path +
+      buildCanonicalUri(path) +
       '\n' +
       buildCanonicalQueryString(queryParams) +
       '\n' +
@@ -235,7 +224,7 @@ sigV4Client.newClient = function(config) {
     // }
 
     // console.log({ canonicalRequest, stringToSign });
-    console.log({ path, myPath: request.path });
+    // console.log({ path, myPath: request.path });
 
     return {
       headers: headers,
