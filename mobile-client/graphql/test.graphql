@@ -1,0 +1,10 @@
+query INVITATION_QUERY($uniqueCode: String!) {
+  getInvitation(uniqueCode: $uniqueCode) {
+    guests {
+      firstName
+      lastName
+      attending
+      email
+    }
+  }
+}
