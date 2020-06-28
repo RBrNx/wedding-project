@@ -22,17 +22,17 @@ sigV4Client.newClient = config => {
   }
 
   function hmac(secret, value) {
-    return HmacSHA256(value, secret, { asBytes: true }); // eslint-disable-line
+    return HmacSHA256(value, secret, { asBytes: true });
   }
 
   function buildCanonicalRequest(method, path, queryParams, headers, payload) {
     return `${method}\n${buildCanonicalUri(path)}\n${buildCanonicalQueryString(queryParams)}\n${buildCanonicalHeaders(
       headers,
-    )}\n${buildCanonicalSignedHeaders(headers)}\n${hexEncode(hash(payload))}`;
+    )}\n${buildCanonicalSignedHeaders(headers)}\n${hash(payload)}`;
   }
 
   function hashCanonicalRequest(request) {
-    return hexEncode(hash(request));
+    return hash(request);
   }
 
   function buildCanonicalUri(uri) {
@@ -40,49 +40,38 @@ sigV4Client.newClient = config => {
   }
 
   function buildCanonicalQueryString(queryParams) {
-    if (Object.keys(queryParams).length < 1) {
+    const queryParamKeys = Object.keys(queryParams);
+    if (queryParamKeys.length < 1) {
       return '';
     }
 
-    const sortedQueryParams = [];
-    for (const property in queryParams) {
-      if (queryParams.hasOwnProperty(property)) {
-        sortedQueryParams.push(property);
-      }
-    }
-    sortedQueryParams.sort();
+    const sortedQueryParams = queryParamKeys.sort();
 
     let canonicalQueryString = '';
-    for (let i = 0; i < sortedQueryParams.length; i++) {
-      canonicalQueryString += `${sortedQueryParams[i]}=${encodeURIComponent(queryParams[sortedQueryParams[i]])}&`;
-    }
+    sortedQueryParams.map(queryParamKey => {
+      canonicalQueryString += `${queryParamKey}=${encodeURIComponent(queryParams[queryParamKey])}&`;
+
+      return queryParamKey;
+    });
+
     return canonicalQueryString.substr(0, canonicalQueryString.length - 1);
   }
 
   function buildCanonicalHeaders(headers) {
     let canonicalHeaders = '';
-    const sortedKeys = [];
-    for (const property in headers) {
-      if (headers.hasOwnProperty(property)) {
-        sortedKeys.push(property);
-      }
-    }
-    sortedKeys.sort();
+    const sortedKeys = Object.keys(headers).sort();
 
-    for (let i = 0; i < sortedKeys.length; i++) {
-      canonicalHeaders += `${sortedKeys[i].toLowerCase()}:${headers[sortedKeys[i]]}\n`;
-    }
+    sortedKeys.map(headerKey => {
+      canonicalHeaders += `${headerKey.toLowerCase()}:${headers[headerKey]}\n`;
+
+      return headerKey;
+    });
+
     return canonicalHeaders;
   }
 
   function buildCanonicalSignedHeaders(headers) {
-    const sortedKeys = [];
-    for (const property in headers) {
-      if (headers.hasOwnProperty(property)) {
-        sortedKeys.push(property.toLowerCase());
-      }
-    }
-    sortedKeys.sort();
+    const sortedKeys = Object.keys(headers).sort();
 
     return sortedKeys.join(';');
   }
@@ -103,6 +92,7 @@ sigV4Client.newClient = config => {
     return hexEncode(hmac(key, stringToSign));
   }
 
+  /* eslint-disable prefer-destructuring */
   function extractHostname(url) {
     let hostname;
 
@@ -117,6 +107,7 @@ sigV4Client.newClient = config => {
 
     return hostname;
   }
+  /* eslint-enable prefer-destructuring */
 
   function buildAuthorizationHeader(accessKey, credentialScope, headers, signature) {
     return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope}, SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
@@ -141,7 +132,7 @@ sigV4Client.newClient = config => {
   awsSigV4Client.endpoint = endpoint;
   awsSigV4Client.pathComponent = pathComponent;
 
-  awsSigV4Client.signRequest = function(request) {
+  awsSigV4Client.signRequest = request => {
     const verb = request.method.toUpperCase();
     const path = awsSigV4Client.pathComponent + request.path;
     const queryParams = { ...request.queryParams };
