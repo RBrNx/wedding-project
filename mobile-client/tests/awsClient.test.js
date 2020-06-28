@@ -1,4 +1,4 @@
-import awsSigV4Client from '../utils/awsClient';
+import awsSigV4Client, { hash } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
 const fakeSecretKey = 'zfq4t13xhfKdIlNkWpjU/4pns/wtAQk3NnGwwgVb';
@@ -13,6 +13,14 @@ const awsClient = awsSigV4Client.newClient({
   sessionToken: fakeSessionToken,
   region,
   endpoint,
+});
+
+test('hash returns the SHA256 hash of a value', () => {
+  expect(hash('test').toEqual('9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'));
+  expect(hash('9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08')).toEqual(
+    '7b3d979ca8330a94fa7e9e1b466d8b99e0bcdea1ec90596c0dcc8d7ef6b4300c',
+  );
+  expect(hash(JSON.stringify({ objectTest: true }))).toEqual('b22fbba47a05818e1ac6911c1f6d542be3b388d41d688ef66bb030d694409128');
 });
 
 test('awsClient is returned with config', () => {
