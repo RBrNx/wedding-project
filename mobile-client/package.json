@@ -25,6 +25,7 @@
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
     "aws-amplify": "^3.0.17",
+    "crypto-js": "^4.0.0",
     "expo": "~36.0.0",
     "expo-constants": "~8.0.0",
     "graphql": "^14.6.0",
