@@ -1,7 +1,9 @@
 import SHA256 from 'crypto-js/sha256';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 
-/* eslint-disable */
+export const hash = value => SHA256(value).toString();
+
+export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true }).toString();
 
 const sigV4Client = {};
 sigV4Client.newClient = config => {
@@ -12,18 +14,6 @@ sigV4Client.newClient = config => {
   const X_AMZ_SECURITY_TOKEN = 'x-amz-security-token';
   const HOST = 'host';
   const AUTHORIZATION = 'Authorization';
-
-  function hash(value) {
-    return SHA256(value); // eslint-disable-line
-  }
-
-  function hexEncode(value) {
-    return value.toString(encHex);
-  }
-
-  function hmac(secret, value) {
-    return HmacSHA256(value, secret, { asBytes: true });
-  }
 
   function buildCanonicalRequest(method, path, queryParams, headers, payload) {
     return `${method}\n${buildCanonicalUri(path)}\n${buildCanonicalQueryString(queryParams)}\n${buildCanonicalHeaders(
@@ -89,7 +79,7 @@ sigV4Client.newClient = config => {
   }
 
   function calculateSignature(key, stringToSign) {
-    return hexEncode(hmac(key, stringToSign));
+    return hmac(key, stringToSign);
   }
 
   /* eslint-disable prefer-destructuring */
