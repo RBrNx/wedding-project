@@ -5,6 +5,8 @@ export const hash = value => SHA256(value).toString();
 
 export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true }).toString();
 
+export const buildCanonicalUri = uri => encodeURI(uri);
+
 const sigV4Client = {};
 sigV4Client.newClient = config => {
   const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
@@ -23,10 +25,6 @@ sigV4Client.newClient = config => {
 
   function hashCanonicalRequest(request) {
     return hash(request);
-  }
-
-  function buildCanonicalUri(uri) {
-    return encodeURI(uri);
   }
 
   function buildCanonicalQueryString(queryParams) {
