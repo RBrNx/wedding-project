@@ -1,4 +1,4 @@
-import awsSigV4Client, { hash, hmac, buildCanonicalUri } from '../utils/awsClient';
+import awsSigV4Client, { hash, hmac, buildCanonicalUri, buildCanonicalQueryString } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
 const fakeSecretKey = 'zfq4t13xhfKdIlNkWpjU/4pns/wtAQk3NnGwwgVb';
@@ -34,6 +34,12 @@ test('hmac returns the HmacSHA256 hash of a secret and a value', () => {
 test('buildCanonicalUri returns encoded uri', () => {
   expect(buildCanonicalUri('ABC abc 123')).toEqual('ABC%20abc%20123');
   expect(buildCanonicalUri('https://mozilla.org/?x=шеллы')).toEqual('https://mozilla.org/?x=%D1%88%D0%B5%D0%BB%D0%BB%D1%8B');
+});
+
+test('buildCanonicalQueryString returns an alphabetically sorted query string with encoded uri components', () => {
+  expect(buildCanonicalQueryString({})).toEqual('');
+  expect(buildCanonicalQueryString({ b: 1, a: 2 })).toEqual('a=2&b=1');
+  expect(buildCanonicalQueryString({ accept: '*/*', 'content-type': 'application/json' })).toEqual('accept=*%2F*&content-type=application%2Fjson');
 });
 
 test('awsClient is returned with config', () => {

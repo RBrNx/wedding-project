@@ -7,6 +7,19 @@ export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true
 
 export const buildCanonicalUri = uri => encodeURI(uri);
 
+export const buildCanonicalQueryString = queryParams => {
+  let canonicalQueryString = '';
+  const queryParamKeys = Object.keys(queryParams).sort();
+
+  if (!queryParamKeys.length) return '';
+
+  queryParamKeys.forEach(key => {
+    canonicalQueryString += `${key}=${encodeURIComponent(queryParams[key])}&`;
+  });
+
+  return canonicalQueryString.slice(0, -1);
+};
+
 const sigV4Client = {};
 sigV4Client.newClient = config => {
   const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
