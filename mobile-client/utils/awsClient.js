@@ -53,10 +53,6 @@ sigV4Client.newClient = config => {
   const HOST = 'host';
   const AUTHORIZATION = 'Authorization';
 
-  function hashCanonicalRequest(request) {
-    return hash(request);
-  }
-
   function buildStringToSign(datetime, credentialScope, hashedCanonicalRequest) {
     return `${AWS_SHA_256}\n${datetime}\n${credentialScope}\n${hashedCanonicalRequest}`;
   }
@@ -152,7 +148,7 @@ sigV4Client.newClient = config => {
     headers[HOST] = extractHostname(awsSigV4Client.endpoint);
 
     const canonicalRequest = buildCanonicalRequest(verb, path, queryParams, headers, body);
-    const hashedCanonicalRequest = hashCanonicalRequest(canonicalRequest);
+    const hashedCanonicalRequest = hash(canonicalRequest);
     const credentialScope = buildCredentialScope(datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
     const stringToSign = buildStringToSign(datetime, credentialScope, hashedCanonicalRequest);
     const signingKey = calculateSigningKey(awsSigV4Client.secretKey, datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
