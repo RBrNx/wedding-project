@@ -20,6 +20,17 @@ export const buildCanonicalQueryString = queryParams => {
   return canonicalQueryString.slice(0, -1);
 };
 
+export const buildCanonicalHeaders = headers => {
+  let canonicalHeaders = '';
+  const headerKeys = Object.keys(headers).sort();
+
+  headerKeys.forEach(key => {
+    canonicalHeaders += `${key.toLowerCase()}:${headers[key]}\n`;
+  });
+
+  return canonicalHeaders;
+};
+
 const sigV4Client = {};
 sigV4Client.newClient = config => {
   const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
@@ -38,37 +49,6 @@ sigV4Client.newClient = config => {
 
   function hashCanonicalRequest(request) {
     return hash(request);
-  }
-
-  function buildCanonicalQueryString(queryParams) {
-    const queryParamKeys = Object.keys(queryParams);
-    if (queryParamKeys.length < 1) {
-      return '';
-    }
-
-    const sortedQueryParams = queryParamKeys.sort();
-
-    let canonicalQueryString = '';
-    sortedQueryParams.map(queryParamKey => {
-      canonicalQueryString += `${queryParamKey}=${encodeURIComponent(queryParams[queryParamKey])}&`;
-
-      return queryParamKey;
-    });
-
-    return canonicalQueryString.substr(0, canonicalQueryString.length - 1);
-  }
-
-  function buildCanonicalHeaders(headers) {
-    let canonicalHeaders = '';
-    const sortedKeys = Object.keys(headers).sort();
-
-    sortedKeys.map(headerKey => {
-      canonicalHeaders += `${headerKey.toLowerCase()}:${headers[headerKey]}\n`;
-
-      return headerKey;
-    });
-
-    return canonicalHeaders;
   }
 
   function buildCanonicalSignedHeaders(headers) {
