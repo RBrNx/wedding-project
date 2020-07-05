@@ -1,4 +1,11 @@
-import awsSigV4Client, { hash, hmac, buildCanonicalUri, buildCanonicalQueryString, buildCanonicalHeaders } from '../utils/awsClient';
+import awsSigV4Client, {
+  hash,
+  hmac,
+  buildCanonicalUri,
+  buildCanonicalQueryString,
+  buildCanonicalHeaders,
+  buildCanonicalSignedHeaders,
+} from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
 const fakeSecretKey = 'zfq4t13xhfKdIlNkWpjU/4pns/wtAQk3NnGwwgVb';
@@ -52,6 +59,18 @@ test('buildCanonicalHeaders returns a newline delimited string of alphabetically
       host: 'execute-api.eu-west-2.amazonaws.com',
     }),
   ).toEqual('accept:*/*\ncontent-type:application/json\nhost:execute-api.eu-west-2.amazonaws.com\nx-amz-date:20200702T153953Z\n');
+});
+
+test('buildSignedCanonicalHeaders returns a semi-colon delimited list of alphabetically sorted header keys', () => {
+  expect(buildCanonicalSignedHeaders({ b: 1, a: 2 })).toEqual('a;b');
+  expect(
+    buildCanonicalSignedHeaders({
+      'content-type': 'application/json',
+      accept: '*/*',
+      'x-amz-date': '20200702T153953Z',
+      host: 'execute-api.eu-west-2.amazonaws.com',
+    }),
+  ).toEqual('accept;content-type;host;x-amz-date');
 });
 
 test('awsClient is returned with config', () => {

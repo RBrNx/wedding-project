@@ -31,6 +31,12 @@ export const buildCanonicalHeaders = headers => {
   return canonicalHeaders;
 };
 
+export const buildCanonicalSignedHeaders = headers => {
+  const headerKeys = Object.keys(headers).sort();
+
+  return headerKeys.join(';');
+};
+
 const sigV4Client = {};
 sigV4Client.newClient = config => {
   const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
@@ -49,12 +55,6 @@ sigV4Client.newClient = config => {
 
   function hashCanonicalRequest(request) {
     return hash(request);
-  }
-
-  function buildCanonicalSignedHeaders(headers) {
-    const sortedKeys = Object.keys(headers).sort();
-
-    return sortedKeys.join(';');
   }
 
   function buildStringToSign(datetime, credentialScope, hashedCanonicalRequest) {
