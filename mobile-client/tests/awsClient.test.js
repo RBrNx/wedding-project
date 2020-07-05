@@ -5,6 +5,7 @@ import awsSigV4Client, {
   buildCanonicalQueryString,
   buildCanonicalHeaders,
   buildCanonicalSignedHeaders,
+  buildCanonicalRequest,
 } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
@@ -13,6 +14,12 @@ const fakeSessionToken =
   'IQoJb3JpZ2luX2VjEL7//////////wEaCWV1LXdlc3QtMiJHMEUCIQDEOqnNcrOnns53BX2eojFfnaiB24xHgOe0BLnABYPDUQIgLzpytsdGoIU2weguyiRXeLQlDxzAKpzdiTXJUEQCIg4qygUIRxABGgw0NjMyNDUyNzM5NjQiDFO7+VOqpR3coVY0JiqnBXvhFVAz5QVdqoAbbjPK4jheK1Qu/f2/pPaR/FnxyHgiCtxpPzQbZBNXwsHQbvtDPtS8FI2MxNYPhNjFCcgTa0jf/Ro7BHYNtyViBh6CCog4FfJQCAHibQ3ohhskgnf53ngPIp3DVVgmt1HcyIeJzBizh3/11t8EODgO5c6yc7H+lXkZDcdeYsohaLt7sf/Ept08D3BTuB9gOvUNOMv/MTh6Ut9pjB/Zap1jirwLVqZU1Ivt/Gu4wai/AMC+xeoo9EJ9pkQDQ24fY8WY4wYNW1WE2darCwwUOSH5uFDjCtnBayUWV8FcpRxCI3MCxXU6yqRn2BxDnIiGcYTrPDzI1Z0AzRgTcV8/wEUAIbe17Ya/PZHbl3sEwyiE38GAgr7DKjShSoPPPpIELDPtIe6l6EyxJMDby/sMMKGBUkyoRLJldzlX4rjhFAEEQxNCJhpyvVMFEQlciHFzMPescH5nkHujGkVDM1kTa9UvznM8cA6s5onFrArc1AGc4WQU2jfGxdS1b5nT0zrF3rhjONvK+gkyrlcf80GjrAYggrV68cNkoZqeWw9zLEhnlFAIQqDMvwUCc28fmjPAC9QOrlzXyxq1YVyTxa+t3ec1TVK84s2dZpwu3L9MpJzl5lLdppIqjQ+o4X/3qTj+zrxCb1/6Bg8FtilXgcnDkWPhxTXcAdDwEcuS4OS/9UICVJvF/jF6XCIk1Bq3cRhMCNtBa9YfC276Dn5W32VfiHc09BOJzUElJMzVb+f3GiKfEPT6hhPL5XECy8R0emIopfGfUxFqzVodlBmU0q+TRI72/GY+H0GvZvh5v38uULm6bYL0e/jwy8g4C8QBQTB7QMRwpnLLBMv1wfRrBXg0Ghp4pSiPnknol8QJur8ZoR0sTYGurhtJMhE2+iUko9Iwicy99wU6zQKt/SJW70ucMnXkPg5KKGNFH4MTiQDfgxcKfOVdiJUN7RxO3BOETgSGnndhgjRiM7tCvBsx8bz+meCHEoGwH3nSzT9gqXU3uveuhaMPS1UUDf+lYWLuQMYIRXNBgO4rXfx6pedbGV4Bv6Jb5cYZEYUp/E/ECBlFn1jltkezwjP0x6GH26duiejH5efCWzRKqTHJu+4vijwv3zskRwhBPp6BiuYJy5Hc6LmJWlRFFkqGVistKZR2nTq7qPnhPlMxOK5VQUqcehGafj+o3U+BWa/griKPHvvX9hVV1XLOFthlLF+cEJN1HKqIjJ7/U5BQsg3SBu/IKlxquVL4TAh7OCItXJ/v2n18Du6ZiEfvAqbxQ5CWJW089T8J/7Bbbl0C+ztAW63LsJUKhmC1suY6XXnzGHddKqJfTWrXGV3VxFSI4lFPpnvwEnpuWBKPeis=';
 const endpoint = 'https://xiey9y60ej.execute-api.eu-west-2.amazonaws.com/dev/api';
 const region = 'eu-west-2';
+const testRequestHeaders = {
+  'content-type': 'application/json',
+  accept: '*/*',
+  'x-amz-date': '20200702T153953Z',
+  host: 'execute-api.eu-west-2.amazonaws.com',
+};
 
 const awsClient = awsSigV4Client.newClient({
   accessKey: fakeAccessKey,
@@ -51,26 +58,32 @@ test('buildCanonicalQueryString returns an alphabetically sorted query string wi
 
 test('buildCanonicalHeaders returns a newline delimited string of alphabetically sorted request headers', () => {
   expect(buildCanonicalHeaders({ b: 1, a: 2 })).toEqual('a:2\nb:1\n');
-  expect(
-    buildCanonicalHeaders({
-      'content-type': 'application/json',
-      accept: '*/*',
-      'x-amz-date': '20200702T153953Z',
-      host: 'execute-api.eu-west-2.amazonaws.com',
-    }),
-  ).toEqual('accept:*/*\ncontent-type:application/json\nhost:execute-api.eu-west-2.amazonaws.com\nx-amz-date:20200702T153953Z\n');
+  expect(buildCanonicalHeaders(testRequestHeaders)).toEqual(
+    'accept:*/*\ncontent-type:application/json\nhost:execute-api.eu-west-2.amazonaws.com\nx-amz-date:20200702T153953Z\n',
+  );
 });
 
 test('buildSignedCanonicalHeaders returns a semi-colon delimited list of alphabetically sorted header keys', () => {
   expect(buildCanonicalSignedHeaders({ b: 1, a: 2 })).toEqual('a;b');
+  expect(buildCanonicalSignedHeaders(testRequestHeaders)).toEqual('accept;content-type;host;x-amz-date');
+});
+
+test('buildCanonicalRequest returns a valid AWS Sig v4 Canonical Request', () => {
+  expect(buildCanonicalRequest('GET', '/dev/api', {}, testRequestHeaders, { data: 'test' })).toEqual(
+    'GET\n/dev/api\n\naccept:*/*\ncontent-type:application/json\nhost:execute-api.eu-west-2.amazonaws.com\nx-amz-date:20200702T153953Z\n\naccept;content-type;host;x-amz-date\n4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e',
+  );
+  expect(buildCanonicalRequest('GET', '/dev/api', { sort: 'asc', query: true }, testRequestHeaders, { data: 'test' })).toEqual(
+    'GET\n/dev/api\nquery=true&sort=asc\naccept:*/*\ncontent-type:application/json\nhost:execute-api.eu-west-2.amazonaws.com\nx-amz-date:20200702T153953Z\n\naccept;content-type;host;x-amz-date\n4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e',
+  );
   expect(
-    buildCanonicalSignedHeaders({
-      'content-type': 'application/json',
-      accept: '*/*',
-      'x-amz-date': '20200702T153953Z',
-      host: 'execute-api.eu-west-2.amazonaws.com',
+    buildCanonicalRequest('POST', '/dev/api', {}, testRequestHeaders, {
+      operationName: 'GET_INVITATION',
+      variables: { uniqueCode: 'i6k307' },
+      query: 'query GET_INVITATION($uniqueCode: String!) {\n  getInvitation(uniqueCode: $uniqueCode) {\n    uniqueCode\n    type\n  }\n}\n',
     }),
-  ).toEqual('accept;content-type;host;x-amz-date');
+  ).toEqual(
+    'POST\n/dev/api\n\naccept:*/*\ncontent-type:application/json\nhost:execute-api.eu-west-2.amazonaws.com\nx-amz-date:20200702T153953Z\n\naccept;content-type;host;x-amz-date\n4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e',
+  );
 });
 
 test('awsClient is returned with config', () => {

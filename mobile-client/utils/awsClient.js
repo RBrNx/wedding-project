@@ -37,6 +37,12 @@ export const buildCanonicalSignedHeaders = headers => {
   return headerKeys.join(';');
 };
 
+export const buildCanonicalRequest = (method, path, queryParams, headers, payload) => {
+  return `${method}\n${buildCanonicalUri(path)}\n${buildCanonicalQueryString(queryParams)}\n${buildCanonicalHeaders(
+    headers,
+  )}\n${buildCanonicalSignedHeaders(headers)}\n${hash(payload)}`;
+};
+
 const sigV4Client = {};
 sigV4Client.newClient = config => {
   const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
@@ -46,12 +52,6 @@ sigV4Client.newClient = config => {
   const X_AMZ_SECURITY_TOKEN = 'x-amz-security-token';
   const HOST = 'host';
   const AUTHORIZATION = 'Authorization';
-
-  function buildCanonicalRequest(method, path, queryParams, headers, payload) {
-    return `${method}\n${buildCanonicalUri(path)}\n${buildCanonicalQueryString(queryParams)}\n${buildCanonicalHeaders(
-      headers,
-    )}\n${buildCanonicalSignedHeaders(headers)}\n${hash(payload)}`;
-  }
 
   function hashCanonicalRequest(request) {
     return hash(request);
