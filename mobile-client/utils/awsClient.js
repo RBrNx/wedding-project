@@ -59,13 +59,18 @@ export const buildStringToSign = (datetime, credentialScope, hashedCanonicalRequ
   return `${AWS_SHA_256}\n${datetime}\n${credentialScope}\n${hashedCanonicalRequest}`;
 };
 
+export const calculateSigningKey = (secretKey, datetime, region, service) => {
+  const hashedDate = hmac(AWS4 + secretKey, datetime);
+  const hashedRegion = hmac(hashedDate, region);
+  const hashedService = hmac(hashedRegion, service);
+  const signingKey = hmac(hashedService, AWS4_REQUEST);
+
+  return signingKey;
+};
+
 /* CREATE CLIENT */
 const sigV4Client = {};
 sigV4Client.newClient = config => {
-  function calculateSigningKey(secretKey, datetime, region, service) {
-    return hmac(hmac(hmac(hmac(AWS4 + secretKey, datetime.substr(0, 8)), region), service), AWS4_REQUEST);
-  }
-
   function calculateSignature(key, stringToSign) {
     return hmac(key, stringToSign);
   }

@@ -8,6 +8,7 @@ import awsSigV4Client, {
   buildCanonicalRequest,
   buildCredentialScope,
   buildStringToSign,
+  calculateSigningKey,
 } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
@@ -100,6 +101,12 @@ test('buildStringToSign returns a string containing relevant request info for AW
 
   expect(buildStringToSign(dateAsString, credentialScope, hashedCanonicalRequest)).toEqual(
     'AWS4-HMAC-SHA256\n20200702T153953Z\n20200702/eu-west-2/execute-api/aws4_request\nb59b943bf21efb7409ad0d2dde8180f9aba273669f0c8607bdd53763405edd84',
+  );
+});
+
+test('calculateSigningKey returns an AWS Sig v4 Signing Key', () => {
+  expect(calculateSigningKey(fakeSecretKey, dateAsString, 'eu-west-2', 'execute-api')).toEqual(
+    '7acecfed2001ab2b2fe4f6c69954f2666196b2556c0c69c5486c03f99f04aab8',
   );
 });
 
