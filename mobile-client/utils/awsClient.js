@@ -68,6 +68,10 @@ export const calculateSigningKey = (secretKey, datetime, region, service) => {
   return signingKey;
 };
 
+export const buildAuthorizationHeader = (accessKey, credentialScope, headers, signature) => {
+  return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope}, SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
+};
+
 /* CREATE CLIENT */
 const sigV4Client = {};
 sigV4Client.newClient = config => {
@@ -76,10 +80,6 @@ sigV4Client.newClient = config => {
 
     return hostname;
   };
-
-  function buildAuthorizationHeader(accessKey, credentialScope, headers, signature) {
-    return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope}, SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
-  }
 
   const awsSigV4Client = {};
   if (config.accessKey === undefined || config.secretKey === undefined) {

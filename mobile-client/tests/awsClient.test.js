@@ -9,6 +9,7 @@ import awsSigV4Client, {
   buildCredentialScope,
   buildStringToSign,
   calculateSigningKey,
+  buildAuthorizationHeader,
 } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
@@ -91,13 +92,13 @@ test('buildCanonicalRequest returns a valid AWS Sig v4 Canonical Request', () =>
 });
 
 test('buildCredentialScope returns a credential scope string', () => {
-  expect(buildCredentialScope(dateAsString, 'eu-west-2', 'execute-api')).toEqual('20200702/eu-west-2/execute-api/aws4_request');
+  expect(buildCredentialScope(dateAsString, region, 'execute-api')).toEqual('20200702/eu-west-2/execute-api/aws4_request');
 });
 
 test('buildStringToSign returns a string containing relevant request info for AWS', () => {
   const canonicalRequest = buildCanonicalRequest('POST', '/dev/api', {}, testRequestHeaders, { data: 'test' });
   const hashedCanonicalRequest = hash(canonicalRequest);
-  const credentialScope = buildCredentialScope(dateAsString, 'eu-west-2', 'execute-api');
+  const credentialScope = buildCredentialScope(dateAsString, region, 'execute-api');
 
   expect(buildStringToSign(dateAsString, credentialScope, hashedCanonicalRequest)).toEqual(
     'AWS4-HMAC-SHA256\n20200702T153953Z\n20200702/eu-west-2/execute-api/aws4_request\nb59b943bf21efb7409ad0d2dde8180f9aba273669f0c8607bdd53763405edd84',
@@ -105,8 +106,21 @@ test('buildStringToSign returns a string containing relevant request info for AW
 });
 
 test('calculateSigningKey returns an AWS Sig v4 Signing Key', () => {
-  expect(calculateSigningKey(fakeSecretKey, dateAsString, 'eu-west-2', 'execute-api')).toEqual(
+  expect(calculateSigningKey(fakeSecretKey, dateAsString, region, 'execute-api')).toEqual(
     '7acecfed2001ab2b2fe4f6c69954f2666196b2556c0c69c5486c03f99f04aab8',
+  );
+});
+
+test('buildAuthorizationHeader returns an AWS Sig v4 Auth headers', () => {
+  const canonicalRequest = buildCanonicalRequest('POST', '/dev/api', {}, testRequestHeaders, { data: 'test' });
+  const hashedCanonicalRequest = hash(canonicalRequest);
+  const credentialScope = buildCredentialScope(dateAsString, region, 'execute-api');
+  const stringToSign = buildStringToSign(dateAsString, credentialScope, hashedCanonicalRequest);
+  const signingKey = calculateSigningKey(fakeSecretKey, dateAsString, region, 'execute-api');
+  const signature = hmac(signingKey, stringToSign);
+
+  expect(buildAuthorizationHeader(fakeAccessKey, credentialScope, testRequestHeaders, signature)).toEqual(
+    'AWS4-HMAC-SHA256 Credential=ASIAWXW4R5NWN4CD3436/20200702/eu-west-2/execute-api/aws4_request, SignedHeaders=accept;content-type;host;x-amz-date, Signature=4279056b10deb760c5fdc276d0ee63a24a43bca2200ea25ab8494730cefad4a1',
   );
 });
 
@@ -121,24 +135,24 @@ test('awsClient is returned with config', () => {
   });
 });
 
-test('signed POST request has the right headers', () => {
-  const requestHeaders = { accept: '*/*', 'content-type': 'application/json' };
-  const dateAsString = new Date()
-    .toISOString()
-    .replace(/\.\d{3}Z$/, 'Z')
-    .replace(/[:-]|\.\d{3}/g, '');
+// test('signed POST request has the right headers', () => {
+//   const requestHeaders = { accept: '*/*', 'content-type': 'application/json' };
+//   const dateAsString = new Date()
+//     .toISOString()
+//     .replace(/\.\d{3}Z$/, 'Z')
+//     .replace(/[:-]|\.\d{3}/g, '');
 
-  const signedRequest = awsClient.signRequest({
-    method: 'POST',
-    path: '',
-    headers: requestHeaders,
-    body: 'test',
-  });
+//   const signedRequest = awsClient.signRequest({
+//     method: 'POST',
+//     path: '',
+//     headers: requestHeaders,
+//     body: 'test',
+//   });
 
-  expect(signedRequest.headers).toMatchObject({
-    Authorization: `AWS4-HMAC-SHA256 Credential=${fakeAccessKey}/${dateAsString.substr(0, 8)}/${region}/execute-api/aws4_request, SignedHeaders=accept;content-type;host;x-amz-date, Signature=${}`,
-    'x-amz-date': dateAsString,
-    'x-amz-security-token': fakeSessionToken,
-    ...requestHeaders,
-  });
-});
+//   expect(signedRequest.headers).toMatchObject({
+//     Authorization: `AWS4-HMAC-SHA256 Credential=${fakeAccessKey}/${dateAsString.substr(0, 8)}/${region}/execute-api/aws4_request, SignedHeaders=accept;content-type;host;x-amz-date, Signature=${}`,
+//     'x-amz-date': dateAsString,
+//     'x-amz-security-token': fakeSessionToken,
+//     ...requestHeaders,
+//   });
+// });
