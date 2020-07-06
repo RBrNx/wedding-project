@@ -7,6 +7,7 @@ import awsSigV4Client, {
   buildCanonicalSignedHeaders,
   buildCanonicalRequest,
   buildCredentialScope,
+  buildStringToSign,
 } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
@@ -90,6 +91,16 @@ test('buildCanonicalRequest returns a valid AWS Sig v4 Canonical Request', () =>
 
 test('buildCredentialScope returns a credential scope string', () => {
   expect(buildCredentialScope(dateAsString, 'eu-west-2', 'execute-api')).toEqual('20200702/eu-west-2/execute-api/aws4_request');
+});
+
+test('buildStringToSign returns a string containing relevant request info for AWS', () => {
+  const canonicalRequest = buildCanonicalRequest('POST', '/dev/api', {}, testRequestHeaders, { data: 'test' });
+  const hashedCanonicalRequest = hash(canonicalRequest);
+  const credentialScope = buildCredentialScope(dateAsString, 'eu-west-2', 'execute-api');
+
+  expect(buildStringToSign(dateAsString, credentialScope, hashedCanonicalRequest)).toEqual(
+    'AWS4-HMAC-SHA256\n20200702T153953Z\n20200702/eu-west-2/execute-api/aws4_request\nb59b943bf21efb7409ad0d2dde8180f9aba273669f0c8607bdd53763405edd84',
+  );
 });
 
 test('awsClient is returned with config', () => {
