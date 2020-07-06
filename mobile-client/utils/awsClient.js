@@ -71,26 +71,11 @@ export const calculateSigningKey = (secretKey, datetime, region, service) => {
 /* CREATE CLIENT */
 const sigV4Client = {};
 sigV4Client.newClient = config => {
-  function calculateSignature(key, stringToSign) {
-    return hmac(key, stringToSign);
-  }
-
-  /* eslint-disable prefer-destructuring */
-  function extractHostname(url) {
-    let hostname;
-
-    if (url.indexOf('://') > -1) {
-      hostname = url.split('/')[2];
-    } else {
-      hostname = url.split('/')[0];
-    }
-
-    hostname = hostname.split(':')[0];
-    hostname = hostname.split('?')[0];
+  const extractHostname = url => {
+    const { hostname } = new URL(url);
 
     return hostname;
-  }
-  /* eslint-enable prefer-destructuring */
+  };
 
   function buildAuthorizationHeader(accessKey, credentialScope, headers, signature) {
     return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope}, SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
@@ -158,7 +143,7 @@ sigV4Client.newClient = config => {
     const credentialScope = buildCredentialScope(datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
     const stringToSign = buildStringToSign(datetime, credentialScope, hashedCanonicalRequest);
     const signingKey = calculateSigningKey(awsSigV4Client.secretKey, datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
-    const signature = calculateSignature(signingKey, stringToSign);
+    const signature = hmac(signingKey, stringToSign);
     headers[AUTHORIZATION] = buildAuthorizationHeader(awsSigV4Client.accessKey, credentialScope, headers, signature);
     if (awsSigV4Client.sessionToken !== undefined && awsSigV4Client.sessionToken !== '') {
       headers[X_AMZ_SECURITY_TOKEN] = awsSigV4Client.sessionToken;
