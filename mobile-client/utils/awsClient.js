@@ -1,6 +1,14 @@
 import SHA256 from 'crypto-js/sha256';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 
+const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
+const AWS4_REQUEST = 'aws4_request';
+const AWS4 = 'AWS4';
+const X_AMZ_DATE = 'x-amz-date';
+const X_AMZ_SECURITY_TOKEN = 'x-amz-security-token';
+const HOST = 'host';
+const AUTHORIZATION = 'Authorization';
+
 export const hash = value => SHA256(value).toString();
 
 export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true }).toString();
@@ -43,22 +51,15 @@ export const buildCanonicalRequest = (method, path, queryParams, headers, payloa
   )}\n${buildCanonicalSignedHeaders(headers)}\n${hash(payload)}`;
 };
 
+export const buildCredentialScope = (datetime, region, service) => {
+  return `${datetime.substr(0, 8)}/${region}/${service}/${AWS4_REQUEST}`;
+};
+
+/* CREATE CLIENT */
 const sigV4Client = {};
 sigV4Client.newClient = config => {
-  const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
-  const AWS4_REQUEST = 'aws4_request';
-  const AWS4 = 'AWS4';
-  const X_AMZ_DATE = 'x-amz-date';
-  const X_AMZ_SECURITY_TOKEN = 'x-amz-security-token';
-  const HOST = 'host';
-  const AUTHORIZATION = 'Authorization';
-
   function buildStringToSign(datetime, credentialScope, hashedCanonicalRequest) {
     return `${AWS_SHA_256}\n${datetime}\n${credentialScope}\n${hashedCanonicalRequest}`;
-  }
-
-  function buildCredentialScope(datetime, region, service) {
-    return `${datetime.substr(0, 8)}/${region}/${service}/${AWS4_REQUEST}`;
   }
 
   function calculateSigningKey(secretKey, datetime, region, service) {
