@@ -1,4 +1,4 @@
-import awsSigV4Client, {
+import {
   hash,
   hmac,
   buildCanonicalUri,
@@ -10,6 +10,7 @@ import awsSigV4Client, {
   buildStringToSign,
   calculateSigningKey,
   buildAuthorizationHeader,
+  createAwsClient,
 } from '../utils/awsClient';
 
 const fakeAccessKey = 'ASIAWXW4R5NWN4CD3436';
@@ -25,14 +26,6 @@ const testRequestHeaders = {
   'x-amz-date': '20200702T153953Z',
   host: 'execute-api.eu-west-2.amazonaws.com',
 };
-
-const awsClient = awsSigV4Client.newClient({
-  accessKey: fakeAccessKey,
-  secretKey: fakeSecretKey,
-  sessionToken: fakeSessionToken,
-  region,
-  endpoint,
-});
 
 test('hash returns the SHA256 hash of a value', () => {
   expect(hash('test')).toEqual('9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08');
@@ -125,6 +118,8 @@ test('buildAuthorizationHeader returns an AWS Sig v4 Auth headers', () => {
 });
 
 test('awsClient is returned with config', () => {
+  const awsClient = createAwsClient(fakeAccessKey, fakeSecretKey, fakeSessionToken, { region, endpoint });
+
   expect(awsClient).toMatchObject({
     accessKey: fakeAccessKey,
     secretKey: fakeSecretKey,

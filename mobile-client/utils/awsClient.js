@@ -72,33 +72,29 @@ export const buildAuthorizationHeader = (accessKey, credentialScope, headers, si
   return `${AWS_SHA_256} Credential=${accessKey}/${credentialScope}, SignedHeaders=${buildCanonicalSignedHeaders(headers)}, Signature=${signature}`;
 };
 
+const extractHostname = url => {
+  const { hostname } = new URL(url);
+
+  return hostname;
+};
+
 /* CREATE CLIENT */
-const sigV4Client = {};
-sigV4Client.newClient = config => {
-  const extractHostname = url => {
-    const { hostname } = new URL(url);
-
-    return hostname;
-  };
-
+export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
   const awsSigV4Client = {};
-  if (config.accessKey === undefined || config.secretKey === undefined) {
-    return awsSigV4Client;
-  }
-  awsSigV4Client.accessKey = config.accessKey;
-  awsSigV4Client.secretKey = config.secretKey;
-  awsSigV4Client.sessionToken = config.sessionToken;
-  awsSigV4Client.serviceName = config.serviceName || 'execute-api';
-  awsSigV4Client.region = config.region || 'us-east-1';
-  awsSigV4Client.defaultAcceptType = config.defaultAcceptType || 'application/json';
-  awsSigV4Client.defaultContentType = config.defaultContentType || 'application/json';
+  const { serviceName, region, defaultAcceptType, defaultContentType, endpoint } = config;
+  const { origin, pathname } = new URL(endpoint);
 
-  const invokeUrl = config.endpoint;
-  const endpoint = /(^https?:\/\/[^/]+)/g.exec(invokeUrl)[1];
-  const pathComponent = invokeUrl.substring(endpoint.length);
+  if (!accessKey || !secretKey) return awsSigV4Client;
 
-  awsSigV4Client.endpoint = endpoint;
-  awsSigV4Client.pathComponent = pathComponent;
+  awsSigV4Client.accessKey = accessKey;
+  awsSigV4Client.secretKey = secretKey;
+  awsSigV4Client.sessionToken = sessionToken;
+  awsSigV4Client.serviceName = serviceName || 'execute-api';
+  awsSigV4Client.region = region || 'us-east-1';
+  awsSigV4Client.defaultAcceptType = defaultAcceptType || 'application/json';
+  awsSigV4Client.defaultContentType = defaultContentType || 'application/json';
+  awsSigV4Client.endpoint = origin;
+  awsSigV4Client.pathComponent = pathname;
 
   awsSigV4Client.signRequest = request => {
     const verb = request.method.toUpperCase();
@@ -173,4 +169,4 @@ sigV4Client.newClient = config => {
   return awsSigV4Client;
 };
 
-export default sigV4Client;
+// export default sigV4Client;
