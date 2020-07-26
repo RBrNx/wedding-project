@@ -1,5 +1,6 @@
 import SHA256 from 'crypto-js/sha256';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
+import encHex from 'crypto-js/enc-hex';
 
 const AWS_SHA_256 = 'AWS4-HMAC-SHA256';
 const AWS4_REQUEST = 'aws4_request';
@@ -11,7 +12,7 @@ const AUTHORIZATION = 'Authorization';
 
 export const hash = value => SHA256(value).toString();
 
-export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true }).toString();
+export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true });
 
 export const buildCanonicalUri = uri => encodeURI(uri);
 
@@ -60,7 +61,7 @@ export const buildStringToSign = (datetime, credentialScope, hashedCanonicalRequ
 };
 
 export const calculateSigningKey = (secretKey, datetime, region, service) => {
-  const hashedDate = hmac(AWS4 + secretKey, datetime);
+  const hashedDate = hmac(AWS4 + secretKey, datetime.substr(0, 8));
   const hashedRegion = hmac(hashedDate, region);
   const hashedService = hmac(hashedRegion, service);
   const signingKey = hmac(hashedService, AWS4_REQUEST);
@@ -78,7 +79,6 @@ const extractHostname = url => {
   return hostname;
 };
 
-/* CREATE CLIENT */
 export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
   const awsSigV4Client = {};
   const { serviceName, region, defaultAcceptType, defaultContentType, endpoint } = config;
@@ -139,7 +139,7 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
     const credentialScope = buildCredentialScope(datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
     const stringToSign = buildStringToSign(datetime, credentialScope, hashedCanonicalRequest);
     const signingKey = calculateSigningKey(awsSigV4Client.secretKey, datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
-    const signature = hmac(signingKey, stringToSign);
+    const signature = hmac(signingKey, stringToSign).toString(encHex);
     headers[AUTHORIZATION] = buildAuthorizationHeader(awsSigV4Client.accessKey, credentialScope, headers, signature);
     if (awsSigV4Client.sessionToken !== undefined && awsSigV4Client.sessionToken !== '') {
       headers[X_AMZ_SECURITY_TOKEN] = awsSigV4Client.sessionToken;
