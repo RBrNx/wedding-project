@@ -98,11 +98,11 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
   awsSigV4Client.debug = debug;
 
   awsSigV4Client.signRequest = request => {
-    const { method, queryParams, headers } = request;
+    const { method, queryParams, headers, path = '' } = request;
     const { body } = request;
 
     const requestMethod = method.toUpperCase();
-    const path = awsSigV4Client.pathComponent + request.path;
+    const requestPath = awsSigV4Client.pathComponent + path;
 
     const headerKeys = Object.keys(request.headers).map(key => key.toLowerCase());
 
@@ -131,7 +131,7 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
     headers[X_AMZ_DATE] = datetime;
     headers[HOST] = extractHostname(awsSigV4Client.endpoint);
 
-    const canonicalRequest = buildCanonicalRequest(requestMethod, path, queryParams, headers, body);
+    const canonicalRequest = buildCanonicalRequest(requestMethod, requestPath, queryParams, headers, body);
     const hashedCanonicalRequest = hash(canonicalRequest);
     const credentialScope = buildCredentialScope(datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
     const stringToSign = buildStringToSign(datetime, credentialScope, hashedCanonicalRequest);
@@ -145,7 +145,7 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
       headers[X_AMZ_SECURITY_TOKEN] = awsSigV4Client.sessionToken;
     }
 
-    let url = awsSigV4Client.endpoint + path;
+    let url = awsSigV4Client.endpoint + requestPath;
     const queryString = buildCanonicalQueryString(queryParams);
     if (queryString) url += `?${queryString}`;
 
