@@ -16,10 +16,10 @@ export const hmac = (secret, value) => HmacSHA256(value, secret, { asBytes: true
 export const buildCanonicalUri = uri => encodeURI(uri);
 
 export const buildCanonicalQueryString = queryParams => {
+  if (!queryParams) return '';
+
   let canonicalQueryString = '';
   const queryParamKeys = Object.keys(queryParams).sort();
-
-  if (!queryParamKeys.length) return '';
 
   queryParamKeys.forEach(key => {
     canonicalQueryString += `${key}=${encodeURIComponent(queryParams[key])}&`;
