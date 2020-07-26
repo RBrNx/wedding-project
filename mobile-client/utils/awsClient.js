@@ -81,7 +81,7 @@ const extractHostname = url => {
 
 export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
   const awsSigV4Client = {};
-  const { serviceName, region, defaultAcceptType, defaultContentType, endpoint } = config;
+  const { serviceName, region, defaultAcceptType, defaultContentType, endpoint, debug = false } = config;
   const { origin, pathname } = new URL(endpoint);
 
   if (!accessKey || !secretKey) return awsSigV4Client;
@@ -95,37 +95,34 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
   awsSigV4Client.defaultContentType = defaultContentType || 'application/json';
   awsSigV4Client.endpoint = origin;
   awsSigV4Client.pathComponent = pathname;
+  awsSigV4Client.debug = debug;
 
   awsSigV4Client.signRequest = request => {
-    const verb = request.method.toUpperCase();
-    const path = awsSigV4Client.pathComponent + request.path;
-    const queryParams = { ...request.queryParams };
-    const headers = { ...request.headers };
+    const { method, queryParams, headers } = request;
     const { body } = request;
 
+    const requestMethod = method.toUpperCase();
+    const path = awsSigV4Client.pathComponent + request.path;
+
+    const headerKeys = Object.keys(request.headers).map(key => key.toLowerCase());
+
     // If the user has not specified an override for Content type the use default
-    // if (headers['Content-Type'] === undefined) {
-    //   headers['Content-Type'] = awsSigV4Client.defaultContentType;
-    // }
+    if (!headerKeys.includes('content-type')) {
+      headers['Content-Type'] = awsSigV4Client.defaultContentType;
+      headerKeys.push('content-type');
+    }
 
     // If the user has not specified an override for Accept type the use default
-    // if (headers['Accept'] === undefined) {
-    //   headers['Accept'] = awsSigV4Client.defaultAcceptType;
-    // }
+    if (!headerKeys.includes('accept')) {
+      headers.Accept = awsSigV4Client.defaultAcceptType;
+      headerKeys.push('accept');
+    }
 
-    // let body = typeof body === 'string' ? `${request.body}` : { ...request.body };
-    // override request body and set to empty when signing GET requests
-    // if (request.body === undefined || verb === 'GET') {
-    //   body = '';
-    // } else {
-    //   body = JSON.stringify(body);
-    // }
-
-    // If there is no body remove the content-type header so it is not
-    // included in SigV4 calculation
-    // if (body === '' || body === undefined || body === null) {
-    //   delete headers['Content-Type'];
-    // }
+    // If there is no body remove the content-type header so it is not included in SigV4 calculation
+    if (!body) {
+      delete headers['Content-Type'];
+      delete headers['content-type'];
+    }
 
     const datetime = new Date()
       .toISOString()
@@ -134,31 +131,43 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
     headers[X_AMZ_DATE] = datetime;
     headers[HOST] = extractHostname(awsSigV4Client.endpoint);
 
-    const canonicalRequest = buildCanonicalRequest(verb, path, queryParams, headers, body);
+    const canonicalRequest = buildCanonicalRequest(requestMethod, path, queryParams, headers, body);
     const hashedCanonicalRequest = hash(canonicalRequest);
     const credentialScope = buildCredentialScope(datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
     const stringToSign = buildStringToSign(datetime, credentialScope, hashedCanonicalRequest);
     const signingKey = calculateSigningKey(awsSigV4Client.secretKey, datetime, awsSigV4Client.region, awsSigV4Client.serviceName);
     const signature = hmac(signingKey, stringToSign).toString(encHex);
     headers[AUTHORIZATION] = buildAuthorizationHeader(awsSigV4Client.accessKey, credentialScope, headers, signature);
-    if (awsSigV4Client.sessionToken !== undefined && awsSigV4Client.sessionToken !== '') {
+
+    delete headers[HOST];
+
+    if (awsSigV4Client.sessionToken) {
       headers[X_AMZ_SECURITY_TOKEN] = awsSigV4Client.sessionToken;
     }
-    delete headers[HOST];
 
     let url = awsSigV4Client.endpoint + path;
     const queryString = buildCanonicalQueryString(queryParams);
-    if (queryString !== '') {
-      url += `?${queryString}`;
-    }
+    if (queryString) url += `?${queryString}`;
 
     // Need to re-attach Content-Type if it is not specified at this point
-    // if (headers['Content-Type'] === undefined) {
-    //   headers['Content-Type'] = awsSigV4Client.defaultContentType;
-    // }
+    if (!headerKeys.includes('content-type')) {
+      headers['Content-Type'] = awsSigV4Client.defaultContentType;
+      headerKeys.push('content-type');
+    }
 
-    // console.log({ canonicalRequest, stringToSign });
-    // console.log({ path, myPath: request.path });
+    if (awsSigV4Client.debug) {
+      // eslint-disable-next-line no-console
+      console.log({
+        awsSigV4Client,
+        canonicalRequest,
+        hashedCanonicalRequest,
+        credentialScope,
+        stringToSign,
+        signingKey,
+        signature,
+        headers,
+      });
+    }
 
     return {
       headers,
@@ -168,5 +177,3 @@ export const createAwsClient = (accessKey, secretKey, sessionToken, config) => {
 
   return awsSigV4Client;
 };
-
-// export default sigV4Client;
