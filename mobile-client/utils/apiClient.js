@@ -3,7 +3,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import Constants from 'expo-constants';
 import { Auth } from 'aws-amplify';
-import awsSigV4Client from './awsClient';
+import { createAwsClient } from './awsClient';
 
 const { API_URL } = Constants.manifest.extra;
 
@@ -77,25 +77,16 @@ const httpLink = new HttpLink({
     const { method, body, headers } = options;
     const { accessKeyId, secretAccessKey, sessionToken } = await Auth.currentCredentials();
 
-    // console.log({ gqlHeaders: headers });
-
-    const awsClient = awsSigV4Client.newClient({
-      accessKey: accessKeyId,
-      secretKey: secretAccessKey,
-      sessionToken,
+    const awsClient = createAwsClient(accessKeyId, secretAccessKey, sessionToken, {
       region: 'eu-west-2',
       endpoint: API_URL,
     });
 
     const signedRequest = awsClient.signRequest({
       method,
-      path: '',
       headers,
       body,
-      // queryParams: { Action: 'ListUsers', Version: '2010-05-08' },
     });
-
-    console.log({ headers: signedRequest.headers });
 
     return fetch(uri, { ...options, headers: signedRequest.headers, body });
   },
