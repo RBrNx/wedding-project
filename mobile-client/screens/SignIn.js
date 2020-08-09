@@ -1,21 +1,42 @@
-import React from 'react';
-import { Text, View, Button } from 'react-native';
-import { useQuery } from '@apollo/react-hooks';
-import { loader } from 'graphql.macro';
-
-const TEST_QUERY = loader('../graphql/test.graphql');
+import React, { useState } from 'react';
+import { Text, View, Button, StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { Auth } from 'aws-amplify';
 
 const SignInScreen = ({ route }) => {
-  const { loading, error, data } = useQuery(TEST_QUERY, { variables: { uniqueCode: 'i6k307' } });
+  const [emailAddress, setEmailAddress] = useState(null);
+  const [password, setPassword] = useState(null);
 
-  console.log({ loading, error, data });
+  const attemptLogin = async () => {
+    try {
+      console.log('Signing in', { emailAddress, password });
+      const response = await Auth.signIn(emailAddress.toLowerCase(), password);
+      console.log({ response });
+
+      // eslint-disable-next-line no-unused-expressions
+      route.params?.setIsAuthenticated(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 18, marginBottom: 10 }}>SignIn</Text>
-      <Button title='Navigate to Home' onPress={() => route.params?.setIsAuthenticated(true)} />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: '5%' }}>
+      <Text style={{ fontSize: 18, marginBottom: 10, color: '#fff' }}>SignIn</Text>
+      <TextInput value={emailAddress} placeholder='Email Address' onChangeText={value => setEmailAddress(value)} style={styles.textInput} />
+      <TextInput value={password} placeholder='Password' onChangeText={value => setPassword(value)} style={styles.textInput} />
+      <Button title='Sign In' onPress={attemptLogin} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  textInput: {
+    backgroundColor: '#fff',
+    width: '100%',
+    padding: 15,
+    marginBottom: 15,
+  },
+});
 
 export default SignInScreen;
