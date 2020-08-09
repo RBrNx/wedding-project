@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { Feather } from '@expo/vector-icons';
+import 'react-native-url-polyfill/auto';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import { AsyncStorage } from 'react-native';
 import { SplashScreen } from 'expo';
