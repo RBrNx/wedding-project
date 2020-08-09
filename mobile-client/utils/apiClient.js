@@ -3,9 +3,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import Constants from 'expo-constants';
 import { Auth } from 'aws-amplify';
-import { createAwsClient } from './awsClient';
+import { createAwsClient } from 'agnostic-aws-signature';
 
-const { API_URL } = Constants.manifest.extra;
+const { BASE_API_URL, AUTH_ENDPOINT, UNAUTH_ENDPOINT } = Constants.manifest.extra;
 
 // const apolloClient = new ApolloClient({
 //   link: new HttpLink({
@@ -72,23 +72,39 @@ const { API_URL } = Constants.manifest.extra;
 // });
 
 const httpLink = new HttpLink({
-  uri: API_URL,
+  uri: BASE_API_URL,
   fetch: async (uri, options = {}) => {
     const { method, body, headers } = options;
-    const { accessKeyId, secretAccessKey, sessionToken } = await Auth.currentCredentials();
+    let requestHeaders;
+    let apiUrl;
 
-    const awsClient = createAwsClient(accessKeyId, secretAccessKey, sessionToken, {
-      region: 'eu-west-2',
-      endpoint: API_URL,
-    });
+    try {
+      const { accessToken } = await Auth.currentSession();
+      const { jwtToken } = accessToken;
+      requestHeaders = { ...headers, authorization: `${jwtToken}` };
+      apiUrl = `${uri}${AUTH_ENDPOINT}`;
+      console.log({ requestHeaders, apiUrl, accessToken });
+    } catch (err) {
+      console.log({ err });
+      const { accessKeyId, secretAccessKey, sessionToken } = await Auth.currentCredentials();
 
-    const signedRequest = awsClient.signRequest({
-      method,
-      headers,
-      body,
-    });
+      const awsClient = createAwsClient(accessKeyId, secretAccessKey, sessionToken, {
+        region: 'eu-west-2',
+        endpoint: BASE_API_URL,
+      });
 
-    return fetch(uri, { ...options, headers: signedRequest.headers, body });
+      const signedRequest = awsClient.signRequest({
+        method,
+        headers,
+        body,
+        path: UNAUTH_ENDPOINT,
+      });
+
+      requestHeaders = signedRequest.headers;
+      apiUrl = `${uri}${UNAUTH_ENDPOINT}`;
+    }
+
+    return fetch(apiUrl, { ...options, headers: requestHeaders, body });
   },
 });
 
