@@ -5,6 +5,11 @@ import authenticatedTypeDefs from './authenticatedTypeDefs';
 import authenticatedResolvers from './authenticatedResolvers';
 
 const generateApolloServer = ({ authenticated }) => {
+  if (!process.env.MONGODB_URI) {
+    console.log('Error: Missing .env variables');
+    process.exit(1);
+  }
+
   const typeDefs = [coreTypeDefs];
   if (authenticated) typeDefs.push(authenticatedTypeDefs);
 
@@ -27,7 +32,7 @@ const generateApolloServer = ({ authenticated }) => {
       context,
     }),
     tracing: false,
-    playground: false,
+    playground: true,
   });
 
   return server;
