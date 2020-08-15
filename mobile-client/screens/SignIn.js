@@ -9,9 +9,8 @@ const SignInScreen = ({ route }) => {
 
   const attemptLogin = async () => {
     try {
-      console.log('Signing in', { emailAddress, password });
-      const response = await Auth.signIn(emailAddress.toLowerCase(), password);
-      console.log({ response });
+      const lowercaseEmail = emailAddress.toLowerCase();
+      await Auth.signIn(lowercaseEmail, password);
 
       // eslint-disable-next-line no-unused-expressions
       route.params?.setIsAuthenticated(true);
