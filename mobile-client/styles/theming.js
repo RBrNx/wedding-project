@@ -31,7 +31,7 @@ const darkTheme = {
     card: darkGrey,
     componentBackground: black,
     bodyText: '#eee',
-    headerText: '#fff'
+    headerText: '#fff',
   },
 };
 
@@ -42,8 +42,8 @@ const constantStyles = {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    shadowOpacity: 0.19,
+    shadowRadius: 1,
     elevation: 1.25,
   },
 };

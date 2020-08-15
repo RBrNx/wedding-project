@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
 import { useSettings } from '../components/SettingsContext';
+import TouchableNative from '../components/TouchableNative';
 
 const settings = [
   {
@@ -29,7 +30,7 @@ const SettingsScreen = () => {
     const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
 
     return (
-      <TouchableNativeFeedback
+      <TouchableNative
         onPress={() => {
           setSelectedSetting(item);
           setShowModal(true);
@@ -39,13 +40,13 @@ const SettingsScreen = () => {
           <Text style={{ color: colors.headerText }}>{item.title}</Text>
           <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableNative>
     );
   };
 
   const renderOptionRow = (option, isSelected) => {
     return (
-      <TouchableNativeFeedback
+      <TouchableNative
         onPress={() => {
           setShowModal(false);
           saveUserSetting(selectedSetting._id, option.value);
@@ -56,7 +57,7 @@ const SettingsScreen = () => {
           <Text style={{ color: colors.bodyText }}>{option.label}</Text>
           <FontAwesome5 style={{ color: colors.bodyText }} name={isSelected ? 'dot-circle' : 'circle'} size={20} />
         </View>
-      </TouchableNativeFeedback>
+      </TouchableNative>
     );
   };
 
