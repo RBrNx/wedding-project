@@ -12,7 +12,7 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { icon: TypeIcon } = InvitationTypeEnum[type];
 
   return (
-    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]} onPress={() => console.log(type)}>
+    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]}>
       <View style={[styles.headerRow, { borderBottomColor: colors.componentBackground }]}>
         <TypeIcon style={styles.icon} size={40} />
         <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
