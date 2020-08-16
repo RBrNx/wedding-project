@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   outerSettingsRow: {
     marginHorizontal: 20,
     marginVertical: 5,
+    borderRadius: 10,
   },
   modalContainer: {
     borderRadius: 4,

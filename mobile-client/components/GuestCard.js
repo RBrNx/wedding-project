@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   },
   outerCard: {
     marginBottom: 10,
+    borderRadius: 10,
   },
   statusLine: {
     width: 5,

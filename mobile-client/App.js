@@ -6,7 +6,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { Feather } from '@expo/vector-icons';
 import 'react-native-url-polyfill/auto';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Platform } from 'react-native';
 import { SplashScreen } from 'expo';
 import Amplify from 'aws-amplify';
 import SignInScreen from './screens/SignIn';
@@ -42,7 +42,12 @@ const HomeNavigator = () => {
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: '#2991cc',
-        style: { borderTopWidth: 0 },
+        style: {
+          borderTopWidth: 0,
+          height: Platform.OS === 'android' ? 65 : 80,
+          paddingBottom: Platform.OS === 'android' ? 10 : 30,
+          paddingTop: 10,
+        },
       }}
     >
       <Tab.Screen
