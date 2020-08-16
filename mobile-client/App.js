@@ -17,6 +17,7 @@ import client from './utils/apiClient';
 import { SettingsProvider } from './components/SettingsContext';
 import { darkTheme, lightTheme } from './styles/theming';
 import awsConfig from './awsExports';
+import { isAuthenticatedUser } from './utils/helpers';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,7 +88,14 @@ const App = () => {
       SplashScreen.hide();
     };
 
+    const checkAuthenticatedUser = async () => {
+      const isAuth = await isAuthenticatedUser();
+
+      setIsAuthenticated(isAuth);
+    };
+
     getSavedSettings();
+    checkAuthenticatedUser();
   }, []);
 
   const getTheme = themeSetting => {
