@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   },
   outerCard: {
     marginBottom: 15,
+    borderRadius: 10,
   },
   headerRow: {
     flexDirection: 'row',

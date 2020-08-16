@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { constantStyles } from '../styles/theming';
 import TouchableNative from './TouchableNative';
 
@@ -18,7 +18,11 @@ const StandardPressable = ({ children, style, onPress, raised, outerStyle }) => 
 
 const styles = StyleSheet.create({
   outer: {
-    overflow: 'hidden',
+    ...Platform.select({
+      android: {
+        overflow: 'hidden',
+      },
+    }),
   },
 });
 
