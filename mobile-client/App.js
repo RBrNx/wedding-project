@@ -4,9 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { Feather } from '@expo/vector-icons';
+import 'react-native-url-polyfill/auto';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import { AsyncStorage } from 'react-native';
 import { SplashScreen } from 'expo';
+import Amplify from 'aws-amplify';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
@@ -14,9 +16,20 @@ import SettingsScreen from './screens/Settings';
 import client from './utils/apiClient';
 import { SettingsProvider } from './components/SettingsContext';
 import { darkTheme, lightTheme } from './styles/theming';
+import awsConfig from './awsExports';
+import { isAuthenticatedUser } from './utils/helpers';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+Amplify.configure({
+  Auth: {
+    region: awsConfig.cognito.REGION,
+    userPoolId: awsConfig.cognito.USER_POOL_ID,
+    identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
+    userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID,
+  },
+});
 
 const screenOptions = {
   headerTitleAlign: 'center',
@@ -75,7 +88,14 @@ const App = () => {
       SplashScreen.hide();
     };
 
+    const checkAuthenticatedUser = async () => {
+      const isAuth = await isAuthenticatedUser();
+
+      setIsAuthenticated(isAuth);
+    };
+
     getSavedSettings();
+    checkAuthenticatedUser();
   }, []);
 
   const getTheme = themeSetting => {

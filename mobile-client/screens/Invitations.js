@@ -22,7 +22,7 @@ const InvitationRow = ({ invitation, index }) => {
       useNativeDriver: true,
       easing: Easing.out(Easing.ease),
     }).start();
-  }, []);
+  }, [index, translateY]);
 
   return (
     <Animated.View style={[styles.cardContainer, { transform: [{ translateY }] }]}>

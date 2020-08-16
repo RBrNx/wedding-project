@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-const MoonIcon = ({ size, style, primaryColor, secondaryColor }) => {
+const MoonIcon = ({ size, style }) => {
   return (
     <View style={[{ height: size || 50, width: size || 50 }, style]}>
       <Svg width='100%' height='100%' viewBox='0 0 48 48'>

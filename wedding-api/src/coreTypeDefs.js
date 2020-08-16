@@ -41,9 +41,6 @@ const schema = gql`
   }
 
   type Query {
-    hello: String!
-    getAllGuests: [Guest]
-    getAllInvitations: [Invitation]
     getInvitation(uniqueCode: String!): Invitation
   }
 
