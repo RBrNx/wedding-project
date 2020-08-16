@@ -1,4 +1,6 @@
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { Platform } from 'react-native';
+import Color from 'color';
 
 const black = '#000';
 const white = '#fff';
@@ -15,6 +17,9 @@ const lightTheme = {
     secondary: lightBlue,
     background: darkBlue,
     card: white,
+    cardHover: Color(white)
+      .darken(0.12)
+      .toString(),
     componentBackground: lightGrey,
     bodyText: '#444',
     headerText: '#000',
@@ -29,6 +34,9 @@ const darkTheme = {
     secondary: lightBlue,
     background: darkBlue,
     card: darkGrey,
+    cardHover: Color(darkGrey)
+      .darken(0.12)
+      .toString(),
     componentBackground: black,
     bodyText: '#eee',
     headerText: '#fff',
@@ -37,14 +45,20 @@ const darkTheme = {
 
 const constantStyles = {
   cardShadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.19,
-    shadowRadius: 1,
-    elevation: 1.25,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.19,
+        shadowRadius: 1,
+      },
+      android: {
+        elevation: 1.25,
+      },
+    }),
   },
 };
 
