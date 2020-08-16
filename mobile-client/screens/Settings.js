@@ -6,7 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
 import { useSettings } from '../components/SettingsContext';
-import TouchableNative from '../components/TouchableNative';
+import StandardPressable from '../components/StandardPressable';
 
 const settings = [
   {
@@ -30,34 +30,33 @@ const SettingsScreen = () => {
     const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
 
     return (
-      <TouchableNative
+      <StandardPressable
         onPress={() => {
           setSelectedSetting(item);
           setShowModal(true);
         }}
+        style={[styles.settingsRow, { backgroundColor: colors.card }]}
+        outerStyle={styles.outerSettingsRow}
       >
-        <View style={[styles.settingsRow, { backgroundColor: colors.card }]}>
-          <Text style={{ color: colors.headerText }}>{item.title}</Text>
-          <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
-        </View>
-      </TouchableNative>
+        <Text style={{ color: colors.headerText }}>{item.title}</Text>
+        <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
+      </StandardPressable>
     );
   };
 
   const renderOptionRow = (option, isSelected) => {
     return (
-      <TouchableNative
+      <StandardPressable
+        style={styles.optionRow}
         onPress={() => {
           setShowModal(false);
           saveUserSetting(selectedSetting._id, option.value);
         }}
         key={option.value}
       >
-        <View style={styles.optionRow}>
-          <Text style={{ color: colors.bodyText }}>{option.label}</Text>
-          <FontAwesome5 style={{ color: colors.bodyText }} name={isSelected ? 'dot-circle' : 'circle'} size={20} />
-        </View>
-      </TouchableNative>
+        <Text style={{ color: colors.bodyText }}>{option.label}</Text>
+        <FontAwesome5 style={{ color: colors.bodyText }} name={isSelected ? 'dot-circle' : 'circle'} size={20} />
+      </StandardPressable>
     );
   };
 
@@ -69,7 +68,13 @@ const SettingsScreen = () => {
         data={settings}
         renderItem={renderSettingRow}
       />
-      <Modal isVisible={showModal} onBackdropPress={() => setShowModal(false)} useNativeDriver animationIn='fadeIn' animationOut='fadeOut'>
+      <Modal
+        isVisible={showModal}
+        onBackdropPress={() => setShowModal(false)}
+        useNativeDriver
+        animationIn='fadeIn'
+        animationOut='fadeOut'
+      >
         <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
           {selectedSetting?.options?.map(option => {
             const isSelected = option.value === userSettings[selectedSetting._id];
@@ -87,22 +92,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     padding: 20,
-    marginHorizontal: 20,
-    marginVertical: 5,
     borderRadius: 10,
   },
+  outerSettingsRow: {
+    marginHorizontal: 20,
+    marginVertical: 5,
+  },
   modalContainer: {
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
+    overflow: 'hidden',
   },
   optionRow: {
     flexDirection: 'row',
+    padding: 20,
     justifyContent: 'space-between',
-    paddingVertical: 20,
-    width: '100%',
+  },
+  outerOptionRow: {
+    borderRadius: 0,
   },
 });
 

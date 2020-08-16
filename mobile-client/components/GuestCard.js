@@ -2,10 +2,9 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
-import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
 import { GuestResponseEnum } from '../library/enums';
-import TouchableNative from './TouchableNative';
+import StandardPressable from './StandardPressable';
 
 const GuestCard = ({ guest }) => {
   const { firstName, lastName, attending } = guest;
@@ -13,7 +12,12 @@ const GuestCard = ({ guest }) => {
   const { colors } = useTheme();
 
   return (
-    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]}>
+    <StandardPressable
+      raised
+      style={[styles.card, { backgroundColor: colors.card }]}
+      outerStyle={styles.outerCard}
+      onPress={() => {}}
+    >
       <StatusLine status={attending} />
       <View style={styles.textContainer}>
         <Text style={[styles.name, { color: colors.headerText }]}>
@@ -22,19 +26,20 @@ const GuestCard = ({ guest }) => {
         <Text style={[styles.status, { color: colors.bodyText }]}>{guestStatus}</Text>
       </View>
       <Feather name='chevron-right' color={colors.componentBackground} size={30} />
-    </TouchableNative>
+    </StandardPressable>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
     width: '100%',
-    marginBottom: 10,
     borderRadius: 10,
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    ...constantStyles.cardShadow,
+  },
+  outerCard: {
+    marginBottom: 10,
   },
   statusLine: {
     width: 5,

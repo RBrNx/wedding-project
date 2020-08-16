@@ -2,17 +2,21 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
-import { constantStyles } from '../styles/theming';
 import StatusLine from './StatusLine';
-import TouchableNative from './TouchableNative';
 import { InvitationTypeEnum } from '../library/enums';
+import StandardPressable from './StandardPressable';
 
 const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
   const { icon: TypeIcon } = InvitationTypeEnum[type];
 
   return (
-    <TouchableNative style={[styles.card, { backgroundColor: colors.card }]}>
+    <StandardPressable
+      raised
+      style={[styles.card, { backgroundColor: colors.card }]}
+      outerStyle={styles.outerCard}
+      onPress={() => {}}
+    >
       <View style={[styles.headerRow, { borderBottomColor: colors.componentBackground }]}>
         <TypeIcon style={styles.icon} size={40} />
         <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
@@ -36,19 +40,17 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
         </View>
         <Feather name='chevron-right' color={colors.componentBackground} size={30} />
       </View>
-    </TouchableNative>
+    </StandardPressable>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: 15,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
+    borderRadius: 10,
     padding: 10,
-    ...constantStyles.cardShadow,
+  },
+  outerCard: {
+    marginBottom: 15,
   },
   headerRow: {
     flexDirection: 'row',
