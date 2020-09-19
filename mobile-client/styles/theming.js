@@ -60,6 +60,22 @@ const constantStyles = {
       },
     }),
   },
+  inputShadow: {
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.19,
+        shadowRadius: 1,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 };
 
 export { lightTheme, darkTheme, constantStyles };
