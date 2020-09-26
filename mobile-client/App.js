@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import 'react-native-url-polyfill/auto';
 import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
 import { AsyncStorage, Platform } from 'react-native';
-import { SplashScreen } from 'expo';
+import * as SplashScreen from 'expo-splash-screen'
 import Amplify from 'aws-amplify';
 import SignInScreen from './screens/SignIn';
 import GuestsScreen from './screens/Guests';
@@ -83,14 +83,13 @@ const App = () => {
   const systemLevelTheme = useColorScheme();
 
   useEffect(() => {
-    SplashScreen.preventAutoHide();
-
     const getSavedSettings = async () => {
+      await SplashScreen.preventAutoHideAsync();
       const savedSettings = await AsyncStorage.getItem('userSettings');
       setUserSettings(currSettings => {
         return { ...currSettings, ...JSON.parse(savedSettings) };
       });
-      SplashScreen.hide();
+      await SplashScreen.hideAsync();
     };
 
     const checkAuthenticatedUser = async () => {

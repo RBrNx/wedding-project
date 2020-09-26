@@ -26,9 +26,6 @@
       "BASE_API_URL": "https://xiey9y60ej.execute-api.eu-west-2.amazonaws.com/dev/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api"
-    },
-    "experiments": {
-      "redesignedLogBox": true
     }
   }
 }
