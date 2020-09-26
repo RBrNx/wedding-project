@@ -1,18 +1,33 @@
 import { useTheme } from '@react-navigation/native';
+import Color from 'color';
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { constantStyles } from '../styles/theming';
 import TouchableNative from './TouchableNative';
 
 const StandardButton = ({ onPress, raised, text }) => {
   const { colors } = useTheme();
-  const buttonStyles = [styles.button, { backgroundColor: colors.secondary }];
-  if (raised) buttonStyles.push({ ...constantStyles.inputShadow });
+
+  const renderButtonStyles = ({ pressed }) => {
+    const buttonStyles = [
+      styles.button,
+      {
+        backgroundColor: pressed
+          ? Color(colors.secondary)
+              .darken(0.2)
+              .toString()
+          : colors.secondary,
+      },
+    ];
+    if (raised) buttonStyles.push({ ...constantStyles.inputShadow });
+
+    return buttonStyles;
+  };
 
   return (
-    <TouchableNative style={buttonStyles} onPress={onPress}>
+    <Pressable style={renderButtonStyles} onPress={onPress}>
       <Text style={styles.text}>{text}</Text>
-    </TouchableNative>
+    </Pressable>
   );
 };
 
