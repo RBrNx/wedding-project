@@ -6,17 +6,18 @@ import { useTheme } from '@react-navigation/native';
 import { Auth } from 'aws-amplify';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
-import { useSettings } from '../components/SettingsContext';
+import { useSettings } from '../context';
 import StandardPressable from '../components/StandardPressable';
+import { ThemeEnum } from '../library/enums';
 
 const settings = [
   {
     _id: 'theme',
     title: 'Theme',
     options: [
-      { label: 'Dark', value: 'dark' },
-      { label: 'Light', value: 'light' },
-      { label: 'System', value: 'system' },
+      { label: 'Dark', value: ThemeEnum.DARK },
+      { label: 'Light', value: ThemeEnum.LIGHT },
+      { label: 'System', value: ThemeEnum.AUTO },
     ],
     type: 'select',
   },
@@ -36,7 +37,7 @@ const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [signingOut, setSigningOut] = useState(false);
-  const { userSettings, saveUserSetting } = useSettings();
+  const [userSettings, saveUserSetting] = useSettings();
   const { colors } = useTheme();
 
   const renderSettingRow = ({ item }) => {

@@ -7,6 +7,15 @@ const GuestResponseEnum = Object.freeze({
   NOT_ATTENDING: { text: 'Not Attending', color: '#966fd6' },
 });
 
-const InvitationTypeEnum = Object.freeze({ DAYTIME: { text: 'Daytime', icon: SunIcon }, EVENING: { text: 'Evening', icon: MoonIcon } });
+const InvitationTypeEnum = Object.freeze({
+  DAYTIME: { text: 'Daytime', icon: SunIcon },
+  EVENING: { text: 'Evening', icon: MoonIcon },
+});
 
-export { GuestResponseEnum, InvitationTypeEnum };
+const ThemeEnum = Object.freeze({
+  LIGHT: 'light',
+  DARK: 'dark',
+  AUTO: 'system',
+});
+
+export { GuestResponseEnum, InvitationTypeEnum, ThemeEnum };

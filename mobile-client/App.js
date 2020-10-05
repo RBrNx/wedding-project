@@ -15,10 +15,11 @@ import GuestsScreen from './screens/Guests';
 import InvitationsScreen from './screens/Invitations';
 import SettingsScreen from './screens/Settings';
 import client from './utils/apiClient';
-import { SettingsProvider } from './components/SettingsContext';
+import { SettingsProvider } from './context';
 import { darkTheme, lightTheme } from './styles/theming';
 import awsConfig from './awsExports';
 import { isAuthenticatedUser } from './utils/helpers';
+import { settingsDefault } from './library/defaults';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,11 +81,11 @@ const HomeNavigator = () => {
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userSettings, setUserSettings] = useState({ theme: 'system' });
+  const [userSettings, setUserSettings] = useState(settingsDefault);
   const systemLevelTheme = useColorScheme();
 
   useEffect(() => {
-    const getSavedSettings = async () => {
+    const loadSavedSettings = async () => {
       await SplashScreen.preventAutoHideAsync();
       const savedSettings = await AsyncStorage.getItem('userSettings');
       setUserSettings(currSettings => {
@@ -99,7 +100,7 @@ const App = () => {
       setIsAuthenticated(isAuth);
     };
 
-    getSavedSettings();
+    loadSavedSettings();
     checkAuthenticatedUser();
     setStatusBarStyle('light');
   }, []);
