@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
+import { Auth } from 'aws-amplify';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
 import { useSettings } from '../components/SettingsContext';
@@ -17,31 +18,60 @@ const settings = [
       { label: 'Light', value: 'light' },
       { label: 'System', value: 'system' },
     ],
+    type: 'select',
+  },
+  {
+    _id: 'signOut',
+    title: 'Sign Out',
+    type: 'button',
+    onPress: async setSigningOut => {
+      setSigningOut(true);
+      await Auth.signOut();
+      setSigningOut(false);
+    },
   },
 ];
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
+  const [signingOut, setSigningOut] = useState(false);
   const { userSettings, saveUserSetting } = useSettings();
   const { colors } = useTheme();
 
   const renderSettingRow = ({ item }) => {
-    const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
+    switch (item.type) {
+      case 'button':
+        return (
+          <StandardPressable
+            onPress={() => item.onPress(setSigningOut)}
+            style={[styles.settingsRow, { backgroundColor: colors.card }]}
+            outerStyle={styles.outerSettingsRow}
+          >
+            <Text style={{ color: colors.headerText }}>{item.title}</Text>
+            {signingOut && <ActivityIndicator />}
+          </StandardPressable>
+        );
+      case 'select':
+        // eslint-disable-next-line no-case-declarations
+        const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
 
-    return (
-      <StandardPressable
-        onPress={() => {
-          setSelectedSetting(item);
-          setShowModal(true);
-        }}
-        style={[styles.settingsRow, { backgroundColor: colors.card }]}
-        outerStyle={styles.outerSettingsRow}
-      >
-        <Text style={{ color: colors.headerText }}>{item.title}</Text>
-        <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
-      </StandardPressable>
-    );
+        return (
+          <StandardPressable
+            onPress={() => {
+              setSelectedSetting(item);
+              setShowModal(true);
+            }}
+            style={[styles.settingsRow, { backgroundColor: colors.card }]}
+            outerStyle={styles.outerSettingsRow}
+          >
+            <Text style={{ color: colors.headerText }}>{item.title}</Text>
+            <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
+          </StandardPressable>
+        );
+      default:
+        return <View />;
+    }
   };
 
   const renderOptionRow = (option, isSelected) => {
