@@ -1,9 +1,8 @@
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import { constantStyles } from '../styles/theming';
-import TouchableNative from './TouchableNative';
 
 const StandardButton = ({ onPress, raised, text }) => {
   const { colors } = useTheme();

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View, Button, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View } from 'react-native';
 import { Auth } from 'aws-amplify';
+import StandardButton from '../components/StandardButton';
+import StandardInput from '../components/StandardInput';
+import LandingScreenBackground from '../components/LandingScreenBackground';
 
 const SignInScreen = ({ route }) => {
   const [emailAddress, setEmailAddress] = useState(null);
@@ -20,21 +22,52 @@ const SignInScreen = ({ route }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: '5%' }}>
-      <Text style={{ fontSize: 18, marginBottom: 10, color: '#fff' }}>SignIn</Text>
-      <TextInput value={emailAddress} placeholder='Email Address' onChangeText={value => setEmailAddress(value)} style={styles.textInput} />
-      <TextInput value={password} placeholder='Password' onChangeText={value => setPassword(value)} style={styles.textInput} />
-      <Button title='Sign In' onPress={attemptLogin} />
-    </View>
+    <>
+      <LandingScreenBackground />
+      <View style={styles.container}>
+        <View style={styles.headingContainer}>
+          <Text style={styles.heading}>Hello</Text>
+          <Text style={styles.subHeading}>Sign in to your Account</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <StandardInput value={emailAddress} label='Email Address' onChangeText={value => setEmailAddress(value)} />
+          <StandardInput value={password} label='Password' onChangeText={value => setPassword(value)} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <StandardButton text='Sign In' raised onPress={attemptLogin} />
+        </View>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  textInput: {
-    backgroundColor: '#fff',
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: '5%',
+  },
+  headingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heading: {
+    fontSize: 96,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  subHeading: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  inputContainer: {
     width: '100%',
-    padding: 15,
-    marginBottom: 15,
+  },
+  buttonContainer: {
+    flex: 1,
+    width: '100%',
   },
 });
 
