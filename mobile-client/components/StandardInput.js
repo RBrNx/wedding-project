@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, StyleSheet, View } from 'react-native';
+import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import AnimatedInputBorder from './AnimatedInputBorder';
 
@@ -10,6 +10,7 @@ const StandardInput = ({ label, value, placeholder, onChangeText }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [focusAnimation] = useState(new Animated.Value(0));
   const [inputHeight, setInputHeight] = useState(0);
+  const [labelWidth, setLabelWidth] = useState(0);
   const shouldAnimateLabel = isFocused || value;
 
   useEffect(() => {
@@ -23,15 +24,15 @@ const StandardInput = ({ label, value, placeholder, onChangeText }) => {
   const animatedStyles = {
     top: focusAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: [20, -5],
+      outputRange: [styles.label.top, styles.smallLabel.top],
     }),
     fontSize: focusAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: [20, 14],
+      outputRange: [styles.label.fontSize, styles.smallLabel.fontSize],
     }),
     color: focusAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: ['#aaa', '#fff'],
+      outputRange: [styles.label.color, styles.smallLabel.color],
     }),
   };
 
@@ -41,9 +42,9 @@ const StandardInput = ({ label, value, placeholder, onChangeText }) => {
         <AnimatedInputBorder
           height={inputHeight}
           width={windowWidth}
-          borderRadius={15}
-          label={label}
-          labelStyle={[styles.label, { fontSize: 14 }]}
+          borderRadius={5}
+          labelXPos={styles.input.paddingLeft}
+          gapWidth={labelWidth}
           animate={shouldAnimateLabel}
         />
       )}
@@ -63,15 +64,26 @@ const StandardInput = ({ label, value, placeholder, onChangeText }) => {
       <Animated.Text style={[styles.label, animatedStyles]} onPress={() => textInput.current.focus()}>
         {label}
       </Animated.Text>
+      <Text
+        style={[styles.smallLabel, { opacity: 0 }]}
+        onLayout={event => {
+          if (labelWidth) return;
+
+          const { width: textWidth } = event.nativeEvent.layout;
+          setLabelWidth(textWidth);
+        }}
+      >
+        {label}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    borderRadius: 15,
-    padding: 20,
-    paddingLeft: 40,
+    borderRadius: 5,
+    padding: 18,
+    paddingLeft: 30,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -82,10 +94,22 @@ const styles = StyleSheet.create({
   label: {
     position: 'absolute',
     left: 30,
-    paddingHorizontal: 10,
-    top: 20,
+    top: Platform.select({
+      ios: 16,
+      android: 18,
+    }),
     fontSize: 20,
     color: '#aaa',
+  },
+  smallLabel: {
+    position: 'absolute',
+    left: 30,
+    top: Platform.select({
+      ios: -5,
+      android: -7,
+    }),
+    fontSize: 14,
+    color: '#fff',
   },
 });
 
