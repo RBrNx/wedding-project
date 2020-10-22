@@ -25,8 +25,8 @@ const StandardButton = ({ onPress, raised, text, loading }) => {
 
   return (
     <Pressable style={renderButtonStyles} onPress={onPress}>
-      <Text style={styles.text}>{text}</Text>
-      {loading && <ActivityIndicator />}
+      {!loading && <Text style={styles.text}>{text}</Text>}
+      {loading && <ActivityIndicator color='#fff' />}
     </Pressable>
   );
 };
@@ -38,10 +38,12 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   text: {
     color: '#fff',
     textAlign: 'center',
+    width: '100%',
   },
 });
 
