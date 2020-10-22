@@ -13,12 +13,17 @@ const LandingScreenBackground = () => {
   const blobTwo = useRef(null);
 
   useEffect(() => {
-    setTimeout(() => {
+    const blobOneTimeout = setTimeout(() => {
       blobOne.current.play();
     }, 500);
-    setTimeout(() => {
+    const blobTwoTimeout = setTimeout(() => {
       blobTwo.current.play();
     }, 1500);
+
+    return () => {
+      clearTimeout(blobOneTimeout);
+      clearTimeout(blobTwoTimeout);
+    };
   }, []);
 
   return (
