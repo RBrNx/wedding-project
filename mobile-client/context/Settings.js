@@ -1,23 +1,71 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AsyncStorage } from 'react-native';
-import { settingsDefault } from '../library/defaults';
+import { ThemeEnum } from '../library/enums';
 
-const SettingsContext = createContext([settingsDefault, () => {}]);
+const SettingsContext = createContext();
 
-const SettingsProvider = ({ children, value }) => {
-  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
+const SettingsProvider = ({ children }) => {
+  const settings = useProviderSettings();
+  return <SettingsContext.Provider value={settings}>{children}</SettingsContext.Provider>;
 };
 
-const useSettings = () => {
-  const [userSettings, setUserSettings] = useContext(SettingsContext);
+const useProviderSettings = () => {
+  const settings = [
+    {
+      _id: 'theme',
+      title: 'Theme',
+      options: [
+        { label: 'Dark', value: ThemeEnum.DARK },
+        { label: 'Light', value: ThemeEnum.LIGHT },
+        { label: 'System', value: ThemeEnum.AUTO },
+      ],
+      type: 'select',
+      default: ThemeEnum.AUTO,
+    },
+  ];
 
-  const saveUserSetting = (setting, value) => {
+  const defaultSettings = settings.reduce((result, setting) => {
+    const key = setting._id;
+    const value = setting.default;
+
+    return { ...result, [key]: value };
+  }, {});
+
+  const [userSettings, setUserSettings] = useState(defaultSettings);
+  const [bootstrapComplete, setBootstrapComplete] = useState(false);
+
+  const updateSetting = (setting, value) => {
     const newSettings = { ...userSettings, [setting]: value };
     setUserSettings(newSettings);
     AsyncStorage.setItem('userSettings', JSON.stringify(newSettings));
   };
 
-  return [userSettings, saveUserSetting];
+  useEffect(() => {
+    const loadSavedSettings = async () => {
+      const savedSettings = await AsyncStorage.getItem('userSettings');
+      setUserSettings(currSettings => {
+        return { ...currSettings, ...JSON.parse(savedSettings) };
+      });
+      setBootstrapComplete(true);
+    };
+
+    loadSavedSettings();
+  }, []);
+
+  return {
+    settings,
+    userSettings,
+    updateSetting,
+    bootstrapComplete,
+  };
+};
+
+const useSettings = () => {
+  const context = useContext(SettingsContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within a SettingsProvider');
+  }
+  return context;
 };
 
 export { SettingsProvider, useSettings };

@@ -3,56 +3,31 @@ import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import { Auth } from 'aws-amplify';
 import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
-import { useSettings } from '../context';
+import { useAuth, useSettings } from '../context';
 import StandardPressable from '../components/StandardPressable';
-import { ThemeEnum } from '../library/enums';
-
-const settings = [
-  {
-    _id: 'theme',
-    title: 'Theme',
-    options: [
-      { label: 'Dark', value: ThemeEnum.DARK },
-      { label: 'Light', value: ThemeEnum.LIGHT },
-      { label: 'System', value: ThemeEnum.AUTO },
-    ],
-    type: 'select',
-  },
-  {
-    _id: 'signOut',
-    title: 'Sign Out',
-    type: 'button',
-    onPress: async setSigningOut => {
-      setSigningOut(true);
-      await Auth.signOut();
-      setSigningOut(false);
-    },
-  },
-];
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [signingOut, setSigningOut] = useState(false);
-  const [userSettings, saveUserSetting] = useSettings();
+  const { settings, userSettings, updateSetting } = useSettings();
   const { colors } = useTheme();
+  const { signOut } = useAuth();
+
+  const attemptSignOut = async () => {
+    try {
+      setSigningOut(true);
+      await signOut();
+    } catch (err) {
+      console.log(err);
+      setSigningOut(false);
+    }
+  };
 
   const renderSettingRow = ({ item }) => {
     switch (item.type) {
-      case 'button':
-        return (
-          <StandardPressable
-            onPress={() => item.onPress(setSigningOut)}
-            style={[styles.settingsRow, { backgroundColor: colors.card }]}
-            outerStyle={styles.outerSettingsRow}
-          >
-            <Text style={{ color: colors.headerText }}>{item.title}</Text>
-            {signingOut && <ActivityIndicator />}
-          </StandardPressable>
-        );
       case 'select':
         // eslint-disable-next-line no-case-declarations
         const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
@@ -75,13 +50,13 @@ const SettingsScreen = () => {
     }
   };
 
-  const renderOptionRow = (option, isSelected) => {
+  const renderModalOptionRow = (option, isSelected) => {
     return (
       <StandardPressable
         style={styles.optionRow}
         onPress={() => {
           setShowModal(false);
-          saveUserSetting(selectedSetting._id, option.value);
+          updateSetting(selectedSetting._id, option.value);
         }}
         key={option.value}
       >
@@ -98,6 +73,18 @@ const SettingsScreen = () => {
         renderImage={() => <SettingsIllustration size='90%' />}
         data={settings}
         renderItem={renderSettingRow}
+        ListFooterComponent={() => {
+          return (
+            <StandardPressable
+              onPress={attemptSignOut}
+              style={[styles.settingsRow, { backgroundColor: colors.card }]}
+              outerStyle={styles.outerSettingsRow}
+            >
+              <Text style={{ color: colors.headerText }}>Sign Out</Text>
+              {signingOut && <ActivityIndicator />}
+            </StandardPressable>
+          );
+        }}
       />
       <Modal
         isVisible={showModal}
@@ -109,7 +96,7 @@ const SettingsScreen = () => {
         <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
           {selectedSetting?.options?.map(option => {
             const isSelected = option.value === userSettings[selectedSetting._id];
-            return renderOptionRow(option, isSelected);
+            return renderModalOptionRow(option, isSelected);
           })}
         </View>
       </Modal>
