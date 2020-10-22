@@ -1,40 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { View, Animated, Text } from 'react-native';
+import { View, Animated } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-const roundedRectData = (w, h, r, gap) => {
-  const padding = gap ? 10 : 0;
-  const padLeft = 30 - padding;
+const roundedRectData = (w, h, r, startingXPos, gap) => {
+  const leftPadding = gap ? 5 : 0;
+  const rightPadding = gap ? 10 : 0;
   const width = w - r * 2;
   const height = h - r * 2;
-  const widthIncludingGap = width - padLeft - gap - padding; // Padding is removed twice as it applies to both sides of the text
 
   return `
-    m ${r + padLeft} 0
-    l -${padLeft} 0
-    a ${r} ${r} 0 0 0 -${r} ${r}
+    m ${startingXPos + gap + rightPadding} 0
+    l ${w - (startingXPos + gap + r + rightPadding)} 0
+    a ${r} ${r} 0 0 1 ${r} ${r}
     l 0 ${height}
-    a ${r} ${r} 0 0 0 ${r} ${r}
-    l ${width} 0
-    a ${r} ${r} 0 0 0 ${r} -${r}
+    a ${r} ${r} 0 0 1 -${r} ${r}
+    l -${width} 0
+    a ${r} ${r} 0 0 1 -${r} -${r}
     l 0 -${height}
-    a ${r} ${r} 0 0 0 -${r} -${r}
-    l -${widthIncludingGap} 0
+    a ${r} ${r} 0 0 1 ${r} -${r}
+    l ${startingXPos - r - leftPadding} 0
   `;
 };
 
-const AnimatedInputBorder = ({ style, height, width, borderRadius, label, labelStyle, animate }) => {
+const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, gapWidth, animate }) => {
   const [borderAnim] = useState(new Animated.Value(0));
-  const [gapWidth, setGapWidth] = useState(0);
+  const [viewWidth, setViewWidth] = useState(0);
+  const ratio = viewWidth ? width / viewWidth : 1;
 
-  const fullRectangle = roundedRectData(width, height, borderRadius, 0);
-  const gapRectangle = roundedRectData(width, height, borderRadius, gapWidth);
+  const fullRectangle = roundedRectData(width, height, borderRadius, labelXPos, 0);
+  const gapRectangle = roundedRectData(width, height, borderRadius, labelXPos, gapWidth * ratio);
 
   const path = borderAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [fullRectangle, gapRectangle],
+  });
+  const colour = borderAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgb(170, 170, 170)', 'rgb(255, 255, 255)'],
   });
 
   useEffect(() => {
@@ -46,19 +50,17 @@ const AnimatedInputBorder = ({ style, height, width, borderRadius, label, labelS
   }, [borderAnim, animate]);
 
   return (
-    <View style={[{ height: '100%', width: '100%', position: 'absolute' }, style]} pointerEvents='none'>
-      <Svg viewBox={`-0.5 5 ${width + 1} ${height}`} width='100%' height='100%'>
-        <AnimatedPath d={path} stroke='#fff' strokeWidth='0.5' />
+    <View
+      style={[{ width: '100%', height, position: 'absolute' }, style]}
+      pointerEvents='none'
+      onLayout={event => {
+        const { width: vWidth } = event.nativeEvent.layout;
+        setViewWidth(vWidth);
+      }}
+    >
+      <Svg viewBox={`-0.75 0 ${width + 1} ${height}`} width='100%' height={height}>
+        <AnimatedPath d={path} stroke={colour} strokeWidth='0.75' />
       </Svg>
-      <Text
-        style={[labelStyle, { opacity: 0 }]}
-        onLayout={event => {
-          const { width: layoutWidth } = event.nativeEvent.layout;
-          setGapWidth(layoutWidth);
-        }}
-      >
-        {label}
-      </Text>
     </View>
   );
 };
