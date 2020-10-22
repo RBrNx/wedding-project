@@ -1,10 +1,10 @@
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { constantStyles } from '../styles/theming';
 
-const StandardButton = ({ onPress, raised, text }) => {
+const StandardButton = ({ onPress, raised, text, loading }) => {
   const { colors } = useTheme();
 
   const renderButtonStyles = ({ pressed }) => {
@@ -26,6 +26,7 @@ const StandardButton = ({ onPress, raised, text }) => {
   return (
     <Pressable style={renderButtonStyles} onPress={onPress}>
       <Text style={styles.text}>{text}</Text>
+      {loading && <ActivityIndicator />}
     </Pressable>
   );
 };
