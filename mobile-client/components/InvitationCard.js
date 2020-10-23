@@ -3,12 +3,12 @@ import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import StatusLine from './StatusLine';
-import { InvitationTypeEnum } from '../library/enums';
+import { InvitationType } from '../library/enums';
 import StandardPressable from './StandardPressable';
 
 const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
-  const { icon: TypeIcon } = InvitationTypeEnum[type];
+  const { icon: TypeIcon } = InvitationType[type];
 
   return (
     <StandardPressable

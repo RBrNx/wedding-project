@@ -8,7 +8,15 @@ const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, data, ListEmptyComponent }) => {
+const FlatListAnimatedHeader = ({
+  title,
+  renderImage,
+  onRefresh,
+  renderItem,
+  data,
+  ListEmptyComponent,
+  ListFooterComponent,
+}) => {
   const { colors } = useTheme();
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -39,7 +47,9 @@ const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, dat
 
   const renderListHandle = () => {
     return (
-      <Animated.View style={[styles.handleContainer, { transform: [{ translateY }], backgroundColor: colors.background }]}>
+      <Animated.View
+        style={[styles.handleContainer, { transform: [{ translateY }], backgroundColor: colors.background }]}
+      >
         <View style={[styles.handleBackgound, { backgroundColor: colors.componentBackground }]}>
           <View style={styles.handle} />
         </View>
@@ -71,6 +81,7 @@ const FlatListAnimatedHeader = ({ title, renderImage, onRefresh, renderItem, dat
             </View>
           );
         }}
+        ListFooterComponent={ListFooterComponent}
         stickyHeaderIndices={[0]}
         refreshControl={
           <RefreshControl
