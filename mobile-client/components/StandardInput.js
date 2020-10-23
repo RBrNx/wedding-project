@@ -5,7 +5,7 @@ import AnimatedInputBorder from './AnimatedInputBorder';
 
 const { width: windowWidth } = Dimensions.get('window');
 
-const StandardInput = ({ label, value, placeholder, onChangeText }) => {
+const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntry, keyboardType = 'default' }) => {
   const textInput = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusAnimation] = useState(new Animated.Value(0));
@@ -60,6 +60,8 @@ const StandardInput = ({ label, value, placeholder, onChangeText }) => {
         onChangeText={onChangeText}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType}
       />
       <Animated.Text style={[styles.label, animatedStyles]} onPress={() => textInput.current.focus()}>
         {label}
