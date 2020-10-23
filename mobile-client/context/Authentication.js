@@ -13,6 +13,8 @@ const useProviderAuth = () => {
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
 
   const signIn = async (emailAddress, password) => {
+    if (!emailAddress || !password) return null;
+
     const lowercaseEmail = emailAddress.toLowerCase();
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
     setUser(cognitoUser);
