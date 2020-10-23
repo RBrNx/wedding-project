@@ -3,12 +3,12 @@ import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import StatusLine from './StatusLine';
-import { GuestResponseEnum } from '../library/enums';
+import { GuestResponse } from '../library/enums';
 import StandardPressable from './StandardPressable';
 
 const GuestCard = ({ guest }) => {
   const { firstName, lastName, attending } = guest;
-  const { text: guestStatus } = GuestResponseEnum[attending];
+  const { text: guestStatus } = GuestResponse[attending];
   const { colors } = useTheme();
 
   return (

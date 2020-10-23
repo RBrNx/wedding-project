@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AsyncStorage } from 'react-native';
-import { ThemeEnum } from '../library/enums';
+import { Theme } from '../library/enums';
 
 const SettingsContext = createContext();
 
@@ -15,12 +15,12 @@ const useProviderSettings = () => {
       _id: 'theme',
       title: 'Theme',
       options: [
-        { label: 'Dark', value: ThemeEnum.DARK },
-        { label: 'Light', value: ThemeEnum.LIGHT },
-        { label: 'System', value: ThemeEnum.AUTO },
+        { label: 'Dark', value: Theme.DARK },
+        { label: 'Light', value: Theme.LIGHT },
+        { label: 'System', value: Theme.AUTO },
       ],
       type: 'select',
-      default: ThemeEnum.AUTO,
+      default: Theme.AUTO,
     },
   ];
 

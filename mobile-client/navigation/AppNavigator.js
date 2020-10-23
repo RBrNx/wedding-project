@@ -7,7 +7,7 @@ import { darkTheme, lightTheme } from '../styles/theming';
 import SignInScreen from '../screens/SignIn';
 import HomeNavigator from './HomeNavigator';
 import { useAuth, useSettings } from '../context';
-import { ThemeEnum } from '../library/enums';
+import { Theme } from '../library/enums';
 
 const Stack = createStackNavigator();
 
@@ -30,11 +30,11 @@ const AppNavigator = () => {
 
   const getTheme = () => {
     switch (userSettings.theme) {
-      case ThemeEnum.DARK:
+      case Theme.DARK:
         return darkTheme;
-      case ThemeEnum.LIGHT:
+      case Theme.LIGHT:
         return lightTheme;
-      case ThemeEnum.AUTO:
+      case Theme.AUTO:
       default:
         return systemLevelTheme === 'dark' ? darkTheme : lightTheme;
     }

@@ -1,21 +1,21 @@
 import SunIcon from '../components/SVG/SunIcon';
 import MoonIcon from '../components/SVG/MoonIcon';
 
-const GuestResponseEnum = Object.freeze({
+const GuestResponse = Object.freeze({
   AWAITING_RSVP: { text: 'Awaiting RSVP', color: '#2991cc' },
   ATTENDING: { text: 'Attending', color: '#04b84a' },
   NOT_ATTENDING: { text: 'Not Attending', color: '#966fd6' },
 });
 
-const InvitationTypeEnum = Object.freeze({
+const InvitationType = Object.freeze({
   DAYTIME: { text: 'Daytime', icon: SunIcon },
   EVENING: { text: 'Evening', icon: MoonIcon },
 });
 
-const ThemeEnum = Object.freeze({
+const Theme = Object.freeze({
   LIGHT: 'light',
   DARK: 'dark',
   AUTO: 'system',
 });
 
-export { GuestResponseEnum, InvitationTypeEnum, ThemeEnum };
+export { GuestResponse, InvitationType, Theme };

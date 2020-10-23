@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { GuestResponseEnum } from '../library/enums';
+import { GuestResponse } from '../library/enums';
 
 const StatusLine = ({ status, isFirst = true, isLast = true }) => {
-  const { color } = GuestResponseEnum[status];
+  const { color } = GuestResponse[status];
 
   return (
     <View
