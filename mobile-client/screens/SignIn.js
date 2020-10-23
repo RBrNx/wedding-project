@@ -15,10 +15,9 @@ const SignInScreen = () => {
   const attemptLogin = async () => {
     try {
       setSigningIn(true);
-      await signIn(emailAddress, password);
+      const signedIn = await signIn(emailAddress, password);
 
-      // eslint-disable-next-line no-unused-expressions
-      // route.params?.setIsAuthenticated(true);
+      if (!signedIn) setSigningIn(false);
     } catch (err) {
       console.log(err);
       setSigningIn(false);
@@ -36,7 +35,12 @@ const SignInScreen = () => {
           </View>
           <View style={styles.inputContainer}>
             <StandardInput value={emailAddress} label='Email Address' onChangeText={value => setEmailAddress(value)} />
-            <StandardInput value={password} label='Password' onChangeText={value => setPassword(value)} />
+            <StandardInput
+              value={password}
+              label='Password'
+              onChangeText={value => setPassword(value)}
+              secureTextEntry
+            />
           </View>
           <View style={styles.buttonContainer}>
             <StandardButton text='Sign In' raised onPress={attemptLogin} loading={signingIn} />
