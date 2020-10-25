@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import StatusLine from './StatusLine';
 import { InvitationType } from '../library/enums';
-import StandardPressable from './StandardPressable';
+import StandardPressable from '../library/components/StandardPressable';
 
 const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
@@ -14,7 +14,7 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
     <StandardPressable
       raised
       style={[styles.card, { backgroundColor: colors.card }]}
-      outerStyle={styles.outerCard}
+      pressedStyle={{ backgroundColor: colors.cardHover }}
       onPress={() => {}}
     >
       <View style={[styles.headerRow, { borderBottomColor: colors.componentBackground }]}>
@@ -48,10 +48,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 10,
     padding: 10,
-  },
-  outerCard: {
     marginBottom: 15,
-    borderRadius: 10,
   },
   headerRow: {
     flexDirection: 'row',

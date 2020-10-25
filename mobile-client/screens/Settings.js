@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
+import { FontAwesome5 } from '@expo/vector-icons';
+import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
+import StandardPressable from '../library/components/StandardPressable';
 import { useAuth, useSettings } from '../context';
-import StandardPressable from '../components/StandardPressable';
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
@@ -39,7 +39,7 @@ const SettingsScreen = () => {
               setShowModal(true);
             }}
             style={[styles.settingsRow, { backgroundColor: colors.card }]}
-            outerStyle={styles.outerSettingsRow}
+            pressedStyle={{ backgroundColor: colors.cardHover }}
           >
             <Text style={{ color: colors.headerText }}>{item.title}</Text>
             <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
@@ -54,6 +54,7 @@ const SettingsScreen = () => {
     return (
       <StandardPressable
         style={styles.optionRow}
+        pressedStyle={{ backgroundColor: colors.cardHover }}
         onPress={() => {
           setShowModal(false);
           updateSetting(selectedSetting._id, option.value);
@@ -78,7 +79,7 @@ const SettingsScreen = () => {
             <StandardPressable
               onPress={attemptSignOut}
               style={[styles.settingsRow, { backgroundColor: colors.card }]}
-              outerStyle={styles.outerSettingsRow}
+              pressedStyle={{ backgroundColor: colors.cardHover }}
             >
               <Text style={{ color: colors.headerText }}>Sign Out</Text>
               {signingOut && <ActivityIndicator />}
@@ -111,11 +112,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     borderRadius: 10,
-  },
-  outerSettingsRow: {
     marginHorizontal: 20,
     marginVertical: 5,
-    borderRadius: 10,
   },
   modalContainer: {
     borderRadius: 4,

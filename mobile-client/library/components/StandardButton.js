@@ -2,22 +2,23 @@ import { useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { constantStyles } from '../styles/theming';
+import { constantStyles } from '../../styles/theming';
 
 const StandardButton = ({ onPress, raised, text, loading }) => {
   const { colors } = useTheme();
+  const backgroundColor = colors.secondary;
+  const pressedColour = Color(colors.secondary)
+    .darken(0.2)
+    .toString();
 
   const renderButtonStyles = ({ pressed }) => {
     const buttonStyles = [
       styles.button,
       {
-        backgroundColor: pressed
-          ? Color(colors.secondary)
-              .darken(0.2)
-              .toString()
-          : colors.secondary,
+        backgroundColor: pressed ? pressedColour : backgroundColor,
       },
     ];
+
     if (raised) buttonStyles.push({ ...constantStyles.inputShadow });
 
     return buttonStyles;

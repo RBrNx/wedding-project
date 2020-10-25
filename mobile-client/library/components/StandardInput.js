@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import AnimatedInputBorder from './AnimatedInputBorder';
+import AnimatedInputBorder from '../../components/AnimatedInputBorder';
 
 const { width: windowWidth } = Dimensions.get('window');
 
