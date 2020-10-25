@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import StandardButton from '../components/StandardButton';
-import StandardInput from '../components/StandardInput';
+import StandardButton from '../library/components/StandardButton';
+import StandardInput from '../library/components/StandardInput';
 import LandingScreenBackground from '../components/LandingScreenBackground';
 import { useAuth } from '../context';
 import DismissKeyboard from '../components/DismissKeyboard';

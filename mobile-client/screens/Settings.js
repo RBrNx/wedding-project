@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import FlatListAnimatedHeader from '../components/FlatListAnimatedHeader';
+import { FontAwesome5 } from '@expo/vector-icons';
+import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
 import SettingsIllustration from '../components/SVG/Settings';
+import StandardPressable from '../library/components/StandardPressable';
 import { useAuth, useSettings } from '../context';
-import StandardPressable from '../components/StandardPressable';
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);

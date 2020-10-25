@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import StatusLine from './StatusLine';
 import { InvitationType } from '../library/enums';
-import StandardPressable from './StandardPressable';
+import StandardPressable from '../library/components/StandardPressable';
 
 const InvitationCard = ({ guests, uniqueCode, type }) => {
   const { colors } = useTheme();
