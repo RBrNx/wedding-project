@@ -15,7 +15,7 @@ const GuestCard = ({ guest }) => {
     <StandardPressable
       raised
       style={[styles.card, { backgroundColor: colors.card }]}
-      outerStyle={styles.outerCard}
+      pressedStyle={{ backgroundColor: colors.cardHover }}
       onPress={() => {}}
     >
       <StatusLine status={attending} />
@@ -37,10 +37,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  outerCard: {
     marginBottom: 10,
-    borderRadius: 10,
   },
   statusLine: {
     width: 5,

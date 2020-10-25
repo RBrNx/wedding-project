@@ -1,29 +1,22 @@
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Pressable } from 'react-native';
 import { constantStyles } from '../styles/theming';
-import TouchableNative from './TouchableNative';
 
-const StandardPressable = ({ children, style, onPress, raised, outerStyle }) => {
-  const pressableStyles = [styles.outer];
-  if (raised) pressableStyles.push({ ...constantStyles.cardShadow });
+const StandardPressable = ({ children, style, onPress, raised, pressedStyle }) => {
+  const renderPressableStyles = ({ pressed }) => {
+    const pressableStyles = [style];
+
+    if (raised) pressableStyles.push({ ...constantStyles.cardShadow });
+    if (pressed) pressableStyles.push({ ...pressedStyle });
+
+    return pressableStyles;
+  };
 
   return (
-    <View style={[...pressableStyles, { ...outerStyle }]}>
-      <TouchableNative style={style} onPress={onPress}>
-        {children}
-      </TouchableNative>
-    </View>
+    <Pressable style={renderPressableStyles} onPress={onPress}>
+      {children}
+    </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  outer: {
-    ...Platform.select({
-      android: {
-        overflow: 'hidden',
-      },
-    }),
-  },
-});
 
 export default StandardPressable;
