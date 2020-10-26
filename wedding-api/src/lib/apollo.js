@@ -69,4 +69,20 @@ const splitResolverGroups = (resolverGroups) => {
   }, initialState)
 }
 
-export { generateApolloServer, filterResolvers, splitResolverGroups }
+const splitTypedefGroups = (typeDefGroups) => {
+  const initialState = {
+    coreTypeDefs: [],
+    authenticatedTypeDefs: [],
+  }
+
+  return typeDefGroups.reduce((result, typeDefGroup) => {
+    const { coreSchema, authenticatedSchema } = typeDefGroup;
+
+    if(coreSchema) result.coreTypeDefs = [...result.coreTypeDefs, coreSchema];
+    if(authenticatedSchema) result.authenticatedTypeDefs = [...result.authenticatedTypeDefs, authenticatedSchema];
+    
+    return result;
+  }, initialState)
+}
+
+export { generateApolloServer, filterResolvers, splitResolverGroups, splitTypedefGroups }
