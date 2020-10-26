@@ -40,4 +40,33 @@ const filterResolvers = (resolverObjects, options = {}) => {
   }, {})
 }
 
-export { generateApolloServer, filterResolvers }
+const splitResolverGroups = (resolverGroups) => {
+  const initialState = {
+    coreResolvers: {},
+    authenticatedResolvers: {},
+  }
+
+  return resolverGroups.reduce((result, resolverGroup) => {
+    result.coreResolvers.Query = {
+      ...result.coreResolvers.Query,
+      ...filterResolvers(resolverGroup.queries)
+    }
+    result.coreResolvers.Mutation = {
+      ...result.coreResolvers.Mutation,
+      ...filterResolvers(resolverGroup.mutations)
+    }
+  
+    result.authenticatedResolvers.Query = {
+      ...result.authenticatedResolvers.Query,
+      ...filterResolvers(resolverGroup.queries, { authenticated: true })
+    }
+    result.authenticatedResolvers.Mutation = {
+      ...result.authenticatedResolvers.Mutation,
+      ...filterResolvers(resolverGroup.mutations, { authenticated: true })
+    }
+    
+    return result;
+  }, initialState)
+}
+
+export { generateApolloServer, filterResolvers, splitResolverGroups }
