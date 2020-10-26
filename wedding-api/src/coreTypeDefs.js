@@ -12,6 +12,17 @@ const schema = gql`
     EVENING
   }
 
+  enum QuestionType {
+    ATTENDANCE
+    MULTIPLE_CHOICE
+    TEXT
+  }
+
+  enum ResponseType {
+    INDIVIDUAL
+    HOUSEHOLD
+  }
+
   type Guest {
     _id: ID
     firstName: String
@@ -26,6 +37,27 @@ const schema = gql`
     uniqueCode: String
     guests: [Guest]
     type: InvitationType
+  }
+
+  type Choice {
+    _id: ID
+    text: String
+  }
+
+  type FollowUp {
+    to: ID
+    matchesChoice: ID
+  }
+
+  type Question {
+    _id: ID
+    type: QuestionType
+    title: String
+    label: String
+    choices: [Choice]
+    specificGuests: [Guest]
+    responseType: ResponseType
+    followUp: FollowUp
   }
 
   input GuestInput {

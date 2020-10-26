@@ -26,9 +26,31 @@ const getAllInvitations = async (args, context) => {
   }
 };
 
+const createQuestion = async (parent, args, context) => {
+  const { question } = args;
+
+  try {
+    const db = await connectToDatabase();
+    const QuestionModel = db.model('Question');
+
+    const questionDoc = new QuestionModel(question);
+    await questionDoc.save();
+
+    return {
+      success: true,
+      feedback: "Question created successfully"
+    }
+  } catch(error) {
+    return error;
+  }
+}
+
 export default {
   Query: {
     getAllGuests,
     getAllInvitations,
   },
+  Mutation: {
+    createQuestion
+  }
 };
