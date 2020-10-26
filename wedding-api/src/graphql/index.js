@@ -10,7 +10,7 @@ import QuestionTypeDefs from './typeDefs/Question';
 const resolverGroups = [GuestResolvers, InvitationResolvers, QuestionResolvers];
 const typeDefGroups = [BaseTypeDefs, GuestTypeDefs, InvitationTypeDefs, QuestionTypeDefs];
 
-const { coreResolvers, authenticatedResolvers } = splitResolverGroups(resolverGroups)
-const { coreTypeDefs, authenticatedTypeDefs } = splitTypedefGroups(typeDefGroups)
+const { coreResolvers, authenticatedResolvers } = splitResolverGroups(resolverGroups);
+const { coreTypeDefs, authenticatedTypeDefs } = splitTypedefGroups(typeDefGroups);
 
-export { coreResolvers, authenticatedResolvers, coreTypeDefs, authenticatedTypeDefs }
+export { coreResolvers, authenticatedResolvers, coreTypeDefs, authenticatedTypeDefs };

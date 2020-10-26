@@ -3,7 +3,7 @@ import GuestSchema from '../models/Guest';
 import InvitationSchema from '../models/Invitation';
 import QuestionSchema from '../models/Question';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const { MONGODB_URI } = process.env;
 
 let cachedDb = null;
 

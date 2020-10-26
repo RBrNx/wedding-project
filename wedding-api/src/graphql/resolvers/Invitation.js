@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../../lib/database';
 
-const getInvitation = async (parent, args, context) => {
+const getInvitation = async (parent, args) => {
   try {
     const { uniqueCode } = args;
     const db = await connectToDatabase();
@@ -14,7 +14,7 @@ const getInvitation = async (parent, args, context) => {
   }
 };
 
-const getAllInvitations = async (args, context) => {
+const getAllInvitations = async () => {
   try {
     const db = await connectToDatabase();
     const InvitationSchema = db.model('Invitation');
@@ -28,9 +28,6 @@ const getAllInvitations = async (args, context) => {
 };
 
 export default {
-  queries: [
-    { resolver: getInvitation },
-    { resolver: getAllInvitations, authenticated: true },
-  ],
-  mutations: []
-}
+  queries: [{ resolver: getInvitation }, { resolver: getAllInvitations, authenticated: true }],
+  mutations: [],
+};

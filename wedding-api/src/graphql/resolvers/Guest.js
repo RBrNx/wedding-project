@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../../lib/database';
 
-const getAllGuests = async (args, context) => {
+const getAllGuests = async () => {
   try {
     const db = await connectToDatabase();
     const GuestSchema = db.model('Guest');
@@ -13,7 +13,7 @@ const getAllGuests = async (args, context) => {
   }
 };
 
-const updateGuest = async (parent, args, context) => {
+const updateGuest = async (parent, args) => {
   try {
     const { input } = args;
     const { guestId, attending, mainCourse, email } = input;

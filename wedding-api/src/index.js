@@ -2,7 +2,10 @@ import { coreResolvers, authenticatedResolvers, coreTypeDefs, authenticatedTypeD
 import { generateApolloServer } from './lib/apollo';
 
 const unauthenticatedServer = generateApolloServer({ resolvers: [coreResolvers], typeDefs: [...coreTypeDefs] });
-const authenticatedServer = generateApolloServer({ resolvers: [coreResolvers, authenticatedResolvers], typeDefs: [...coreTypeDefs, ...authenticatedTypeDefs] });
+const authenticatedServer = generateApolloServer({
+  resolvers: [coreResolvers, authenticatedResolvers],
+  typeDefs: [...coreTypeDefs, ...authenticatedTypeDefs],
+});
 
 exports.unauthenticatedGQLHandler = (event, context, callback) => {
   const handler = unauthenticatedServer.createHandler({

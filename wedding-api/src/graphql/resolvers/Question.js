@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../../lib/database';
 
-const createQuestion = async (parent, args, context) => {
+const createQuestion = async (parent, args) => {
   const { question } = args;
 
   try {
@@ -12,16 +12,14 @@ const createQuestion = async (parent, args, context) => {
 
     return {
       success: true,
-      feedback: "Question created successfully"
-    }
-  } catch(error) {
+      feedback: 'Question created successfully',
+    };
+  } catch (error) {
     return error;
   }
-}
+};
 
 export default {
   queries: [],
-  mutations: [
-    { resolver: createQuestion, authenticated: true }
-  ]
-}
+  mutations: [{ resolver: createQuestion, authenticated: true }],
+};
