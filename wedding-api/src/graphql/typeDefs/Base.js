@@ -6,9 +6,7 @@ const coreSchema = gql`
     message: String
   }
 
-  type Query {
-    _empty: String
-  }
+  type Query
 
   type Mutation {
     _empty: String
