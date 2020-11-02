@@ -44,8 +44,14 @@ const coreSchema = gql`
     answer: String!
   }
 
+  input ChoiceAnswerInput {
+    questionId: ID!
+    answer: ID!
+  }
+
   extend type Mutation {
     answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
+    answerChoiceQuestion(guestId: ID!, answerInput: ChoiceAnswerInput!): AnswerMutationResponse
   }
 `;
 

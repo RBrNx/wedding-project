@@ -43,7 +43,35 @@ const answerTextQuestion = async (parent, args) => {
   }
 };
 
+const answerChoiceQuestion = async (parent, args) => {
+  const { guestId, answerInput } = args;
+  const { questionId, answer } = answerInput;
+
+  try {
+    const db = await connectToDatabase();
+    const AnswerModel = db.model('Answer');
+
+    const answerDoc = new AnswerModel({
+      questionId,
+      guestId,
+      answer,
+    });
+    await answerDoc.save();
+
+    return {
+      success: true,
+      feedback: 'Answer created successfully',
+    };
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   queries: [],
-  mutations: [{ resolver: createQuestion, authenticated: true }, { resolver: answerTextQuestion }],
+  mutations: [
+    { resolver: createQuestion, authenticated: true },
+    { resolver: answerTextQuestion },
+    { resolver: answerChoiceQuestion },
+  ],
 };
