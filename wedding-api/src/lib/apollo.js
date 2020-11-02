@@ -48,23 +48,25 @@ const splitResolverGroups = resolverGroups => {
   };
 
   return resolverGroups.reduce((result, resolverGroup) => {
-    result.coreResolvers.Query = {
-      ...result.coreResolvers.Query,
-      ...filterResolvers(resolverGroup.queries),
-    };
-    result.coreResolvers.Mutation = {
-      ...result.coreResolvers.Mutation,
-      ...filterResolvers(resolverGroup.mutations),
-    };
+    resolverGroup.queries.forEach(query => {
+      const { authenticated, root = 'Query', resolver } = query;
+      const resolverSet = authenticated ? 'authenticatedResolvers' : 'coreResolvers';
 
-    result.authenticatedResolvers.Query = {
-      ...result.authenticatedResolvers.Query,
-      ...filterResolvers(resolverGroup.queries, { authenticated: true }),
-    };
-    result.authenticatedResolvers.Mutation = {
-      ...result.authenticatedResolvers.Mutation,
-      ...filterResolvers(resolverGroup.mutations, { authenticated: true }),
-    };
+      result[resolverSet][root] = {
+        ...result[resolverSet][root],
+        [resolver.name]: resolver,
+      };
+    });
+
+    resolverGroup.mutations.forEach(mutation => {
+      const { authenticated, root = 'Mutation', resolver } = mutation;
+      const resolverSet = authenticated ? 'authenticatedResolvers' : 'coreResolvers';
+
+      result[resolverSet][root] = {
+        ...result[resolverSet][root],
+        [resolver.name]: resolver,
+      };
+    });
 
     return result;
   }, initialState);
