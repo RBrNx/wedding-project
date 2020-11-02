@@ -32,6 +32,20 @@ const coreSchema = gql`
     responseType: ResponseType
     followUp: FollowUp
   }
+
+  type AnswerMutationResponse implements MutationResponse {
+    success: Boolean
+    message: String
+  }
+
+  input TextAnswerInput {
+    questionId: ID!
+    answer: String!
+  }
+
+  extend type Mutation {
+    answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
+  }
 `;
 
 const authenticatedSchema = gql`
