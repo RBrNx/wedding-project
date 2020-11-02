@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import AnswerSchema from '../models/Answer';
 import GuestSchema from '../models/Guest';
 import InvitationSchema from '../models/Invitation';
 import QuestionSchema from '../models/Question';
@@ -24,6 +25,7 @@ const connectToDatabase = async () => {
       cachedDb.model('Guest', GuestSchema);
       cachedDb.model('Invitation', InvitationSchema);
       cachedDb.model('Question', QuestionSchema);
+      cachedDb.model('Answer', AnswerSchema);
     }
     return cachedDb;
   } catch (error) {
