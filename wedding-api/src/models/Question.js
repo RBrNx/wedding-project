@@ -1,4 +1,6 @@
 import { Schema } from 'mongoose';
+import { mapEnumValues } from '../lib/helpers';
+import { QuestionType, QuestionResponseType } from '../lib/enums';
 
 const { ObjectId } = Schema.Types;
 
@@ -22,13 +24,13 @@ const FollowUpSchema = new Schema(
 );
 
 const QuestionSchema = new Schema({
-  type: { type: String, enum: ['ATTENDANCE', 'MULTIPLE_CHOICE', 'TEXT'], required: true },
+  type: { type: String, enum: mapEnumValues(QuestionType), required: true },
   title: { type: String, required: true },
   label: { type: String },
   choices: [{ type: ChoiceSchema }],
   specificGroups: [{ type: ObjectId, ref: 'Group' }],
   specificGuests: [{ type: ObjectId, ref: 'Guest' }],
-  responseType: { type: String, enum: ['INDIVIDUAL', 'HOUSEHOLD'], required: true },
+  responseType: { type: String, enum: mapEnumValues(QuestionResponseType), required: true },
   followUp: { type: FollowUpSchema },
 });
 
