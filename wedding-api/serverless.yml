@@ -42,14 +42,12 @@ functions:
           path: api
           method: post
           cors: true
-          integration: lambda-proxy
           authorizer: aws_iam
 
       - http:
           path: api
           method: get
           cors: true
-          integration: lambda-proxy
           authorizer: aws_iam
   authenticated:
     handler: src/index.authenticatedGQLHandler
@@ -60,14 +58,12 @@ functions:
           path: admin
           method: post
           cors: true
-          integration: lambda-proxy
           authorizer: aws_iam
 
       - http:
           path: admin
           method: get
           cors: true
-          integration: lambda-proxy
           authorizer: aws_iam
 
 resources:
