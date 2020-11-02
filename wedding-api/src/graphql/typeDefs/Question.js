@@ -14,7 +14,8 @@ const coreSchema = gql`
 
   type Choice {
     _id: ID
-    text: String
+    label: String
+    value: String
   }
 
   type FollowUp {
@@ -56,7 +57,8 @@ const authenticatedSchema = gql`
   }
 
   input ChoiceInput {
-    text: String!
+    label: String!
+    value: String
   }
 
   input FollowUpInput {

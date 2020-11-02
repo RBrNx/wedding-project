@@ -6,7 +6,8 @@ const { ObjectId } = Schema.Types;
 
 const ChoiceSchema = new Schema(
   {
-    text: String,
+    label: String,
+    value: String,
   },
   {
     _id: true,
