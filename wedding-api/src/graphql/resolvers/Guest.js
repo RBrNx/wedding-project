@@ -3,9 +3,9 @@ import { connectToDatabase } from '../../lib/database';
 const getAllGuests = async () => {
   try {
     const db = await connectToDatabase();
-    const GuestSchema = db.model('Guest');
+    const GuestModel = db.model('Guest');
 
-    const guests = await GuestSchema.find().exec();
+    const guests = await GuestModel.find().exec();
 
     return guests;
   } catch (error) {
@@ -18,9 +18,9 @@ const updateGuest = async (parent, args) => {
     const { input } = args;
     const { guestId, attending, mainCourse, email } = input;
     const db = await connectToDatabase();
-    const GuestSchema = db.model('Guest');
+    const GuestModel = db.model('Guest');
 
-    const guest = await GuestSchema.findOneAndUpdate(
+    const guest = await GuestModel.findOneAndUpdate(
       { _id: guestId },
       { attending, mainCourse, email },
       { new: true },

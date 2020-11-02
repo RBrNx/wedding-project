@@ -4,9 +4,9 @@ const getInvitation = async (parent, args) => {
   try {
     const { uniqueCode } = args;
     const db = await connectToDatabase();
-    const InvitationSchema = db.model('Invitation');
+    const InvitationModel = db.model('Invitation');
 
-    const invitation = await InvitationSchema.findOne({ uniqueCode }).populate('guests').exec();
+    const invitation = await InvitationModel.findOne({ uniqueCode }).populate('guests').exec();
 
     return invitation;
   } catch (error) {
@@ -17,9 +17,9 @@ const getInvitation = async (parent, args) => {
 const getAllInvitations = async () => {
   try {
     const db = await connectToDatabase();
-    const InvitationSchema = db.model('Invitation');
+    const InvitationModel = db.model('Invitation');
 
-    const invitations = await InvitationSchema.find().populate('guests').exec();
+    const invitations = await InvitationModel.find().populate('guests').exec();
 
     return invitations;
   } catch (error) {
