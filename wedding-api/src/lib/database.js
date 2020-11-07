@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
-import { GuestSchema, InvitationSchema } from '../models';
+import AnswerSchema from '../models/Answer';
+import GuestSchema from '../models/Guest';
+import InvitationSchema from '../models/Invitation';
+import QuestionSchema from '../models/Question';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const { MONGODB_URI } = process.env;
 
 let cachedDb = null;
 
@@ -21,6 +24,8 @@ const connectToDatabase = async () => {
 
       cachedDb.model('Guest', GuestSchema);
       cachedDb.model('Invitation', InvitationSchema);
+      cachedDb.model('Question', QuestionSchema);
+      cachedDb.model('Answer', AnswerSchema);
     }
     return cachedDb;
   } catch (error) {

@@ -1,45 +1,11 @@
-import { ApolloServer } from 'apollo-server-lambda';
-import coreTypeDefs from './coreTypeDefs';
-import coreResolvers from './coreResolvers';
-import authenticatedTypeDefs from './authenticatedTypeDefs';
-import authenticatedResolvers from './authenticatedResolvers';
+import { coreResolvers, authenticatedResolvers, coreTypeDefs, authenticatedTypeDefs } from './graphql/index';
+import { generateApolloServer } from './lib/apollo';
 
-const generateApolloServer = ({ authenticated }) => {
-  if (!process.env.MONGODB_URI) {
-    console.log('Error: Missing .env variables');
-    process.exit(1);
-  }
-
-  const typeDefs = [coreTypeDefs];
-  if (authenticated) typeDefs.push(authenticatedTypeDefs);
-
-  const resolvers = [coreResolvers];
-  if (authenticated) resolvers.push(authenticatedResolvers);
-
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    formatError: (error) => {
-      return error;
-    },
-    formatResponse: (response) => {
-      return response;
-    },
-    context: ({ event, context }) => ({
-      headers: event.headers,
-      functionName: context.functionName,
-      event,
-      context,
-    }),
-    tracing: false,
-    playground: true,
-  });
-
-  return server;
-};
-
-const unauthenticatedServer = generateApolloServer({ authenticated: false });
-const authenticatedServer = generateApolloServer({ authenticated: true });
+const unauthenticatedServer = generateApolloServer({ resolvers: [coreResolvers], typeDefs: [...coreTypeDefs] });
+const authenticatedServer = generateApolloServer({
+  resolvers: [coreResolvers, authenticatedResolvers],
+  typeDefs: [...coreTypeDefs, ...authenticatedTypeDefs],
+});
 
 exports.unauthenticatedGQLHandler = (event, context, callback) => {
   const handler = unauthenticatedServer.createHandler({

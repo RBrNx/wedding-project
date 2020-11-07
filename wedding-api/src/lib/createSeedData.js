@@ -1,5 +1,5 @@
-import _ from './env';
 import faker from 'faker';
+import _ from './env';
 import { connectToDatabase } from './database';
 
 faker.seed(100);
@@ -19,12 +19,12 @@ const generateGuest = () => {
   };
 };
 
-const generateInvitation = (guests) => {
+const generateInvitation = guests => {
   const invitationType = ['DAYTIME', 'EVENING'];
 
   return {
     uniqueCode: faker.random.alphaNumeric(6),
-    guests: guests.map((guest) => guest._id),
+    guests: guests.map(guest => guest._id),
     type: faker.random.arrayElement(invitationType),
   };
 };
@@ -51,8 +51,6 @@ const createWeddingGuests = async () => {
   await InvitationSchema.insertMany(invitations);
 
   console.log(`Created ${invitations.length} invitations.`);
-
-  return;
 };
 
 createWeddingGuests();
