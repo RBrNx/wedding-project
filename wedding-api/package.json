@@ -1,8 +1,7 @@
 {
   "name": "wedding-api",
-  "version": "0.0.1",
-  "description": "A GraphQL Node.js starter for the Serverless Framework with async/await and unit test support",
-  "main": "handler.js",
+  "version": "0.1.0",
+  "description": "A GraphQL API running on AWS Lambda",
   "scripts": {
     "start:offline": "sls offline",
     "deploy": "sls deploy -v",
@@ -11,11 +10,6 @@
     "generate-data": "node -r esm ./src/lib/createSeedData.js"
   },
   "author": "",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pimp-my-book/serverless-graphql-nodejs-starter"
-  },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
