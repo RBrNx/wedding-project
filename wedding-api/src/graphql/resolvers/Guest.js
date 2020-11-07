@@ -53,9 +53,13 @@ const attending = async parent => {
 };
 
 export default {
-  queries: [
-    { resolver: getAllGuests, authenticated: true },
-    { resolver: attending, authenticated: true, root: 'Guest' },
-  ],
-  mutations: [{ resolver: updateGuest, authenticated: true }],
+  Query: {
+    getAllGuests,
+  },
+  Mutation: {
+    updateGuest,
+  },
+  Guest: {
+    attending,
+  },
 };

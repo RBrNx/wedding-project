@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 
-const coreSchema = gql`
+const schema = gql`
   enum InvitationType {
     DAYTIME
     EVENING
@@ -15,13 +15,8 @@ const coreSchema = gql`
 
   extend type Query {
     getInvitation(uniqueCode: String!): Invitation
-  }
-`;
-
-const authenticatedSchema = gql`
-  extend type Query {
     getAllInvitations: [Invitation]
   }
 `;
 
-export default { coreSchema, authenticatedSchema };
+export default schema;

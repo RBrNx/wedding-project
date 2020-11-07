@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 
-const coreSchema = gql`
+const schema = gql`
   enum QuestionType {
     ATTENDANCE
     MULTIPLE_CHOICE
@@ -39,23 +39,6 @@ const coreSchema = gql`
     message: String
   }
 
-  input TextAnswerInput {
-    questionId: ID!
-    answer: String!
-  }
-
-  input ChoiceAnswerInput {
-    questionId: ID!
-    answer: ID!
-  }
-
-  extend type Mutation {
-    answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
-    answerChoiceQuestion(guestId: ID!, answerInput: ChoiceAnswerInput!): AnswerMutationResponse
-  }
-`;
-
-const authenticatedSchema = gql`
   type QuestionMutationResponse implements MutationResponse {
     success: Boolean
     message: String
@@ -82,9 +65,21 @@ const authenticatedSchema = gql`
     followUp: FollowUpInput
   }
 
+  input TextAnswerInput {
+    questionId: ID!
+    answer: String!
+  }
+
+  input ChoiceAnswerInput {
+    questionId: ID!
+    answer: ID!
+  }
+
   extend type Mutation {
     createQuestion(question: QuestionInput!): QuestionMutationResponse
+    answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
+    answerChoiceQuestion(guestId: ID!, answerInput: ChoiceAnswerInput!): AnswerMutationResponse
   }
 `;
 
-export default { coreSchema, authenticatedSchema };
+export default schema;

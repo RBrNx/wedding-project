@@ -28,6 +28,8 @@ const getAllInvitations = async () => {
 };
 
 export default {
-  queries: [{ resolver: getInvitation }, { resolver: getAllInvitations, authenticated: true }],
-  mutations: [],
+  Query: {
+    getInvitation,
+    getAllInvitations,
+  },
 };

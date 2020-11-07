@@ -68,10 +68,9 @@ const answerChoiceQuestion = async (parent, args) => {
 };
 
 export default {
-  queries: [],
-  mutations: [
-    { resolver: createQuestion, authenticated: true },
-    { resolver: answerTextQuestion },
-    { resolver: answerChoiceQuestion },
-  ],
+  Mutation: {
+    createQuestion,
+    answerTextQuestion,
+    answerChoiceQuestion,
+  },
 };

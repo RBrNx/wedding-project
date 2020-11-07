@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 
-const coreSchema = gql`
+const schema = gql`
   interface MutationResponse {
     success: Boolean
     message: String
@@ -8,9 +8,7 @@ const coreSchema = gql`
 
   type Query
 
-  type Mutation {
-    _empty: String
-  }
+  type Mutation
 `;
 
-export default { coreSchema };
+export default schema;

@@ -33,35 +33,35 @@ provider:
   #environment: ${file(env.yml):${self:provider.stage}}
 
 functions:
-  unauthenticated:
-    handler: src/index.unauthenticatedGQLHandler
-    environment:
-      SLS_DEBUG: true
-    events:
-      - http:
-          path: api
-          method: post
-          cors: true
-          authorizer: aws_iam
+  # unauthenticated:
+  #   handler: src/index.unauthenticatedGQLHandler
+  #   environment:
+  #     SLS_DEBUG: true
+  #   events:
+  #     - http:
+  #         path: api
+  #         method: post
+  #         cors: true
+  #         authorizer: aws_iam
 
-      - http:
-          path: api
-          method: get
-          cors: true
-          authorizer: aws_iam
+  #     - http:
+  #         path: api
+  #         method: get
+  #         cors: true
+  #         authorizer: aws_iam
   authenticated:
-    handler: src/index.authenticatedGQLHandler
+    handler: src/server.authenticatedGQLHandler
     environment:
       SLS_DEBUG: true
     events:
       - http:
-          path: admin
+          path: api
           method: post
           cors: true
           authorizer: aws_iam
 
       - http:
-          path: admin
+          path: api
           method: get
           cors: true
           authorizer: aws_iam
