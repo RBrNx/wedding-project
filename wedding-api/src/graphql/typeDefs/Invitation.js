@@ -9,7 +9,7 @@ const schema = gql`
   type Invitation {
     _id: ID
     uniqueCode: String
-    guests: [Guest]
+    guests: [User]
     type: InvitationType
   }
 

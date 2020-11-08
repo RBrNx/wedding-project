@@ -1,13 +1,13 @@
-import GuestResolvers from './resolvers/Guest';
+import UserResolvers from './resolvers/User';
 import InvitationResolvers from './resolvers/Invitation';
 import QuestionResolvers from './resolvers/Question';
 import BaseTypeDefs from './typeDefs/Base';
-import GuestTypeDefs from './typeDefs/Guest';
+import UserTypeDefs from './typeDefs/User';
 import InvitationTypeDefs from './typeDefs/Invitation';
 import QuestionTypeDefs from './typeDefs/Question';
 
-const typeDefs = [BaseTypeDefs, GuestTypeDefs, InvitationTypeDefs, QuestionTypeDefs];
+const typeDefs = [BaseTypeDefs, UserTypeDefs, InvitationTypeDefs, QuestionTypeDefs];
 
-const resolvers = [GuestResolvers, InvitationResolvers, QuestionResolvers];
+const resolvers = [UserResolvers, InvitationResolvers, QuestionResolvers];
 
 export { typeDefs, resolvers };

@@ -1,14 +1,47 @@
 import { connectToDatabase } from '../../lib/database';
-import { AttendanceStatus, QuestionType } from '../../lib/enums';
+import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
+import { stripNonAlphaChars } from '../../lib/helpers';
 
 const getAllGuests = async () => {
   try {
     const db = await connectToDatabase();
-    const GuestModel = db.model('Guest');
+    const UserModel = db.model('User');
 
-    const guests = await GuestModel.find().exec();
+    const guests = await UserModel.find({ role: UserRole.GUEST }).exec();
 
     return guests;
+  } catch (error) {
+    return error;
+  }
+};
+
+const createGuest = async (parent, { guest }) => {
+  try {
+    const { firstName, lastName } = guest;
+
+    const db = await connectToDatabase();
+    const GuestModel = db.model('User');
+
+    const forename = stripNonAlphaChars(firstName);
+    const surname = stripNonAlphaChars(lastName);
+    let username = `${forename}${surname}`.toLowerCase();
+
+    const usernameCount = await GuestModel.countDocuments({ username: { $regex: `^${username}` } });
+    if (usernameCount > 0) username += usernameCount;
+
+    const guestDoc = new GuestModel({
+      firstName,
+      lastName,
+      username,
+      role: UserRole.GUEST,
+    });
+    await guestDoc.save();
+
+    return {
+      success: true,
+      message: 'Guest created successfully',
+      payload: guestDoc.toObject(),
+    };
   } catch (error) {
     return error;
   }
@@ -57,9 +90,10 @@ export default {
     getAllGuests,
   },
   Mutation: {
-    updateGuest,
+    createGuest,
+    // updateGuest,
   },
-  Guest: {
+  User: {
     attending,
   },
 };

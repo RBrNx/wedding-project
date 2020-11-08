@@ -29,7 +29,7 @@ const schema = gql`
     title: String
     label: String
     choices: [Choice]
-    specificGuests: [Guest]
+    specificGuests: [User]
     responseType: ResponseType
     followUp: FollowUp
   }
