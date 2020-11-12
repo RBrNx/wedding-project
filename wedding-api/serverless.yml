@@ -65,6 +65,12 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  preAuthentication:
+    handler: src/server.preAuthenticationHandler
+    events:
+      - cognitoUserPool:
+          pool: CognitoUserPool
+          trigger: PreAuthentication
 
 resources:
   # Cognito
