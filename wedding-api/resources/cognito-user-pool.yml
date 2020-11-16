@@ -1,5 +1,5 @@
 Resources:
-  CognitoUserPool:
+  CognitoUserPoolWedding:
     Type: AWS::Cognito::UserPool
     Properties:
       # Generate a name based on the stage
@@ -16,7 +16,7 @@ Resources:
       # Generate an app client name based on the stage
       ClientName: ${self:provider.stage}-user-pool-client
       UserPoolId:
-        Ref: CognitoUserPool
+        Ref: CognitoUserPoolWedding
       ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
       GenerateSecret: false
@@ -25,7 +25,7 @@ Resources:
 Outputs:
   UserPoolId:
     Value:
-      Ref: CognitoUserPool
+      Ref: CognitoUserPoolWedding
 
   UserPoolClientId:
     Value:
