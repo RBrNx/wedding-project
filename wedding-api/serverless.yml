@@ -69,7 +69,7 @@ functions:
     handler: src/server.preAuthenticationHandler
     events:
       - cognitoUserPool:
-          pool: CognitoUserPoolWedding
+          pool: Wedding
           trigger: PreAuthentication
 
 resources:
