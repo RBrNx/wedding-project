@@ -5,10 +5,26 @@ Resources:
       # Generate a name based on the stage
       UserPoolName: ${self:provider.stage}-user-pool
       # Set email as an alias
-      UsernameAttributes:
+      AliasAttributes:
         - email
       AutoVerifiedAttributes:
         - email
+      Schema:
+        - Name: userId
+          AttributeDataType: String
+          DeveloperOnlyAttribute: true
+          Mutable: false
+          Required: false
+      UsernameConfiguration:
+        CaseSensitive: false
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: false
+          RequireNumbers: true
+          RequireSymbols: false
+          TemporaryPasswordValidityDays: 7
 
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
@@ -19,6 +35,7 @@ Resources:
         Ref: CognitoUserPoolWedding
       ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
+        - USER_PASSWORD_AUTH
       GenerateSecret: false
 
 # Print out the Id of the User Pool that is created
