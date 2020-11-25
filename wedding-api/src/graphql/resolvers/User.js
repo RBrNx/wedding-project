@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../../lib/database';
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
-import { generateTemporaryCredentials } from '../../lib/helpers/users';
+import { createCognitoUser, generateTemporaryCredentials } from '../../lib/helpers/users';
 
 const getAllGuests = async () => {
   try {
@@ -51,6 +51,8 @@ const createGuest = async (parent, { guest }) => {
       ],
       { session },
     );
+
+    await createCognitoUser({ userId: userDoc._id.toString(), username, password });
 
     await session.commitTransaction();
 
