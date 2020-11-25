@@ -13,13 +13,13 @@ const schema = gql`
   }
 
   type User {
-    _id: ID
-    firstName: String
-    lastName: String
-    username: String
+    _id: ID!
+    eventId: ID!
+    firstName: String!
+    lastName: String!
     email: String
-    role: UserRole
-    attending: AttendanceStatus
+    role: UserRole!
+    attending: AttendanceStatus!
   }
 
   type UserMutationResponse implements MutationResponse {
