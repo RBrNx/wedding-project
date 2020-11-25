@@ -4,6 +4,7 @@ import UserSchema from '../models/User';
 import InvitationSchema from '../models/Invitation';
 import QuestionSchema from '../models/Question';
 import EventSchema from '../models/Event';
+import TempLoginDetailsSchema from '../models/TempLoginDetails';
 
 const { MONGODB_URI } = process.env;
 
@@ -29,6 +30,7 @@ const connectToDatabase = async () => {
       cachedDb.model('Question', QuestionSchema);
       cachedDb.model('Answer', AnswerSchema);
       cachedDb.model('Event', EventSchema);
+      cachedDb.model('TempLoginDetails', TempLoginDetailsSchema);
     }
     return cachedDb;
   } catch (error) {
