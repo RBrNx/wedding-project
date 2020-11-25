@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../../lib/database';
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
-import { stripNonAlphaChars } from '../../lib/helpers';
+import { generateTemporaryCredentials } from '../../lib/helpers/users';
 
 const getAllGuests = async () => {
   try {
@@ -16,20 +16,43 @@ const getAllGuests = async () => {
 };
 
 const createGuest = async (parent, { guest }) => {
+  let session;
+
   try {
     const { firstName, lastName } = guest;
 
     const db = await connectToDatabase();
+    session = await db.startSession();
+    session.startTransaction();
+
     const UserModel = db.model('User');
+    const TempLoginDetailsModel = db.model('TempLoginDetails');
 
-    const userDoc = new UserModel({
-      eventId: '5fbea387019cca16234648f0', // TODO: Pull this from CurrentUser
-      firstName,
-      lastName,
-      role: UserRole.GUEST,
-    });
+    const [userDoc] = await UserModel.create(
+      [
+        {
+          eventId: '5fbea387019cca16234648f0', // TODO: Pull this from CurrentUser
+          firstName,
+          lastName,
+          role: UserRole.GUEST,
+        },
+      ],
+      { session },
+    );
+    const { username, password } = await generateTemporaryCredentials({ firstName, lastName });
 
-    await userDoc.save();
+    await TempLoginDetailsModel.create(
+      [
+        {
+          userId: userDoc._id,
+          username,
+          password,
+        },
+      ],
+      { session },
+    );
+
+    await session.commitTransaction();
 
     return {
       success: true,
@@ -37,7 +60,12 @@ const createGuest = async (parent, { guest }) => {
       payload: userDoc,
     };
   } catch (error) {
-    return error;
+    if (session) await session.abortTransaction();
+
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 };
 
