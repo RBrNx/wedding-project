@@ -20,27 +20,21 @@ const createGuest = async (parent, { guest }) => {
     const { firstName, lastName } = guest;
 
     const db = await connectToDatabase();
-    const GuestModel = db.model('User');
+    const UserModel = db.model('User');
 
-    const forename = stripNonAlphaChars(firstName);
-    const surname = stripNonAlphaChars(lastName);
-    let username = `${forename}${surname}`.toLowerCase();
-
-    const usernameCount = await GuestModel.countDocuments({ username: { $regex: `^${username}` } });
-    if (usernameCount > 0) username += usernameCount;
-
-    const guestDoc = new GuestModel({
+    const userDoc = new UserModel({
+      eventId: '5fbea387019cca16234648f0', // TODO: Pull this from CurrentUser
       firstName,
       lastName,
-      username,
       role: UserRole.GUEST,
     });
-    await guestDoc.save();
+
+    await userDoc.save();
 
     return {
       success: true,
       message: 'Guest created successfully',
-      payload: guestDoc.toObject(),
+      payload: userDoc,
     };
   } catch (error) {
     return error;
