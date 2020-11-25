@@ -1,6 +1,9 @@
 import crypto from 'crypto';
+import AWS from 'aws-sdk';
 import { connectToDatabase } from '../database';
 import { stripNonAlphaChars } from '../helpers';
+
+const { COGNITO_USER_POOL_ID } = process.env;
 
 const generatePassword = (
   length = 15,
@@ -29,4 +32,34 @@ const generateTemporaryCredentials = async ({ firstName, lastName }) => {
   };
 };
 
-export { generateTemporaryCredentials };
+const createCognitoUser = async ({ userId, username, password }) => {
+  const cognitoProvider = new AWS.CognitoIdentityServiceProvider();
+  const user = await cognitoProvider
+    .adminCreateUser({
+      UserPoolId: COGNITO_USER_POOL_ID,
+      Username: username,
+      UserAttributes: [
+        {
+          Name: 'dev:custom:userId',
+          Value: userId,
+        },
+      ],
+      MessageAction: 'SUPPRESS',
+    })
+    .promise();
+
+  if (!user) return null;
+
+  await cognitoProvider
+    .adminSetUserPassword({
+      UserPoolId: COGNITO_USER_POOL_ID,
+      Username: username,
+      Password: password,
+      Permanent: true,
+    })
+    .promise();
+
+  return user;
+};
+
+export { generateTemporaryCredentials, createCognitoUser };
