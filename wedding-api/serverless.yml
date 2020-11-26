@@ -33,24 +33,8 @@ provider:
   #environment: ${file(env.yml):${self:provider.stage}}
 
 functions:
-  # unauthenticated:
-  #   handler: src/index.unauthenticatedGQLHandler
-  #   environment:
-  #     SLS_DEBUG: true
-  #   events:
-  #     - http:
-  #         path: api
-  #         method: post
-  #         cors: true
-  #         authorizer: aws_iam
-
-  #     - http:
-  #         path: api
-  #         method: get
-  #         cors: true
-  #         authorizer: aws_iam
-  authenticated:
-    handler: src/server.authenticatedGQLHandler
+  unauthenticated:
+    handler: src/server.unauthenticatedGQLHandler
     environment:
       SLS_DEBUG: true
     events:
@@ -65,12 +49,22 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
-  preAuthentication:
-    handler: src/server.preAuthenticationHandler
+  authenticated:
+    handler: src/server.authenticatedGQLHandler
+    environment:
+      SLS_DEBUG: true
     events:
-      - cognitoUserPool:
-          pool: Wedding
-          trigger: PreAuthentication
+      - http:
+          path: admin
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+      - http:
+          path: admin
+          method: get
+          cors: true
+          authorizer: aws_iam
 
 resources:
   # Cognito
