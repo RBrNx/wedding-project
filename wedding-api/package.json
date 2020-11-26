@@ -2,6 +2,8 @@
   "name": "wedding-api",
   "version": "0.1.0",
   "description": "A GraphQL API running on AWS Lambda",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "start:offline": "sls offline",
     "deploy": "sls deploy -v",
@@ -31,13 +33,14 @@
   },
   "dependencies": {
     "apollo-server-lambda": "^2.14.2",
-    "babel-runtime": "^6.26.0",
+    "aws-sdk": "^2.787.0",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "graphql": "^14.3.0",
     "graphql-scalars": "^1.5.0",
     "jsonfile": "^5.0.0",
     "mongoose": "^5.8.11",
+    "nanoid": "^3.1.18",
     "serverless-dotenv-plugin": "^2.3.2",
     "source-map-support": "^0.5.19"
   }
