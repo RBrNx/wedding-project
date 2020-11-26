@@ -8,6 +8,7 @@ const TempLoginDetailsSchema = new Schema({
   shortId: { type: String, required: true, unique: true, default: () => nanoid(12) },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  disabled: { type: Boolean, required: true, default: false },
 });
 
 export default TempLoginDetailsSchema;
