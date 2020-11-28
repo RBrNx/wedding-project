@@ -3,7 +3,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       # Generate a name based on the stage
-      UserPoolName: ${self:provider.stage}-user-pool
+      UserPoolName: wedding-${self:provider.stage}-user-pool
       # Set email as an alias
       AliasAttributes:
         - email
@@ -30,7 +30,7 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       # Generate an app client name based on the stage
-      ClientName: ${self:provider.stage}-user-pool-client
+      ClientName: wedding-${self:provider.stage}-user-pool-client
       UserPoolId:
         Ref: CognitoUserPoolWedding
       ExplicitAuthFlows:
