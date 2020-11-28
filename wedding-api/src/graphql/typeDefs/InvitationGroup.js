@@ -6,16 +6,15 @@ const schema = gql`
     EVENING
   }
 
-  type Invitation {
+  type InvitationGroup {
     _id: ID
-    uniqueCode: String
     guests: [User]
     type: InvitationType
   }
 
   extend type Query {
-    getInvitation(uniqueCode: String!): Invitation
-    getAllInvitations: [Invitation]
+    getInvitationGroup(id: ID!): InvitationGroup
+    getAllInvitationGroups: [InvitationGroup]
   }
 `;
 

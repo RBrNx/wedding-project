@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import AnswerSchema from '../models/Answer';
 import UserSchema from '../models/User';
-import InvitationSchema from '../models/Invitation';
+import InvitationGroupSchema from '../models/InvitationGroup';
 import QuestionSchema from '../models/Question';
 import EventSchema from '../models/Event';
 import TempLoginDetailsSchema from '../models/TempLoginDetails';
@@ -26,7 +26,7 @@ const connectToDatabase = async () => {
       });
 
       cachedDb.model('User', UserSchema);
-      cachedDb.model('Invitation', InvitationSchema);
+      cachedDb.model('InvitationGroup', InvitationGroupSchema);
       cachedDb.model('Question', QuestionSchema);
       cachedDb.model('Answer', AnswerSchema);
       cachedDb.model('Event', EventSchema);
