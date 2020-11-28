@@ -8,6 +8,7 @@ plugins:
   - serverless-webpack
   - serverless-offline
   - serverless-dotenv-plugin
+  - serverless-domain-manager
 
 # serverless-webpack configuration
 # Enable auto-packing of external modules
@@ -17,6 +18,25 @@ custom:
     includeModules: true
   serverless-offline:
     port: 4000
+  customDomain:
+    - http:
+        domainName: ${self:provider.stage}-api.thewatsonwedding.com
+        basePath: ''
+        endpointType: 'edge'
+        stage: ci
+        createRoute53Record: true
+        securityPolicy: tls_1_2
+        apiType: http
+        autoDomain: false # False until Domain is transferred
+    - http:
+        domainName: api.thewatsonwedding.com
+        basePath: ''
+        endpointType: 'edge'
+        stage: prod
+        createRoute53Record: true
+        securityPolicy: tls_1_2
+        apiType: http
+        autoDomain: false # False until Domain is transferred
 
 provider:
   name: aws
