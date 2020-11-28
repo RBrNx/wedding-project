@@ -16,7 +16,9 @@ const schema = gql`
     message: String
   }
 
-  type Query
+  type Query {
+    _: Boolean
+  }
 
   type Mutation
 `;
