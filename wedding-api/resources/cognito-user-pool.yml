@@ -7,14 +7,9 @@ Resources:
       # Set email as an alias
       AliasAttributes:
         - email
+        - preferred_username
       AutoVerifiedAttributes:
         - email
-      Schema:
-        - Name: userId
-          AttributeDataType: String
-          DeveloperOnlyAttribute: true
-          Mutable: false
-          Required: false
       UsernameConfiguration:
         CaseSensitive: false
       Policies:
@@ -25,6 +20,8 @@ Resources:
           RequireNumbers: true
           RequireSymbols: false
           TemporaryPasswordValidityDays: 7
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_LINK
 
   CognitoUserPoolClientMobile:
     Type: AWS::Cognito::UserPoolClient
