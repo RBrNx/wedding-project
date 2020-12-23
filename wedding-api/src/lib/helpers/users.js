@@ -37,11 +37,11 @@ const createCognitoUser = async ({ userId, username, password }) => {
   const user = await cognitoProvider
     .adminCreateUser({
       UserPoolId: COGNITO_USER_POOL_ID,
-      Username: username,
+      Username: userId,
       UserAttributes: [
         {
-          Name: 'dev:custom:userId',
-          Value: userId,
+          Name: 'preferred_username',
+          Value: username,
         },
       ],
       MessageAction: 'SUPPRESS',
@@ -53,7 +53,7 @@ const createCognitoUser = async ({ userId, username, password }) => {
   await cognitoProvider
     .adminSetUserPassword({
       UserPoolId: COGNITO_USER_POOL_ID,
-      Username: username,
+      Username: userId,
       Password: password,
       Permanent: true,
     })
