@@ -143,9 +143,9 @@ const attending = async parent => {
   const AnswerModel = db.model('Answer');
 
   const attendanceQuestion = await QuestionModel.findOne({ type: QuestionType.ATTENDANCE });
-  const answerDoc = await AnswerModel.findOne({ guestId: _id, questionId: attendanceQuestion._id });
+  const answerDoc = await AnswerModel.findOne({ guestId: _id, questionId: attendanceQuestion?._id });
 
-  if (!answerDoc) return AttendanceStatus.AWAITING_RSVP;
+  if (!attendanceQuestion || !answerDoc) return AttendanceStatus.AWAITING_RSVP;
 
   const { answer } = answerDoc;
   const userChoice = attendanceQuestion.choices.find(choice => choice._id.toString() === answer);
