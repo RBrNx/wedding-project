@@ -26,11 +26,23 @@ Resources:
           RequireSymbols: false
           TemporaryPasswordValidityDays: 7
 
-  CognitoUserPoolClient:
+  CognitoUserPoolClientMobile:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       # Generate an app client name based on the stage
-      ClientName: wedding-${self:provider.stage}-user-pool-client
+      ClientName: wedding-${self:provider.stage}-client-mobile
+      UserPoolId:
+        Ref: CognitoUserPoolWedding
+      ExplicitAuthFlows:
+        - ADMIN_NO_SRP_AUTH
+        - USER_PASSWORD_AUTH
+      GenerateSecret: false
+
+  CognitoUserPoolClientAPI:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      # Generate an app client name based on the stage
+      ClientName: wedding-${self:provider.stage}-client-api
       UserPoolId:
         Ref: CognitoUserPoolWedding
       ExplicitAuthFlows:
@@ -44,6 +56,10 @@ Outputs:
     Value:
       Ref: CognitoUserPoolWedding
 
-  UserPoolClientId:
+  UserPoolMobileClientId:
     Value:
-      Ref: CognitoUserPoolClient
+      Ref: CognitoUserPoolClientMobile
+
+  UserPoolMobileApiId:
+    Value:
+      Ref: CognitoUserPoolClientAPI

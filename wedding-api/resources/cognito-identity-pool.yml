@@ -10,7 +10,11 @@ Resources:
       # Link to our User Pool
       CognitoIdentityProviders:
         - ClientId:
-            Ref: CognitoUserPoolClient
+            Ref: CognitoUserPoolClientAPI
+          ProviderName:
+            Fn::GetAtt: ['CognitoUserPoolWedding', 'ProviderName']
+        - ClientId:
+            Ref: CognitoUserPoolClientMobile
           ProviderName:
             Fn::GetAtt: ['CognitoUserPoolWedding', 'ProviderName']
 
