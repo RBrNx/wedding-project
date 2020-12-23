@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 import { connectToDatabase } from '../database';
 import { stripNonAlphaChars } from '../helpers';
 
-const { COGNITO_USER_POOL_ID } = process.env;
+const { COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID } = process.env;
 
 const generatePassword = (
   length = 15,
@@ -62,4 +62,23 @@ const createCognitoUser = async ({ userId, username, password }) => {
   return user;
 };
 
-export { generateTemporaryCredentials, createCognitoUser };
+const createCognitoAdminUser = async ({ userId, email, password }) => {
+  const cognitoProvider = new AWS.CognitoIdentityServiceProvider();
+  const user = await cognitoProvider
+    .signUp({
+      ClientId: COGNITO_APP_CLIENT_ID,
+      Username: userId,
+      Password: password,
+      UserAttributes: [
+        {
+          Name: 'email',
+          Value: email,
+        },
+      ],
+    })
+    .promise();
+
+  return user;
+};
+
+export { generateTemporaryCredentials, createCognitoUser, createCognitoAdminUser };
