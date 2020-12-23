@@ -18,25 +18,21 @@ custom:
     includeModules: true
   serverless-offline:
     port: 4000
+  domains:
+    prod: api.thewatsonwedding.com
+    staging: staging-api.thewatsonwedding.com
+    dev: dev-api.thewatsonwedding.com
   customDomain:
-    - http:
-        domainName: ${self:provider.stage}-api.thewatsonwedding.com
-        basePath: ''
-        endpointType: 'edge'
-        stage: ci
-        createRoute53Record: true
-        securityPolicy: tls_1_2
-        apiType: http
-        autoDomain: false # False until Domain is transferred
-    - http:
-        domainName: api.thewatsonwedding.com
-        basePath: ''
-        endpointType: 'edge'
-        stage: prod
-        createRoute53Record: true
-        securityPolicy: tls_1_2
-        apiType: http
-        autoDomain: false # False until Domain is transferred
+    domainName: ${self:custom.domains.${self:provider.stage}}
+    basePath: ''
+    endpointType: 'regional'
+    stage: '${self:provider.stage}'
+    certificateName: 'thewatsonwedding.com'
+    createRoute53Record: true
+    securityPolicy: tls_1_2
+    apiType: rest
+    autoDomain: true
+    enabled: true
 
 provider:
   name: aws
