@@ -1,6 +1,6 @@
 import { connectToDatabase } from '../../lib/database';
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
-import { createCognitoUser, generateTemporaryCredentials } from '../../lib/helpers/users';
+import { createCognitoAdminUser, createCognitoUser, generateTemporaryCredentials } from '../../lib/helpers/users';
 
 const getAllGuests = async () => {
   try {
@@ -91,6 +91,50 @@ const updateGuest = async (parent, args) => {
   }
 };
 
+const createAdmin = async (parent, { input }) => {
+  let session;
+
+  try {
+    const { firstName, lastName, email, password, eventId } = input;
+
+    const db = await connectToDatabase();
+    session = await db.startSession();
+    session.startTransaction();
+
+    const UserModel = db.model('User');
+
+    const [userDoc] = await UserModel.create(
+      [
+        {
+          eventId: eventId || '5fbea387019cca16234648f0', // TODO: Pull this from CurrentUser
+          firstName,
+          lastName,
+          role: UserRole.ADMIN,
+          email,
+        },
+      ],
+      { session },
+    );
+
+    await createCognitoAdminUser({ userId: userDoc._id.toString(), email, password });
+
+    await session.commitTransaction();
+
+    return {
+      success: true,
+      message: 'Admin created successfully',
+      payload: userDoc,
+    };
+  } catch (error) {
+    if (session) await session.abortTransaction();
+
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 const attending = async parent => {
   const { _id } = parent;
 
@@ -115,7 +159,7 @@ export default {
   },
   Mutation: {
     createGuest,
-    // updateGuest,
+    createAdmin,
   },
   User: {
     attending,

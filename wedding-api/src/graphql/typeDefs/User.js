@@ -33,12 +33,21 @@ const schema = gql`
     lastName: String!
   }
 
+  input CreateAdminInput {
+    firstName: String!
+    lastName: String!
+    email: EmailAddress!
+    password: String!
+    eventId: String
+  }
+
   extend type Query {
     getAllGuests: [User]
   }
 
   extend type Mutation {
     createGuest(guest: CreateUserInput!): UserMutationResponse
+    createAdmin(input: CreateAdminInput!): UserMutationResponse
   }
 `;
 
