@@ -52,7 +52,10 @@ const createGuest = async (parent, { guest }) => {
       { session },
     );
 
-    await createCognitoUser({ userId: userDoc._id.toString(), username, password });
+    const cognitoUser = await createCognitoUser({ userId: userDoc._id.toString(), username, password });
+    const cognitoUserId = cognitoUser.Attributes.find(({ Name }) => Name === 'sub')?.Value;
+
+    await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
 
     await session.commitTransaction();
 
@@ -116,7 +119,10 @@ const createAdmin = async (parent, { input }) => {
       { session },
     );
 
-    await createCognitoAdminUser({ userId: userDoc._id.toString(), email, password });
+    const cognitoUser = await createCognitoAdminUser({ userId: userDoc._id.toString(), email, password });
+    const cognitoUserId = cognitoUser.UserSub;
+
+    await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
 
     await session.commitTransaction();
 

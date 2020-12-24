@@ -5,6 +5,7 @@ import { mapEnumValues } from '../lib/helpers';
 const { ObjectId } = Types;
 
 const UserSchema = new Schema({
+  cognitoUserId: { type: String, required: false, unique: true },
   eventId: { type: ObjectId, required: true, ref: 'Event' },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
