@@ -34,7 +34,7 @@ const generateTemporaryCredentials = async ({ firstName, lastName }) => {
 
 const createCognitoUser = async ({ userId, username, password }) => {
   const cognitoProvider = new AWS.CognitoIdentityServiceProvider();
-  const user = await cognitoProvider
+  const { User: user } = await cognitoProvider
     .adminCreateUser({
       UserPoolId: COGNITO_USER_POOL_ID,
       Username: userId,
