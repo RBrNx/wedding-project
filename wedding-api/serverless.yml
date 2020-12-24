@@ -8,6 +8,7 @@ plugins:
   - serverless-webpack
   - serverless-offline
   - serverless-dotenv-plugin
+  - serverless-domain-manager
 
 # serverless-webpack configuration
 # Enable auto-packing of external modules
@@ -17,6 +18,21 @@ custom:
     includeModules: true
   serverless-offline:
     port: 4000
+  domains:
+    prod: api.thewatsonwedding.com
+    staging: staging-api.thewatsonwedding.com
+    dev: dev-api.thewatsonwedding.com
+  customDomain:
+    domainName: ${self:custom.domains.${self:provider.stage}}
+    basePath: ''
+    endpointType: 'regional'
+    stage: '${self:provider.stage}'
+    certificateName: 'thewatsonwedding.com'
+    createRoute53Record: true
+    securityPolicy: tls_1_2
+    apiType: rest
+    autoDomain: true
+    enabled: true
 
 provider:
   name: aws
@@ -34,7 +50,7 @@ provider:
 
 functions:
   unauthenticated:
-    handler: src/index.unauthenticatedGQLHandler
+    handler: src/server.unauthenticatedGQLHandler
     environment:
       SLS_DEBUG: true
     events:
@@ -50,7 +66,7 @@ functions:
           cors: true
           authorizer: aws_iam
   authenticated:
-    handler: src/index.authenticatedGQLHandler
+    handler: src/server.authenticatedGQLHandler
     environment:
       SLS_DEBUG: true
     events:

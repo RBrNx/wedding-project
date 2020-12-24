@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 import AnswerSchema from '../models/Answer';
-import GuestSchema from '../models/Guest';
-import InvitationSchema from '../models/Invitation';
+import UserSchema from '../models/User';
+import InvitationGroupSchema from '../models/InvitationGroup';
 import QuestionSchema from '../models/Question';
+import EventSchema from '../models/Event';
+import TempLoginDetailsSchema from '../models/TempLoginDetails';
 
 const { MONGODB_URI } = process.env;
 
@@ -12,6 +14,7 @@ const connectToDatabase = async () => {
   try {
     if (cachedDb == null) {
       console.log('Creating new database connection');
+
       cachedDb = await mongoose.createConnection(MONGODB_URI, {
         bufferCommands: false,
         bufferMaxEntries: 0,
@@ -22,10 +25,12 @@ const connectToDatabase = async () => {
         useUnifiedTopology: true,
       });
 
-      cachedDb.model('Guest', GuestSchema);
-      cachedDb.model('Invitation', InvitationSchema);
+      cachedDb.model('User', UserSchema);
+      cachedDb.model('InvitationGroup', InvitationGroupSchema);
       cachedDb.model('Question', QuestionSchema);
       cachedDb.model('Answer', AnswerSchema);
+      cachedDb.model('Event', EventSchema);
+      cachedDb.model('TempLoginDetails', TempLoginDetailsSchema);
     }
     return cachedDb;
   } catch (error) {

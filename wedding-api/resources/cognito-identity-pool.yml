@@ -1,25 +1,29 @@
 Resources:
   # The federated identity for our user pool to auth with
-  CognitoIdentityPool:
+  CognitoIdentityPoolWedding:
     Type: AWS::Cognito::IdentityPool
     Properties:
       # Generate a name based on the stage
-      IdentityPoolName: ${self:provider.stage}IdentityPool
+      IdentityPoolName: wedding-${self:provider.stage}-identity-pool
       # Allow unathenticated users
       AllowUnauthenticatedIdentities: true
       # Link to our User Pool
       CognitoIdentityProviders:
         - ClientId:
-            Ref: CognitoUserPoolClient
+            Ref: CognitoUserPoolClientAPI
           ProviderName:
-            Fn::GetAtt: ['CognitoUserPool', 'ProviderName']
+            Fn::GetAtt: ['CognitoUserPoolWedding', 'ProviderName']
+        - ClientId:
+            Ref: CognitoUserPoolClientMobile
+          ProviderName:
+            Fn::GetAtt: ['CognitoUserPoolWedding', 'ProviderName']
 
   # IAM roles
   CognitoIdentityPoolRoles:
     Type: AWS::Cognito::IdentityPoolRoleAttachment
     Properties:
       IdentityPoolId:
-        Ref: CognitoIdentityPool
+        Ref: CognitoIdentityPoolWedding
       Roles:
         authenticated:
           Fn::GetAtt: [CognitoAuthRole, Arn]
@@ -42,7 +46,7 @@ Resources:
             Condition:
               StringEquals:
                 'cognito-identity.amazonaws.com:aud':
-                  Ref: CognitoIdentityPool
+                  Ref: CognitoIdentityPoolWedding
               'ForAnyValue:StringLike':
                 'cognito-identity.amazonaws.com:amr': authenticated
       Policies:
@@ -88,7 +92,7 @@ Resources:
             Condition:
               StringEquals:
                 'cognito-identity.amazonaws.com:aud':
-                  Ref: CognitoIdentityPool
+                  Ref: CognitoIdentityPoolWedding
               'ForAnyValue:StringLike':
                 'cognito-identity.amazonaws.com:amr': unauthenticated
       Policies:
@@ -122,4 +126,4 @@ Resources:
 Outputs:
   IdentityPoolId:
     Value:
-      Ref: CognitoIdentityPool
+      Ref: CognitoIdentityPoolWedding

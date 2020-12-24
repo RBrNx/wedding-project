@@ -1,16 +1,20 @@
-import { splitResolverGroups, splitTypedefGroups } from '../lib/apollo';
-import GuestResolvers from './resolvers/Guest';
-import InvitationResolvers from './resolvers/Invitation';
+import BaseResolvers from './resolvers/Base';
+import UserResolvers from './resolvers/User';
+import InvitationResolvers from './resolvers/InvitationGroup';
 import QuestionResolvers from './resolvers/Question';
+import TempLoginResolvers from './resolvers/TempLogin';
+import EventResolvers from './resolvers/Event';
 import BaseTypeDefs from './typeDefs/Base';
-import GuestTypeDefs from './typeDefs/Guest';
-import InvitationTypeDefs from './typeDefs/Invitation';
+import UserTypeDefs from './typeDefs/User';
+import InvitationTypeDefs from './typeDefs/InvitationGroup';
 import QuestionTypeDefs from './typeDefs/Question';
+import TempLoginTypeDefs from './typeDefs/TempLogin';
+import EventTypeDefs from './typeDefs/Event';
 
-const resolverGroups = [GuestResolvers, InvitationResolvers, QuestionResolvers];
-const typeDefGroups = [BaseTypeDefs, GuestTypeDefs, InvitationTypeDefs, QuestionTypeDefs];
+const typeDefs = [BaseTypeDefs, UserTypeDefs, InvitationTypeDefs, QuestionTypeDefs, EventTypeDefs];
+const resolvers = [BaseResolvers, UserResolvers, InvitationResolvers, QuestionResolvers, EventResolvers];
 
-const { coreResolvers, authenticatedResolvers } = splitResolverGroups(resolverGroups);
-const { coreTypeDefs, authenticatedTypeDefs } = splitTypedefGroups(typeDefGroups);
+const unauthenticatedTypeDefs = [BaseTypeDefs, TempLoginTypeDefs];
+const unauthenticatedResolvers = [BaseResolvers, TempLoginResolvers];
 
-export { coreResolvers, authenticatedResolvers, coreTypeDefs, authenticatedTypeDefs };
+export { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers };

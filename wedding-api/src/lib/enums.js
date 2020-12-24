@@ -20,4 +20,9 @@ const InvitationType = Object.freeze({
   EVENING: 'EVENING',
 });
 
-export { QuestionType, QuestionResponseType, AttendanceStatus, InvitationType };
+const UserRole = Object.freeze({
+  GUEST: 'GUEST',
+  ADMIN: 'ADMIN',
+});
+
+export { QuestionType, QuestionResponseType, AttendanceStatus, InvitationType, UserRole };
