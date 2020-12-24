@@ -15,7 +15,7 @@ const getAllGuests = async () => {
   }
 };
 
-const createGuest = async (parent, { guest }) => {
+const createGuest = async (parent, { guest }, { currentUser }) => {
   let session;
 
   try {
@@ -31,7 +31,7 @@ const createGuest = async (parent, { guest }) => {
     const [userDoc] = await UserModel.create(
       [
         {
-          eventId: '5fbea387019cca16234648f0', // TODO: Pull this from CurrentUser
+          eventId: currentUser.eventId,
           firstName,
           lastName,
           role: UserRole.GUEST,
@@ -94,7 +94,7 @@ const updateGuest = async (parent, args) => {
   }
 };
 
-const createAdmin = async (parent, { input }) => {
+const createAdmin = async (parent, { input }, { currentUser }) => {
   let session;
 
   try {
@@ -109,7 +109,7 @@ const createAdmin = async (parent, { input }) => {
     const [userDoc] = await UserModel.create(
       [
         {
-          eventId: eventId || '5fbea387019cca16234648f0', // TODO: Pull this from CurrentUser
+          eventId: eventId || currentUser.eventId,
           firstName,
           lastName,
           role: UserRole.ADMIN,
