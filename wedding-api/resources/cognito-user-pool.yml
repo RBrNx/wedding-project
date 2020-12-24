@@ -47,6 +47,13 @@ Resources:
         - USER_PASSWORD_AUTH
       GenerateSecret: false
 
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId:
+        Ref: CognitoUserPoolWedding
+      Domain: 'thewatsonwedding'
+
 # Print out the Id of the User Pool that is created
 Outputs:
   UserPoolId:
