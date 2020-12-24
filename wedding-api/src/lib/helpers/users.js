@@ -81,4 +81,19 @@ const createCognitoAdminUser = async ({ userId, email, password }) => {
   return user;
 };
 
-export { generateTemporaryCredentials, createCognitoUser, createCognitoAdminUser };
+const getUserFromRequest = async requestContext => {
+  const authProviderRegex = new RegExp(/([\w-]+_[0-9a-zA-Z]+)|([0-9a-zA-Z-]{36})/g);
+
+  const { cognitoAuthenticationProvider } = requestContext.identity;
+  // eslint-disable-next-line no-unused-vars
+  const [_, cognitoUserPoolId, cognitoUserId] = cognitoAuthenticationProvider.match(authProviderRegex);
+
+  const db = await connectToDatabase();
+  const UserModel = db.model('User');
+
+  const user = await UserModel.findOne({ cognitoUserId }).exec();
+
+  return user;
+};
+
+export { generateTemporaryCredentials, createCognitoUser, createCognitoAdminUser, getUserFromRequest };

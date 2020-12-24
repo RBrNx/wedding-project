@@ -1,5 +1,6 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers } from './graphql/index';
+import { getUserFromRequest } from './lib/helpers/users';
 
 const server = new ApolloServer({
   typeDefs,
@@ -10,12 +11,18 @@ const server = new ApolloServer({
   formatResponse: response => {
     return response;
   },
-  context: ({ event, context }) => ({
-    headers: event.headers,
-    functionName: context.functionName,
-    event,
-    context,
-  }),
+  context: async ({ event, context }) => {
+    const { requestContext } = event;
+    const currentUser = await getUserFromRequest(requestContext);
+
+    return {
+      headers: event.headers,
+      functionName: context.functionName,
+      event,
+      context,
+      currentUser,
+    };
+  },
   tracing: false,
   playground: true,
 });
