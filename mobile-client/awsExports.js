@@ -1,12 +1,12 @@
 export default {
   apiGateway: {
     REGION: 'eu-west-2',
-    URL: 'https://xiey9y60ej.execute-api.eu-west-2.amazonaws.com/dev/',
+    URL: 'https://dev-api.thewatsonwedding.com/',
   },
   cognito: {
     REGION: 'eu-west-2',
-    USER_POOL_ID: 'eu-west-2_iiQpCxBC7',
-    APP_CLIENT_ID: '50r8fo85ulchgdai3vfa81h99f',
-    IDENTITY_POOL_ID: 'eu-west-2:266c0ec0-0bcf-40cf-8808-a404552485d4',
+    USER_POOL_ID: 'eu-west-2_g3LoxXrOl',
+    APP_CLIENT_ID: '2nja9tapj9ki8659i7m98dnhi8',
+    IDENTITY_POOL_ID: 'eu-west-2:f409113a-4b2b-4c75-a334-ec5670d535d1',
   },
 };

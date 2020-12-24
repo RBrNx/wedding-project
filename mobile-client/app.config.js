@@ -28,7 +28,7 @@ export default {
   },
   assetBundlePatterns: ['**/*'],
   extra: {
-    BASE_API_URL: 'https://xiey9y60ej.execute-api.eu-west-2.amazonaws.com/dev/',
+    BASE_API_URL: 'https://dev-api.thewatsonwedding.com/',
     AUTH_ENDPOINT: 'admin',
     UNAUTH_ENDPOINT: 'api',
   },
