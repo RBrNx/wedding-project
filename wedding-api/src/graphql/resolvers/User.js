@@ -74,25 +74,25 @@ const createGuest = async (parent, { guest }, { currentUser }) => {
   }
 };
 
-const updateGuest = async (parent, args) => {
-  try {
-    const { input } = args;
-    const { guestId, attending, mainCourse, email } = input;
-    const db = await connectToDatabase();
-    const GuestModel = db.model('Guest');
+// const updateGuest = async (parent, args) => {
+//   try {
+//     const { input } = args;
+//     const { guestId, attending, mainCourse, email } = input;
+//     const db = await connectToDatabase();
+//     const GuestModel = db.model('Guest');
 
-    const guest = await GuestModel.findOneAndUpdate(
-      { _id: guestId },
-      { attending, mainCourse, email },
-      { new: true },
-    ).exec();
+//     const guest = await GuestModel.findOneAndUpdate(
+//       { _id: guestId },
+//       { attending, mainCourse, email },
+//       { new: true },
+//     ).exec();
 
-    if (guest) return { success: true };
-    return { success: false };
-  } catch (error) {
-    return error;
-  }
-};
+//     if (guest) return { success: true };
+//     return { success: false };
+//   } catch (error) {
+//     return error;
+//   }
+// };
 
 const createAdmin = async (parent, { input }, { currentUser }) => {
   let session;
