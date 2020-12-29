@@ -5,7 +5,16 @@ import AnimatedInputBorder from '../../components/AnimatedInputBorder';
 
 const { width: windowWidth } = Dimensions.get('window');
 
-const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntry, keyboardType = 'default' }) => {
+const StandardInput = ({
+  label,
+  value,
+  placeholder,
+  onChangeText,
+  secureTextEntry,
+  keyboardType = 'default',
+  containerStyle,
+  inputStyle,
+}) => {
   const textInput = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusAnimation] = useState(new Animated.Value(0));
@@ -37,7 +46,7 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
   };
 
   return (
-    <View style={{ position: 'relative' }}>
+    <View style={[styles.containerStyle, containerStyle]}>
       {!!inputHeight && !!windowWidth && (
         <AnimatedInputBorder
           height={inputHeight}
@@ -54,7 +63,7 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
           const { height } = event.nativeEvent.layout;
           setInputHeight(Math.round(height));
         }}
-        style={styles.input}
+        style={[styles.input, inputStyle]}
         value={value}
         placeholder={placeholder}
         onChangeText={onChangeText}
@@ -82,6 +91,9 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
 };
 
 const styles = StyleSheet.create({
+  containerStyle: {
+    position: 'relative',
+  },
   input: {
     borderRadius: 5,
     padding: 18,
