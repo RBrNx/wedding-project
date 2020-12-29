@@ -4,16 +4,18 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import Svg, { Path } from 'react-native-svg';
+import ScannerCard from '../components/ScannerCard';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
-export default function App() {
+const ScannerScreen = ({ navigation }) => {
   const cameraRef = useRef(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [imagePadding, setImagePadding] = useState(0);
   const [ratio, setRatio] = useState('4:3'); // default is 4:3
   const [isRatioSet, setIsRatioSet] = useState(false);
+  const [flashEnabled, setFlashEnabled] = useState(false);
   const screenRatio = windowHeight / windowWidth;
 
   useEffect(() => {
@@ -93,10 +95,16 @@ export default function App() {
           }
         }}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
+      />
+      <ScannerCard
+        onClose={() => navigation.pop()}
+        onFlashPress={() => setFlashEnabled(!flashEnabled)}
+        flashEnabled={flashEnabled}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -108,3 +116,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default ScannerScreen;
