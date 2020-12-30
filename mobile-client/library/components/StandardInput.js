@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -23,6 +24,7 @@ const StandardInput = ({
   const [inputWidth, setInputWidth] = useState(0);
   const [labelWidth, setLabelWidth] = useState(0);
   const shouldAnimateLabel = isFocused || value;
+  const { colors } = useTheme();
 
   useEffect(() => {
     Animated.timing(focusAnimation, {
@@ -43,7 +45,7 @@ const StandardInput = ({
     }),
     color: focusAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: [styles.label.color, styles.smallLabel.color],
+      outputRange: ['#aaa', colors.focusedText],
     }),
   };
 
@@ -67,7 +69,7 @@ const StandardInput = ({
           setInputHeight(Math.round(height));
           setInputWidth(Math.round(width));
         }}
-        style={[styles.input, inputStyle]}
+        style={[styles.input, { color: colors.focusedText }, inputStyle]}
         value={value}
         placeholder={placeholder}
         onChangeText={onChangeText}
@@ -107,7 +109,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
     fontSize: 18,
-    color: '#fff',
   },
   label: {
     position: 'absolute',
