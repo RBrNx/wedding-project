@@ -20,6 +20,7 @@ const StandardInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [focusAnimation] = useState(new Animated.Value(0));
   const [inputHeight, setInputHeight] = useState(0);
+  const [inputWidth, setInputWidth] = useState(0);
   const [labelWidth, setLabelWidth] = useState(0);
   const shouldAnimateLabel = isFocused || value;
 
@@ -51,7 +52,7 @@ const StandardInput = ({
       {!!inputHeight && !!windowWidth && (
         <AnimatedInputBorder
           height={inputHeight}
-          width={windowWidth}
+          width={inputWidth}
           borderRadius={5}
           borderColour={borderColour}
           labelXPos={styles.input.paddingLeft}
@@ -62,8 +63,9 @@ const StandardInput = ({
       <TextInput
         ref={textInput}
         onLayout={event => {
-          const { height } = event.nativeEvent.layout;
+          const { height, width } = event.nativeEvent.layout;
           setInputHeight(Math.round(height));
+          setInputWidth(Math.round(width));
         }}
         style={[styles.input, inputStyle]}
         value={value}
