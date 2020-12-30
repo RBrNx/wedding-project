@@ -14,6 +14,7 @@ const StandardInput = ({
   keyboardType = 'default',
   containerStyle,
   inputStyle,
+  borderColour,
 }) => {
   const textInput = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -52,6 +53,7 @@ const StandardInput = ({
           height={inputHeight}
           width={windowWidth}
           borderRadius={5}
+          borderColour={borderColour}
           labelXPos={styles.input.paddingLeft}
           gapWidth={labelWidth}
           animate={shouldAnimateLabel}

@@ -34,12 +34,18 @@ const SignInScreen = () => {
             <Text style={styles.subHeading}>Sign in to your Account</Text>
           </View>
           <View style={styles.inputContainer}>
-            <StandardInput value={emailAddress} label='Email Address' onChangeText={value => setEmailAddress(value)} />
+            <StandardInput
+              value={emailAddress}
+              label='Email Address'
+              onChangeText={value => setEmailAddress(value)}
+              borderColour='#fff'
+            />
             <StandardInput
               value={password}
               label='Password'
               onChangeText={value => setPassword(value)}
               secureTextEntry
+              borderColour='#fff'
             />
           </View>
           <View style={styles.buttonContainer}>
