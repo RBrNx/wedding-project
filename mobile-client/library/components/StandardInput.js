@@ -13,6 +13,7 @@ const StandardInput = ({
   onChangeText,
   secureTextEntry,
   keyboardType = 'default',
+  maxLength,
   containerStyle,
   inputStyle,
   borderColour,
@@ -77,6 +78,7 @@ const StandardInput = ({
         onBlur={() => setIsFocused(false)}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
+        maxLength={maxLength}
       />
       <Animated.Text style={[styles.label, animatedStyles]} onPress={() => textInput.current.focus()}>
         {label}
