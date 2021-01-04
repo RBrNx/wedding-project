@@ -74,6 +74,23 @@ const FlatListAnimatedHeader = ({
     );
   };
 
+  const renderRefreshControl = () => {
+    return (
+      <RefreshControl
+        refreshing={isRefreshing}
+        progressViewOffset={HEADER_MAX_HEIGHT + 15}
+        onRefresh={async () => {
+          setIsRefreshing(true);
+          await onRefresh();
+          setIsRefreshing(false);
+        }}
+        progressBackgroundColor='#14233c'
+        colors={['#fff']}
+        tintColor='#2991cc'
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Animated.View style={styles.headerContainer} pointerEvents='none'>
@@ -98,20 +115,7 @@ const FlatListAnimatedHeader = ({
           ListEmptyComponent={ListEmptyComponent}
           ListFooterComponent={ListFooterComponent}
           stickyHeaderIndices={[0]}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              progressViewOffset={HEADER_MAX_HEIGHT + 15}
-              onRefresh={async () => {
-                setIsRefreshing(true);
-                await onRefresh();
-                setIsRefreshing(false);
-              }}
-              progressBackgroundColor='#14233c'
-              colors={['#fff']}
-              tintColor='#2991cc'
-            />
-          }
+          refreshControl={renderRefreshControl()}
           showsVerticalScrollIndicator={false}
           onContentSizeChange={(contentWidth, contentHeight) => {
             setTotalScrollbarHeight(contentHeight);
