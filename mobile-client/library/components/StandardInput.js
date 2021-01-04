@@ -16,7 +16,7 @@ const StandardInput = ({
   maxLength,
   containerStyle,
   inputStyle,
-  borderColour,
+  themeColourOverride,
 }) => {
   const textInput = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -46,7 +46,7 @@ const StandardInput = ({
     }),
     color: focusAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: ['#aaa', colors.focusedText],
+      outputRange: ['#aaa', themeColourOverride || colors.focusedText],
     }),
   };
 
@@ -57,7 +57,7 @@ const StandardInput = ({
           height={inputHeight}
           width={inputWidth}
           borderRadius={5}
-          borderColour={borderColour}
+          borderColour={themeColourOverride}
           labelXPos={styles.input.paddingLeft}
           gapWidth={labelWidth}
           animate={shouldAnimateLabel}
@@ -70,7 +70,7 @@ const StandardInput = ({
           setInputHeight(Math.round(height));
           setInputWidth(Math.round(width));
         }}
-        style={[styles.input, { color: colors.focusedText }, inputStyle]}
+        style={[styles.input, { color: themeColourOverride || colors.focusedText }, inputStyle]}
         value={value}
         placeholder={placeholder}
         onChangeText={onChangeText}

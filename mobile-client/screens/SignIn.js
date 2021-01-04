@@ -38,14 +38,14 @@ const SignInScreen = () => {
               value={emailAddress}
               label='Email Address'
               onChangeText={value => setEmailAddress(value)}
-              borderColour='#fff'
+              themeColourOverride='#fff'
             />
             <StandardInput
               value={password}
               label='Password'
               onChangeText={value => setPassword(value)}
               secureTextEntry
-              borderColour='#fff'
+              themeColourOverride='#fff'
             />
           </View>
           <View style={styles.buttonContainer}>
