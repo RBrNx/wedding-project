@@ -144,6 +144,7 @@ const FlatListAnimatedHeader = ({
               useNativeDriver: true,
             }).start();
           }}
+          scrollEnabled={!isFlatlistEmpty}
         />
         <Animated.View
           style={{
