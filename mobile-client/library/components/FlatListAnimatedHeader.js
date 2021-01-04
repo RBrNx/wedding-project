@@ -24,6 +24,7 @@ const FlatListAnimatedHeader = ({
   const [completeScrollBarHeight, setCompleteScrollBarHeight] = useState(1);
   const [visibleScrollBarHeight, setVisibleScrollBarHeight] = useState(0);
   const [scrollOpacity] = useState(new Animated.Value(0));
+  const isFlatlistEmpty = !data?.length;
 
   const scrollIndicatorSize =
     completeScrollBarHeight > visibleScrollBarHeight
@@ -91,9 +92,12 @@ const FlatListAnimatedHeader = ({
         </Animated.View>
         <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
+      <View style={styles.flatlistContainer}>
         <Animated.FlatList
-          contentContainerStyle={[styles.flatlistContent, { backgroundColor: colors.componentBackground }]}
+          contentContainerStyle={[
+            isFlatlistEmpty ? styles.flatlistContentEmpty : styles.flatlistContent,
+            { backgroundColor: colors.componentBackground },
+          ]}
           scrollEventThrottle={1}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
           renderItem={renderItem}
@@ -101,13 +105,7 @@ const FlatListAnimatedHeader = ({
           keyExtractor={item => item._id}
           initialNumToRender={20}
           ListHeaderComponent={renderListHandle}
-          ListEmptyComponent={() => {
-            return (
-              <View style={{ minHeight: height - HEADER_MAX_HEIGHT }}>
-                <ListEmptyComponent />
-              </View>
-            );
-          }}
+          ListEmptyComponent={ListEmptyComponent}
           ListFooterComponent={ListFooterComponent}
           stickyHeaderIndices={[0]}
           refreshControl={
@@ -210,10 +208,17 @@ const styles = StyleSheet.create({
     textShadowColor: '#000',
     bottom: 15,
   },
+  flatlistContainer: {
+    flex: 1,
+    flexDirection: 'row',
+  },
   flatlistContent: {
     marginTop: HEADER_MAX_HEIGHT,
-    // minHeight: height - HEADER_MAX_HEIGHT,
     paddingBottom: HEADER_MAX_HEIGHT,
+  },
+  flatlistContentEmpty: {
+    marginTop: HEADER_MAX_HEIGHT,
+    flex: 1,
   },
   handleContainer: {
     marginBottom: 5,
