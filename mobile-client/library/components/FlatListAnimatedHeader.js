@@ -21,6 +21,26 @@ const FlatListAnimatedHeader = ({
   const [scrollY] = useState(new Animated.Value(0));
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const [completeScrollBarHeight, setCompleteScrollBarHeight] = useState(1);
+  const [visibleScrollBarHeight, setVisibleScrollBarHeight] = useState(0);
+  const [scrollOpacity] = useState(new Animated.Value(0));
+
+  const scrollIndicatorSize =
+    completeScrollBarHeight > visibleScrollBarHeight
+      ? (visibleScrollBarHeight * visibleScrollBarHeight) / completeScrollBarHeight
+      : visibleScrollBarHeight;
+
+  const difference = visibleScrollBarHeight > scrollIndicatorSize ? visibleScrollBarHeight - scrollIndicatorSize : 1;
+
+  const scrollIndicatorPosition = Animated.multiply(
+    scrollY,
+    visibleScrollBarHeight / completeScrollBarHeight,
+  ).interpolate({
+    inputRange: [0, difference],
+    outputRange: [0, difference],
+    extrapolate: 'clamp',
+  });
+
   const imageOpacity = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
     outputRange: [1, 1, 0],
@@ -45,6 +65,12 @@ const FlatListAnimatedHeader = ({
     extrapolate: 'clamp',
   });
 
+  const scrollBarTop = scrollY.interpolate({
+    inputRange: [0, HEADER_SCROLL_DISTANCE],
+    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+    extrapolate: 'clamp',
+  });
+
   const renderListHandle = () => {
     return (
       <Animated.View
@@ -65,39 +91,88 @@ const FlatListAnimatedHeader = ({
         </Animated.View>
         <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
-      <Animated.FlatList
-        contentContainerStyle={[styles.flatlistContent, { backgroundColor: colors.componentBackground }]}
-        scrollEventThrottle={1}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
-        renderItem={renderItem}
-        data={data}
-        keyExtractor={item => item._id}
-        initialNumToRender={20}
-        ListHeaderComponent={renderListHandle}
-        ListEmptyComponent={() => {
-          return (
-            <View style={{ minHeight: height - HEADER_MAX_HEIGHT }}>
-              <ListEmptyComponent />
-            </View>
-          );
-        }}
-        ListFooterComponent={ListFooterComponent}
-        stickyHeaderIndices={[0]}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            progressViewOffset={HEADER_MAX_HEIGHT + 15}
-            onRefresh={async () => {
-              setIsRefreshing(true);
-              await onRefresh();
-              setIsRefreshing(false);
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        <Animated.FlatList
+          contentContainerStyle={[styles.flatlistContent, { backgroundColor: colors.componentBackground }]}
+          scrollEventThrottle={1}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
+          renderItem={renderItem}
+          data={data}
+          keyExtractor={item => item._id}
+          initialNumToRender={20}
+          ListHeaderComponent={renderListHandle}
+          ListEmptyComponent={() => {
+            return (
+              <View style={{ minHeight: height - HEADER_MAX_HEIGHT }}>
+                <ListEmptyComponent />
+              </View>
+            );
+          }}
+          ListFooterComponent={ListFooterComponent}
+          stickyHeaderIndices={[0]}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              progressViewOffset={HEADER_MAX_HEIGHT + 15}
+              onRefresh={async () => {
+                setIsRefreshing(true);
+                await onRefresh();
+                setIsRefreshing(false);
+              }}
+              progressBackgroundColor='#14233c'
+              colors={['#fff']}
+              tintColor='#2991cc'
+            />
+          }
+          showsVerticalScrollIndicator={false}
+          onContentSizeChange={(_, contentHeight) => {
+            setCompleteScrollBarHeight(contentHeight);
+          }}
+          onLayout={e => {
+            setVisibleScrollBarHeight(e.nativeEvent.layout.height);
+          }}
+          onScrollBeginDrag={() => {
+            Animated.timing(scrollOpacity, {
+              toValue: 1,
+              duration: 200,
+              useNativeDriver: true,
+            }).start();
+          }}
+          onMomentumScrollEnd={() => {
+            Animated.timing(scrollOpacity, {
+              toValue: 0,
+              delay: 200,
+              duration: 200,
+              useNativeDriver: true,
+            }).start();
+          }}
+        />
+        <Animated.View
+          style={{
+            position: 'absolute',
+            right: 2,
+            // height: '100%',
+            top: 10,
+            height: height - HEADER_MIN_HEIGHT - 10,
+            width: 6,
+            // backgroundColor: '#52057b',
+            borderRadius: 8,
+            transform: [{ translateY: scrollBarTop }],
+          }}
+        >
+          <Animated.View
+            style={{
+              width: 2,
+              borderRadius: 8,
+              // backgroundColor: '#bc6ff1',
+              backgroundColor: 'darkgray',
+              height: scrollIndicatorSize - HEADER_MIN_HEIGHT,
+              transform: [{ translateY: scrollIndicatorPosition }],
+              opacity: scrollOpacity,
             }}
-            progressBackgroundColor='#14233c'
-            colors={['#fff']}
-            tintColor='#2991cc'
           />
-        }
-      />
+        </Animated.View>
+      </View>
       <Animated.View style={[styles.navigationBar, { opacity: titleOpacity, backgroundColor: colors.background }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
@@ -137,7 +212,8 @@ const styles = StyleSheet.create({
   },
   flatlistContent: {
     marginTop: HEADER_MAX_HEIGHT,
-    minHeight: height - HEADER_MAX_HEIGHT,
+    // minHeight: height - HEADER_MAX_HEIGHT,
+    paddingBottom: HEADER_MAX_HEIGHT,
   },
   handleContainer: {
     marginBottom: 5,
