@@ -1,15 +1,18 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import LoadingAnimation from '../assets/animations/loading.json';
 
-const LoadingIndicator = () => (
-  <LottieView source={LoadingAnimation} autoPlay loop style={styles.animation} speed={0.75} />
+const LoadingIndicator = ({ size, style }) => (
+  <View style={[styles.container, { height: size || 50, width: size || 50 }, style]}>
+    <LottieView source={LoadingAnimation} autoPlay loop speed={0.75} />
+  </View>
 );
 
 const styles = StyleSheet.create({
-  animation: {
-    marginTop: -30,
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
