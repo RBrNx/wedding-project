@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    textAlign: 'center',
     fontSize: 16,
     flex: 0.5,
   },
