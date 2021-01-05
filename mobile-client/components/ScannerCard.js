@@ -1,18 +1,37 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import StandardPressable from '../library/components/StandardPressable';
 import StandardInput from '../library/components/StandardInput';
+import { useAuth } from '../context';
+import LoadingIndicator from './LoadingIndicator';
 
 const ScannerCard = ({ onFlashPress, flashEnabled, onClose }) => {
   const [inKeyboardMode, setInKeyboardMode] = useState(false);
   const [shortId, setShortId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { colors } = useTheme();
+  const { signInWithShortId } = useAuth();
+
+  const attemptSignIn = async () => {
+    try {
+      setIsLoading(true);
+
+      const signedIn = await signInWithShortId(shortId);
+
+      if (!signedIn) setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      console.log(err);
+      Alert.alert('Oops!', err.message);
+    }
+  };
 
   return (
     <View style={[styles.card, styles.scannerCard, { backgroundColor: colors.card }]}>
-      {inKeyboardMode && (
+      {isLoading && <LoadingIndicator style={styles.loading} size={40} />}
+      {!isLoading && inKeyboardMode && (
         <>
           <StandardPressable
             onPress={() => setInKeyboardMode(!inKeyboardMode)}
@@ -30,7 +49,7 @@ const ScannerCard = ({ onFlashPress, flashEnabled, onClose }) => {
             inputStyle={{ marginBottom: 0 }}
           />
           <StandardPressable
-            onPress={() => setInKeyboardMode(!inKeyboardMode)}
+            onPress={attemptSignIn}
             style={[styles.icon, { backgroundColor: colors.componentBackground, marginRight: 15 }]}
             pressedStyle={{ backgroundColor: colors.cardHover }}
           >
@@ -38,7 +57,7 @@ const ScannerCard = ({ onFlashPress, flashEnabled, onClose }) => {
           </StandardPressable>
         </>
       )}
-      {!inKeyboardMode && (
+      {!isLoading && !inKeyboardMode && (
         <>
           <StandardPressable
             onPress={() => setInKeyboardMode(!inKeyboardMode)}
