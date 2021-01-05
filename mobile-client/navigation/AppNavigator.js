@@ -4,8 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useColorScheme } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { darkTheme, lightTheme } from '../styles/theming';
-import SignInScreen from '../screens/SignIn';
 import HomeNavigator from './HomeNavigator';
+import SignInNavigator from './SignInNavigator';
 import { useAuth, useSettings } from '../context';
 import { Theme } from '../library/enums';
 
@@ -44,7 +44,7 @@ const AppNavigator = () => {
     <NavigationContainer theme={getTheme()}>
       <Stack.Navigator screenOptions={screenOptions}>
         {!isAuthenticated ? (
-          <Stack.Screen name='SignIn' component={SignInScreen} />
+          <Stack.Screen name='SignIn' component={SignInNavigator} />
         ) : (
           <Stack.Screen name='Home' component={HomeNavigator} />
         )}
