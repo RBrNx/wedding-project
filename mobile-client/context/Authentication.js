@@ -1,5 +1,9 @@
 import { Auth } from 'aws-amplify';
+import { loader } from 'graphql.macro';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import client from '../utils/apiClient';
+
+const FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION = loader('../graphql/fetchTempLoginCredentials.graphql');
 
 const AuthContext = createContext();
 
@@ -19,6 +23,29 @@ const useProviderAuth = () => {
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
     setUser(cognitoUser);
     return cognitoUser;
+  };
+
+  const signInWithShortId = async shortId => {
+    if (!shortId) return null;
+
+    const { data } = await client.mutate({
+      mutation: FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION,
+      variables: {
+        input: {
+          shortId,
+        },
+      },
+    });
+
+    const { success, payload, message } = data.fetchTempLoginCredentials;
+
+    if (success) {
+      const { username, password } = payload;
+      const signedIn = await signIn(username, password);
+      return signedIn;
+    }
+
+    throw new Error(message);
   };
 
   const signOut = async () => {
@@ -48,6 +75,7 @@ const useProviderAuth = () => {
   return {
     user,
     signIn,
+    signInWithShortId,
     signOut,
     isAuthenticated: isAuthenticated(),
     bootstrapComplete,
