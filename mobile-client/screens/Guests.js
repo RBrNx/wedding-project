@@ -44,9 +44,11 @@ const GuestsScreen = () => {
       renderImage={() => <PartyIllustration size='100%' />}
       ListEmptyComponent={() => (
         <View style={styles.emptyContainer}>
-          {loading && <LoadingIndicator />}
-          {error && <ErrorMessage message='We encountered an error when loading your Guests, please try again.' />}
-          {!error && !loading && <EmptyMessage />}
+          {loading && <LoadingIndicator size={100} />}
+          {error && (
+            <ErrorMessage size={125} message='We encountered an error when loading your Guests, please try again.' />
+          )}
+          {!error && !loading && <EmptyMessage size={125} />}
         </View>
       )}
     />
@@ -60,6 +62,8 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     paddingHorizontal: '4%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
