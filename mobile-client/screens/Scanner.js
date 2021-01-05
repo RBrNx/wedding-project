@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, Dimensions, StatusBar, Platform } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-import Svg, { Path } from 'react-native-svg';
 import ScannerCard from '../components/ScannerCard';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
@@ -13,7 +11,7 @@ const ScannerScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [imagePadding, setImagePadding] = useState(0);
-  const [ratio, setRatio] = useState('4:3'); // default is 4:3
+  const [ratio, setRatio] = useState('4:3');
   const [isRatioSet, setIsRatioSet] = useState(false);
   const [flashEnabled, setFlashEnabled] = useState(false);
   const screenRatio = windowHeight / windowWidth;
@@ -85,7 +83,7 @@ const ScannerScreen = ({ navigation }) => {
       <Camera
         ref={cameraRef}
         barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+          barCodeTypes: ['qr'],
         }}
         style={[styles.cameraPreview, { marginBottom: imagePadding + StatusBar.currentHeight }]}
         ratio={ratio}
