@@ -41,7 +41,6 @@ const ScannerScreen = ({ navigation }) => {
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<shortId>[A-Za-z0-9_-]{12})/g);
-    // eslint-disable-next-line no-unused-vars
     const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups;
 
     await attemptSignIn(scannedShortId);
