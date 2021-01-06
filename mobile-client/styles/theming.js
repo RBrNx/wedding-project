@@ -22,7 +22,9 @@ const lightTheme = {
       .toString(),
     componentBackground: lightGrey,
     bodyText: '#444',
+    focusedText: '#000',
     headerText: '#000',
+    border: '#000',
   },
 };
 
@@ -39,7 +41,9 @@ const darkTheme = {
       .toString(),
     componentBackground: black,
     bodyText: '#eee',
+    focusedText: '#fff',
     headerText: '#fff',
+    border: '#fff',
   },
 };
 

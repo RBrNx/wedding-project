@@ -1,3 +1,5 @@
+import { useTheme } from '@react-navigation/native';
+import Color from 'color';
 import React, { useEffect, useState } from 'react';
 import { View, Animated } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
@@ -24,10 +26,11 @@ const roundedRectData = (w, h, r, startingXPos, gap) => {
   `;
 };
 
-const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, gapWidth, animate }) => {
+const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, gapWidth, animate, borderColour }) => {
   const [borderAnim] = useState(new Animated.Value(0));
   const [viewWidth, setViewWidth] = useState(0);
   const ratio = viewWidth ? width / viewWidth : 1;
+  const { colors } = useTheme();
 
   const fullRectangle = roundedRectData(width, height, borderRadius, labelXPos, 0);
   const gapRectangle = roundedRectData(width, height, borderRadius, labelXPos, gapWidth * ratio);
@@ -38,7 +41,12 @@ const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, ga
   });
   const colour = borderAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgb(170, 170, 170)', 'rgb(255, 255, 255)'],
+    outputRange: [
+      'rgb(170, 170, 170)',
+      Color(borderColour || colors.border)
+        .rgb()
+        .string(),
+    ],
   });
 
   useEffect(() => {

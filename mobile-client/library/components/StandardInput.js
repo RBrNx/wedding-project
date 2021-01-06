@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -5,13 +6,26 @@ import AnimatedInputBorder from '../../components/AnimatedInputBorder';
 
 const { width: windowWidth } = Dimensions.get('window');
 
-const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntry, keyboardType = 'default' }) => {
+const StandardInput = ({
+  label,
+  value,
+  placeholder,
+  onChangeText,
+  secureTextEntry,
+  keyboardType = 'default',
+  maxLength,
+  containerStyle,
+  inputStyle,
+  themeColourOverride,
+}) => {
   const textInput = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusAnimation] = useState(new Animated.Value(0));
   const [inputHeight, setInputHeight] = useState(0);
+  const [inputWidth, setInputWidth] = useState(0);
   const [labelWidth, setLabelWidth] = useState(0);
   const shouldAnimateLabel = isFocused || value;
+  const { colors } = useTheme();
 
   useEffect(() => {
     Animated.timing(focusAnimation, {
@@ -32,17 +46,18 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
     }),
     color: focusAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: [styles.label.color, styles.smallLabel.color],
+      outputRange: ['#aaa', themeColourOverride || colors.focusedText],
     }),
   };
 
   return (
-    <View style={{ position: 'relative' }}>
+    <View style={[styles.containerStyle, containerStyle]}>
       {!!inputHeight && !!windowWidth && (
         <AnimatedInputBorder
           height={inputHeight}
-          width={windowWidth}
+          width={inputWidth}
           borderRadius={5}
+          borderColour={themeColourOverride}
           labelXPos={styles.input.paddingLeft}
           gapWidth={labelWidth}
           animate={shouldAnimateLabel}
@@ -51,10 +66,11 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
       <TextInput
         ref={textInput}
         onLayout={event => {
-          const { height } = event.nativeEvent.layout;
+          const { height, width } = event.nativeEvent.layout;
           setInputHeight(Math.round(height));
+          setInputWidth(Math.round(width));
         }}
-        style={styles.input}
+        style={[styles.input, { color: themeColourOverride || colors.focusedText }, inputStyle]}
         value={value}
         placeholder={placeholder}
         onChangeText={onChangeText}
@@ -62,6 +78,7 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
         onBlur={() => setIsFocused(false)}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
+        maxLength={maxLength}
       />
       <Animated.Text style={[styles.label, animatedStyles]} onPress={() => textInput.current.focus()}>
         {label}
@@ -82,6 +99,9 @@ const StandardInput = ({ label, value, placeholder, onChangeText, secureTextEntr
 };
 
 const styles = StyleSheet.create({
+  containerStyle: {
+    position: 'relative',
+  },
   input: {
     borderRadius: 5,
     padding: 18,
@@ -91,7 +111,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
     fontSize: 18,
-    color: '#fff',
   },
   label: {
     position: 'absolute',

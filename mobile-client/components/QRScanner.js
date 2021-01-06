@@ -1,11 +1,11 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import { View, StyleSheet } from 'react-native';
-import LoadingAnimation from '../assets/animations/loading.json';
+import qrScanAnimation from '../assets/animations/qrScanner.json';
 
-const LoadingIndicator = ({ size, style }) => (
+const QRScanner = ({ size, style }) => (
   <View style={[styles.container, { height: size || 50, width: size || 50 }, style]}>
-    <LottieView source={LoadingAnimation} autoPlay loop speed={0.75} />
+    <LottieView source={qrScanAnimation} autoPlay loop speed={1} />
   </View>
 );
 
@@ -17,4 +17,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingIndicator;
+export default QRScanner;

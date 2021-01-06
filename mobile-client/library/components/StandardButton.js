@@ -1,10 +1,10 @@
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { constantStyles } from '../../styles/theming';
 
-const StandardButton = ({ onPress, raised, text, loading }) => {
+const StandardButton = ({ onPress, raised, text, loading, icon }) => {
   const { colors } = useTheme();
   const backgroundColor = colors.secondary;
   const pressedColour = Color(colors.secondary)
@@ -26,7 +26,9 @@ const StandardButton = ({ onPress, raised, text, loading }) => {
 
   return (
     <Pressable style={renderButtonStyles} onPress={onPress}>
+      <View style={{ opacity: 0 }}>{!loading && icon && icon()}</View>
       {!loading && <Text style={styles.text}>{text}</Text>}
+      {!loading && icon && icon()}
       {loading && <ActivityIndicator color='#fff' />}
     </Pressable>
   );
@@ -35,7 +37,6 @@ const StandardButton = ({ onPress, raised, text, loading }) => {
 const styles = StyleSheet.create({
   button: {
     borderRadius: 5,
-    padding: 15,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -44,7 +45,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#fff',
     textAlign: 'center',
-    width: '100%',
+    flex: 1,
+    paddingVertical: 15,
   },
 });
 

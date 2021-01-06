@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, Animated } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, StyleSheet, Animated, View } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { useTheme } from '@react-navigation/native';
-import EmptyAnimation from '../assets/animations/moon.json';
+import EmptyAnimation from '../assets/animations/emptyBox.json';
 
-const EmptyMessage = ({ message }) => {
+const EmptyMessage = ({ message, size, style }) => {
   const { colors } = useTheme();
+  const animation = useRef(null);
   const [opacity] = useState(new Animated.Value(0));
   const emptyMessage = message || "There doesn't seem to be anything here";
 
@@ -17,9 +18,24 @@ const EmptyMessage = ({ message }) => {
     }).start();
   }, [opacity]);
 
+  const onAnimationFinish = () => {
+    setTimeout(() => {
+      if (animation?.current) animation.current.play();
+    }, 3000);
+  };
+
   return (
     <Animated.View style={[styles.container, { opacity }]}>
-      <LottieView source={EmptyAnimation} autoPlay style={styles.animation} speed={0.65} />
+      <View style={[styles.container, { height: size || 50, width: size || 50 }, style]}>
+        <LottieView
+          ref={animation}
+          source={EmptyAnimation}
+          autoPlay
+          speed={0.9}
+          loop={false}
+          onAnimationFinish={onAnimationFinish}
+        />
+      </View>
       <Text style={[styles.text, { color: colors.bodyText }]}>{emptyMessage}</Text>
     </Animated.View>
   );
@@ -31,13 +47,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  animation: {
-    marginTop: -50,
-  },
   text: {
-    marginTop: 100,
     textAlign: 'center',
     fontSize: 16,
+    flex: 0.5,
   },
 });
 
