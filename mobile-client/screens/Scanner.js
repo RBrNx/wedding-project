@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, Dimensions, StatusBar, Platform } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, StatusBar, Platform, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import ScannerCard from '../components/ScannerCard';
+import { useAuth } from '../context';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -14,7 +15,35 @@ const ScannerScreen = ({ navigation }) => {
   const [ratio, setRatio] = useState('4:3');
   const [isRatioSet, setIsRatioSet] = useState(false);
   const [flashEnabled, setFlashEnabled] = useState(false);
+  const [shortId, setShortId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signInWithShortId } = useAuth();
   const screenRatio = windowHeight / windowWidth;
+
+  const attemptSignIn = async scannedShortId => {
+    try {
+      setIsLoading(true);
+
+      const signedIn = await signInWithShortId(scannedShortId || shortId);
+
+      if (!signedIn) setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      setScanned(false);
+      console.log(err);
+      Alert.alert('Oops!', err.message);
+    }
+  };
+
+  const handleBarCodeScanned = async ({ data }) => {
+    setScanned(true);
+
+    const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<shortId>[A-Za-z0-9_-]{12})/g);
+    // eslint-disable-next-line no-unused-vars
+    const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups;
+
+    await attemptSignIn(scannedShortId);
+  };
 
   useEffect(() => {
     async function getCameraStatus() {
@@ -23,11 +52,6 @@ const ScannerScreen = ({ navigation }) => {
     }
     getCameraStatus();
   }, []);
-
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-  };
 
   // set the camera ratio and padding.
   // this code assumes a portrait mode screen
@@ -99,6 +123,10 @@ const ScannerScreen = ({ navigation }) => {
         onClose={() => navigation.pop()}
         onFlashPress={() => setFlashEnabled(!flashEnabled)}
         flashEnabled={flashEnabled}
+        onSubmit={() => attemptSignIn()}
+        shortId={shortId}
+        setShortId={setShortId}
+        isLoading={isLoading}
       />
     </View>
   );
