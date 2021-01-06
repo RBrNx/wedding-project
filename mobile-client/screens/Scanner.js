@@ -45,12 +45,15 @@ const ScannerScreen = ({ navigation }) => {
     await attemptSignIn(scannedShortId);
   };
 
+  const askForCameraPermission = async manuallyTriggered => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    setHasPermission(status === 'granted');
+
+    if (status === 'denied' && manuallyTriggered) Linking.openSettings();
+  };
+
   useEffect(() => {
-    async function getCameraStatus() {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      setHasPermission(status === 'granted');
-    }
-    getCameraStatus();
+    askForCameraPermission();
   }, []);
 
   // set the camera ratio and padding.
