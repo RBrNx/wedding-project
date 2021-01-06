@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
   card: {
     height: '20%',
     width: '100%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
     padding: 10,
   },
   scannerCard: {

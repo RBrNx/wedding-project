@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, StyleSheet, Dimensions, StatusBar, Platform, Alert } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, StatusBar, Platform, Alert, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import ScannerCard from '../components/ScannerCard';
 import { useAuth } from '../context';
+import QRScanner from '../components/QRScanner';
+import StandardButton from '../library/components/StandardButton';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -98,30 +100,34 @@ const ScannerScreen = ({ navigation }) => {
     }
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-
   return (
-    <View style={styles.container}>
-      <Camera
-        ref={cameraRef}
-        barCodeScannerSettings={{
-          barCodeTypes: ['qr'],
-        }}
-        style={[styles.cameraPreview, { marginBottom: imagePadding + StatusBar.currentHeight }]}
-        ratio={ratio}
-        onCameraReady={async () => {
-          if (!isRatioSet) {
-            await prepareRatio();
-          }
-        }}
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
-      />
+    <View style={[styles.container, !hasPermission ? { alignItems: 'center' } : {}]}>
+      {!hasPermission && (
+        <View style={styles.permissionContainer}>
+          <Text style={styles.permissionText}>
+            To scan your invitation, we require your permission to access the Camera
+          </Text>
+          <QRScanner size={400} />
+          <StandardButton text='Grant Permission' raised onPress={() => askForCameraPermission(true)} />
+        </View>
+      )}
+      {hasPermission && (
+        <Camera
+          ref={cameraRef}
+          barCodeScannerSettings={{
+            barCodeTypes: ['qr'],
+          }}
+          style={[styles.cameraPreview, { marginBottom: imagePadding + StatusBar.currentHeight }]}
+          ratio={ratio}
+          onCameraReady={async () => {
+            if (!isRatioSet) {
+              await prepareRatio();
+            }
+          }}
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
+        />
+      )}
       <ScannerCard
         onClose={() => navigation.pop()}
         onFlashPress={() => setFlashEnabled(!flashEnabled)}
@@ -139,10 +145,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'red',
   },
   cameraPreview: {
     flex: 1,
+  },
+  permissionContainer: {
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 0.4,
+  },
+  permissionText: {
+    textAlign: 'center',
   },
 });
 
