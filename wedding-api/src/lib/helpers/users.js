@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import AWS from 'aws-sdk';
 import { connectToDatabase } from '../database';
 import { stripNonAlphaChars } from '../helpers';
+import { UserRole } from '../enums';
 
 const { COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID } = process.env;
 
@@ -43,6 +44,10 @@ const createCognitoUser = async ({ userId, username, password }) => {
           Name: 'preferred_username',
           Value: username,
         },
+        {
+          Name: 'custom:role',
+          Value: UserRole.GUEST,
+        },
       ],
       MessageAction: 'SUPPRESS',
     })
@@ -73,6 +78,10 @@ const createCognitoAdminUser = async ({ userId, email, password }) => {
         {
           Name: 'email',
           Value: email,
+        },
+        {
+          Name: 'custom:role',
+          Value: UserRole.ADMIN,
         },
       ],
     })
