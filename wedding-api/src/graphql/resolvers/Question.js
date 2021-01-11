@@ -1,13 +1,26 @@
 import { connectToDatabase } from '../../lib/database';
 
-const createQuestion = async (parent, args) => {
+const getRSVPQuestions = async (parent, args, { currentUser }) => {
+  try {
+    const db = await connectToDatabase();
+    const QuestionModel = db.model('Question');
+
+    const questions = await QuestionModel.find({ eventId: currentUser.eventId }).exec();
+
+    return questions;
+  } catch (error) {
+    return error;
+  }
+};
+
+const createQuestion = async (parent, args, { currentUser }) => {
   const { question } = args;
 
   try {
     const db = await connectToDatabase();
     const QuestionModel = db.model('Question');
 
-    const questionDoc = new QuestionModel(question);
+    const questionDoc = new QuestionModel({ ...question, eventId: currentUser.eventId });
     await questionDoc.save();
 
     return {
@@ -88,6 +101,9 @@ const answerChoiceQuestion = async (parent, args) => {
 };
 
 export default {
+  Query: {
+    getRSVPQuestions,
+  },
   Mutation: {
     createQuestion,
     updateQuestion,

@@ -26,6 +26,7 @@ const FollowUpSchema = new Schema(
 );
 
 const QuestionSchema = new Schema({
+  eventId: { type: ObjectId, required: true, ref: 'Event' },
   type: { type: String, enum: mapEnumValues(QuestionType), required: true },
   title: { type: String, required: true },
   label: { type: String },

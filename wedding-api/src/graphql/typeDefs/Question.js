@@ -26,6 +26,7 @@ const schema = gql`
 
   type Question {
     _id: ID!
+    eventId: ID!
     type: QuestionType!
     title: String!
     label: String
@@ -85,6 +86,10 @@ const schema = gql`
   input ChoiceAnswerInput {
     questionId: ID!
     answer: ID!
+  }
+
+  extend type Query {
+    getRSVPQuestions: [Question]
   }
 
   extend type Mutation {
