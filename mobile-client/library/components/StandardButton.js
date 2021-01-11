@@ -29,7 +29,7 @@ const StandardButton = ({ onPress, raised, text, loading, icon }) => {
       <View style={{ opacity: 0 }}>{!loading && icon && icon()}</View>
       {!loading && <Text style={styles.text}>{text}</Text>}
       {!loading && icon && icon()}
-      {loading && <ActivityIndicator color='#fff' />}
+      {loading && <ActivityIndicator color='#fff' style={styles.loadingSpinner} />}
     </Pressable>
   );
 };
@@ -46,6 +46,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     flex: 1,
+    paddingVertical: 15,
+  },
+  loadingSpinner: {
     paddingVertical: 15,
   },
 });
