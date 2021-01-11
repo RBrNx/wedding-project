@@ -12,7 +12,27 @@ const createQuestion = async (parent, args) => {
 
     return {
       success: true,
-      feedback: 'Question created successfully',
+      message: 'Question created successfully',
+      payload: questionDoc,
+    };
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateQuestion = async (parent, args) => {
+  const { id, question } = args;
+
+  try {
+    const db = await connectToDatabase();
+    const QuestionModel = db.model('Question');
+
+    const questionDoc = await QuestionModel.findByIdAndUpdate(id, { ...question }, { new: true });
+
+    return {
+      success: true,
+      message: 'Question updated successfully',
+      payload: questionDoc,
     };
   } catch (error) {
     return error;
@@ -36,7 +56,7 @@ const answerTextQuestion = async (parent, args) => {
 
     return {
       success: true,
-      feedback: 'Answer created successfully',
+      message: 'Answer created successfully',
     };
   } catch (error) {
     return error;
@@ -60,7 +80,7 @@ const answerChoiceQuestion = async (parent, args) => {
 
     return {
       success: true,
-      feedback: 'Answer created successfully',
+      message: 'Answer created successfully',
     };
   } catch (error) {
     return error;
@@ -70,6 +90,7 @@ const answerChoiceQuestion = async (parent, args) => {
 export default {
   Mutation: {
     createQuestion,
+    updateQuestion,
     answerTextQuestion,
     answerChoiceQuestion,
   },

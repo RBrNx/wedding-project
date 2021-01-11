@@ -19,19 +19,20 @@ const schema = gql`
   }
 
   type FollowUp {
-    to: ID
-    matchesChoice: ID
+    question: ID!
+    matchesChoice: ID!
+    order: Int!
   }
 
   type Question {
-    _id: ID
-    type: QuestionType
-    title: String
+    _id: ID!
+    type: QuestionType!
+    title: String!
     label: String
     choices: [Choice]
     specificGuests: [User]
-    responseType: ResponseType
-    followUp: FollowUp
+    responseType: ResponseType!
+    followUp: [FollowUp]
   }
 
   type AnswerMutationResponse implements MutationResponse {
@@ -51,18 +52,29 @@ const schema = gql`
   }
 
   input FollowUpInput {
-    to: ID!
+    question: ID!
     matchesChoice: ID!
+    order: Int!
   }
 
-  input QuestionInput {
+  input CreateQuestionInput {
     type: QuestionType!
     title: String!
     label: String
     choices: [ChoiceInput]
     specificGuests: [ID]
     responseType: ResponseType!
-    followUp: FollowUpInput
+    followUpQuestions: [FollowUpInput!]
+  }
+
+  input UpdateQuestionInput {
+    type: QuestionType
+    title: String
+    label: String
+    choices: [ChoiceInput]
+    specificGuests: [ID]
+    responseType: ResponseType
+    followUpQuestions: [FollowUpInput!]
   }
 
   input TextAnswerInput {
@@ -76,7 +88,8 @@ const schema = gql`
   }
 
   extend type Mutation {
-    createQuestion(question: QuestionInput!): QuestionMutationResponse
+    createQuestion(question: CreateQuestionInput!): QuestionMutationResponse
+    updateQuestion(id: ID!, question: UpdateQuestionInput!): QuestionMutationResponse
     answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
     answerChoiceQuestion(guestId: ID!, answerInput: ChoiceAnswerInput!): AnswerMutationResponse
   }
