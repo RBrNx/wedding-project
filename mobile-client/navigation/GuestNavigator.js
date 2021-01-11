@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import SignInScreen from '../screens/SignIn';
-import ScannerScreen from '../screens/Scanner';
+import SubmitRSVPScreen from '../screens/SubmitRSVP';
 
 const Stack = createStackNavigator();
 
@@ -11,13 +10,12 @@ const screenOptions = {
   headerShown: false,
 };
 
-const SignInNavigator = () => {
+const GuestNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name='SignIn' component={SignInScreen} />
-      <Stack.Screen name='Scanner' component={ScannerScreen} />
+      <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
     </Stack.Navigator>
   );
 };
 
-export default SignInNavigator;
+export default GuestNavigator;

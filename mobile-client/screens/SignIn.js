@@ -56,7 +56,6 @@ const SignInScreen = ({ navigation }) => {
               text='Scan Invitation'
               raised
               onPress={() => navigation.navigate('Scanner')}
-              loading={signingIn}
               icon={() => <MaterialCommunityIcons name='qrcode-scan' size={22} color='white' style={styles.icon} />}
             />
           </View>

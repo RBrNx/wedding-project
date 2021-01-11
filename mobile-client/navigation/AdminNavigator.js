@@ -8,7 +8,7 @@ import SettingsScreen from '../screens/Settings';
 
 const Tab = createBottomTabNavigator();
 
-const HomeNavigator = () => {
+const AdminNavigator = () => {
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -48,4 +48,4 @@ const HomeNavigator = () => {
   );
 };
 
-export default HomeNavigator;
+export default AdminNavigator;
