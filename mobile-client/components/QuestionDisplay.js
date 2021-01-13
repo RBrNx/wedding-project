@@ -1,19 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import StandardPressable from '../library/components/StandardPressable';
+import StandardRadioInput from '../library/components/StandardRadioInput';
 
-const QuestionDisplay = ({ question, index }) => {
+const QuestionDisplay = ({ question, index, setFormValue, formValues }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.questionNumber}>{`Q${index}`}</Text>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      <View style={styles.choiceContainer}>
-        {question.choices.map(choice => (
-          <StandardPressable key={choice._id} style={styles.questionChoice}>
-            <Text style={styles.choiceText}>{choice.label}</Text>
-          </StandardPressable>
-        ))}
-      </View>
+      {question.choices && (
+        <StandardRadioInput
+          options={question.choices}
+          setSelectedValue={value => setFormValue(question._id, value)}
+          selectedValue={formValues[question._id]}
+        />
+      )}
     </View>
   );
 };
