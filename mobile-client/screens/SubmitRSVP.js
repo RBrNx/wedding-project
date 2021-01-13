@@ -1,27 +1,53 @@
 import { useTheme } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
-import React, { useLayoutEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
-import { constantStyles } from '../styles/theming';
 import StandardButton from '../library/components/StandardButton';
 import LoadingIndicator from '../components/LoadingIndicator';
-import StandardPressable from '../library/components/StandardPressable';
 import QuestionDisplay from '../components/QuestionDisplay';
 import FormWizard from '../library/components/FormWizard';
 
 const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
 
 const SubmitRSVPScreen = ({ navigation }) => {
-  const { loading, error, data, refetch } = useQuery(GET_RSVP_QUESTIONS);
+  const [currQuestion, setCurrQuestion] = useState(0);
+  const formWizardRef = useRef();
+  const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
   const { colors } = useTheme();
 
   const { getRSVPQuestions: questions } = data || {};
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <HeaderBackButton tintColor='#fff' onPress={onPrev} />,
+    });
+  }, [navigation]);
+
+  const onNext = () => {
+    formWizardRef.current.nextStep();
+  };
+
+  const onPrev = () => {
+    formWizardRef.current.prevStep();
+  };
+
+  const onStepChange = newStep => {
+    setCurrQuestion(newStep);
+  };
+
   return (
     <View style={styles.container}>
-      <FormWizard navigation={navigation} data={questions} loading={loading} />
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
+        {loading && <LoadingIndicator size={100} />}
+        {!loading && !error && (
+          <FormWizard ref={formWizardRef} numSteps={questions.length} onStepChange={onStepChange}>
+            <QuestionDisplay question={questions[currQuestion]} index={currQuestion + 1} />
+          </FormWizard>
+        )}
+      </View>
+      <StandardButton text='Next' onPress={onNext} />
     </View>
   );
 };
@@ -32,6 +58,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '5%',
     paddingBottom: 30,
+  },
+  card: {
+    width: '100%',
+    borderRadius: 15,
+    marginBottom: 30,
+    padding: 10,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    overflow: 'hidden',
   },
 });
 
