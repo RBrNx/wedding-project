@@ -9,18 +9,8 @@ import StandardButton from './StandardButton';
 
 const FormWizard = ({ navigation, data, loading }) => {
   const [currStep, setCurrStep] = useState(0);
+  const { setTranslateAction, TranslateAction, animationDuration, animatedWizardStyle } = useAnimatedWizard();
   const { colors } = useTheme();
-
-  const {
-    setTranslateAction,
-    translateAction,
-    translateIn,
-    translateOut,
-    opacityIn,
-    opacityOut,
-    TranslateAction,
-    animationDuration,
-  } = useAnimatedWizard();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,31 +21,21 @@ const FormWizard = ({ navigation, data, loading }) => {
   const onPrev = useCallback(() => {
     if (currStep <= 0) return;
 
-    setTranslateAction(TranslateAction.OUT_RIGHT);
-    setTimeout(() => setCurrStep(currStep - 1), animationDuration);
-  }, [TranslateAction.OUT_RIGHT, animationDuration, currStep, setTranslateAction]);
+    setTranslateAction(TranslateAction.PREV);
+    setTimeout(() => setCurrStep(currStep - 1), animationDuration / 2);
+  }, [TranslateAction.PREV, animationDuration, currStep, setTranslateAction]);
 
   const onNext = () => {
     if (currStep === data.length - 1) return;
 
-    setTranslateAction(TranslateAction.OUT_LEFT);
-    setTimeout(() => setCurrStep(currStep + 1), animationDuration);
+    setTranslateAction(TranslateAction.NEXT);
+    setTimeout(() => setCurrStep(currStep + 1), animationDuration / 2);
   };
 
   return (
     <>
       <View style={[styles.card, { backgroundColor: colors.card }]}>
-        <Animated.View
-          style={[
-            styles.container,
-            {
-              transform: [
-                { translateX: ['IN_LEFT', 'IN_RIGHT'].includes(translateAction) ? translateIn : translateOut },
-              ],
-              opacity: ['IN_LEFT', 'IN_RIGHT'].includes(translateAction) ? opacityIn : opacityOut,
-            },
-          ]}
-        >
+        <Animated.View style={[styles.container, animatedWizardStyle]}>
           {loading && <LoadingIndicator size={100} />}
           {!loading && data && <QuestionDisplay question={data[currStep]} index={currStep + 1} />}
         </Animated.View>
