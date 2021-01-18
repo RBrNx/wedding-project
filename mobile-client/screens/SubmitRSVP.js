@@ -1,14 +1,15 @@
 import { useTheme } from '@react-navigation/native';
-import { HeaderBackButton } from '@react-navigation/stack';
+import { HeaderBackButton, Assets } from '@react-navigation/stack';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
-import StandardButton from '../library/components/StandardButton';
 import LoadingIndicator from '../components/LoadingIndicator';
 import QuestionDisplay from '../components/QuestionDisplay';
 import FormWizard from '../library/components/FormWizard';
+import StandardActionButton from '../library/components/StandardActionButton';
 
+const { width } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
 
 const SubmitRSVPScreen = ({ navigation }) => {
@@ -57,7 +58,10 @@ const SubmitRSVPScreen = ({ navigation }) => {
           </FormWizard>
         )}
       </View>
-      <StandardButton text='Next' onPress={onNext} />
+      <StandardActionButton
+        icon={() => <Image source={Assets[0]} fadeDuration={0} style={styles.actionButtonIcon} />}
+        maxExpansionWidth={width * 0.95 - 16}
+      />
     </View>
   );
 };
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: '5%',
-    paddingBottom: 30,
+    paddingBottom: 56,
   },
   card: {
     width: '100%',
@@ -77,8 +81,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
     overflow: 'hidden',
+  },
+  actionButtonIcon: {
+    tintColor: '#fff',
+    transform: [{ rotate: '180deg' }],
   },
 });
 
