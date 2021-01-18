@@ -16,6 +16,10 @@ const lightTheme = {
     primary: darkBlue,
     secondary: lightBlue,
     background: darkBlue,
+    button: lightBlue,
+    buttonPressed: Color(lightBlue)
+      .darken(0.2)
+      .toString(),
     card: white,
     cardHover: Color(white)
       .darken(0.12)
@@ -35,6 +39,10 @@ const darkTheme = {
     primary: darkBlue,
     secondary: lightBlue,
     background: darkBlue,
+    button: lightBlue,
+    buttonPressed: Color(lightBlue)
+      .darken(0.2)
+      .toString(),
     card: darkGrey,
     cardHover: Color(darkGrey)
       .darken(0.12)
