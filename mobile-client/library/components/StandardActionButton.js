@@ -63,7 +63,7 @@ const StandardActionButton = ({
   }, [errorMessage]);
 
   return (
-    <View style={styles.fullscreenContainer}>
+    <View style={styles.fullscreenContainer} pointerEvents='box-none'>
       <Animated.View
         style={[
           styles.expansion,
