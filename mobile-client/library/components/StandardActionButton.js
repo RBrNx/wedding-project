@@ -44,9 +44,9 @@ const StandardActionButton = ({
   };
 
   const showMessage = () => {
-    const animateOut = withTiming(1, { duration: animDuration, easing: Easing.inOut(Easing.exp) });
-    const animateIn = withTiming(0, { duration: animDuration - 200, easing: Easing.inOut(Easing.exp) });
-    expansion.value = withSequence(animateOut, withDelay(3000, animateIn));
+    const expand = withTiming(1, { duration: animDuration, easing: Easing.inOut(Easing.exp) });
+    const shrink = withTiming(0, { duration: animDuration - 200, easing: Easing.inOut(Easing.exp) });
+    expansion.value = withSequence(expand, withDelay(3000, shrink));
   };
 
   const closeMessage = () => {
