@@ -18,6 +18,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const StandardActionButton = ({
   size = 56,
   icon,
+  errorMessage,
   expansionStyle = { right: 16, bottom: 16 },
   buttonStyle,
   messageStyle,
@@ -52,6 +53,10 @@ const StandardActionButton = ({
     else if (expansion.value <= 0.5 && isExpanded) runOnJS(switchIcon)(false);
   }, [isExpanded]);
 
+  useEffect(() => {
+    if (errorMessage) showMessage();
+  }, [errorMessage]);
+
   return (
     <View style={styles.fullscreenContainer}>
       <Animated.View
@@ -76,7 +81,7 @@ const StandardActionButton = ({
             messageStyle,
           ]}
         >
-          Please select an answer before continuing.
+          {errorMessage}
         </Animated.Text>
         <AnimatedPressable
           style={[

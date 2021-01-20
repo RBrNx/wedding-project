@@ -15,6 +15,7 @@ const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
 const SubmitRSVPScreen = ({ navigation }) => {
   const [currQuestion, setCurrQuestion] = useState(0);
   const [rsvpForm, setRSVPForm] = useState({});
+  const [formError, setFormError] = useState(null);
   const formWizardRef = useRef();
   const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
   const { colors } = useTheme();
@@ -28,7 +29,9 @@ const SubmitRSVPScreen = ({ navigation }) => {
   }, [navigation]);
 
   const onNext = () => {
-    formWizardRef.current.nextStep();
+    const { _id } = questions[currQuestion];
+    if (!rsvpForm[_id]) setFormError('Please select an answer before continuing.');
+    else formWizardRef.current.nextStep();
   };
 
   const onPrev = () => {
@@ -61,6 +64,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
       <StandardActionButton
         icon={() => <Image source={Assets[0]} fadeDuration={0} style={styles.actionButtonIcon} />}
         maxExpansionWidth={width * 0.95 - 16}
+        errorMessage={formError}
       />
     </View>
   );
