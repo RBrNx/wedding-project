@@ -18,6 +18,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const StandardActionButton = ({
   size = 56,
   icon,
+  onPress,
   errorMessage,
   expansionStyle = { right: 16, bottom: 16 },
   buttonStyle,
@@ -94,7 +95,7 @@ const StandardActionButton = ({
             animatedButtonStyle,
             buttonStyle,
           ]}
-          onPress={isExpanded ? closeMessage : showMessage}
+          onPress={isExpanded ? closeMessage : onPress}
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
         >
