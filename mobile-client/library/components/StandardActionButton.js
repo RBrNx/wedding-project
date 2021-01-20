@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   withTiming,
@@ -19,6 +19,7 @@ const StandardActionButton = ({
   size = 56,
   icon,
   onPress,
+  onButtonShrink,
   errorMessage,
   expansionStyle = { right: 16, bottom: 16 },
   buttonStyle,
@@ -35,8 +36,11 @@ const StandardActionButton = ({
     maxExpansionWidth,
   });
 
-  const switchIcon = newState => {
-    if (newState !== isExpanded) setIsExpanded(newState);
+  const storeExpandedState = newState => {
+    if (newState !== isExpanded) {
+      setIsExpanded(newState);
+      if (!newState && onButtonShrink) onButtonShrink();
+    }
   };
 
   const showMessage = () => {
@@ -50,8 +54,8 @@ const StandardActionButton = ({
   };
 
   useDerivedValue(() => {
-    if (expansion.value > 0.5 && !isExpanded) runOnJS(switchIcon)(true);
-    else if (expansion.value <= 0.5 && isExpanded) runOnJS(switchIcon)(false);
+    if (expansion.value > 0.5 && !isExpanded) runOnJS(storeExpandedState)(true);
+    else if (expansion.value <= 0.5 && isExpanded) runOnJS(storeExpandedState)(false);
   }, [isExpanded]);
 
   useEffect(() => {

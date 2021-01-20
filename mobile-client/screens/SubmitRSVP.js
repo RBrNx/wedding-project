@@ -65,6 +65,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         icon={() => <Image source={Assets[0]} fadeDuration={0} style={styles.actionButtonIcon} />}
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNext}
+        onButtonShrink={() => setFormError(null)}
         errorMessage={formError}
       />
     </View>
