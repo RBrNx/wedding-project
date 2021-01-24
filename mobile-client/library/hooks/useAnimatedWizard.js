@@ -25,7 +25,7 @@ const useAnimatedWizard = duration => {
         duration: animationDuration,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.exp),
-      }).start();
+      }).start(() => setTranslateAction(null));
     }
   }, [animationDuration, currStepAnimation, translateAction]);
 
