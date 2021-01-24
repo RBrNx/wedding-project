@@ -18,7 +18,6 @@ const FollowUpSchema = new Schema(
   {
     question: { type: ObjectId, ref: 'Question', required: true },
     matchesChoice: { type: ObjectId, required: true },
-    order: { type: Number, required: true },
   },
   {
     _id: false,
@@ -35,6 +34,8 @@ const QuestionSchema = new Schema({
   specificGuests: [{ type: ObjectId, ref: 'Guest' }],
   responseType: { type: String, enum: mapEnumValues(QuestionResponseType), required: true },
   followUpQuestions: [{ type: FollowUpSchema }],
+  order: { type: Number, required: true },
+  isFollowUp: { type: Boolean, required: true },
 });
 
 export default QuestionSchema;

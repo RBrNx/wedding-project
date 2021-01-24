@@ -21,7 +21,6 @@ const schema = gql`
   type FollowUp {
     question: ID!
     matchesChoice: ID!
-    order: Int!
   }
 
   type Question {
@@ -33,7 +32,9 @@ const schema = gql`
     choices: [Choice]
     specificGuests: [User]
     responseType: ResponseType!
-    followUp: [FollowUp]
+    followUpQuestions: [FollowUp]
+    order: Int!
+    isFollowUp: Boolean!
   }
 
   type AnswerMutationResponse implements MutationResponse {
@@ -66,6 +67,8 @@ const schema = gql`
     specificGuests: [ID]
     responseType: ResponseType!
     followUpQuestions: [FollowUpInput!]
+    order: Int!
+    isFollowUp: Boolean!
   }
 
   input UpdateQuestionInput {
@@ -76,6 +79,8 @@ const schema = gql`
     specificGuests: [ID]
     responseType: ResponseType
     followUpQuestions: [FollowUpInput!]
+    order: Int!
+    isFollowUp: Boolean!
   }
 
   input TextAnswerInput {
