@@ -1,38 +1,31 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { StyleSheet, Animated } from 'react-native';
+import QuestionDisplay from '../../components/QuestionDisplay';
 import useAnimatedWizard from '../hooks/useAnimatedWizard';
 
-const FormWizard = forwardRef(({ children, onStepChange, numSteps }, ref) => {
-  const [currStep, setCurrStep] = useState(0);
+const FormWizard = ({ question, setFormValue, formValues }) => {
+  const [displayedQuestion, setDisplayedQuestion] = useState(question);
   const { setTranslateAction, animationDuration, animatedWizardStyle, TranslateAction } = useAnimatedWizard();
 
-  const prevStep = () => {
-    if (currStep <= 0) return;
+  useEffect(() => {
+    const { order: displayedIndex } = displayedQuestion;
+    const { order: newIndex } = question;
 
-    const newStep = currStep - 1;
+    if (newIndex > displayedIndex) setTranslateAction(TranslateAction.NEXT);
+    else if (newIndex < displayedIndex) setTranslateAction(TranslateAction.PREV);
 
-    setTranslateAction(TranslateAction.PREV);
-    setCurrStep(newStep);
-    setTimeout(() => onStepChange(newStep), animationDuration / 2);
-  };
+    setTimeout(() => {
+      setDisplayedQuestion(question);
+    }, animationDuration / 2);
+  }, [question]);
 
-  const nextStep = () => {
-    if (currStep === numSteps - 1) return;
-
-    const newStep = currStep + 1;
-
-    setTranslateAction(TranslateAction.NEXT);
-    setCurrStep(newStep);
-    setTimeout(() => onStepChange(newStep), animationDuration / 2);
-  };
-
-  useImperativeHandle(ref, () => ({
-    nextStep,
-    prevStep,
-  }));
-
-  return <Animated.View style={[styles.container, animatedWizardStyle]}>{children}</Animated.View>;
-});
+  return (
+    <Animated.View style={[styles.container, animatedWizardStyle]}>
+      <QuestionDisplay question={displayedQuestion} setFormValue={setFormValue} formValues={formValues} />
+    </Animated.View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
