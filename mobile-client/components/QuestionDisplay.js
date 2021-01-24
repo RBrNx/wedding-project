@@ -2,10 +2,10 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import StandardRadioInput from '../library/components/StandardRadioInput';
 
-const QuestionDisplay = ({ question, index, setFormValue, formValues }) => {
+const QuestionDisplay = ({ question, setFormValue, formValues }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.questionNumber}>{`Q${index}`}</Text>
+      <Text style={styles.questionNumber}>{`Q${question.number}`}</Text>
       <Text style={styles.questionTitle}>{question.title}</Text>
       {question.choices && (
         <StandardRadioInput
