@@ -9,10 +9,22 @@ query GET_RSVP_QUESTIONS {
       value
     }
     responseType
-    followUp {
-      question
+    isFollowUp
+    order
+    followUpQuestions {
       matchesChoice
-      order
+      question {
+        _id
+        type
+        title
+        choices {
+          _id
+          label
+          value
+        }
+        responseType
+        order
+      }
     }
   }
 }
