@@ -19,7 +19,7 @@ const schema = gql`
   }
 
   type FollowUp {
-    question: ID!
+    question: Question!
     matchesChoice: ID!
   }
 

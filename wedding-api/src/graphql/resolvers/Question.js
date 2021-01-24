@@ -5,7 +5,15 @@ const getRSVPQuestions = async (parent, args, { currentUser }) => {
     const db = await connectToDatabase();
     const QuestionModel = db.model('Question');
 
-    const questions = await QuestionModel.find({ eventId: currentUser.eventId }).exec();
+    const questions = await QuestionModel.find({ eventId: currentUser.eventId, isFollowUp: false })
+      .populate({
+        path: 'followUpQuestions',
+        populate: {
+          path: 'question',
+          model: 'Question',
+        },
+      })
+      .exec();
 
     return questions;
   } catch (error) {
