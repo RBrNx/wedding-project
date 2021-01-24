@@ -33,7 +33,7 @@ const schema = gql`
     specificGuests: [User]
     responseType: ResponseType!
     followUpQuestions: [FollowUp]
-    order: Float!
+    order: Int!
     isFollowUp: Boolean!
   }
 
@@ -66,7 +66,7 @@ const schema = gql`
     specificGuests: [ID]
     responseType: ResponseType!
     followUpQuestions: [FollowUpInput!]
-    order: Float!
+    order: Int!
     isFollowUp: Boolean!
   }
 
@@ -78,7 +78,7 @@ const schema = gql`
     specificGuests: [ID]
     responseType: ResponseType
     followUpQuestions: [FollowUpInput!]
-    order: Float!
+    order: Int!
     isFollowUp: Boolean!
   }
 
