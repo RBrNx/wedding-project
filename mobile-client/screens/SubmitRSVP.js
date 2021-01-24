@@ -1,45 +1,64 @@
 import { useTheme } from '@react-navigation/native';
 import { HeaderBackButton, Assets } from '@react-navigation/stack';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import LoadingIndicator from '../components/LoadingIndicator';
-import QuestionDisplay from '../components/QuestionDisplay';
 import FormWizard from '../library/components/FormWizard';
 import StandardActionButton from '../library/components/StandardActionButton';
+import { calculateQuestions } from '../library/helpers/RSVP';
 
 const { width } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
 
 const SubmitRSVPScreen = ({ navigation }) => {
-  const [currQuestion, setCurrQuestion] = useState(0);
+  const [prevQuestions, setPrevQuestions] = useState([]);
+  const [currQuestion, setCurrQuestion] = useState(null);
+  const [questionNumber, setQuestionNumber] = useState(1);
   const [rsvpForm, setRSVPForm] = useState({});
   const [formError, setFormError] = useState(null);
-  const formWizardRef = useRef();
   const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
   const { colors } = useTheme();
 
   const { getRSVPQuestions: questions } = data || {};
+  const currAnswer = rsvpForm[currQuestion?._id];
+  const { prevQuestion, nextQuestion } = calculateQuestions({
+    questions,
+    prevQuestions,
+    currQuestion,
+    currAnswer,
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => <HeaderBackButton tintColor='#fff' onPress={onPrev} />,
     });
-  }, [navigation]);
+  }, [navigation, currQuestion]);
+
+  useEffect(() => {
+    if (questions) setCurrQuestion({ ...questions[0], number: questionNumber });
+  }, [questions]);
 
   const onNext = () => {
-    const { _id } = questions[currQuestion];
-    if (!rsvpForm[_id]) setFormError('Please select an answer before continuing.');
-    else formWizardRef.current.nextStep();
+    if (!currAnswer) {
+      setFormError('Please select an answer before continuing.');
+      return;
+    }
+
+    if (nextQuestion) {
+      setPrevQuestions([...prevQuestions, currQuestion]);
+      setCurrQuestion({ ...nextQuestion, number: questionNumber + 1 });
+      setQuestionNumber(questionNumber + 1);
+    }
   };
 
   const onPrev = () => {
-    formWizardRef.current.prevStep();
-  };
-
-  const onStepChange = newStep => {
-    setCurrQuestion(newStep);
+    if (prevQuestion) {
+      setPrevQuestions(prevQuestions.slice(0, -1));
+      setCurrQuestion({ ...prevQuestion });
+      setQuestionNumber(questionNumber - 1);
+    }
   };
 
   const setFormValue = (key, value) => {
@@ -50,15 +69,8 @@ const SubmitRSVPScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={[styles.card, { backgroundColor: colors.card }]}>
         {loading && <LoadingIndicator size={100} />}
-        {!loading && !error && (
-          <FormWizard ref={formWizardRef} numSteps={questions.length} onStepChange={onStepChange}>
-            <QuestionDisplay
-              question={questions[currQuestion]}
-              index={currQuestion + 1}
-              setFormValue={setFormValue}
-              formValues={rsvpForm}
-            />
-          </FormWizard>
+        {!loading && !error && currQuestion && (
+          <FormWizard question={currQuestion} setFormValue={setFormValue} formValues={rsvpForm} />
         )}
       </View>
       <StandardActionButton
