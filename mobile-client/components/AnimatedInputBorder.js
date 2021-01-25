@@ -6,34 +6,44 @@ import { Svg, Path } from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-const roundedRectData = (w, h, r, startingXPos, gap) => {
+const roundedRectData = (w, h, r, startingXPos, gap, stroke) => {
   const leftPadding = gap ? 5 : 0;
   const rightPadding = gap ? 10 : 0;
   const width = w - r * 2;
   const height = h - r * 2;
 
   return `
-    m ${startingXPos + gap + rightPadding} 0
-    l ${w - (startingXPos + gap + r + rightPadding)} 0
+    m ${startingXPos + gap + rightPadding} ${stroke / 2}
+    h ${w - (startingXPos + gap + r + rightPadding) - stroke}
     a ${r} ${r} 0 0 1 ${r} ${r}
-    l 0 ${height}
+    v ${height - stroke}
     a ${r} ${r} 0 0 1 -${r} ${r}
-    l -${width} 0
+    h -${width - stroke * 2}
     a ${r} ${r} 0 0 1 -${r} -${r}
-    l 0 -${height}
+    v -${height - stroke}
     a ${r} ${r} 0 0 1 ${r} -${r}
-    l ${startingXPos - r - leftPadding} 0
+    h ${startingXPos - r - leftPadding}
   `;
 };
 
-const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, gapWidth, animate, borderColour }) => {
+const AnimatedInputBorder = ({
+  style,
+  height,
+  width,
+  borderRadius,
+  stroke = 2,
+  labelXPos,
+  gapWidth,
+  animate,
+  borderColour,
+}) => {
   const [borderAnim] = useState(new Animated.Value(0));
   const [viewWidth, setViewWidth] = useState(0);
   const ratio = viewWidth ? width / viewWidth : 1;
   const { colors } = useTheme();
 
-  const fullRectangle = roundedRectData(width, height, borderRadius, labelXPos, 0);
-  const gapRectangle = roundedRectData(width, height, borderRadius, labelXPos, gapWidth * ratio);
+  const fullRectangle = roundedRectData(width, height, borderRadius, labelXPos, 0, stroke);
+  const gapRectangle = roundedRectData(width, height, borderRadius, labelXPos, gapWidth * ratio, stroke);
 
   const path = borderAnim.interpolate({
     inputRange: [0, 1],
@@ -66,8 +76,8 @@ const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, ga
         setViewWidth(vWidth);
       }}
     >
-      <Svg viewBox={`-0.75 0 ${width + 1} ${height}`} width='100%' height={height}>
-        <AnimatedPath d={path} stroke={colour} strokeWidth='0.75' />
+      <Svg viewBox={`0 0 ${width} ${height}`}>
+        <AnimatedPath d={path} stroke={colour} strokeWidth={stroke} />
       </Svg>
     </View>
   );
