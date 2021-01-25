@@ -101,6 +101,8 @@ const StandardInput = ({
 const styles = StyleSheet.create({
   containerStyle: {
     position: 'relative',
+    width: '100%',
+    maxWidth: '100%',
   },
   input: {
     borderRadius: 5,

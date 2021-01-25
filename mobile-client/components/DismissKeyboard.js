@@ -12,6 +12,7 @@ const DismissKeyboard = ({ children, style }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
   },
 });
 
