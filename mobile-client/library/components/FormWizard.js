@@ -1,23 +1,28 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { StyleSheet, Animated } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 import QuestionDisplay from '../../components/QuestionDisplay';
 import useAnimatedWizard from '../hooks/useAnimatedWizard';
 
 const FormWizard = ({ question, setFormValue, formValues }) => {
   const [displayedQuestion, setDisplayedQuestion] = useState(question);
-  const { setTranslateAction, animationDuration, animatedWizardStyle, TranslateAction } = useAnimatedWizard();
+  const { animateStepChange, animatedWizardStyle } = useAnimatedWizard({
+    fromStep: displayedQuestion.order,
+    toStep: question.order,
+  });
 
   useEffect(() => {
-    const { order: displayedIndex } = displayedQuestion;
-    const { order: newIndex } = question;
-
-    if (newIndex > displayedIndex) setTranslateAction(TranslateAction.NEXT);
-    else if (newIndex < displayedIndex) setTranslateAction(TranslateAction.PREV);
-
-    setTimeout(() => {
-      setDisplayedQuestion(question);
-    }, animationDuration / 2);
+    if (question._id !== displayedQuestion._id) {
+      animateStepChange({
+        fromStep: displayedQuestion.order,
+        toStep: question.order,
+        callback: () => {
+          setDisplayedQuestion(question);
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
 
   return (

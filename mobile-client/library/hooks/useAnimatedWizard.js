@@ -1,52 +1,46 @@
-import { useEffect, useState } from 'react';
-import { Animated, Dimensions, Easing } from 'react-native';
+import { useState } from 'react';
+import { Dimensions } from 'react-native';
+import {
+  Extrapolate,
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 
-const useAnimatedWizard = duration => {
-  const [translateAction, setTranslateAction] = useState(null);
-  const [currStepAnimation] = useState(new Animated.Value(0));
-  const TranslateAction = Object.freeze({
-    NEXT: 'NEXT',
-    PREV: 'PREV',
-  });
-  const outputRanges = {
-    [null]: [0, 0, 0, 0],
-    [TranslateAction.PREV]: [0, width, -width, 0],
-    [TranslateAction.NEXT]: [0, -width, width, 0],
+const useAnimatedWizard = ({ duration }) => {
+  const stepAnimation = useSharedValue(0);
+  const [transformOutput, setTransformOutput] = useState([0, 0, 0, 0]);
+  const animationDuration = duration || 400;
+
+  const animateStepChange = ({ fromStep, toStep, callback }) => {
+    if (toStep > fromStep) setTransformOutput([0, -width, width, 0]);
+    else if (toStep < fromStep) setTransformOutput([0, width, -width, 0]);
+
+    stepAnimation.value = 0;
+    const animateScreenOut = withTiming(1, { duration: animationDuration, easing: Easing.inOut(Easing.exp) }, () =>
+      runOnJS(callback)(),
+    );
+    const animateScreenIn = withTiming(2, { duration: animationDuration, easing: Easing.inOut(Easing.exp) });
+
+    stepAnimation.value = withSequence(animateScreenOut, animateScreenIn);
   };
-  const animationDuration = duration || 800;
 
-  useEffect(() => {
-    if (translateAction !== null) {
-      currStepAnimation.setValue(0);
-      Animated.timing(currStepAnimation, {
-        toValue: 2,
-        duration: animationDuration,
-        useNativeDriver: true,
-        easing: Easing.inOut(Easing.exp),
-      }).start(() => setTranslateAction(null));
-    }
-  }, [animationDuration, currStepAnimation, translateAction]);
-
-  const translateX = currStepAnimation.interpolate({
-    inputRange: [0, 1, 1, 2],
-    outputRange: outputRanges[translateAction],
-    extrapolate: 'clamp',
-  });
-
-  const opacity = currStepAnimation.interpolate({
-    inputRange: [0, 1, 1, 2],
-    outputRange: [1, 0, 0, 1],
-    extrapolate: 'clamp',
+  const animatedWizardStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: interpolate(stepAnimation.value, [0, 1, 1, 2], transformOutput, Extrapolate.CLAMP) }],
+      opacity: interpolate(stepAnimation.value, [0, 1, 1, 2], [1, 0, 0, 1], Extrapolate.CLAMP),
+    };
   });
 
   return {
-    TranslateAction,
-    translateAction,
-    setTranslateAction,
-    animationDuration,
-    animatedWizardStyle: { transform: [{ translateX }], opacity },
+    animateStepChange,
+    animatedWizardStyle,
   };
 };
 
