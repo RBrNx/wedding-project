@@ -17,6 +17,8 @@ const StandardInput = ({
   containerStyle,
   inputStyle,
   themeColourOverride,
+  borderColourFocused,
+  multiline,
 }) => {
   const textInput = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -57,7 +59,7 @@ const StandardInput = ({
           height={inputHeight}
           width={inputWidth}
           borderRadius={5}
-          borderColour={themeColourOverride}
+          borderColour={themeColourOverride || borderColourFocused}
           labelXPos={styles.input.paddingLeft}
           gapWidth={labelWidth}
           animate={shouldAnimateLabel}
@@ -70,7 +72,11 @@ const StandardInput = ({
           setInputHeight(Math.round(height));
           setInputWidth(Math.round(width));
         }}
-        style={[styles.input, { color: themeColourOverride || colors.focusedText }, inputStyle]}
+        style={[
+          styles.input,
+          { color: themeColourOverride || colors.focusedText, minHeight: multiline ? 200 : 0 },
+          inputStyle,
+        ]}
         value={value}
         placeholder={placeholder}
         onChangeText={onChangeText}
@@ -79,6 +85,8 @@ const StandardInput = ({
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         maxLength={maxLength}
+        multiline={multiline}
+        textAlignVertical='top'
       />
       <Animated.Text style={[styles.label, animatedStyles]} onPress={() => textInput.current.focus()}>
         {label}
