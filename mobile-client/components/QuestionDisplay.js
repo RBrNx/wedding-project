@@ -1,19 +1,32 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import StandardInput from '../library/components/StandardInput';
 import StandardRadioInput from '../library/components/StandardRadioInput';
 
 const QuestionDisplay = ({ question, setFormValue, formValues }) => {
+  const formValue = formValues[question._id];
+
   return (
     <View style={styles.container}>
       <Text style={styles.questionNumber}>{`Q${question.number}`}</Text>
       <Text style={styles.questionTitle}>{question.title}</Text>
-      {question.choices && (
-        <StandardRadioInput
-          options={question.choices}
-          setSelectedValue={value => setFormValue(question._id, value)}
-          selectedValue={formValues[question._id]}
-        />
-      )}
+      <View style={styles.answersContainer}>
+        {!!question?.choices?.length && (
+          <StandardRadioInput
+            options={question.choices}
+            setSelectedValue={value => setFormValue(question._id, value)}
+            selectedValue={formValue}
+          />
+        )}
+        {question.type === 'TEXT' && (
+          <StandardInput
+            borderColourFocused='#2991cc'
+            multiline
+            value={formValue}
+            onChangeText={value => setFormValue(question._id, value)}
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -30,22 +43,11 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: '#2991cc',
   },
-  choiceContainer: {
+  answersContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  questionChoice: {
-    borderRadius: 5,
-    padding: 15,
-    borderColor: '#ccc',
-    borderWidth: 2,
-    marginBottom: 15,
-    width: '100%',
-  },
-  choiceText: {
-    fontSize: 16,
   },
 });
 
