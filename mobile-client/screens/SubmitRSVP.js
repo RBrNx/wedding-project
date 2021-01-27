@@ -13,7 +13,7 @@ const { width } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
 
 const SubmitRSVPScreen = ({ navigation }) => {
-  const [prevQuestions, setPrevQuestions] = useState([]);
+  const [questionHistory, setQuestionHistory] = useState([]);
   const [currQuestion, setCurrQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [rsvpForm, setRSVPForm] = useState({});
@@ -25,7 +25,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const currAnswer = rsvpForm[currQuestion?._id];
   const { prevQuestion, nextQuestion } = calculateQuestions({
     questions,
-    prevQuestions,
+    questionHistory,
     currQuestion,
     currAnswer,
   });
@@ -47,7 +47,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
     }
 
     if (nextQuestion) {
-      setPrevQuestions([...prevQuestions, currQuestion]);
+      setQuestionHistory([...questionHistory, currQuestion]);
       setCurrQuestion({ ...nextQuestion, number: questionNumber + 1 });
       setQuestionNumber(questionNumber + 1);
     }
@@ -55,7 +55,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   const onPrev = () => {
     if (prevQuestion) {
-      setPrevQuestions(prevQuestions.slice(0, -1));
+      setQuestionHistory(questionHistory.slice(0, -1));
       setCurrQuestion({ ...prevQuestion });
       setQuestionNumber(questionNumber - 1);
     }

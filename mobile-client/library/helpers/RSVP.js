@@ -6,8 +6,8 @@ const filterQuestions = (questions, { filter, sort = (a, b) => b.order - a.order
   return filteredQuestions;
 };
 
-const calculateQuestions = ({ questions, prevQuestions, currQuestion, currAnswer }) => {
-  const prevQuestion = prevQuestions[prevQuestions.length - 1];
+const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnswer }) => {
+  const prevQuestion = questionHistory[questionHistory.length - 1];
   let nextQuestion = null;
   const { followUpQuestions } = currQuestion || {};
 
