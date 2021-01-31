@@ -1,9 +1,22 @@
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
-import { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { useState } from 'react';
+import {
+  Easing,
+  Extrapolate,
+  interpolate,
+  interpolateColor,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 
-const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed }) => {
+const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animationDuration } = {}) => {
   const expansion = useSharedValue(0);
+  const [buttonText, setButtonText] = useState('');
   const { colors } = useTheme();
   const closeColor = Color(colors.button)
     .lighten(0.2)
@@ -11,6 +24,22 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed }) => {
   const closePressedColor = Color(colors.button)
     .lighten(0.1)
     .string();
+
+  const showMessage = message => {
+    if (message) setButtonText(message);
+
+    const expand = withTiming(1, { duration: animationDuration, easing: Easing.inOut(Easing.exp) });
+    const shrink = withTiming(0, { duration: animationDuration - 200, easing: Easing.inOut(Easing.exp) }, () =>
+      runOnJS(setButtonText)(''),
+    );
+    expansion.value = withSequence(expand, withDelay(3000, shrink));
+  };
+
+  const closeMessage = () => {
+    expansion.value = withTiming(0, { duration: animationDuration - 200, easing: Easing.inOut(Easing.exp) }, () =>
+      runOnJS(setButtonText)(''),
+    );
+  };
 
   const animatedExpansionStyle = useAnimatedStyle(() => {
     return {
@@ -40,6 +69,9 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed }) => {
 
   return {
     expansion,
+    buttonText,
+    showMessage,
+    closeMessage,
     animatedExpansionStyle,
     animatedButtonStyle,
     animatedMessageStyle,

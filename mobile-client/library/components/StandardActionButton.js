@@ -2,14 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
-import Animated, {
-  withTiming,
-  Easing,
-  withSequence,
-  withDelay,
-  useDerivedValue,
-  runOnJS,
-} from 'react-native-reanimated';
+import Animated, { useDerivedValue, runOnJS } from 'react-native-reanimated';
 import useAnimatedActionButton from '../hooks/useAnimatedActionButton';
 
 const { width } = Dimensions.get('window');
@@ -25,15 +18,24 @@ const StandardActionButton = ({
   buttonStyle,
   messageStyle,
   maxExpansionWidth = width,
-  animDuration = 500,
+  animationDuration = 500,
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const { colors } = useTheme();
-  const { expansion, animatedExpansionStyle, animatedButtonStyle, animatedMessageStyle } = useAnimatedActionButton({
+  const {
+    expansion,
+    buttonText,
+    showMessage,
+    closeMessage,
+    animatedExpansionStyle,
+    animatedButtonStyle,
+    animatedMessageStyle,
+  } = useAnimatedActionButton({
     size,
     isPressed,
     maxExpansionWidth,
+    animationDuration,
   });
 
   const storeExpandedState = newState => {
@@ -43,23 +45,14 @@ const StandardActionButton = ({
     }
   };
 
-  const showMessage = () => {
-    const expand = withTiming(1, { duration: animDuration, easing: Easing.inOut(Easing.exp) });
-    const shrink = withTiming(0, { duration: animDuration - 200, easing: Easing.inOut(Easing.exp) });
-    expansion.value = withSequence(expand, withDelay(3000, shrink));
-  };
-
-  const closeMessage = () => {
-    expansion.value = withTiming(0, { duration: animDuration - 200, easing: Easing.inOut(Easing.exp) });
-  };
-
   useDerivedValue(() => {
     if (expansion.value > 0.5 && !isExpanded) runOnJS(storeExpandedState)(true);
     else if (expansion.value <= 0.5 && isExpanded) runOnJS(storeExpandedState)(false);
   }, [isExpanded]);
 
   useEffect(() => {
-    if (errorMessage) showMessage();
+    if (errorMessage) showMessage(errorMessage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMessage]);
 
   return (
@@ -86,7 +79,7 @@ const StandardActionButton = ({
             messageStyle,
           ]}
         >
-          {errorMessage}
+          {buttonText}
         </Animated.Text>
         <AnimatedPressable
           style={[
