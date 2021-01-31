@@ -7,10 +7,7 @@ import useAnimatedWizard from '../hooks/useAnimatedWizard';
 
 const FormWizard = ({ question, setFormValue, formValues }) => {
   const [displayedQuestion, setDisplayedQuestion] = useState(question);
-  const { animateStepChange, animatedWizardStyle } = useAnimatedWizard({
-    fromStep: displayedQuestion.order,
-    toStep: question.order,
-  });
+  const { animateStepChange, animatedWizardStyle } = useAnimatedWizard();
 
   useEffect(() => {
     if (question._id !== displayedQuestion._id) {
