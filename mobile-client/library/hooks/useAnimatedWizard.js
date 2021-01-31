@@ -13,20 +13,17 @@ import {
 
 const { width } = Dimensions.get('window');
 
-const useAnimatedWizard = ({ duration }) => {
+const useAnimatedWizard = ({ duration = 400 } = {}) => {
   const stepAnimation = useSharedValue(0);
   const [transformOutput, setTransformOutput] = useState([0, 0, 0, 0]);
-  const animationDuration = duration || 400;
 
-  const animateStepChange = ({ fromStep, toStep, callback }) => {
+  const animateStepChange = ({ fromStep, toStep, callback = () => {} }) => {
     if (toStep > fromStep) setTransformOutput([0, -width, width, 0]);
     else if (toStep < fromStep) setTransformOutput([0, width, -width, 0]);
 
     stepAnimation.value = 0;
-    const animateScreenOut = withTiming(1, { duration: animationDuration, easing: Easing.inOut(Easing.exp) }, () =>
-      runOnJS(callback)(),
-    );
-    const animateScreenIn = withTiming(2, { duration: animationDuration, easing: Easing.inOut(Easing.exp) });
+    const animateScreenOut = withTiming(1, { duration, easing: Easing.inOut(Easing.exp) }, () => runOnJS(callback)());
+    const animateScreenIn = withTiming(2, { duration, easing: Easing.inOut(Easing.exp) });
 
     stepAnimation.value = withSequence(animateScreenOut, animateScreenIn);
   };
