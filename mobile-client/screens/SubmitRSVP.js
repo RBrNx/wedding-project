@@ -75,6 +75,21 @@ const SubmitRSVPScreen = ({ navigation }) => {
     }
   };
 
+  const onEditPress = editQuestion => {
+    const questionIndex = questionHistory.findIndex(question => question._id === editQuestion._id);
+
+    animateRSVPStep({
+      fromStep: 1,
+      toStep: 0,
+      callback: () => {
+        setCurrQuestion({ ...editQuestion });
+        setQuestionNumber(editQuestion.number);
+        setQuestionHistory(questionHistory.slice(0, questionIndex));
+        setShowOverview(false);
+      },
+    });
+  };
+
   const setFormValue = (key, value) => {
     setRSVPForm({ ...rsvpForm, [key]: value });
   };
@@ -88,7 +103,9 @@ const SubmitRSVPScreen = ({ navigation }) => {
             {!loading && !error && currQuestion && !showOverview && (
               <FormWizard question={currQuestion} setFormValue={setFormValue} formValues={rsvpForm} />
             )}
-            {!loading && !error && showOverview && <FormOverview questions={questionHistory} formValues={rsvpForm} />}
+            {!loading && !error && showOverview && (
+              <FormOverview questions={questionHistory} formValues={rsvpForm} onEditPress={onEditPress} />
+            )}
           </Animated.View>
         </View>
       </DismissKeyboard>

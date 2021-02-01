@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { constantStyles } from '../../styles/theming';
 import Spacer from './Spacer';
 
-const FormOverview = ({ questions, formValues }) => {
+const FormOverview = ({ questions, formValues, onEditPress }) => {
   const { colors } = useTheme();
 
   return (
@@ -27,7 +27,13 @@ const FormOverview = ({ questions, formValues }) => {
               <Spacer size={5} />
               <Text style={{ color: colors.bodyText }}>{answer}</Text>
             </View>
-            <AntDesign name='edit' color={colors.componentBackground} size={25} style={{ alignSelf: 'center' }} />
+            <AntDesign
+              name='edit'
+              color={colors.componentBackground}
+              size={25}
+              style={{ alignSelf: 'center' }}
+              onPress={() => onEditPress(question)}
+            />
           </View>
         );
       })}
