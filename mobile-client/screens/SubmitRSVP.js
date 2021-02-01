@@ -99,14 +99,16 @@ const SubmitRSVPScreen = ({ navigation }) => {
       <DismissKeyboard>
         <View style={[styles.card, { backgroundColor: colors.card }]}>
           {loading && <LoadingIndicator size={100} />}
-          <Animated.View style={[styles.rsvpFormContainer, animatedWizardStyle]}>
-            {!loading && !error && currQuestion && !showOverview && (
-              <FormWizard question={currQuestion} setFormValue={setFormValue} formValues={rsvpForm} />
-            )}
-            {!loading && !error && showOverview && (
-              <FormOverview questions={questionHistory} formValues={rsvpForm} onEditPress={onEditPress} />
-            )}
-          </Animated.View>
+          {!loading && !error && (
+            <Animated.View style={[styles.rsvpFormContainer, animatedWizardStyle]}>
+              {currQuestion && !showOverview && (
+                <FormWizard question={currQuestion} setFormValue={setFormValue} formValues={rsvpForm} />
+              )}
+              {showOverview && (
+                <FormOverview questions={questionHistory} formValues={rsvpForm} onEditPress={onEditPress} />
+              )}
+            </Animated.View>
+          )}
         </View>
       </DismissKeyboard>
       <StandardActionButton
