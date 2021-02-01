@@ -11,6 +11,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const StandardActionButton = ({
   size = 56,
   icon,
+  label,
   onPress,
   onButtonShrink,
   errorMessage,
@@ -25,9 +26,7 @@ const StandardActionButton = ({
   const { colors } = useTheme();
   const {
     buttonText,
-    showMessage,
     closeMessage,
-    expandToFullSize,
     isFullSize,
     isShowingMessage,
     animatedExpansionStyle,
@@ -35,22 +34,14 @@ const StandardActionButton = ({
     animatedMessageStyle,
   } = useAnimatedActionButton({
     size,
+    label,
     isPressed,
     maxExpansionWidth,
     animationDuration,
     onButtonShrink,
+    errorMessage,
+    expandToFullButton,
   });
-
-  useEffect(() => {
-    if (errorMessage) showMessage(errorMessage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errorMessage]);
-
-  useEffect(() => {
-    if (expandToFullButton) expandToFullSize('Submit RSVP');
-    else closeMessage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expandToFullButton]);
 
   return (
     <View style={styles.fullscreenContainer} pointerEvents='box-none'>

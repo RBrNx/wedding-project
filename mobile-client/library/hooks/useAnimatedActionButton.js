@@ -1,6 +1,6 @@
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Easing,
   Extrapolate,
@@ -15,7 +15,16 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animationDuration, onButtonShrink } = {}) => {
+const useAnimatedActionButton = ({
+  size,
+  label,
+  maxExpansionWidth,
+  isPressed,
+  animationDuration,
+  onButtonShrink,
+  errorMessage,
+  expandToFullButton,
+} = {}) => {
   const expansion = useSharedValue(0);
   const [buttonText, setButtonText] = useState('');
   const [isFullSize, setIsFullSize] = useState(false);
@@ -39,6 +48,17 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animation
     if (expansion.value > 0.5 && !isShowingMessage) runOnJS(storeExpandedState)(true);
     else if (expansion.value <= 0.5 && isShowingMessage) runOnJS(storeExpandedState)(false);
   }, [isShowingMessage]);
+
+  useEffect(() => {
+    if (errorMessage) showMessage(errorMessage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errorMessage]);
+
+  useEffect(() => {
+    if (expandToFullButton) expandToFullSize(label);
+    else closeMessage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandToFullButton]);
 
   const showMessage = message => {
     if (message) setButtonText(message);
