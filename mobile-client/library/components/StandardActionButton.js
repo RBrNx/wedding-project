@@ -13,7 +13,7 @@ const StandardActionButton = ({
   icon,
   label,
   onPress,
-  onButtonShrink,
+  onMessageClose,
   errorMessage,
   expansionStyle = { right: 16, bottom: 16 },
   buttonStyle,
@@ -38,7 +38,7 @@ const StandardActionButton = ({
     isPressed,
     maxExpansionWidth,
     animationDuration,
-    onButtonShrink,
+    onMessageClose,
     errorMessage,
     expandToFullButton,
   });

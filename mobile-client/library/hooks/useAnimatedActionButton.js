@@ -21,7 +21,7 @@ const useAnimatedActionButton = ({
   maxExpansionWidth,
   isPressed,
   animationDuration,
-  onButtonShrink,
+  onMessageClose,
   errorMessage,
   expandToFullButton,
 } = {}) => {
@@ -37,16 +37,18 @@ const useAnimatedActionButton = ({
     .lighten(0.1)
     .string();
 
-  const storeExpandedState = newState => {
-    if (newState !== isShowingMessage) {
+  const updateMessageState = newState => {
+    const currState = isShowingMessage;
+
+    if (newState !== currState) {
       setIsShowingMessage(newState);
-      if (!newState && onButtonShrink) onButtonShrink();
+      if (newState === false && onMessageClose) onMessageClose();
     }
   };
 
   useDerivedValue(() => {
-    if (expansion.value > 0.5 && !isShowingMessage) runOnJS(storeExpandedState)(true);
-    else if (expansion.value <= 0.5 && isShowingMessage) runOnJS(storeExpandedState)(false);
+    if (expansion.value > 0.5 && !isShowingMessage) runOnJS(updateMessageState)(true);
+    else if (expansion.value <= 0.5 && isShowingMessage) runOnJS(updateMessageState)(false);
   }, [isShowingMessage]);
 
   useEffect(() => {
