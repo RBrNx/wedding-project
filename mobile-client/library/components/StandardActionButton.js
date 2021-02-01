@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
-import Animated, { useDerivedValue, runOnJS } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import useAnimatedActionButton from '../hooks/useAnimatedActionButton';
 
 const { width } = Dimensions.get('window');
@@ -19,15 +19,17 @@ const StandardActionButton = ({
   messageStyle,
   maxExpansionWidth = width,
   animationDuration = 500,
+  expandToFullButton,
 }) => {
   const [isPressed, setIsPressed] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const { colors } = useTheme();
   const {
-    expansion,
     buttonText,
     showMessage,
     closeMessage,
+    expandToFullSize,
+    isFullSize,
+    isShowingMessage,
     animatedExpansionStyle,
     animatedButtonStyle,
     animatedMessageStyle,
@@ -36,24 +38,19 @@ const StandardActionButton = ({
     isPressed,
     maxExpansionWidth,
     animationDuration,
+    onButtonShrink,
   });
-
-  const storeExpandedState = newState => {
-    if (newState !== isExpanded) {
-      setIsExpanded(newState);
-      if (!newState && onButtonShrink) onButtonShrink();
-    }
-  };
-
-  useDerivedValue(() => {
-    if (expansion.value > 0.5 && !isExpanded) runOnJS(storeExpandedState)(true);
-    else if (expansion.value <= 0.5 && isExpanded) runOnJS(storeExpandedState)(false);
-  }, [isExpanded]);
 
   useEffect(() => {
     if (errorMessage) showMessage(errorMessage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMessage]);
+
+  useEffect(() => {
+    if (expandToFullButton) expandToFullSize('Submit RSVP');
+    else closeMessage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandToFullButton]);
 
   return (
     <View style={styles.fullscreenContainer} pointerEvents='box-none'>
@@ -75,6 +72,7 @@ const StandardActionButton = ({
             {
               marginRight: size,
             },
+            isFullSize ? styles.fullSizeMessage : {},
             animatedMessageStyle,
             messageStyle,
           ]}
@@ -92,11 +90,11 @@ const StandardActionButton = ({
             animatedButtonStyle,
             buttonStyle,
           ]}
-          onPress={isExpanded ? closeMessage : onPress}
+          onPress={isShowingMessage ? closeMessage : onPress}
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
         >
-          {isExpanded ? <Ionicons name='close-outline' size={36} color='#fff' /> : icon()}
+          {isShowingMessage ? <Ionicons name='close-outline' size={36} color='#fff' /> : icon()}
         </AnimatedPressable>
       </Animated.View>
     </View>
@@ -109,6 +107,7 @@ const styles = StyleSheet.create({
     zIndex: 99,
   },
   expansion: {
+    display: 'flex',
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -121,6 +120,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     paddingLeft: 0,
     marginLeft: 30,
+  },
+  fullSizeMessage: {
+    textAlign: 'center',
+    marginRight: 0,
+    marginLeft: 0,
   },
   button: {
     position: 'absolute',

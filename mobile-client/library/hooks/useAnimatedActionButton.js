@@ -8,15 +8,18 @@ import {
   interpolateColor,
   runOnJS,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDelay,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
 
-const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animationDuration } = {}) => {
+const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animationDuration, onButtonShrink } = {}) => {
   const expansion = useSharedValue(0);
   const [buttonText, setButtonText] = useState('');
+  const [isFullSize, setIsFullSize] = useState(false);
+  const [isShowingMessage, setIsShowingMessage] = useState(false);
   const { colors } = useTheme();
   const closeColor = Color(colors.button)
     .lighten(0.2)
@@ -24,6 +27,18 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animation
   const closePressedColor = Color(colors.button)
     .lighten(0.1)
     .string();
+
+  const storeExpandedState = newState => {
+    if (newState !== isShowingMessage) {
+      setIsShowingMessage(newState);
+      if (!newState && onButtonShrink) onButtonShrink();
+    }
+  };
+
+  useDerivedValue(() => {
+    if (expansion.value > 0.5 && !isShowingMessage) runOnJS(storeExpandedState)(true);
+    else if (expansion.value <= 0.5 && isShowingMessage) runOnJS(storeExpandedState)(false);
+  }, [isShowingMessage]);
 
   const showMessage = message => {
     if (message) setButtonText(message);
@@ -39,6 +54,14 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animation
     expansion.value = withTiming(0, { duration: animationDuration - 200, easing: Easing.inOut(Easing.exp) }, () =>
       runOnJS(setButtonText)(''),
     );
+    setTimeout(() => setIsFullSize(false), (animationDuration - 200) / 2);
+  };
+
+  const expandToFullSize = text => {
+    if (text) setButtonText(text);
+
+    expansion.value = withTiming(1, { duration: animationDuration, easing: Easing.inOut(Easing.exp) });
+    setIsFullSize(true);
   };
 
   const animatedExpansionStyle = useAnimatedStyle(() => {
@@ -48,6 +71,7 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animation
   });
 
   const animatedButtonStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(expansion.value, [0, 0.3], [1, 0], Extrapolate.CLAMP);
     const rotate = interpolate(expansion.value, [0, 1], [0, 180], Extrapolate.CLAMP);
     const backgroundColor = interpolateColor(
       expansion.value,
@@ -58,6 +82,7 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animation
     return {
       transform: [{ rotate: `${rotate}deg` }],
       backgroundColor,
+      opacity: isFullSize ? opacity : 1,
     };
   });
 
@@ -72,6 +97,9 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, isPressed, animation
     buttonText,
     showMessage,
     closeMessage,
+    expandToFullSize,
+    isFullSize,
+    isShowingMessage,
     animatedExpansionStyle,
     animatedButtonStyle,
     animatedMessageStyle,
