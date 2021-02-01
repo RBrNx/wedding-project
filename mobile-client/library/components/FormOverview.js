@@ -1,9 +1,11 @@
 import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
+import Color from 'color';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { constantStyles } from '../../styles/theming';
 import Spacer from './Spacer';
+import StandardRoundPressable from './StandardRoundPressable';
 
 const FormOverview = ({ questions, formValues, onEditPress }) => {
   const { colors } = useTheme();
@@ -27,12 +29,18 @@ const FormOverview = ({ questions, formValues, onEditPress }) => {
               <Spacer size={5} />
               <Text style={{ color: colors.bodyText }}>{answer}</Text>
             </View>
-            <AntDesign
-              name='edit'
-              color={colors.componentBackground}
-              size={25}
-              style={{ alignSelf: 'center' }}
+            <StandardRoundPressable
+              size={45}
+              icon={() => (
+                <AntDesign name='edit' color={colors.componentBackground} size={25} style={{ alignSelf: 'center' }} />
+              )}
               onPress={() => onEditPress(question)}
+              pressedStyle={{
+                backgroundColor: Color(colors.cardHover)
+                  .fade(0.5)
+                  .rgb()
+                  .toString(),
+              }}
             />
           </View>
         );
