@@ -94,10 +94,12 @@ const SubmitRSVPScreen = ({ navigation }) => {
       </DismissKeyboard>
       <StandardActionButton
         icon={() => <Image source={Assets[0]} fadeDuration={0} style={styles.actionButtonIcon} />}
+        label='Submit RSVP'
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNext}
-        onButtonShrink={() => setFormError(null)}
+        onMessageClose={() => setFormError(null)}
         errorMessage={formError}
+        expandToFullButton={showOverview}
       />
     </View>
   );
