@@ -35,12 +35,6 @@ const FormOverview = ({ questions, formValues, onEditPress }) => {
                 <AntDesign name='edit' color={colors.componentBackground} size={25} style={{ alignSelf: 'center' }} />
               )}
               onPress={() => onEditPress(question)}
-              pressedStyle={{
-                backgroundColor: Color(colors.cardHover)
-                  .fade(0.5)
-                  .rgb()
-                  .toString(),
-              }}
             />
           </View>
         );
