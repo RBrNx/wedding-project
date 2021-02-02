@@ -3,7 +3,7 @@ import Color from 'color';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
-const StandardRoundPressable = ({ size = 56, icon, style, pressedStyle }) => {
+const StandardRoundPressable = ({ size = 56, icon, style, pressedStyle, onPress }) => {
   const { colors } = useTheme();
 
   const renderPressableStyles = ({ pressed }) => {
@@ -21,7 +21,11 @@ const StandardRoundPressable = ({ size = 56, icon, style, pressedStyle }) => {
     return pressableStyles;
   };
 
-  return <Pressable style={renderPressableStyles}>{icon && icon()}</Pressable>;
+  return (
+    <Pressable style={renderPressableStyles} onPress={onPress}>
+      {icon && icon()}
+    </Pressable>
+  );
 };
 
 export default StandardRoundPressable;
