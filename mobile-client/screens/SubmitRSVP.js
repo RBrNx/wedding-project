@@ -12,21 +12,23 @@ import { calculateQuestions } from '../library/helpers/RSVP';
 import DismissKeyboard from '../components/DismissKeyboard';
 import FormOverview from '../library/components/FormOverview';
 import useAnimatedWizard from '../library/hooks/useAnimatedWizard';
+import useLazyQuery from '../library/hooks/useLazyQuery';
 
 const { width } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
 
 const SubmitRSVPScreen = ({ navigation }) => {
+  const [questions, setQuestions] = useState([]);
   const [questionHistory, setQuestionHistory] = useState([]);
   const [currQuestion, setCurrQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [rsvpForm, setRSVPForm] = useState({});
   const [formError, setFormError] = useState(null);
   const [showOverview, setShowOverview] = useState(false);
-  const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
+  const [fetchRSVPQuestions, { loading, error }] = useLazyQuery(GET_RSVP_QUESTIONS);
   const { colors } = useTheme();
 
-  const { getRSVPQuestions: questions } = data || {};
+  // const { getRSVPQuestions: questions } = data || {};
   const currAnswer = rsvpForm[currQuestion?._id];
   const { animateStepChange: animateRSVPStep, animatedWizardStyle } = useAnimatedWizard();
   const { prevQuestion, nextQuestion } = calculateQuestions({
@@ -43,8 +45,18 @@ const SubmitRSVPScreen = ({ navigation }) => {
   }, [navigation, currQuestion, showOverview]);
 
   useEffect(() => {
-    if (questions) setCurrQuestion({ ...questions[0], number: questionNumber });
-  }, [questions]);
+    const fetchDataOnMount = async () => {
+      const { data } = await fetchRSVPQuestions();
+      const { getRSVPQuestions: rsvpQuestions } = data || {};
+
+      if (rsvpQuestions) {
+        setQuestions(rsvpQuestions);
+        setCurrQuestion({ ...rsvpQuestions[0], number: questionNumber });
+      }
+    };
+
+    fetchDataOnMount();
+  }, []);
 
   const onNext = () => {
     if (!currAnswer) {
