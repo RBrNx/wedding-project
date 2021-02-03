@@ -15,7 +15,7 @@ import useAnimatedWizard from '../library/hooks/useAnimatedWizard';
 import useLazyQuery from '../library/hooks/useLazyQuery';
 
 const { width } = Dimensions.get('window');
-const GET_RSVP_QUESTIONS = loader('../graphql/getRSVPQuestions.graphql');
+const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
 
 const SubmitRSVPScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
@@ -28,7 +28,6 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [fetchRSVPQuestions, { loading, error }] = useLazyQuery(GET_RSVP_QUESTIONS);
   const { colors } = useTheme();
 
-  // const { getRSVPQuestions: questions } = data || {};
   const currAnswer = rsvpForm[currQuestion?._id];
   const { animateStepChange: animateRSVPStep, animatedWizardStyle } = useAnimatedWizard();
   const { prevQuestion, nextQuestion } = calculateQuestions({

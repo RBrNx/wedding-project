@@ -3,7 +3,8 @@ import { loader } from 'graphql.macro';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import client from '../utils/apiClient';
 
-const FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION = loader('../graphql/fetchTempLoginCredentials.graphql');
+const FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION = loader('../graphql/mutations/fetchTempLoginCredentials.graphql');
+const GET_CURRENT_USER_QUERY = loader('../graphql/queries/currentUser.graphql');
 
 const AuthContext = createContext();
 
