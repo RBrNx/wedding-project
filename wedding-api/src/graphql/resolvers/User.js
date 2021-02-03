@@ -52,7 +52,11 @@ const createGuest = async (parent, { guest }, { currentUser }) => {
       { session },
     );
 
-    const cognitoUser = await createCognitoUser({ userId: userDoc._id.toString(), username, password });
+    const cognitoUser = await createCognitoUser({
+      userId: userDoc._id.toString(),
+      username,
+      password,
+    });
     const cognitoUserId = cognitoUser.Attributes.find(({ Name }) => Name === 'sub')?.Value;
 
     await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
@@ -159,17 +163,16 @@ const createAdmin = async (parent, { input }, { currentUser }) => {
 //   return userChoice.value;
 // };
 
+const rsvpForm = async parent => {
+  const { _id, eventId } = parent;
+
   const db = await connectToDatabase();
-  const QuestionModel = db.model('Question');
-  const AnswerModel = db.model('Answer');
+  const RSVPResponseModel = db.model('RSVPResponse');
 
-  const attendanceQuestion = await QuestionModel.findOne({ type: QuestionType.ATTENDANCE });
-  const answerDoc = await AnswerModel.findOne({ guestId: _id, questionId: attendanceQuestion?._id });
+  const rsvpResponse = await RSVPResponseModel.findOne({ eventId, userId: _id }).populate('rsvpForm.question');
 
-  if (!attendanceQuestion || !answerDoc) return AttendanceStatus.AWAITING_RSVP;
-
-  const { answer } = answerDoc;
-  const userChoice = attendanceQuestion.choices.find(choice => choice._id.toString() === answer);
+  return rsvpResponse?.rsvpForm;
+};
 
   return userChoice.value;
 };
@@ -184,5 +187,6 @@ export default {
   },
   User: {
     // attending,
+    rsvpForm,
   },
 };
