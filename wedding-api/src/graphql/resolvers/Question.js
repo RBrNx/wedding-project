@@ -60,54 +60,6 @@ const updateQuestion = async (parent, args) => {
   }
 };
 
-const answerTextQuestion = async (parent, args) => {
-  const { guestId, answerInput } = args;
-  const { questionId, answer } = answerInput;
-
-  try {
-    const db = await connectToDatabase();
-    const AnswerModel = db.model('Answer');
-
-    const answerDoc = new AnswerModel({
-      questionId,
-      guestId,
-      answer,
-    });
-    await answerDoc.save();
-
-    return {
-      success: true,
-      message: 'Answer created successfully',
-    };
-  } catch (error) {
-    return error;
-  }
-};
-
-const answerChoiceQuestion = async (parent, args) => {
-  const { guestId, answerInput } = args;
-  const { questionId, answer } = answerInput;
-
-  try {
-    const db = await connectToDatabase();
-    const AnswerModel = db.model('Answer');
-
-    const answerDoc = new AnswerModel({
-      questionId,
-      guestId,
-      answer,
-    });
-    await answerDoc.save();
-
-    return {
-      success: true,
-      message: 'Answer created successfully',
-    };
-  } catch (error) {
-    return error;
-  }
-};
-
 export default {
   Query: {
     getRSVPQuestions,
@@ -115,7 +67,5 @@ export default {
   Mutation: {
     createQuestion,
     updateQuestion,
-    answerTextQuestion,
-    answerChoiceQuestion,
   },
 };

@@ -37,11 +37,6 @@ const schema = gql`
     isFollowUp: Boolean!
   }
 
-  type AnswerMutationResponse implements MutationResponse {
-    success: Boolean
-    message: String
-  }
-
   type QuestionMutationResponse implements MutationResponse {
     success: Boolean
     message: String
@@ -82,16 +77,6 @@ const schema = gql`
     isFollowUp: Boolean!
   }
 
-  input TextAnswerInput {
-    questionId: ID!
-    answer: String!
-  }
-
-  input ChoiceAnswerInput {
-    questionId: ID!
-    answer: ID!
-  }
-
   extend type Query {
     getRSVPQuestions: [Question]
   }
@@ -99,8 +84,6 @@ const schema = gql`
   extend type Mutation {
     createQuestion(question: CreateQuestionInput!): QuestionMutationResponse
     updateQuestion(id: ID!, question: UpdateQuestionInput!): QuestionMutationResponse
-    answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
-    answerChoiceQuestion(guestId: ID!, answerInput: ChoiceAnswerInput!): AnswerMutationResponse
   }
 `;
 

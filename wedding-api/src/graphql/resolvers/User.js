@@ -141,8 +141,23 @@ const createAdmin = async (parent, { input }, { currentUser }) => {
   }
 };
 
-const attending = async parent => {
-  const { _id } = parent;
+// const attending = async parent => {
+//   const { _id } = parent;
+
+//   const db = await connectToDatabase();
+//   const QuestionModel = db.model('Question');
+//   const AnswerModel = db.model('Answer');
+
+//   const attendanceQuestion = await QuestionModel.findOne({ type: QuestionType.ATTENDANCE });
+//   const answerDoc = await AnswerModel.findOne({ guestId: _id, questionId: attendanceQuestion?._id });
+
+//   if (!attendanceQuestion || !answerDoc) return AttendanceStatus.AWAITING_RSVP;
+
+//   const { answer } = answerDoc;
+//   const userChoice = attendanceQuestion.choices.find(choice => choice._id.toString() === answer);
+
+//   return userChoice.value;
+// };
 
   const db = await connectToDatabase();
   const QuestionModel = db.model('Question');
@@ -168,6 +183,6 @@ export default {
     createAdmin,
   },
   User: {
-    attending,
+    // attending,
   },
 };
