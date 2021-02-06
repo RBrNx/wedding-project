@@ -47,9 +47,11 @@ const useAnimatedActionButton = ({
   };
 
   useDerivedValue(() => {
+    if (isFullSize) return;
+
     if (expansion.value > 0.5 && !isShowingMessage) runOnJS(updateMessageState)(true);
     else if (expansion.value <= 0.5 && isShowingMessage) runOnJS(updateMessageState)(false);
-  }, [isShowingMessage]);
+  }, [isShowingMessage, isFullSize]);
 
   useEffect(() => {
     if (errorMessage) showMessage(errorMessage);
@@ -82,8 +84,8 @@ const useAnimatedActionButton = ({
   const expandToFullSize = text => {
     if (text) setButtonText(text);
 
-    expansion.value = withTiming(1, { duration: animationDuration, easing: Easing.inOut(Easing.exp) });
     setIsFullSize(true);
+    expansion.value = withTiming(1, { duration: animationDuration, easing: Easing.inOut(Easing.exp) });
   };
 
   const animatedExpansionStyle = useAnimatedStyle(() => {
