@@ -9,7 +9,7 @@ import EmptyMessage from '../components/EmptyMessage';
 import InvitationsIllustration from '../components/SVG/Invitations';
 import InvitationCard from '../components/InvitationCard';
 
-const ALL_INVITATIONS_QUERY = loader('../graphql/queries/allInvitationsQuery.graphql');
+const ALL_INVITATIONS_QUERY = loader('../graphql/queries/getAllInvitations.graphql');
 
 const InvitationRow = ({ invitation, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));

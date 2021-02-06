@@ -9,7 +9,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import PartyIllustration from '../components/SVG/Party';
 
-const ALL_GUESTS_QUERY = loader('../graphql/queries/allGuestsQuery.graphql');
+const ALL_GUESTS_QUERY = loader('../graphql/queries/getAllGuests.graphql');
 
 const GuestRow = ({ guest, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
