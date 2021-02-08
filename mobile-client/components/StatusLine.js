@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { GuestResponse } from '../library/enums';
 
-const StatusLine = ({ status, isFirst = true, isLast = true }) => {
-  const { color } = GuestResponse[status];
-
+const StatusLine = ({ colour, isFirst = true, isLast = true }) => {
   return (
     <View
       style={[
         styles.statusLine,
         {
-          backgroundColor: color,
+          backgroundColor: colour,
           borderTopRightRadius: isFirst ? 2.5 : 0,
           borderTopLeftRadius: isFirst ? 2.5 : 0,
           borderBottomLeftRadius: isLast ? 2.5 : 0,

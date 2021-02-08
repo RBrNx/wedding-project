@@ -8,7 +8,7 @@ import StandardPressable from '../library/components/StandardPressable';
 
 const GuestCard = ({ guest }) => {
   const { firstName, lastName, attending } = guest;
-  const { text: guestStatus } = GuestResponse[attending];
+  const { text: guestStatus, color: statusColour } = GuestResponse[attending];
   const { colors } = useTheme();
 
   return (
@@ -18,7 +18,7 @@ const GuestCard = ({ guest }) => {
       pressedStyle={{ backgroundColor: colors.cardHover }}
       onPress={() => {}}
     >
-      <StatusLine status={attending} />
+      <StatusLine colour={statusColour} />
       <View style={styles.textContainer}>
         <Text style={[styles.name, { color: colors.headerText }]}>
           {firstName} {lastName}
