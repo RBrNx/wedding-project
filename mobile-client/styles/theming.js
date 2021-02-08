@@ -19,12 +19,12 @@ const lightTheme = {
     button: lightBlue,
     buttonPressed: Color(lightBlue)
       .darken(0.2)
-      .toString(),
+      .hex(),
     card: white,
     cardHover: Color(white)
       .darken(0.12)
-      .toString(),
-    componentBackground: lightGrey,
+      .hex(),
+    componentBackground: '#e0e0e0',
     bodyText: '#444',
     focusedText: '#000',
     headerText: '#000',
@@ -42,11 +42,11 @@ const darkTheme = {
     button: lightBlue,
     buttonPressed: Color(lightBlue)
       .darken(0.2)
-      .toString(),
+      .hex(),
     card: darkGrey,
     cardHover: Color(darkGrey)
       .darken(0.12)
-      .toString(),
+      .hex(),
     componentBackground: black,
     bodyText: '#eee',
     focusedText: '#fff',
