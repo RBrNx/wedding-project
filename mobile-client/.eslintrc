@@ -25,7 +25,8 @@
   },
   "globals": {
     "window": false,
-    "fetch": false
+    "fetch": false,
+    "__DEV__": "readonly"
   },
   "parser": "babel-eslint",
   "settings": {
