@@ -45,17 +45,20 @@ const StandardActionButton = ({
 
   return (
     <View style={styles.fullscreenContainer} pointerEvents='box-none'>
-      <Animated.View
+      <AnimatedPressable
         style={[
           styles.expansion,
           {
             height: size,
             borderRadius: size / 2,
-            backgroundColor: colors.button,
+            backgroundColor: isPressed ? colors.buttonPressed : colors.button,
           },
           animatedExpansionStyle,
           expansionStyle,
         ]}
+        onPress={isFullSize ? onPress : null}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
       >
         <Animated.Text
           style={[
@@ -87,7 +90,7 @@ const StandardActionButton = ({
         >
           {isShowingMessage ? <Ionicons name='close-outline' size={36} color='#fff' /> : icon()}
         </AnimatedPressable>
-      </Animated.View>
+      </AnimatedPressable>
     </View>
   );
 };
