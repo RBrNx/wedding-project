@@ -37,4 +37,20 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnsw
   return { prevQuestion, nextQuestion };
 };
 
-export { filterQuestions, calculateQuestions };
+const formatRSVP = (rsvpForm, questions) => {
+  const rsvpResponses = Object.entries(rsvpForm);
+  const formattedRSVP = rsvpResponses.map(([questionId, answer]) => {
+    const { choices } = questions.find(question => question._id === questionId);
+    const isMultipleChoice = !!choices.length;
+    const textAnswer = isMultipleChoice ? choices.find(choice => choice._id === answer)?.label : answer;
+
+    return {
+      question: questionId,
+      answer: textAnswer,
+    };
+  });
+
+  return formattedRSVP;
+};
+
+export { filterQuestions, calculateQuestions, formatRSVP };
