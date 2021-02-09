@@ -4,20 +4,26 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import StatusLine from '../../components/StatusLine';
 import { constantStyles } from '../../styles/theming';
+import { AlertType } from '../enums';
 import Spacer from './Spacer';
 
-const Alert = ({ title, message, dismissAlert }) => {
-  const alertTitle = title;
-  const alertMessage = message;
+const alertTypeMap = {
+  [AlertType.SUCCESS]: { title: 'Yay! Everything worked!', colour: '#21a67a' },
+  [AlertType.WARNING]: { title: 'Uh oh, something went wrong', colour: '#f0a92e' },
+};
+
+const Alert = ({ title, message, type, dismissAlert }) => {
+  const alertTitle = title || alertTypeMap[type].title;
+  const alertColour = alertTypeMap[type]?.colour;
   const { colors } = useTheme();
 
   return (
     <View style={styles.alert}>
-      <StatusLine colour='#f0a92e' />
+      <StatusLine colour={alertColour} />
       <View style={styles.textContainer}>
-        <Text style={{ color: colors.bodyText, fontSize: 14 }}>{alertTitle}</Text>
+        <Text style={[styles.title, { color: colors.bodyText }]}>{alertTitle}</Text>
         <Spacer size={4} />
-        <Text style={styles.message}>{alertMessage}</Text>
+        <Text style={styles.message}>{message}</Text>
       </View>
       <Pressable onPress={dismissAlert} style={styles.iconContainer}>
         <Ionicons name='close-outline' size={24} color='#e0e0e0' style={styles.icon} />
@@ -46,6 +52,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flex: 1,
+  },
+  title: {
+    fontSize: 14,
   },
   message: {
     color: '#93959a',
