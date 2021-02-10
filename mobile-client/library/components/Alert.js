@@ -1,7 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import Animated, {
+  Easing,
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import StatusLine from '../../components/StatusLine';
 import { constantStyles } from '../../styles/theming';
 import { AlertType } from '../enums';
@@ -12,13 +20,41 @@ const alertTypeMap = {
   [AlertType.WARNING]: { title: 'Uh oh, something went wrong', colour: '#f0a92e' },
 };
 
-const Alert = ({ title, message, type, dismissAlert }) => {
+const Alert = ({ title, message, type, dismissAlert, isVisible, isStatusBarTranslucent = true }) => {
+  const alertEntrance = useSharedValue(0);
+  const [alertHeight, setAlertHeight] = useState(0);
   const alertTitle = title || alertTypeMap[type].title;
   const alertColour = alertTypeMap[type]?.colour;
   const { colors } = useTheme();
+  const { height } = useWindowDimensions();
+  const displayHeight = height + (isStatusBarTranslucent ? StatusBar.currentHeight : 0);
+
+  useEffect(() => {
+    if (isVisible) alertEntrance.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.exp) });
+    else alertEntrance.value = withTiming(0, { duration: 300, easing: Easing.inOut(Easing.exp) });
+  }, [isVisible]);
+
+  const animatedAlertStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      alertEntrance.value,
+      [0, 1],
+      [displayHeight, displayHeight - alertHeight - 15],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      transform: [{ translateY }],
+    };
+  });
 
   return (
-    <View style={styles.alert}>
+    <Animated.View
+      style={[styles.alert, animatedAlertStyle]}
+      onLayout={event => {
+        const { height: vHeight } = event.nativeEvent.layout;
+        setAlertHeight(vHeight);
+      }}
+    >
       <StatusLine colour={alertColour} />
       <View style={styles.textContainer}>
         <Text style={[styles.title, { color: colors.bodyText }]}>{alertTitle}</Text>
@@ -28,7 +64,7 @@ const Alert = ({ title, message, type, dismissAlert }) => {
       <Pressable onPress={dismissAlert} style={styles.iconContainer}>
         <Ionicons name='close-outline' size={24} color='#e0e0e0' style={styles.icon} />
       </Pressable>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -38,8 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     position: 'absolute',
-    width: '90%',
-    marginLeft: '5%',
+    marginHorizontal: '5%',
     borderRadius: 10,
     padding: 8,
     backgroundColor: '#fff',
