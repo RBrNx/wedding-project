@@ -1,18 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { Pressable, StatusBar, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import Animated, {
-  Easing,
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import StatusLine from '../../components/StatusLine';
 import { constantStyles } from '../../styles/theming';
 import { AlertType } from '../enums';
+import useAnimatedAlert from '../hooks/useAnimatedAlert';
 import Spacer from './Spacer';
 
 const alertTypeMap = {
@@ -30,31 +24,17 @@ const Alert = ({
   isStatusBarTranslucent = true,
   breathingSpace = 15,
 }) => {
-  const alertEntrance = useSharedValue(0);
   const [alertHeight, setAlertHeight] = useState(0);
   const { colors } = useTheme();
-  const { height } = useWindowDimensions();
+  const { animatedAlertStyle } = useAnimatedAlert({
+    isVisible,
+    isStatusBarTranslucent,
+    position,
+    alertHeight,
+    breathingSpace,
+  });
   const alertTitle = title || alertTypeMap[type]?.title;
   const alertColour = alertTypeMap[type]?.colour;
-  const statusBarPadding = isStatusBarTranslucent ? StatusBar.currentHeight : 0;
-  const displayHeight = height + statusBarPadding;
-
-  useEffect(() => {
-    if (isVisible) alertEntrance.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.exp) });
-    else alertEntrance.value = withTiming(0, { duration: 300, easing: Easing.inOut(Easing.exp) });
-  }, [isVisible]);
-
-  const animatedAlertStyle = useAnimatedStyle(() => {
-    const startY = position === 'bottom' ? displayHeight : 0 - alertHeight;
-    const endY =
-      position === 'bottom' ? displayHeight - alertHeight - breathingSpace : breathingSpace + statusBarPadding;
-
-    const translateY = interpolate(alertEntrance.value, [0, 1], [startY, endY], Extrapolate.CLAMP);
-
-    return {
-      transform: [{ translateY }],
-    };
-  });
 
   return (
     <Animated.View
