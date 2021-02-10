@@ -10,6 +10,7 @@ import { SettingsProvider, AuthProvider } from './context';
 
 import awsConfig from './awsExports';
 import AppNavigator from './navigation/AppNavigator';
+import { AlertProvider } from './context/Alert';
 
 Amplify.configure({
   Auth: {
@@ -30,9 +31,11 @@ const App = () => {
     <AppearanceProvider>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <SettingsProvider>
-            <AppNavigator />
-          </SettingsProvider>
+          <AlertProvider defaultPosition='top'>
+            <SettingsProvider>
+              <AppNavigator />
+            </SettingsProvider>
+          </AlertProvider>
         </AuthProvider>
       </ApolloProvider>
     </AppearanceProvider>
