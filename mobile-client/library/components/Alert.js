@@ -20,14 +20,15 @@ const alertTypeMap = {
   [AlertType.WARNING]: { title: 'Uh oh, something went wrong', colour: '#f0a92e' },
 };
 
-const Alert = ({ title, message, type, dismissAlert, isVisible, isStatusBarTranslucent = true }) => {
+const Alert = ({ title, message, type, position, dismissAlert, isVisible, isStatusBarTranslucent = true }) => {
   const alertEntrance = useSharedValue(0);
   const [alertHeight, setAlertHeight] = useState(0);
-  const alertTitle = title || alertTypeMap[type].title;
-  const alertColour = alertTypeMap[type]?.colour;
   const { colors } = useTheme();
   const { height } = useWindowDimensions();
-  const displayHeight = height + (isStatusBarTranslucent ? StatusBar.currentHeight : 0);
+  const alertTitle = title || alertTypeMap[type].title;
+  const alertColour = alertTypeMap[type]?.colour;
+  const statusBarPadding = isStatusBarTranslucent ? StatusBar.currentHeight : 0;
+  const displayHeight = height + statusBarPadding;
 
   useEffect(() => {
     if (isVisible) alertEntrance.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.exp) });
@@ -35,12 +36,10 @@ const Alert = ({ title, message, type, dismissAlert, isVisible, isStatusBarTrans
   }, [isVisible]);
 
   const animatedAlertStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      alertEntrance.value,
-      [0, 1],
-      [displayHeight, displayHeight - alertHeight - 15],
-      Extrapolate.CLAMP,
-    );
+    const startY = position === 'bottom' ? displayHeight : 0 - alertHeight;
+    const endY = position === 'bottom' ? displayHeight - alertHeight - 15 : 15 + statusBarPadding;
+
+    const translateY = interpolate(alertEntrance.value, [0, 1], [startY, endY], Extrapolate.CLAMP);
 
     return {
       transform: [{ translateY }],
