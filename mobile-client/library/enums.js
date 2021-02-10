@@ -18,4 +18,9 @@ const Theme = Object.freeze({
   AUTO: 'system',
 });
 
-export { GuestResponse, InvitationType, Theme };
+const AlertType = Object.freeze({
+  SUCCESS: 'SUCCESS',
+  WARNING: 'WARNING',
+});
+
+export { GuestResponse, InvitationType, Theme, AlertType };
