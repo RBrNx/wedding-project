@@ -1,13 +1,7 @@
 import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, StatusBar, View } from 'react-native';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import AnimatedFlatlist from './AnimatedFlatlist';
 
 const HEADER_MAX_HEIGHT = 350;
@@ -26,9 +20,11 @@ const FlatListAnimatedHeader = ({
   const { colors } = useTheme();
   const scrollY = useSharedValue(0);
 
-  const scrollHandler = useAnimatedScrollHandler(event => {
+  const scrollHandler = event => {
+    'worklet';
+
     scrollY.value = event.contentOffset.y;
-  });
+  };
 
   const animatedNavBarStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
