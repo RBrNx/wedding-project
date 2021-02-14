@@ -14,6 +14,8 @@ import FormOverview from '../library/components/FormOverview';
 import useAnimatedWizard from '../library/hooks/useAnimatedWizard';
 import useLazyQuery from '../library/hooks/useLazyQuery';
 import parseError from '../library/helpers/parseError';
+import { useAlert } from '../context/Alert';
+import { AlertType } from '../library/enums';
 
 const { width } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
@@ -30,6 +32,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [fetchRSVPQuestions, { loading, error }] = useLazyQuery(GET_RSVP_QUESTIONS);
   const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
   const { colors } = useTheme();
+  const { showAlert } = useAlert();
 
   const isLoading = loading || submitting;
   const currAnswer = rsvpForm[currQuestion?._id];
@@ -67,11 +70,23 @@ const SubmitRSVPScreen = ({ navigation }) => {
       const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
       const { submitRSVPForm: formResponse } = data || {};
 
-      if (!formResponse.success) console.error(formResponse.message);
-      else console.log(formResponse.message);
+      if (formResponse.success) {
+        // Navigate
+      } else {
+        showAlert({
+          message: formResponse.message,
+          type: AlertType.WARNING,
+          position: 'top',
+        });
+      }
     } catch (err) {
       const { message } = parseError(err);
       console.error(message);
+      showAlert({
+        message,
+        type: AlertType.WARNING,
+        position: 'top',
+      });
     }
   };
 
