@@ -6,12 +6,15 @@ import StandardInput from '../library/components/StandardInput';
 import LandingScreenBackground from '../components/LandingScreenBackground';
 import { useAuth } from '../context';
 import DismissKeyboard from '../components/DismissKeyboard';
+import { useAlert } from '../context/Alert';
+import { AlertType } from '../library/enums';
 
 const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState(null);
   const [password, setPassword] = useState(null);
   const [signingIn, setSigningIn] = useState(false);
   const { signIn } = useAuth();
+  const { showAlert } = useAlert();
 
   const attemptLogin = async () => {
     try {
@@ -21,6 +24,7 @@ const SignInScreen = ({ navigation }) => {
       if (!signedIn) setSigningIn(false);
     } catch (err) {
       console.log(err);
+      showAlert({ message: err.message, type: AlertType.WARNING });
       setSigningIn(false);
     }
   };
