@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, RefreshControl, StatusBar, View, FlatList } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, Text, StatusBar, View } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -8,14 +8,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import useCustomScrollbar from '../hooks/useCustomScrollbar';
-import CustomScrollbar from './CustomScrollbar';
+import AnimatedFlatlist from './AnimatedFlatlist';
 
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const FlatListAnimatedHeader = ({
   title,
@@ -28,34 +25,9 @@ const FlatListAnimatedHeader = ({
 }) => {
   const { colors } = useTheme();
   const scrollY = useSharedValue(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const {
-    setTotalScrollbarHeight,
-    setVisibleScrollbarHeight,
-    animatedHandleStyle,
-    scrollbarHandleSize,
-    scrollbarOpacity,
-    showScrollbar,
-    hideScrollbar,
-  } = useCustomScrollbar(scrollY);
-
-  const isFlatlistEmpty = !data?.length;
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
-  });
-
-  const animatedHandleContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, HEADER_SCROLL_DISTANCE],
-      [0, -HEADER_SCROLL_DISTANCE],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      transform: [{ translateY }],
-    };
   });
 
   const animatedNavBarStyle = useAnimatedStyle(() => ({
@@ -82,89 +54,20 @@ const FlatListAnimatedHeader = ({
     };
   });
 
-  const animatedScrollbarStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, HEADER_SCROLL_DISTANCE],
-      [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      transform: [{ translateY }],
-      opacity: scrollbarOpacity.value,
-    };
-  });
-
-  const renderListHandle = () => {
-    return (
-      <Animated.View
-        style={[styles.handleContainer, animatedHandleContainerStyle, { backgroundColor: colors.background }]}
-      >
-        <View style={[styles.handleBackgound, { backgroundColor: colors.cardBackround }]}>
-          <View style={styles.handle} />
-        </View>
-      </Animated.View>
-    );
-  };
-
-  const renderRefreshControl = () => {
-    return (
-      <RefreshControl
-        refreshing={isRefreshing}
-        progressViewOffset={HEADER_MAX_HEIGHT + 15}
-        onRefresh={async () => {
-          setIsRefreshing(true);
-          await onRefresh();
-          setIsRefreshing(false);
-        }}
-        progressBackgroundColor='#14233c'
-        colors={['#fff']}
-        tintColor='#2991cc'
-      />
-    );
-  };
-
   return (
     <View style={styles.container}>
       <Animated.View style={styles.headerContainer} pointerEvents='none'>
         <Animated.View style={[styles.headerImage, animatedImageStyle]}>{renderImage && renderImage()}</Animated.View>
         <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
-      <View style={styles.flatlistContainer}>
-        <AnimatedFlatList
-          contentContainerStyle={[
-            isFlatlistEmpty ? styles.flatlistContentEmpty : styles.flatlistContent,
-            { backgroundColor: colors.cardBackround },
-          ]}
-          scrollEventThrottle={1}
-          onScroll={scrollHandler}
-          renderItem={renderItem}
-          data={data}
-          keyExtractor={item => item._id}
-          initialNumToRender={20}
-          ListHeaderComponent={renderListHandle}
-          ListEmptyComponent={ListEmptyComponent}
-          ListFooterComponent={ListFooterComponent}
-          stickyHeaderIndices={[0]}
-          refreshControl={renderRefreshControl()}
-          showsVerticalScrollIndicator={false}
-          onContentSizeChange={(contentWidth, contentHeight) => {
-            setTotalScrollbarHeight(contentHeight);
-          }}
-          onLayout={e => {
-            setVisibleScrollbarHeight(e.nativeEvent.layout.height);
-          }}
-          onScrollBeginDrag={showScrollbar}
-          onMomentumScrollEnd={hideScrollbar}
-          scrollEnabled={!isFlatlistEmpty}
-        />
-        <CustomScrollbar
-          handleSize={scrollbarHandleSize - HEADER_MIN_HEIGHT}
-          animatedHandleStyle={animatedHandleStyle}
-          style={animatedScrollbarStyle}
-        />
-      </View>
+      <AnimatedFlatlist
+        data={data}
+        onScroll={scrollHandler}
+        onRefresh={onRefresh}
+        renderItem={renderItem}
+        ListEmptyComponent={ListEmptyComponent}
+        ListFooterComponent={ListFooterComponent}
+      />
       <Animated.View style={[styles.navigationBar, animatedNavBarStyle, { backgroundColor: colors.background }]}>
         <Text style={styles.barTitle}>{title}</Text>
       </Animated.View>
@@ -201,35 +104,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
     textShadowColor: '#000',
     bottom: 15,
-  },
-  flatlistContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  flatlistContent: {
-    marginTop: HEADER_MAX_HEIGHT,
-    paddingBottom: HEADER_MAX_HEIGHT,
-  },
-  flatlistContentEmpty: {
-    marginTop: HEADER_MAX_HEIGHT,
-    flex: 1,
-  },
-  handleContainer: {
-    marginBottom: 5,
-  },
-  handleBackgound: {
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    width: '100%',
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  handle: {
-    width: 30,
-    height: 5,
-    borderRadius: 5,
-    backgroundColor: '#aaa',
   },
   navigationBar: {
     height: HEADER_MIN_HEIGHT,
