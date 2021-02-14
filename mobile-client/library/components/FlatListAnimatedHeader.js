@@ -27,56 +27,25 @@ const FlatListAnimatedHeader = ({
   ListFooterComponent,
 }) => {
   const { colors } = useTheme();
-  // const [scrollY] = useState(new Animated.Value(0));
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  // const {
-  //   setTotalScrollbarHeight,
-  //   setVisibleScrollbarHeight,
-  //   scrollbarHandlePosition,
-  //   scrollbarHandleSize,
-  //   scrollbarOpacity,
-  //   showScrollbar,
-  //   hideScrollbar,
-  // } = useCustomScrollbar(scrollY);
+  const {
+    setTotalScrollbarHeight,
+    setVisibleScrollbarHeight,
+    animatedHandleStyle,
+    scrollbarHandleSize,
+    scrollbarOpacity,
+    showScrollbar,
+    hideScrollbar,
+  } = useCustomScrollbar(scrollY);
 
   const isFlatlistEmpty = !data?.length;
-
-  // const imageOpacity = scrollY.interpolate({
-  //   inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-  //   outputRange: [1, 1, 0],
-  //   extrapolate: 'clamp',
-  // });
-
-  // const imageScale = scrollY.interpolate({
-  //   inputRange: [0, HEADER_SCROLL_DISTANCE],
-  //   outputRange: [1, 0.2],
-  //   extrapolate: 'clamp',
-  // });
-
-  // const titleOpacity = scrollY.interpolate({
-  //   inputRange: [0, HEADER_SCROLL_DISTANCE * 0.75, HEADER_SCROLL_DISTANCE],
-  //   outputRange: [0, 0.5, 1],
-  //   extrapolate: 'clamp',
-  // });
-
-  // const translateY = scrollY.interpolate({
-  //   inputRange: [0, HEADER_SCROLL_DISTANCE],
-  //   outputRange: [0, -HEADER_SCROLL_DISTANCE],
-  //   extrapolate: 'clamp',
-  // });
-
-  // const scrollBarTop = scrollY.interpolate({
-  //   inputRange: [0, HEADER_SCROLL_DISTANCE],
-  //   outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-  //   extrapolate: 'clamp',
-  // });
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
 
-  const animatedHandleStyle = useAnimatedStyle(() => {
+  const animatedHandleContainerStyle = useAnimatedStyle(() => {
     const translateY = interpolate(
       scrollY.value,
       [0, HEADER_SCROLL_DISTANCE],
@@ -113,9 +82,25 @@ const FlatListAnimatedHeader = ({
     };
   });
 
+  const animatedScrollbarStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      scrollY.value,
+      [0, HEADER_SCROLL_DISTANCE],
+      [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      transform: [{ translateY }],
+      opacity: scrollbarOpacity.value,
+    };
+  });
+
   const renderListHandle = () => {
     return (
-      <Animated.View style={[styles.handleContainer, animatedHandleStyle, { backgroundColor: colors.background }]}>
+      <Animated.View
+        style={[styles.handleContainer, animatedHandleContainerStyle, { backgroundColor: colors.background }]}
+      >
         <View style={[styles.handleBackgound, { backgroundColor: colors.cardBackround }]}>
           <View style={styles.handle} />
         </View>
@@ -164,24 +149,21 @@ const FlatListAnimatedHeader = ({
           stickyHeaderIndices={[0]}
           refreshControl={renderRefreshControl()}
           showsVerticalScrollIndicator={false}
-          // onContentSizeChange={(contentWidth, contentHeight) => {
-          //   setTotalScrollbarHeight(contentHeight);
-          // }}
-          // onLayout={e => {
-          //   setVisibleScrollbarHeight(e.nativeEvent.layout.height);
-          // }}
-          // onScrollBeginDrag={showScrollbar}
-          // onMomentumScrollEnd={hideScrollbar}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            setTotalScrollbarHeight(contentHeight);
+          }}
+          onLayout={e => {
+            setVisibleScrollbarHeight(e.nativeEvent.layout.height);
+          }}
+          onScrollBeginDrag={showScrollbar}
+          onMomentumScrollEnd={hideScrollbar}
           scrollEnabled={!isFlatlistEmpty}
         />
-        {/* <CustomScrollbar
+        <CustomScrollbar
           handleSize={scrollbarHandleSize - HEADER_MIN_HEIGHT}
-          handlePosition={scrollbarHandlePosition}
-          style={{
-            transform: [{ translateY: scrollBarTop }],
-            opacity: scrollbarOpacity,
-          }}
-        /> */}
+          animatedHandleStyle={animatedHandleStyle}
+          style={animatedScrollbarStyle}
+        />
       </View>
       <Animated.View style={[styles.navigationBar, animatedNavBarStyle, { backgroundColor: colors.background }]}>
         <Text style={styles.barTitle}>{title}</Text>

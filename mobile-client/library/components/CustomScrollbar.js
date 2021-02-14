@@ -1,19 +1,11 @@
 import React from 'react';
-import { StyleSheet, Animated } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
 
-const CustomScrollbar = ({ handleSize, handlePosition, style, handleStyle }) => {
+const CustomScrollbar = ({ handleSize, animatedHandleStyle, style, handleStyle }) => {
   return (
     <Animated.View style={[styles.scrollbarContainer, style]}>
-      <Animated.View
-        style={[
-          styles.scrollbarHandle,
-          {
-            height: handleSize,
-            transform: [{ translateY: handlePosition }],
-          },
-          handleStyle,
-        ]}
-      />
+      <Animated.View style={[styles.scrollbarHandle, { height: handleSize }, animatedHandleStyle, handleStyle]} />
     </Animated.View>
   );
 };
