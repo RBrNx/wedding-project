@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
 import { useTheme } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
+import HeaderFlatlist from '../library/components/HeaderFlatlist';
 import SettingsIllustration from '../components/SVG/Settings';
 import StandardPressable from '../library/components/StandardPressable';
 import { useAuth, useSettings } from '../context';
@@ -69,7 +69,7 @@ const SettingsScreen = () => {
 
   return (
     <>
-      <FlatListAnimatedHeader
+      <HeaderFlatlist
         title='Settings'
         renderImage={() => <SettingsIllustration size='90%' />}
         data={settings}

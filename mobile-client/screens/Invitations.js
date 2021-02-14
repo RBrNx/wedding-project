@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
-import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
+import HeaderFlatlist from '../library/components/HeaderFlatlist';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
@@ -35,7 +35,7 @@ const InvitationsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_INVITATIONS_QUERY);
 
   return (
-    <FlatListAnimatedHeader
+    <HeaderFlatlist
       title='Invitations'
       onRefresh={async () => {
         await refetch();

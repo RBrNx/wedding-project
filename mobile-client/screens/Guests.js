@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
-import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
+import HeaderFlatlist from '../library/components/HeaderFlatlist';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
@@ -34,7 +34,7 @@ const GuestsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_GUESTS_QUERY);
 
   return (
-    <FlatListAnimatedHeader
+    <HeaderFlatlist
       title='Guests'
       onRefresh={async () => {
         await refetch();
