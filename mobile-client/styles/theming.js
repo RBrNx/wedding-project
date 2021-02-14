@@ -23,7 +23,7 @@ const lightTheme = {
     card: white,
     cardHover: Color(white)
       .darken(0.12)
-      .hex(),
+    cardBackround: '#fbfbfb',
     componentBackground: '#e0e0e0',
     bodyText: '#444',
     focusedText: '#000',
@@ -42,12 +42,11 @@ const darkTheme = {
     button: lightBlue,
     buttonPressed: Color(lightBlue)
       .darken(0.2)
-      .hex(),
-    card: darkGrey,
-    cardHover: Color(darkGrey)
+    card: '#2b2b2b',
+    cardHover: Color('#2b2b2b')
       .darken(0.12)
-      .hex(),
-    componentBackground: black,
+    cardBackround: darkGrey,
+    componentBackground: '#e0e0e0',
     bodyText: '#eee',
     focusedText: '#fff',
     headerText: '#fff',
