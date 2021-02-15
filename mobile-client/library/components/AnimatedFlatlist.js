@@ -69,7 +69,7 @@ const AnimatedFlatlist = ({ data, onRefresh, onScroll, renderItem, ListEmptyComp
       <Animated.View
         style={[styles.handleContainer, animatedHandleContainerStyle, { backgroundColor: colors.background }]}
       >
-        <View style={[styles.handleBackgound, { backgroundColor: colors.cardBackround }]}>
+        <View style={[styles.handleBackgound, { backgroundColor: colors.cardBackground }]}>
           <View style={styles.handle} />
         </View>
       </Animated.View>
@@ -98,7 +98,7 @@ const AnimatedFlatlist = ({ data, onRefresh, onScroll, renderItem, ListEmptyComp
       <AnimatedFlatList
         contentContainerStyle={[
           isFlatlistEmpty ? styles.flatlistContentEmpty : styles.flatlistContent,
-          { backgroundColor: colors.cardBackround },
+          { backgroundColor: colors.cardBackground },
         ]}
         scrollEventThrottle={1}
         onScroll={scrollHandler}
