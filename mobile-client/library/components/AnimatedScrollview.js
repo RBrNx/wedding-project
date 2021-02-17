@@ -1,6 +1,6 @@
 import { useTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, RefreshControl, View } from 'react-native';
+import { StyleSheet, RefreshControl, View, Dimensions } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -11,8 +11,18 @@ import Animated, {
 import ListHandle from '../../components/ListHandle';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
+import Spacer from './Spacer';
 
-const AnimatedScrollview = ({ children, onRefresh, onScroll, topOffset, collapsedPosition = 350 }) => {
+const { height } = Dimensions.get('window');
+
+const AnimatedScrollview = ({
+  children,
+  onRefresh,
+  onScroll,
+  topOffset,
+  collapsedPosition = 350,
+  unlockFullScroll = true,
+}) => {
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { colors } = useTheme();
@@ -70,11 +80,10 @@ const AnimatedScrollview = ({ children, onRefresh, onScroll, topOffset, collapse
       <ListHandle animatedHandleContainerStyle={animatedHandleContainerStyle} />
       <View style={styles.scrollviewContainer}>
         <Animated.ScrollView
-          style={styles.scrollview}
           contentContainerStyle={{
             backgroundColor: colors.cardBackground,
             marginTop: collapsedPosition,
-            paddingBottom: collapsedPosition,
+            minHeight: unlockFullScroll ? height - topOffset + collapsedPosition : height - collapsedPosition,
           }}
           onScroll={scrollHandler}
           scrollEventThrottle={1}
@@ -88,8 +97,10 @@ const AnimatedScrollview = ({ children, onRefresh, onScroll, topOffset, collapse
           }}
           onScrollBeginDrag={showScrollbar}
           onMomentumScrollEnd={hideScrollbar}
+          overScrollMode='never'
         >
           {children}
+          {unlockFullScroll && <Spacer size={collapsedPosition} />}
         </Animated.ScrollView>
         <CustomScrollbar
           handleSize={scrollbarHandleSize}
