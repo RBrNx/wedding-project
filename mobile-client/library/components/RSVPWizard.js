@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Dimensions, StyleSheet, View } from 'react-native';
+import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -8,54 +8,44 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import useAnimatedWizardV2 from '../hooks/useAnimatedWizardV2';
 
 const { width } = Dimensions.get('window');
 
-const Screen = ({ screen, isPrev, isNext, position }) => {
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    // eslint-disable-next-line no-nested-ternary
-    const outputRange = isPrev ? [0, -width, -width] : isNext ? [width, width, 0] : [width, 0, -width];
-
-    const translateX = interpolate(position.value, [-1, 0, 1], outputRange, Extrapolate.CLAMP);
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
-
-  return <Animated.View key={screen} style={[styles.screen, { backgroundColor: screen }, animatedContainerStyle]} />;
+const Screen = ({ screen, animatedStyle, index }) => {
+  return (
+    <Animated.View key={screen} style={[styles.screen, { backgroundColor: screen }, animatedStyle]}>
+      <Text style={{ fontSize: 24, color: '#fff' }}>{index}</Text>
+    </Animated.View>
+  );
 };
 
-const RSVPWizard = () => {
+const FormWizardV2 = () => {
   const [currIndex, setCurrIndex] = useState(0);
-  const screenPosition = useSharedValue(0);
-  const screens = ['red', 'blue', 'green', 'yellow', 'pink', 'purple'];
-  const currScreen = screens[currIndex];
-  const prevScreen = screens[currIndex - 1];
-  const nextScreen = screens[currIndex + 1];
+  const steps = ['red', 'blue', 'green']; // 'yellow', 'pink', 'purple'
 
-  useEffect(() => {
-    screenPosition.value = 0;
-  }, [currIndex]);
+  const {
+    moveToPrevStep,
+    moveToNextStep,
+    prevStepAnimatedStyle,
+    currStepAnimatedStyle,
+    nextStepAnimatedStyle,
+  } = useAnimatedWizardV2({ currStep: currIndex });
 
   const onPrev = () => {
-    screenPosition.value = withTiming(-1, { duration: 300 }, () => {
-      runOnJS(setCurrIndex)(currIndex - 1);
-    });
+    moveToPrevStep(() => setCurrIndex(currIndex - 1));
   };
 
   const onNext = () => {
-    screenPosition.value = withTiming(1, { duration: 300 }, () => {
-      runOnJS(setCurrIndex)(currIndex + 1);
-    });
+    moveToNextStep(() => setCurrIndex(currIndex + 1));
   };
 
   return (
     <>
       <View style={styles.container}>
-        <Screen screen={prevScreen} isPrev position={screenPosition} />
-        <Screen screen={currScreen} position={screenPosition} />
-        <Screen screen={nextScreen} isNext position={screenPosition} />
+        <Screen screen={steps[currIndex - 1]} isPrev animatedStyle={prevStepAnimatedStyle} />
+        <Screen screen={steps[currIndex]} animatedStyle={currStepAnimatedStyle} />
+        <Screen screen={steps[currIndex + 1]} isNext animatedStyle={nextStepAnimatedStyle} />
       </View>
       <Button title='Prev' onPress={onPrev} />
       <Button title='Next' onPress={onNext} />
@@ -71,7 +61,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
-export default RSVPWizard;
+export default FormWizardV2;
