@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Button, StyleSheet, View } from 'react-native';
 import useAnimatedWizardV2 from '../hooks/useAnimatedWizardV2';
 
-const Screen = ({ screen, animatedStyle, index }) => {
-  return (
-    <Animated.View key={screen} style={[styles.screen, { backgroundColor: screen }, animatedStyle]}>
-      <Text style={{ fontSize: 24, color: '#fff' }}>{index}</Text>
-    </Animated.View>
-  );
-};
-
-const FormWizardV2 = () => {
+const FormWizardV2 = ({ steps = [], renderStep = () => null }) => {
   const [currIndex, setCurrIndex] = useState(0);
-  const steps = ['red', 'blue', 'green'];
+  const prevIndex = currIndex - 1;
+  const nextIndex = currIndex + 1;
 
   const {
     moveToPrevStep,
@@ -24,19 +16,23 @@ const FormWizardV2 = () => {
   } = useAnimatedWizardV2({ currStep: currIndex });
 
   const onPrev = () => {
+    if (currIndex - 1 < 0) return;
+
     moveToPrevStep(() => setCurrIndex(currIndex - 1));
   };
 
   const onNext = () => {
+    if (currIndex + 1 > steps.length - 1) return;
+
     moveToNextStep(() => setCurrIndex(currIndex + 1));
   };
 
   return (
     <>
       <View style={styles.container}>
-        <Screen screen={steps[currIndex - 1]} isPrev animatedStyle={prevStepAnimatedStyle} />
-        <Screen screen={steps[currIndex]} animatedStyle={currStepAnimatedStyle} />
-        <Screen screen={steps[currIndex + 1]} isNext animatedStyle={nextStepAnimatedStyle} />
+        {renderStep({ step: steps[prevIndex], animatedStyle: prevStepAnimatedStyle, stepIndex: prevIndex })}
+        {renderStep({ step: steps[currIndex], animatedStyle: currStepAnimatedStyle, stepIndex: currIndex })}
+        {renderStep({ step: steps[nextIndex], animatedStyle: nextStepAnimatedStyle, stepIndex: nextIndex })}
       </View>
       <Button title='Prev' onPress={onPrev} />
       <Button title='Next' onPress={onNext} />
@@ -47,13 +43,6 @@ const FormWizardV2 = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-  },
-  screen: {
-    width: '100%',
-    height: 300,
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
