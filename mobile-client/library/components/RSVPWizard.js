@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import React, { useState } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import useAnimatedWizardV2 from '../hooks/useAnimatedWizardV2';
-
-const { width } = Dimensions.get('window');
 
 const Screen = ({ screen, animatedStyle, index }) => {
   return (
@@ -22,7 +13,7 @@ const Screen = ({ screen, animatedStyle, index }) => {
 
 const FormWizardV2 = () => {
   const [currIndex, setCurrIndex] = useState(0);
-  const steps = ['red', 'blue', 'green']; // 'yellow', 'pink', 'purple'
+  const steps = ['red', 'blue', 'green'];
 
   const {
     moveToPrevStep,
