@@ -1,69 +1,46 @@
-import { useEffect } from 'react';
-import { Dimensions } from 'react-native';
-import {
-  Extrapolate,
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { useState } from 'react';
+import { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 
-const { width } = Dimensions.get('window');
-
-const useAnimatedWizardV2 = ({ currStep }) => {
-  const stepDirection = useSharedValue(0);
-
-  useEffect(() => {
-    stepDirection.value = 0;
-  }, [currStep]);
+const useAnimatedWizardV2 = ({ maxStepIndex }) => {
+  const [currIndex, setCurrIndex] = useState(0);
+  const animIndex = useSharedValue(0);
 
   const moveToPrevStep = callback => {
-    stepDirection.value = withTiming(-1, { duration: 300 }, isFinished => {
-      if (callback) runOnJS(callback)(isFinished);
+    const currAnimValue = animIndex.value;
+    if (currAnimValue <= 0) return;
+
+    const isAnimating = !Number.isInteger(currAnimValue);
+    const prevIndexValue = isAnimating ? Math.floor(currAnimValue) : currAnimValue - 1;
+
+    animIndex.value = withTiming(prevIndexValue, { duration: 300 }, isFinished => {
+      if (isFinished) {
+        runOnJS(setCurrIndex)(currIndex - 1);
+        if (callback) runOnJS(callback)();
+      }
     });
   };
 
   const moveToNextStep = callback => {
-    stepDirection.value = withTiming(1, { duration: 300 }, isFinished => {
-      if (callback) runOnJS(callback)(isFinished);
+    const currAnimValue = animIndex.value;
+    if (currAnimValue === maxStepIndex) return;
+
+    const isAnimating = !Number.isInteger(currAnimValue);
+
+    const nextIndexValue = isAnimating ? Math.ceil(currAnimValue) : currAnimValue + 1;
+
+    animIndex.value = withTiming(nextIndexValue, { duration: 300 }, isFinished => {
+      if (isFinished) {
+        runOnJS(setCurrIndex)(currIndex + 1);
+        if (callback) runOnJS(callback)();
+      }
     });
   };
 
-  const prevStepAnimatedStyle = useAnimatedStyle(() => {
-    const outputRange = [0, -width, -width];
-    const translateX = interpolate(stepDirection.value, [-1, 0, 1], outputRange, Extrapolate.CLAMP);
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
-
-  const currStepAnimatedStyle = useAnimatedStyle(() => {
-    const outputRange = [width, 0, -width];
-    const translateX = interpolate(stepDirection.value, [-1, 0, 1], outputRange, Extrapolate.CLAMP);
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
-
-  const nextStepAnimatedStyle = useAnimatedStyle(() => {
-    const outputRange = [width, width, 0];
-    const translateX = interpolate(stepDirection.value, [-1, 0, 1], outputRange, Extrapolate.CLAMP);
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
-
   return {
+    currIndex,
+    animIndex,
     moveToPrevStep,
     moveToNextStep,
-    prevStepAnimatedStyle,
-    currStepAnimatedStyle,
-    nextStepAnimatedStyle,
-    stepDirection,
   };
 };
 
