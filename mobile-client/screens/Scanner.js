@@ -41,7 +41,7 @@ const ScannerScreen = ({ navigation }) => {
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<shortId>[A-Za-z0-9_-]{12})/g);
-    const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups;
+    const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups || {};
 
     await attemptSignIn(scannedShortId);
   };
