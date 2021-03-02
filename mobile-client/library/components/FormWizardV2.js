@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 const FormWizardV2 = ({ steps = [], renderStep = () => null, renderCount = 3, animIndex }) => {
   return (
@@ -17,6 +19,7 @@ const FormWizardV2 = ({ steps = [], renderStep = () => null, renderCount = 3, an
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    width,
   },
 });
 
