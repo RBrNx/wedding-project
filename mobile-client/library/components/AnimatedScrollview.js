@@ -14,6 +14,7 @@ import CustomScrollbar from './CustomScrollbar';
 import Spacer from './Spacer';
 
 const { height } = Dimensions.get('window');
+const HANDLE_HEIGHT = 20;
 
 const AnimatedScrollview = ({
   children,
@@ -21,7 +22,7 @@ const AnimatedScrollview = ({
   onScroll,
   topOffset,
   collapsedPosition = 350,
-  unlockFullScroll = true,
+  unlockFullScroll = false,
 }) => {
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -83,7 +84,10 @@ const AnimatedScrollview = ({
           contentContainerStyle={{
             backgroundColor: colors.cardBackground,
             marginTop: collapsedPosition,
-            minHeight: unlockFullScroll ? height - topOffset + collapsedPosition : height - collapsedPosition,
+            minHeight: unlockFullScroll
+              ? height - topOffset + collapsedPosition
+              : height - collapsedPosition - HANDLE_HEIGHT,
+            alignItems: 'center',
           }}
           onScroll={scrollHandler}
           scrollEventThrottle={1}
