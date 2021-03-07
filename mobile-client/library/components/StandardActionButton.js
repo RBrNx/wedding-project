@@ -81,7 +81,7 @@ const StandardActionButton = ({
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
           style={[styles.button, animatedButtonStyle, buttonStyle]}
-          backImageStyle={{ transform: [{ rotate: '180deg' }] }}
+          backImageStyle={{ tintColor: '#fff', transform: [{ rotate: '180deg' }] }}
           icon={isShowingMessage ? () => <Ionicons name='close-outline' size={36} color='#fff' /> : null}
         />
       </AnimatedPressable>
