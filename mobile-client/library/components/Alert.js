@@ -18,7 +18,7 @@ const Alert = ({
   title,
   message,
   type,
-  position,
+  position = 'top',
   dismissAlert,
   isVisible,
   isStatusBarTranslucent = true,
