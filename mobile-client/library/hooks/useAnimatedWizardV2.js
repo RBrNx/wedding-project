@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 
-const useAnimatedWizardV2 = ({ maxStepIndex }) => {
+const useAnimatedWizardV2 = () => {
   const [currIndex, setCurrIndex] = useState(0);
   const animIndex = useSharedValue(0);
 
   const moveToPrevStep = callback => {
     const currAnimValue = animIndex.value;
-    if (currAnimValue <= 0) return;
 
     const isAnimating = !Number.isInteger(currAnimValue);
     const prevIndexValue = isAnimating ? Math.floor(currAnimValue) : currAnimValue - 1;
@@ -22,10 +21,8 @@ const useAnimatedWizardV2 = ({ maxStepIndex }) => {
 
   const moveToNextStep = callback => {
     const currAnimValue = animIndex.value;
-    if (currAnimValue === maxStepIndex) return;
 
     const isAnimating = !Number.isInteger(currAnimValue);
-
     const nextIndexValue = isAnimating ? Math.ceil(currAnimValue) : currAnimValue + 1;
 
     animIndex.value = withTiming(nextIndexValue, { duration: 300 }, isFinished => {
