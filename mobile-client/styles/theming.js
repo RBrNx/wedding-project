@@ -1,6 +1,6 @@
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { Platform } from 'react-native';
-import Color from 'color';
+import { darken } from '../library/helpers/colours';
 
 const black = '#000';
 const white = '#fff';
@@ -17,12 +17,9 @@ const lightTheme = {
     secondary: lightBlue,
     background: darkBlue,
     button: lightBlue,
-    buttonPressed: Color(lightBlue)
-      .darken(0.2)
-      .hex(),
+    buttonPressed: darken(lightBlue, 0.2),
     card: white,
-    cardHover: Color(white)
-      .darken(0.12)
+    cardHover: darken(white, 0.12),
     cardBackground: '#fbfbfb',
     componentBackground: '#e0e0e0',
     bodyText: '#444',
@@ -40,11 +37,9 @@ const darkTheme = {
     secondary: lightBlue,
     background: darkBlue,
     button: lightBlue,
-    buttonPressed: Color(lightBlue)
-      .darken(0.2)
+    buttonPressed: darken(lightBlue, 0.2),
     card: '#2b2b2b',
-    cardHover: Color('#2b2b2b')
-      .darken(0.12)
+    cardHover: darken('#2b2b2b', 0.12),
     cardBackground: darkGrey,
     componentBackground: '#e0e0e0',
     bodyText: '#eee',
