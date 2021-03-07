@@ -8,7 +8,7 @@ const BackButtonImage = ({ style }) => {
 
 const styles = StyleSheet.create({
   backImage: {
-    tintColor: '#fff',
+    tintColor: '#000',
   },
 });
 
