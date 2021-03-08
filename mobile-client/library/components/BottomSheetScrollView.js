@@ -16,7 +16,7 @@ import Spacer from './Spacer';
 const { height } = Dimensions.get('window');
 const HANDLE_HEIGHT = 20;
 
-const AnimatedScrollview = ({
+const BottomSheetScrollView = ({
   children,
   onRefresh,
   onScroll,
@@ -126,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AnimatedScrollview;
+export default BottomSheetScrollView;

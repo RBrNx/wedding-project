@@ -10,7 +10,7 @@ import useLazyQuery from '../library/hooks/useLazyQuery';
 import parseError from '../library/helpers/parseError';
 import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
-import AnimatedScrollview from '../library/components/AnimatedScrollview';
+import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
 import Spacer from '../library/components/Spacer';
 import FormWizardV2 from '../library/components/FormWizardV2';
 import useAnimatedWizardV2 from '../library/hooks/useAnimatedWizardV2';
@@ -168,7 +168,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
       {!isLoading && currQuestion && (
         <FormWizardV2 steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
       )}
-      <AnimatedScrollview
+      <BottomSheetScrollView
         topOffset={StatusBar.currentHeight}
         collapsedPosition={SHEET_COLLAPSED_POS}
         unlockFullScroll={!isLoading}
@@ -180,7 +180,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
             <FormWizardV2 steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
           </View>
         )}
-      </AnimatedScrollview>
+      </BottomSheetScrollView>
       <StandardActionButton
         label='Submit RSVP'
         maxExpansionWidth={width * 0.95 - 16}
