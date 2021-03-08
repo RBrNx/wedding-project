@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-const FormWizardV2 = ({ steps = [], renderStep = () => null, renderCount = 3, animIndex }) => {
+const StepTransition = ({ steps = [], renderStep = () => null, renderCount = 3, animIndex }) => {
   return (
     <View style={styles.container}>
       {steps.map((step, index) => {
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FormWizardV2;
+export default StepTransition;

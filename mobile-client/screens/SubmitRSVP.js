@@ -12,7 +12,7 @@ import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
 import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
 import Spacer from '../library/components/Spacer';
-import FormWizardV2 from '../library/components/FormWizardV2';
+import StepTransition from '../library/components/StepTransition';
 import useAnimatedWizardV2 from '../library/hooks/useAnimatedWizardV2';
 import RSVPQuestion from '../library/components/RSVPQuestion';
 import RSVPAnswerInput from '../library/components/RSVPAnswerInput';
@@ -166,7 +166,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
     <>
       <Spacer size={StatusBar.currentHeight} />
       {!isLoading && currQuestion && (
-        <FormWizardV2 steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
+        <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
       )}
       <BottomSheetScrollView
         topOffset={StatusBar.currentHeight}
@@ -177,7 +177,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         {!isLoading && currQuestion && (
           <View style={styles.contentContainer}>
             <BackButton style={styles.backButton} backImageStyle={{ tintColor: colors.secondary }} onPress={onPrevV2} />
-            <FormWizardV2 steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
+            <StepTransition steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
           </View>
         )}
       </BottomSheetScrollView>
