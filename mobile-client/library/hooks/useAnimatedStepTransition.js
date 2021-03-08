@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 
-const useAnimatedWizardV2 = () => {
+const useAnimatedStepTransition = () => {
   const [currIndex, setCurrIndex] = useState(0);
   const animIndex = useSharedValue(0);
 
@@ -41,4 +41,4 @@ const useAnimatedWizardV2 = () => {
   };
 };
 
-export default useAnimatedWizardV2;
+export default useAnimatedStepTransition;

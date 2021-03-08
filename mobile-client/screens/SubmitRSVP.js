@@ -13,7 +13,7 @@ import { AlertType } from '../library/enums';
 import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
 import Spacer from '../library/components/Spacer';
 import StepTransition from '../library/components/StepTransition';
-import useAnimatedWizardV2 from '../library/hooks/useAnimatedWizardV2';
+import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 import RSVPQuestion from '../library/components/RSVPQuestion';
 import RSVPAnswerInput from '../library/components/RSVPAnswerInput';
 import BackButton from '../library/components/BackButton';
@@ -34,7 +34,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [showOverview, setShowOverview] = useState(false);
   const [fetchRSVPQuestions, { loading, error }] = useLazyQuery(GET_RSVP_QUESTIONS);
   const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
-  const { animIndex, moveToNextStep, moveToPrevStep } = useAnimatedWizardV2();
+  const { animIndex, moveToNextStep, moveToPrevStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
   const { colors } = useTheme();
 
