@@ -141,6 +141,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   const renderAnswerInput = ({ step, index }) => {
     const { _id: id, type, choices } = step || {};
+    const answer = rsvpForm[id];
 
     return (
       <RSVPAnswerInput
@@ -148,7 +149,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         questionId={id}
         questionType={type}
         answerChoices={choices}
-        answerValue={currAnswer}
+        answerValue={answer}
         setRSVPAnswer={setFormValue}
         index={index}
         animIndex={animIndex}
