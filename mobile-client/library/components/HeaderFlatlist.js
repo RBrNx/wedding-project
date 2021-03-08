@@ -2,7 +2,7 @@ import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, StatusBar, View } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import AnimatedFlatlist from './AnimatedFlatlist';
+import BottomSheetFlatList from './BottomSheetFlatList';
 
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 100;
@@ -56,7 +56,7 @@ const HeaderFlatlist = ({
         <Animated.View style={[styles.headerImage, animatedImageStyle]}>{renderImage && renderImage()}</Animated.View>
         <Text style={styles.headerTitle}>{title}</Text>
       </Animated.View>
-      <AnimatedFlatlist
+      <BottomSheetFlatList
         data={data}
         onScroll={scrollHandler}
         onRefresh={onRefresh}

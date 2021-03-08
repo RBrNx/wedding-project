@@ -16,7 +16,7 @@ const HEADER_MIN_HEIGHT = 100;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-const AnimatedFlatlist = ({ data, onRefresh, onScroll, renderItem, ListEmptyComponent, ListFooterComponent }) => {
+const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyComponent, ListFooterComponent }) => {
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { colors } = useTheme();
@@ -163,4 +163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AnimatedFlatlist;
+export default BottomSheetFlatList;
