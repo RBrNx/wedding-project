@@ -1,11 +1,10 @@
 import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import Color from 'color';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { constantStyles } from '../../styles/theming';
-import Spacer from './Spacer';
-import StandardRoundPressable from './StandardRoundPressable';
+import { constantStyles } from '../styles/theming';
+import Spacer from '../library/components/Spacer';
+import StandardRoundPressable from '../library/components/StandardRoundPressable';
 
 const FormOverview = ({ questions, formValues, onEditPress }) => {
   const { colors } = useTheme();
