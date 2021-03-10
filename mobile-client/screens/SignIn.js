@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StandardButton from '../library/components/StandardButton';
-import StandardInput from '../library/components/StandardInput';
+import StandardTextInput from '../library/components/StandardTextInput';
 import LandingScreenBackground from '../components/LandingScreenBackground';
 import { useAuth } from '../context';
-import DismissKeyboard from '../components/DismissKeyboard';
+import DismissKeyboard from '../library/components/DismissKeyboard';
 import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
 
@@ -39,13 +39,13 @@ const SignInScreen = ({ navigation }) => {
             <Text style={styles.subHeading}>Sign in to your Account</Text>
           </View>
           <View style={styles.inputContainer}>
-            <StandardInput
+            <StandardTextInput
               value={emailAddress}
               label='Email Address'
               onChangeText={value => setEmailAddress(value)}
               themeColourOverride='#fff'
             />
-            <StandardInput
+            <StandardTextInput
               value={password}
               label='Password'
               onChangeText={value => setPassword(value)}

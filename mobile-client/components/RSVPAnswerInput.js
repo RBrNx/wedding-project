@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import StandardInput from '../library/components/StandardInput';
+import StandardTextInput from '../library/components/StandardTextInput';
 import StandardRadioInput from '../library/components/StandardRadioInput';
 
 const { width } = Dimensions.get('window');
@@ -35,7 +35,7 @@ const RSVPAnswerInput = ({
       )}
 
       {questionType === 'TEXT' && (
-        <StandardInput
+        <StandardTextInput
           borderColourFocused='#2991cc'
           multiline
           value={answerValue}
