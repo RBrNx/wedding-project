@@ -9,7 +9,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import AnimatedInputBorderV2 from '../../components/AnimatedInputBorderV2';
+import AnimatedInputBorder from '../../components/AnimatedInputBorder';
 import TextDimensions from '../../components/TextDimensions';
 
 const StandardTextInput = ({
@@ -68,7 +68,7 @@ const StandardTextInput = ({
   return (
     <View style={[styles.containerStyle, containerStyle]}>
       {!!inputHeight && !!inputWidth && (
-        <AnimatedInputBorderV2
+        <AnimatedInputBorder
           inputHeight={inputHeight}
           inputWidth={inputWidth}
           borderColour={themeColourOverride || borderColourFocused}

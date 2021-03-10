@@ -6,7 +6,7 @@ import { useTheme } from '@react-navigation/native';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-const AnimatedInputBorderV2 = ({
+const AnimatedInputBorder = ({
   inputHeight,
   inputWidth,
   borderColour,
@@ -73,4 +73,4 @@ const AnimatedInputBorderV2 = ({
   );
 };
 
-export default AnimatedInputBorderV2;
+export default AnimatedInputBorder;
