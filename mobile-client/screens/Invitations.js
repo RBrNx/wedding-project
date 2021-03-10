@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import HeaderFlatlist from '../library/components/HeaderFlatlist';
-import LoadingIndicator from '../components/LoadingIndicator';
+import LoadingIndicator from '../library/components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import InvitationsIllustration from '../components/SVG/Invitations';

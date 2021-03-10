@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import StandardPressable from '../library/components/StandardPressable';
 import StandardInput from '../library/components/StandardInput';
-import LoadingIndicator from './LoadingIndicator';
+import LoadingIndicator from '../library/components/LoadingIndicator';
 
 const ScannerCard = ({ onFlashPress, flashEnabled, onClose, onSubmit, shortId, setShortId, isLoading }) => {
   const [inKeyboardMode, setInKeyboardMode] = useState(false);

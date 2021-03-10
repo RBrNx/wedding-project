@@ -4,7 +4,7 @@ import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
 import HeaderFlatlist from '../library/components/HeaderFlatlist';
-import LoadingIndicator from '../components/LoadingIndicator';
+import LoadingIndicator from '../library/components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import PartyIllustration from '../components/SVG/Party';
