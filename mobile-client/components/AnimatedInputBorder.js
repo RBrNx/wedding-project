@@ -22,7 +22,7 @@ const AnimatedInputBorder = ({
 
   const gapValues = useDerivedValue(() => {
     const maxGap = gapWidth * widthRatio;
-    const padding = 5;
+    const padding = gapWidth ? 5 : 0;
 
     return {
       size: focusAnimationProgress.value * maxGap,
