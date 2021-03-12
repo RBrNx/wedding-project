@@ -31,7 +31,7 @@ const connectToDatabase = async () => {
       cachedDb.model('RSVPResponse', RSVPResponseSchema);
       cachedDb.model('Event', EventSchema);
       cachedDb.model('TempLoginDetails', TempLoginDetailsSchema);
-    }
+    } else console.log('using cachedDb');
     return cachedDb;
   } catch (error) {
     console.log(error);

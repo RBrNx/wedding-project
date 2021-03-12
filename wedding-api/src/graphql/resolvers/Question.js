@@ -1,8 +1,5 @@
-import { connectToDatabase } from '../../lib/database';
-
-const getRSVPQuestions = async (parent, args, { currentUser }) => {
+const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
   try {
-    const db = await connectToDatabase();
     const QuestionModel = db.model('Question');
 
     const questions = await QuestionModel.find({ eventId: currentUser.eventId, isFollowUp: false })
@@ -21,11 +18,10 @@ const getRSVPQuestions = async (parent, args, { currentUser }) => {
   }
 };
 
-const createQuestion = async (parent, args, { currentUser }) => {
+const createQuestion = async (parent, args, { currentUser, db }) => {
   const { question } = args;
 
   try {
-    const db = await connectToDatabase();
     const QuestionModel = db.model('Question');
 
     const questionDoc = new QuestionModel({ ...question, eventId: currentUser.eventId });
@@ -41,11 +37,10 @@ const createQuestion = async (parent, args, { currentUser }) => {
   }
 };
 
-const updateQuestion = async (parent, args) => {
+const updateQuestion = async (parent, args, { db }) => {
   const { id, question } = args;
 
   try {
-    const db = await connectToDatabase();
     const QuestionModel = db.model('Question');
 
     const questionDoc = await QuestionModel.findByIdAndUpdate(id, { ...question }, { new: true });

@@ -1,10 +1,8 @@
-import { connectToDatabase } from '../../lib/database';
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
 import { createCognitoAdminUser, createCognitoUser, generateTemporaryCredentials } from '../../lib/helpers/users';
 
-const getAllGuests = async () => {
+const getAllGuests = async (parent, args, { db }) => {
   try {
-    const db = await connectToDatabase();
     const UserModel = db.model('User');
 
     const guests = await UserModel.find({ role: UserRole.GUEST }).exec();
@@ -15,13 +13,12 @@ const getAllGuests = async () => {
   }
 };
 
-const createGuest = async (parent, { guest }, { currentUser }) => {
+const createGuest = async (parent, { guest }, { currentUser, db }) => {
   let session;
 
   try {
     const { firstName, lastName } = guest;
 
-    const db = await connectToDatabase();
     session = await db.startSession();
     session.startTransaction();
 
@@ -98,13 +95,12 @@ const createGuest = async (parent, { guest }, { currentUser }) => {
 //   }
 // };
 
-const createAdmin = async (parent, { input }, { currentUser }) => {
+const createAdmin = async (parent, { input }, { currentUser, db }) => {
   let session;
 
   try {
     const { firstName, lastName, email, password, eventId } = input;
 
-    const db = await connectToDatabase();
     session = await db.startSession();
     session.startTransaction();
 
@@ -163,10 +159,9 @@ const createAdmin = async (parent, { input }, { currentUser }) => {
 //   return userChoice.value;
 // };
 
-const rsvpForm = async parent => {
+const rsvpForm = async (parent, args, { db }) => {
   const { _id, eventId } = parent;
 
-  const db = await connectToDatabase();
   const RSVPResponseModel = db.model('RSVPResponse');
 
   const rsvpResponse = await RSVPResponseModel.findOne({ eventId, userId: _id }).populate('rsvpForm.question');

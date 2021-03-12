@@ -1,10 +1,7 @@
-import { connectToDatabase } from '../../lib/database';
-
-const createEvent = async (parent, { input }) => {
+const createEvent = async (parent, { input }, { db }) => {
   try {
     const { name, date } = input;
 
-    const db = await connectToDatabase();
     const EventModel = db.model('Event');
 
     const eventDoc = new EventModel({

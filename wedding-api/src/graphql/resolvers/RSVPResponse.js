@@ -1,12 +1,9 @@
-import { connectToDatabase } from '../../lib/database';
-
-const submitRSVPForm = async (parent, args, { currentUser }) => {
+const submitRSVPForm = async (parent, args, { currentUser, db }) => {
   const { input } = args;
   const { rsvpForm } = input;
   const { _id, eventId } = currentUser;
 
   try {
-    const db = await connectToDatabase();
     const RSVPResponseModel = db.model('RSVPResponse');
 
     const rsvpResponseDoc = new RSVPResponseModel({ userId: _id, eventId, rsvpForm });
