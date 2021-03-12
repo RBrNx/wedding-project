@@ -55,6 +55,8 @@ const unauthenticatedServer = new ApolloServer({
 });
 
 exports.authenticatedGQLHandler = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
   const handler = server.createHandler({
     cors: {
       origin: '*',
@@ -67,6 +69,8 @@ exports.authenticatedGQLHandler = (event, context, callback) => {
 };
 
 exports.unauthenticatedGQLHandler = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
   const handler = unauthenticatedServer.createHandler({
     cors: {
       origin: '*',
