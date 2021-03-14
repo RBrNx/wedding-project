@@ -27,7 +27,9 @@ const server = new ApolloServer({
     };
   },
   tracing: false,
-  playground: true,
+  playground: {
+    endpoint: '/dev/admin',
+  },
 });
 
 const unauthenticatedServer = new ApolloServer({
@@ -51,7 +53,9 @@ const unauthenticatedServer = new ApolloServer({
     };
   },
   tracing: false,
-  playground: true,
+  playground: {
+    endpoint: '/dev/api',
+  },
 });
 
 exports.authenticatedGQLHandler = (event, context, callback) => {
