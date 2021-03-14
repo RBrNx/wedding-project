@@ -1,18 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import useAnimatedActionButton from '../hooks/useAnimatedActionButton';
-import BackButton from './BackButton';
-import withAnimated from './withAnimated';
 
 const { width } = Dimensions.get('window');
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedBackButton = withAnimated(BackButton);
 
 const StandardActionButton = ({
   size = 56,
+  icon,
   label,
   onPress,
   onMessageClose,
@@ -75,12 +73,20 @@ const StandardActionButton = ({
         >
           {buttonText}
         </Animated.Text>
-        <AnimatedBackButton
-          size={size}
+        <AnimatedPressable
+          style={[
+            styles.button,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+            },
+            animatedButtonStyle,
+            buttonStyle,
+          ]}
           onPress={isShowingMessage ? closeMessage : onPress}
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
-          style={[styles.button, animatedButtonStyle, buttonStyle]}
           backImageStyle={{ tintColor: '#fff', transform: [{ rotate: '180deg' }] }}
           icon={isShowingMessage ? () => <Ionicons name='close-outline' size={36} color='#fff' /> : null}
         />
