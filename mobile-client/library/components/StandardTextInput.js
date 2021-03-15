@@ -27,7 +27,7 @@ const StandardTextInput = ({
   multiline,
 }) => {
   const textInput = useRef(null);
-  const focusAnimation = useSharedValue(0);
+  const focusAnimation = useSharedValue(value ? 1 : 0);
   const [inputHeight, setInputHeight] = useState(0);
   const [inputWidth, setInputWidth] = useState(0);
   const [labelWidth, setLabelWidth] = useState(0);
