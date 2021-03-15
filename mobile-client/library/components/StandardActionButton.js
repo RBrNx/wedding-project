@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginRight: 0,
     marginLeft: 0,
+    fontSize: 16,
   },
 });
 
