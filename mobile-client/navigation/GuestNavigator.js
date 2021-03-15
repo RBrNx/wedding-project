@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import SubmitRSVPScreen from '../screens/SubmitRSVP';
 
 const Stack = createStackNavigator();
@@ -8,7 +8,7 @@ const screenOptions = {
   headerTitleAlign: 'center',
   headerBackTitleVisible: false,
   // headerShown: false,
-  headerTitle: 'RSVP',
+  // headerTitle: 'RSVP',
   headerTitleStyle: {
     color: '#fff',
   },
@@ -22,7 +22,7 @@ const screenOptions = {
 const GuestNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
+      <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
