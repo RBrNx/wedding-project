@@ -82,6 +82,10 @@ const constantStyles = {
       },
     }),
   },
+  inputBorder: {
+    borderRadius: 5,
+    borderWidth: 1.5,
+  },
 };
 
 export { lightTheme, darkTheme, constantStyles };
