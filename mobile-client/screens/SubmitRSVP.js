@@ -17,6 +17,8 @@ import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransitio
 import RSVPQuestion from '../components/RSVPQuestion';
 import RSVPAnswerInput from '../components/RSVPAnswerInput';
 import BackButton from '../library/components/BackButton';
+import { RSVPOverview, RSVPOverviewTitle } from '../components/RSVPOverview';
+import BackButtonImage from '../library/components/BackButtonImage';
 
 const { width, height } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
@@ -34,7 +36,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [showOverview, setShowOverview] = useState(false);
   const [fetchRSVPQuestions, { loading, error }] = useLazyQuery(GET_RSVP_QUESTIONS);
   const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
-  const { animIndex, moveToNextStep, moveToPrevStep } = useAnimatedStepTransition();
+  const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
   const { colors } = useTheme();
 
@@ -49,24 +51,27 @@ const SubmitRSVPScreen = ({ navigation }) => {
       const { getRSVPQuestions: rsvpQuestions } = data || {};
 
       if (rsvpQuestions) {
-        const currQ = rsvpQuestions[0];
+        const typedQuestions = rsvpQuestions.map(question => ({ ...question, componentType: 'question' }));
+        const currQ = typedQuestions[0];
         const { nextQuestion: nextQ } = calculateQuestions({
-          questions: rsvpQuestions,
+          questions: typedQuestions,
           questionHistory,
           currQuestion: currQ,
           currAnswer,
         });
-        setQuestions(rsvpQuestions);
+        setQuestions(typedQuestions);
         setCurrQuestion(currQ);
         setFormSteps([currQ, nextQ]);
       }
     };
 
     fetchDataOnMount();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    setFormSteps([...questionHistory, currQuestion, nextQuestion]);
+    if (nextQuestion) setFormSteps([...questionHistory, currQuestion, nextQuestion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextQuestion]);
 
   // const onSubmit = async () => {
@@ -103,10 +108,14 @@ const SubmitRSVPScreen = ({ navigation }) => {
       });
       return;
     }
-    if (!nextQuestion) return;
+
+    if (!nextQuestion) {
+      setShowOverview(true);
+      setFormSteps([...formSteps, { componentType: 'overview' }]);
+    }
+    setQuestionHistory([...questionHistory, currQuestion]);
 
     moveToNextStep(() => {
-      setQuestionHistory([...questionHistory, currQuestion]);
       setCurrQuestion(nextQuestion);
     });
   };
@@ -114,26 +123,25 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const onPrevV2 = () => {
     if (!prevQuestion) return;
 
+    if (showOverview) setShowOverview(false);
+
     moveToPrevStep(() => {
+      setFormSteps(formSteps.slice(0, -1));
       setQuestionHistory(questionHistory.slice(0, -1));
       setCurrQuestion(prevQuestion);
     });
   };
 
-  // const onEditPress = editQuestion => {
-  //   const questionIndex = questionHistory.findIndex(question => question._id === editQuestion._id);
+  const onEditPress = (question, questionIndex) => {
+    const sliceIndex = questionHistory.length - questionIndex;
+    setShowOverview(false);
 
-  //   animateRSVPStep({
-  //     fromStep: 1,
-  //     toStep: 0,
-  //     callback: () => {
-  //       setCurrQuestion({ ...editQuestion });
-  //       setQuestionNumber(editQuestion.number);
-  //       setQuestionHistory(questionHistory.slice(0, questionIndex));
-  //       setShowOverview(false);
-  //     },
-  //   });
-  // };
+    moveToStep(questionIndex, () => {
+      setFormSteps(formSteps.slice(0, -1));
+      setQuestionHistory(questionHistory.slice(0, -sliceIndex));
+      setCurrQuestion(question);
+    });
+  };
 
   const setFormValue = (key, value) => {
     setRSVPForm({ ...rsvpForm, [key]: value });
@@ -143,6 +151,18 @@ const SubmitRSVPScreen = ({ navigation }) => {
     const { _id: id, type, choices } = step || {};
     const answer = rsvpForm[id];
 
+    if (step?.componentType === 'overview')
+      return (
+        <RSVPOverview
+          key='overview'
+          questions={questionHistory}
+          formValues={rsvpForm}
+          index={index}
+          animIndex={animIndex}
+          style={{ minHeight: sheetMinHeight }}
+          onEditPress={onEditPress}
+        />
+      );
     return (
       <RSVPAnswerInput
         key={`answer_${step._id}`}
@@ -159,22 +179,22 @@ const SubmitRSVPScreen = ({ navigation }) => {
   };
 
   const renderQuestion = ({ step, index }) => {
+    if (step?.componentType === 'overview')
+      return <RSVPOverviewTitle key='overview' index={index} animIndex={animIndex} />;
     return <RSVPQuestion key={`question_${step._id}`} question={step} animIndex={animIndex} index={index} />;
   };
 
   return (
     <>
       <Spacer size={StatusBar.currentHeight} />
-      {!isLoading && currQuestion && (
-        <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
-      )}
+      {!isLoading && <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />}
       <BottomSheetScrollView
         topOffset={StatusBar.currentHeight}
         collapsedPosition={SHEET_COLLAPSED_POS}
         unlockFullScroll={!isLoading}
       >
         {isLoading && <LoadingIndicator size={100} />}
-        {!isLoading && currQuestion && (
+        {!isLoading && (
           <View style={styles.contentContainer}>
             <BackButton style={styles.backButton} backImageStyle={{ tintColor: colors.secondary }} onPress={onPrevV2} />
             <StepTransition steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
