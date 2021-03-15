@@ -20,12 +20,12 @@ const lightTheme = {
     buttonPressed: darken(lightBlue, 0.2),
     card: white,
     cardHover: darken(white, 0.12),
-    cardBackground: '#fbfbfb',
+    cardBackground: '#f5f5f5',
     componentBackground: '#e0e0e0',
     bodyText: '#444',
     focusedText: '#000',
     headerText: '#000',
-    border: '#000',
+    border: '#ccc',
   },
 };
 
