@@ -2,6 +2,7 @@ import { useTheme } from '@react-navigation/native';
 import Color from 'color';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { constantStyles } from '../../styles/theming';
 import StandardPressable from './StandardPressable';
 
 const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
@@ -10,8 +11,8 @@ const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
   const selectedStyle = {
     borderColor: colors.secondary,
     backgroundColor: Color(colors.secondary)
-      .lighten(0.75)
-      .toString(),
+      .fade(0.8)
+      .string(),
   };
 
   return (
@@ -22,7 +23,7 @@ const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
         return (
           <StandardPressable
             key={option._id}
-            style={[styles.questionChoice, isSelected ? selectedStyle : {}]}
+            style={[styles.questionChoice, { borderColor: colors.border }, isSelected ? selectedStyle : {}]}
             onPress={() => setSelectedValue(option._id)}
           >
             <Text style={[styles.choiceText, { color: colors.bodyText }]}>{option.label}</Text>
@@ -42,18 +43,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   questionChoice: {
-    borderRadius: 5,
+    ...constantStyles.inputBorder,
     padding: 15,
-    borderColor: '#ccc',
-    borderWidth: 2,
     marginBottom: 15,
     width: '100%',
-  },
-  selectedChoice: {
-    borderColor: '#2991cc',
-    backgroundColor: Color('#2991cc')
-      .lighten(0.75)
-      .toString(),
   },
   choiceText: {
     fontSize: 16,
