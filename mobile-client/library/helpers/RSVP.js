@@ -11,7 +11,7 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnsw
   let nextQuestion = null;
   const { followUpQuestions } = currQuestion || {};
 
-  if (!questions || !currQuestion) return { prevQuestion: null, nextQuestion: null };
+  if (!questions || !currQuestion) return { prevQuestion, nextQuestion: null };
 
   // Check to see if our next question is a follow up
   if (followUpQuestions?.length) {
