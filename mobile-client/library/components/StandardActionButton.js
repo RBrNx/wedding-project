@@ -1,8 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { constantStyles } from '../../styles/theming';
 import useAnimatedActionButton from '../hooks/useAnimatedActionButton';
 
 const { width } = Dimensions.get('window');
@@ -13,34 +13,21 @@ const StandardActionButton = ({
   icon,
   label,
   onPress,
-  onMessageClose,
-  errorMessage,
+  onFullSizePress,
+  expandToFullSize,
   expansionStyle = { right: 16, bottom: 16 },
-  buttonStyle,
+  iconStyle,
   messageStyle,
   maxExpansionWidth = width,
-  animationDuration = 500,
-  expandToFullButton,
+  animationDuration = 300,
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const { colors } = useTheme();
-  const {
-    buttonText,
-    closeMessage,
-    isFullSize,
-    isShowingMessage,
-    animatedExpansionStyle,
-    animatedButtonStyle,
-    animatedMessageStyle,
-  } = useAnimatedActionButton({
+  const { animatedExpansionStyle, animatedIconStyle, animatedMessageStyle, isExpanded } = useAnimatedActionButton({
     size,
-    label,
-    isPressed,
+    expandToFullSize,
     maxExpansionWidth,
     animationDuration,
-    onMessageClose,
-    errorMessage,
-    expandToFullButton,
   });
 
   return (
@@ -56,40 +43,12 @@ const StandardActionButton = ({
           animatedExpansionStyle,
           expansionStyle,
         ]}
-        onPress={isFullSize ? onPress : null}
+        onPress={isExpanded ? onFullSizePress : onPress}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
       >
-        <Animated.Text
-          style={[
-            styles.message,
-            {
-              marginRight: size,
-            },
-            isFullSize ? styles.fullSizeMessage : {},
-            animatedMessageStyle,
-            messageStyle,
-          ]}
-        >
-          {buttonText}
-        </Animated.Text>
-        <AnimatedPressable
-          style={[
-            styles.button,
-            {
-              width: size,
-              height: size,
-              borderRadius: size / 2,
-            },
-            animatedButtonStyle,
-            buttonStyle,
-          ]}
-          onPress={isShowingMessage ? closeMessage : onPress}
-          onPressIn={() => setIsPressed(true)}
-          onPressOut={() => setIsPressed(false)}
-          backImageStyle={{ tintColor: '#fff', transform: [{ rotate: '180deg' }] }}
-          icon={isShowingMessage ? () => <Ionicons name='close-outline' size={36} color='#fff' /> : null}
-        />
+        <Animated.Text style={[styles.label, animatedMessageStyle, messageStyle]}>{label}</Animated.Text>
+        <Animated.View style={[animatedIconStyle, iconStyle]}>{!isExpanded && icon && icon()}</Animated.View>
       </AnimatedPressable>
     </View>
   );
@@ -107,25 +66,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    ...constantStyles.cardShadow,
   },
-  message: {
-    flex: 1,
-    flexWrap: 'wrap',
+  label: {
     color: '#fff',
-    paddingLeft: 0,
-    marginLeft: 30,
-  },
-  fullSizeMessage: {
     textAlign: 'center',
     marginRight: 0,
     marginLeft: 0,
-  },
-  button: {
-    position: 'absolute',
-    right: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
   },
 });
 

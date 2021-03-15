@@ -185,9 +185,9 @@ const SubmitRSVPScreen = ({ navigation }) => {
         label='Submit RSVP'
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNextV2}
-        onMessageClose={() => setFormError(null)}
-        errorMessage={formError}
-        expandToFullButton={showOverview}
+        expandToFullSize={showOverview}
+        animationDuration={300}
+        icon={() => <BackButtonImage style={{ transform: [{ rotate: '180deg' }], tintColor: '#fff' }} />}
       />
     </>
   );
