@@ -33,11 +33,26 @@ const useAnimatedStepTransition = () => {
     });
   };
 
+  const moveToStep = (stepIndex, callback) => {
+    const currAnimValue = animIndex.value;
+    const isAnimating = !Number.isInteger(currAnimValue);
+
+    if (isAnimating) return;
+
+    animIndex.value = withTiming(stepIndex, { duration: 300 }, isFinished => {
+      if (isFinished) {
+        runOnJS(setCurrIndex)(stepIndex);
+        if (callback) runOnJS(callback)();
+      }
+    });
+  };
+
   return {
     currIndex,
     animIndex,
     moveToPrevStep,
     moveToNextStep,
+    moveToStep,
   };
 };
 
