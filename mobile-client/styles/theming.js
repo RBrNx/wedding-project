@@ -8,6 +8,12 @@ const lightGrey = '#f5f5f5';
 const darkGrey = '#1d1d1d';
 const darkBlue = '#14233c';
 const lightBlue = '#2991cc';
+const coral = '#ff4d56';
+
+const colours = {
+  lightBlue,
+  coral,
+};
 
 const lightTheme = {
   ...DefaultTheme,
@@ -88,4 +94,4 @@ const constantStyles = {
   },
 };
 
-export { lightTheme, darkTheme, constantStyles };
+export { lightTheme, darkTheme, constantStyles, colours };
