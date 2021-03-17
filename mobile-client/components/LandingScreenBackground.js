@@ -57,12 +57,12 @@ const styles = StyleSheet.create({
   },
   blobOneContainer: {
     position: 'absolute',
-    top: height - BLOB_HEIGHT,
+    top: height / 2,
     left: -BLOB_WIDTH / 2,
   },
   blobTwoContainer: {
     position: 'absolute',
-    top: 75,
+    top: 100,
     left: width - BLOB_WIDTH / 2,
   },
 });
