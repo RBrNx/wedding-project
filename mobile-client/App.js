@@ -7,10 +7,10 @@ import Amplify from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import client from './utils/apiClient';
 import { SettingsProvider, AuthProvider } from './context';
-
 import awsConfig from './awsExports';
 import AppNavigator from './navigation/AppNavigator';
 import { AlertProvider } from './context/Alert';
+import AppLoader from './components/AppLoader';
 
 Amplify.configure({
   Auth: {
@@ -33,7 +33,9 @@ const App = () => {
         <AuthProvider>
           <AlertProvider defaultPosition='top'>
             <SettingsProvider>
-              <AppNavigator />
+              <AppLoader>
+                <AppNavigator />
+              </AppLoader>
             </SettingsProvider>
           </AlertProvider>
         </AuthProvider>

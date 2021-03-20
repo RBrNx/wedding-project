@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useColorScheme } from 'react-native';
-import * as SplashScreen from 'expo-splash-screen';
 import { darkTheme, lightTheme } from '../styles/theming';
 import AuthenticatedNavigator from './AuthenticatedNavigator';
 import UnauthenticatedNavigator from './UnauthenticatedNavigator';
@@ -19,14 +18,8 @@ const screenOptions = {
 
 const AppNavigator = () => {
   const systemLevelTheme = useColorScheme();
-  const { isAuthenticated, bootstrapComplete: authBootstrapped } = useAuth();
-  const { userSettings, bootstrapComplete: settingsBootstrapped } = useSettings();
-
-  useEffect(() => {
-    if (settingsBootstrapped && authBootstrapped) {
-      SplashScreen.hideAsync();
-    }
-  }, [settingsBootstrapped, authBootstrapped]);
+  const { isAuthenticated } = useAuth();
+  const { userSettings } = useSettings();
 
   const getTheme = () => {
     switch (userSettings.theme) {
