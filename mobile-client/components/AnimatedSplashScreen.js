@@ -11,15 +11,17 @@ import Animated, {
 import Constants from 'expo-constants';
 import * as SplashScreen from 'expo-splash-screen';
 import { StyleSheet } from 'react-native';
+import { useFonts, Muli_400Regular, Muli_700Bold } from '@expo-google-fonts/muli';
 import { useAuth, useSettings } from '../context';
 
 const AnimatedSplashScreen = ({ children, splashImage }) => {
   const animation = useSharedValue(0);
   const [isSplashAnimationComplete, setAnimationComplete] = useState(false);
 
+  const [fontsLoaded] = useFonts({ Muli_400Regular, Muli_700Bold });
   const { bootstrapComplete: authBootstrapped } = useAuth();
   const { bootstrapComplete: settingsBootstrapped } = useSettings();
-  const isAppReady = authBootstrapped && settingsBootstrapped;
+  const isAppReady = fontsLoaded && authBootstrapped && settingsBootstrapped;
 
   useEffect(() => {
     if (isAppReady) {
