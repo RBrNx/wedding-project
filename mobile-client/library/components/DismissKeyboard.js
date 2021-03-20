@@ -1,10 +1,10 @@
 import React from 'react';
-import { Keyboard, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 const DismissKeyboard = ({ children, style }) => {
   return (
-    <TouchableWithoutFeedback style={[styles.container, style]} onPress={() => Keyboard.dismiss()}>
-      <>{children}</>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={[styles.container, style]}>{children}</View>
     </TouchableWithoutFeedback>
   );
 };
@@ -12,7 +12,6 @@ const DismissKeyboard = ({ children, style }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
   },
 });
 
