@@ -98,7 +98,7 @@ const StandardTextInput = ({
         keyboardType={keyboardType}
         maxLength={maxLength}
         multiline={multiline}
-        textAlignVertical='top'
+        textAlignVertical={multiline ? 'top' : 'center'}
       />
       <Animated.Text style={[styles.regularLabel, animatedStyles]} onPress={() => textInput.current.focus()}>
         {label}
