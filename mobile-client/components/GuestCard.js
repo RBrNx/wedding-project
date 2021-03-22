@@ -7,8 +7,8 @@ import { GuestResponse } from '../library/enums';
 import StandardPressable from '../library/components/StandardPressable';
 
 const GuestCard = ({ guest }) => {
-  const { firstName, lastName, attending } = guest;
-  const { text: guestStatus, color: statusColour } = GuestResponse[attending];
+  const { firstName, lastName, attendanceStatus } = guest;
+  const { text: guestStatus, color: statusColour } = GuestResponse[attendanceStatus];
   const { colors } = useTheme();
 
   return (

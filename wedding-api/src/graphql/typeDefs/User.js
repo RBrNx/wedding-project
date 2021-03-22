@@ -19,7 +19,7 @@ const schema = gql`
     lastName: String!
     email: String
     role: UserRole!
-    attending: AttendanceStatus!
+    attendanceStatus: AttendanceStatus!
     rsvpForm: [RSVPFormTuple!]
   }
 

@@ -6,7 +6,7 @@ query ALL_GUESTS_QUERY {
       _id
       firstName
       lastName
-      attending
+      attendanceStatus
       email
     }
     type
