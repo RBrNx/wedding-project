@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontFamily: 'Muli_700Bold',
-    fontSize: 36,
+    fontSize: 32,
     color: '#fff',
     textAlign: 'center',
   },
