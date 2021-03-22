@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import SubmitRSVPScreen from '../screens/SubmitRSVP';
 import NavigationPresets from '../library/helpers/NavigationPresets';
 
@@ -7,6 +7,7 @@ const Stack = createStackNavigator();
 
 const screenOptions = {
   ...NavigationPresets.NoHeader,
+  ...TransitionPresets.SlideFromRightIOS,
 };
 
 const GuestNavigator = () => {

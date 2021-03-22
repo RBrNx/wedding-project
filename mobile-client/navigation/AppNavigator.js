@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useColorScheme } from 'react-native';
 import { darkTheme, lightTheme } from '../styles/theming';
 import AuthenticatedNavigator from './AuthenticatedNavigator';
@@ -13,6 +13,7 @@ const Stack = createStackNavigator();
 
 const screenOptions = {
   ...NavigationPresets.NoHeader,
+  ...TransitionPresets.SlideFromRightIOS,
 };
 
 const AppNavigator = () => {
