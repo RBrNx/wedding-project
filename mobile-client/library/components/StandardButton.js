@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 15,
     fontSize: 16,
+    fontFamily: 'Muli_400Regular',
   },
   loadingSpinner: {
     paddingVertical: 15,

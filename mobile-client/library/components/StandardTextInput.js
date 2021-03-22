@@ -123,23 +123,24 @@ const styles = StyleSheet.create({
     maxWidth: '100%',
   },
   input: {
-    padding: 18,
+    padding: 15,
     paddingLeft: 30,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
-    fontSize: 18,
+    fontSize: 16,
+    fontFamily: 'Muli_400Regular',
   },
   regularLabel: {
     position: 'absolute',
     left: 30,
     top: Platform.select({
       ios: 16,
-      android: 18,
+      android: 17,
     }),
-    fontSize: 20,
+    fontSize: 16,
     color: '#aaa',
+    fontFamily: 'Muli_400Regular',
   },
   smallLabel: {
     position: 'absolute',
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
     }),
     fontSize: 14,
     color: '#fff',
+    fontFamily: 'Muli_400Regular',
   },
 });
 
