@@ -81,13 +81,15 @@ const Confetto = ({ colour, animatedParams }) => {
   );
 };
 
-const ConfettiCannon = () => {
+const ConfettiCannon = ({ initialDelay = 0 }) => {
   const confetti = useMemo(createConfetti, []);
 
   return (
     <View pointerEvents='none' style={StyleSheet.absoluteFill}>
-      {confetti.map(({ key, colour, ...animatedParams }) => {
-        return <Confetto key={key} colour={colour} animatedParams={animatedParams} />;
+      {confetti.map(({ key, colour, delay, ...animatedParams }) => {
+        return (
+          <Confetto key={key} colour={colour} animatedParams={{ ...animatedParams, delay: initialDelay + delay }} />
+        );
       })}
     </View>
   );
