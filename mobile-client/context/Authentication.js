@@ -54,10 +54,6 @@ const useProviderAuth = () => {
     setUser(null);
   };
 
-  const isAuthenticated = () => {
-    return !!user;
-  };
-
   useEffect(() => {
     const checkForAuthenticatedUser = async () => {
       try {
@@ -78,7 +74,7 @@ const useProviderAuth = () => {
     signIn,
     signInWithShortId,
     signOut,
-    isAuthenticated: isAuthenticated(),
+    isAuthenticated: !!user,
     bootstrapComplete,
   };
 };
