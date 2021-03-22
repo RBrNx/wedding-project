@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import AdminNavigator from './AdminNavigator';
 import GuestNavigator from './GuestNavigator';
@@ -14,7 +14,7 @@ const screenOptions = {
 const AuthenticatedNavigator = () => {
   const { user } = useAuth();
 
-  const role = user?.attributes?.['custom:role'];
+  const role = useMemo(() => user?.attributes?.['custom:role'], []);
 
   return (
     <AuthenticatedStack.Navigator screenOptions={screenOptions}>
