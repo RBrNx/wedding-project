@@ -17,7 +17,16 @@ const UnauthenticatedNavigator = () => {
   return (
     <UnauthenticatedStack.Navigator screenOptions={screenOptions}>
       <UnauthenticatedStack.Screen name='Landing' component={LandingScreen} />
-      <UnauthenticatedStack.Screen name='SignIn' component={SignInScreen} />
+      <UnauthenticatedStack.Screen
+        name='SignIn'
+        component={SignInScreen}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTintColor: '#fff',
+          headerTitle: '',
+        }}
+      />
       <UnauthenticatedStack.Screen name='Scanner' component={ScannerScreen} />
     </UnauthenticatedStack.Navigator>
   );

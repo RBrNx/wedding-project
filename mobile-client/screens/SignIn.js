@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StandardButton from '../library/components/StandardButton';
 import StandardTextInput from '../library/components/StandardTextInput';
-import LandingScreenBackground from '../components/LandingScreenBackground';
 import { useAuth } from '../context';
 import DismissKeyboard from '../library/components/DismissKeyboard';
 import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
+import Spacer from '../library/components/Spacer';
 
-const SignInScreen = ({ navigation }) => {
+const SignInScreen = () => {
   const [emailAddress, setEmailAddress] = useState(null);
   const [password, setPassword] = useState(null);
   const [signingIn, setSigningIn] = useState(false);
@@ -30,42 +29,32 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <>
-      <LandingScreenBackground />
-      <DismissKeyboard>
-        <View style={styles.container}>
-          <View style={styles.headingContainer}>
-            <Text style={styles.heading}>Hello</Text>
-            <Text style={styles.subHeading}>Sign in to your Account</Text>
-          </View>
-          <View style={styles.inputContainer}>
-            <StandardTextInput
-              value={emailAddress}
-              label='Email Address'
-              onChangeText={value => setEmailAddress(value)}
-              themeColourOverride='#fff'
-            />
-            <StandardTextInput
-              value={password}
-              label='Password'
-              onChangeText={value => setPassword(value)}
-              secureTextEntry
-              themeColourOverride='#fff'
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <StandardButton text='Sign In' raised onPress={attemptLogin} loading={signingIn} />
-            <View style={styles.separator} />
-            <StandardButton
-              text='Scan Invitation'
-              raised
-              onPress={() => navigation.navigate('Scanner')}
-              icon={() => <MaterialCommunityIcons name='qrcode-scan' size={22} color='white' style={styles.icon} />}
-            />
-          </View>
+    <DismissKeyboard>
+      <View style={styles.container}>
+        <View style={styles.headingContainer}>
+          <Text style={styles.heading}>Let&apos;s sign you in.</Text>
+          <Text style={styles.subHeading}>Welcome back,</Text>
+          <Text style={styles.subHeading}>You&apos;ve been missed!</Text>
         </View>
-      </DismissKeyboard>
-    </>
+        <View style={styles.inputContainer}>
+          <StandardTextInput
+            value={emailAddress}
+            label='Email address'
+            onChangeText={value => setEmailAddress(value)}
+            themeColourOverride='#fff'
+          />
+          <Spacer size={15} />
+          <StandardTextInput
+            value={password}
+            label='Password'
+            onChangeText={value => setPassword(value)}
+            secureTextEntry
+            themeColourOverride='#fff'
+          />
+        </View>
+        <StandardButton text='Sign In' raised onPress={attemptLogin} loading={signingIn} />
+      </View>
+    </DismissKeyboard>
   );
 };
 
@@ -74,37 +63,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: '5%',
+    paddingBottom: 25,
+    paddingTop: 75,
   },
   headingContainer: {
-    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
   },
   heading: {
-    fontSize: 96,
+    fontSize: 32,
     color: '#fff',
-    textAlign: 'center',
+    fontFamily: 'Muli_700Bold',
   },
   subHeading: {
-    fontSize: 18,
+    fontSize: 32,
     color: '#fff',
-    textAlign: 'center',
+    fontFamily: 'Muli_400Regular',
   },
   inputContainer: {
     width: '100%',
-  },
-  buttonContainer: {
     flex: 1,
-    width: '100%',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#fff',
-    marginVertical: 10,
-    marginHorizontal: 10,
-  },
-  icon: {
-    marginRight: 15,
+    paddingTop: 100,
   },
 });
 
