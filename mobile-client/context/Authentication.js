@@ -15,6 +15,7 @@ const AuthProvider = ({ children }) => {
 
 const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
+  const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
 
   const signIn = async (emailAddress, password) => {
@@ -50,8 +51,10 @@ const useProviderAuth = () => {
   };
 
   const signOut = async () => {
+    setIsSigningOut(true);
     await Auth.signOut();
     setUser(null);
+    setIsSigningOut(false);
   };
 
   useEffect(() => {
@@ -75,6 +78,7 @@ const useProviderAuth = () => {
     signInWithShortId,
     signOut,
     isAuthenticated: !!user,
+    isSigningOut,
     bootstrapComplete,
   };
 };

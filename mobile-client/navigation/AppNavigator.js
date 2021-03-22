@@ -17,7 +17,7 @@ const screenOptions = {
 
 const AppNavigator = () => {
   const systemLevelTheme = useColorScheme();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isSigningOut } = useAuth();
   const { userSettings } = useSettings();
 
   const getTheme = () => {
@@ -36,7 +36,11 @@ const AppNavigator = () => {
     <NavigationContainer theme={getTheme()}>
       <Stack.Navigator screenOptions={screenOptions}>
         {!isAuthenticated ? (
-          <Stack.Screen name='Unauthenticated' component={UnauthenticatedNavigator} />
+          <Stack.Screen
+            name='Unauthenticated'
+            component={UnauthenticatedNavigator}
+            options={{ animationTypeForReplace: isSigningOut ? 'pop' : 'push' }}
+          />
         ) : (
           <Stack.Screen name='Authenticated' component={AuthenticatedNavigator} />
         )}
