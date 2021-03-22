@@ -3,13 +3,12 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import SignInScreen from '../screens/SignIn';
 import ScannerScreen from '../screens/Scanner';
 import LandingScreen from '../screens/Landing';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const UnauthenticatedStack = createStackNavigator();
 
 const screenOptions = {
-  headerTitleAlign: 'center',
-  headerBackTitleVisible: false,
-  headerShown: false,
+  ...NavigationPresets.NoHeader,
   ...TransitionPresets.SlideFromRightIOS,
 };
 
@@ -17,16 +16,7 @@ const UnauthenticatedNavigator = () => {
   return (
     <UnauthenticatedStack.Navigator screenOptions={screenOptions}>
       <UnauthenticatedStack.Screen name='Landing' component={LandingScreen} />
-      <UnauthenticatedStack.Screen
-        name='SignIn'
-        component={SignInScreen}
-        options={{
-          headerShown: true,
-          headerTransparent: true,
-          headerTintColor: '#fff',
-          headerTitle: '',
-        }}
-      />
+      <UnauthenticatedStack.Screen name='SignIn' component={SignInScreen} options={NavigationPresets.OnlyBackButton} />
       <UnauthenticatedStack.Screen name='Scanner' component={ScannerScreen} />
     </UnauthenticatedStack.Navigator>
   );

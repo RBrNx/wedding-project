@@ -1,28 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import SubmitRSVPScreen from '../screens/SubmitRSVP';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const Stack = createStackNavigator();
 
 const screenOptions = {
-  headerTitleAlign: 'center',
-  headerBackTitleVisible: false,
-  // headerShown: false,
-  // headerTitle: 'RSVP',
-  headerTitleStyle: {
-    color: '#fff',
-  },
-  headerStyle: {
-    elevation: 0,
-    backgroundColor: 'transparent',
-  },
-  // headerTransparent: true,
+  ...NavigationPresets.NoHeader,
 };
 
 const GuestNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} options={{ headerShown: false }} />
+      <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
     </Stack.Navigator>
   );
 };

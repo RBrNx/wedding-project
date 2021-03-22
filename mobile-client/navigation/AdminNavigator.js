@@ -1,26 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import GuestsScreen from '../screens/Guests';
 import InvitationsScreen from '../screens/Invitations';
 import SettingsScreen from '../screens/Settings';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const Tab = createBottomTabNavigator();
 
 const AdminNavigator = () => {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: '#2991cc',
-        style: {
-          borderTopWidth: 0,
-          height: Platform.OS === 'android' ? 65 : 80,
-          paddingBottom: Platform.OS === 'android' ? 10 : 30,
-          paddingTop: 10,
-        },
-      }}
-    >
+    <Tab.Navigator tabBarOptions={NavigationPresets.DefaultTabBar}>
       <Tab.Screen
         name='Guests'
         component={GuestsScreen}

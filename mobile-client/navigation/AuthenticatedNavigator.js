@@ -3,13 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AdminNavigator from './AdminNavigator';
 import GuestNavigator from './GuestNavigator';
 import { useAuth } from '../context';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const AuthenticatedStack = createStackNavigator();
 
 const screenOptions = {
-  headerTitleAlign: 'center',
-  headerBackTitleVisible: false,
-  headerShown: false,
+  ...NavigationPresets.NoHeader,
 };
 
 const AuthenticatedNavigator = () => {

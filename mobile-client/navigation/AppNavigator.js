@@ -7,13 +7,12 @@ import AuthenticatedNavigator from './AuthenticatedNavigator';
 import UnauthenticatedNavigator from './UnauthenticatedNavigator';
 import { useAuth, useSettings } from '../context';
 import { Theme } from '../library/enums';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const Stack = createStackNavigator();
 
 const screenOptions = {
-  headerTitleAlign: 'center',
-  headerBackTitleVisible: false,
-  headerShown: false,
+  ...NavigationPresets.NoHeader,
 };
 
 const AppNavigator = () => {
