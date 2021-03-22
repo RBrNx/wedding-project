@@ -5,10 +5,12 @@ import SuccessAnimation from '../components/SuccessAnimation';
 import ConfettiCannon from '../library/components/ConfettiCannon';
 import Spacer from '../library/components/Spacer';
 import StandardButton from '../library/components/StandardButton';
+import usePreventGoingBack from '../library/hooks/usePreventGoingBack';
 
 const RSVPSuccessScreen = ({ route, navigation }) => {
   const fadeIn = useSharedValue(0);
   const { isAttending = false } = route?.params || {};
+  usePreventGoingBack();
 
   useEffect(() => {
     fadeIn.value = withTiming(1, { duration: 300 });
