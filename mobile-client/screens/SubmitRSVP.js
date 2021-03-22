@@ -32,9 +32,8 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [formSteps, setFormSteps] = useState([]);
   const [currQuestion, setCurrQuestion] = useState(null);
   const [rsvpForm, setRSVPForm] = useState({});
-  const [formError, setFormError] = useState(null);
   const [showOverview, setShowOverview] = useState(false);
-  const [fetchRSVPQuestions, { loading, error }] = useLazyQuery(GET_RSVP_QUESTIONS);
+  const [fetchRSVPQuestions, { loading }] = useLazyQuery(GET_RSVP_QUESTIONS);
   const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
@@ -74,33 +73,33 @@ const SubmitRSVPScreen = ({ navigation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextQuestion]);
 
-  // const onSubmit = async () => {
-  //   try {
-  //     const formattedRSVP = formatRSVP(rsvpForm, questionHistory);
-  //     const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
-  //     const { submitRSVPForm: formResponse } = data || {};
+  const onSubmit = async () => {
+    try {
+      const formattedRSVP = formatRSVP(rsvpForm, questionHistory);
+      const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
+      const { submitRSVPForm: formResponse } = data || {};
 
-  //     if (formResponse.success) {
-  //       // Navigate
-  //     } else {
-  //       showAlert({
-  //         message: formResponse.message,
-  //         type: AlertType.WARNING,
-  //         position: 'top',
-  //       });
-  //     }
-  //   } catch (err) {
-  //     const { message } = parseError(err);
-  //     console.error(message);
-  //     showAlert({
-  //       message,
-  //       type: AlertType.WARNING,
-  //       position: 'top',
-  //     });
-  //   }
-  // };
+      if (formResponse.success) {
+        navigation.navigate('RSVPSuccess');
+      } else {
+        showAlert({
+          message: formResponse.message,
+          type: AlertType.WARNING,
+          position: 'top',
+        });
+      }
+    } catch (err) {
+      const { message } = parseError(err);
+      console.error(message);
+      showAlert({
+        message,
+        type: AlertType.WARNING,
+        position: 'top',
+      });
+    }
+  };
 
-  const onNextV2 = () => {
+  const onNext = () => {
     if (!currAnswer) {
       showAlert({
         message: 'Please select an answer before continuing.',
@@ -120,7 +119,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
     });
   };
 
-  const onPrevV2 = () => {
+  const onPrev = () => {
     if (!prevQuestion) return;
 
     if (showOverview) setShowOverview(false);
@@ -196,7 +195,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         {isLoading && <LoadingIndicator size={100} />}
         {!isLoading && (
           <View style={styles.contentContainer}>
-            <BackButton style={styles.backButton} backImageStyle={{ tintColor: colors.secondary }} onPress={onPrevV2} />
+            <BackButton style={styles.backButton} backImageStyle={{ tintColor: colors.secondary }} onPress={onPrev} />
             <StepTransition steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
           </View>
         )}
@@ -204,7 +203,8 @@ const SubmitRSVPScreen = ({ navigation }) => {
       <StandardActionButton
         label='Submit RSVP'
         maxExpansionWidth={width * 0.95 - 16}
-        onPress={onNextV2}
+        onPress={onNext}
+        onFullSizePress={onSubmit}
         expandToFullSize={showOverview}
         animationDuration={300}
         icon={() => <BackButtonImage style={{ transform: [{ rotate: '180deg' }], tintColor: '#fff' }} />}
