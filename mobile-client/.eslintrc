@@ -21,11 +21,13 @@
     "no-underscore-dangle": 0,
     "import/imports-first": ["error", "absolute-first"],
     "import/newline-after-import": "error",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "jsx-a11y/accessible-emoji": "off"
   },
   "globals": {
     "window": false,
-    "fetch": false
+    "fetch": false,
+    "__DEV__": "readonly"
   },
   "parser": "babel-eslint",
   "settings": {

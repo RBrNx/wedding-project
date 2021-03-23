@@ -16,8 +16,8 @@ const ChoiceSchema = new Schema(
 
 const FollowUpSchema = new Schema(
   {
-    to: { type: ObjectId, ref: 'Question' },
-    matchesChoice: { type: ObjectId, ref: 'Answer' },
+    question: { type: ObjectId, ref: 'Question', required: true },
+    matchesChoice: { type: ObjectId, required: true },
   },
   {
     _id: false,
@@ -25,6 +25,7 @@ const FollowUpSchema = new Schema(
 );
 
 const QuestionSchema = new Schema({
+  eventId: { type: ObjectId, required: true, ref: 'Event' },
   type: { type: String, enum: mapEnumValues(QuestionType), required: true },
   title: { type: String, required: true },
   label: { type: String },
@@ -32,7 +33,9 @@ const QuestionSchema = new Schema({
   specificGroups: [{ type: ObjectId, ref: 'Group' }],
   specificGuests: [{ type: ObjectId, ref: 'Guest' }],
   responseType: { type: String, enum: mapEnumValues(QuestionResponseType), required: true },
-  followUp: { type: FollowUpSchema },
+  followUpQuestions: [{ type: FollowUpSchema }],
+  order: { type: Number, required: true },
+  isFollowUp: { type: Boolean, required: true },
 });
 
 export default QuestionSchema;

@@ -1,32 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useColorScheme } from 'react-native';
-import * as SplashScreen from 'expo-splash-screen';
 import { darkTheme, lightTheme } from '../styles/theming';
-import HomeNavigator from './HomeNavigator';
-import SignInNavigator from './SignInNavigator';
+import AuthenticatedNavigator from './AuthenticatedNavigator';
+import UnauthenticatedNavigator from './UnauthenticatedNavigator';
 import { useAuth, useSettings } from '../context';
 import { Theme } from '../library/enums';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const Stack = createStackNavigator();
 
 const screenOptions = {
-  headerTitleAlign: 'center',
-  headerBackTitleVisible: false,
-  headerShown: false,
+  ...NavigationPresets.NoHeader,
+  ...TransitionPresets.SlideFromRightIOS,
 };
 
 const AppNavigator = () => {
   const systemLevelTheme = useColorScheme();
-  const { isAuthenticated, bootstrapComplete: authBootstrapped } = useAuth();
-  const { userSettings, bootstrapComplete: settingsBootstrapped } = useSettings();
-
-  useEffect(() => {
-    if (settingsBootstrapped && authBootstrapped) {
-      SplashScreen.hideAsync();
-    }
-  }, [settingsBootstrapped, authBootstrapped]);
+  const { isAuthenticated, isSigningOut } = useAuth();
+  const { userSettings } = useSettings();
 
   const getTheme = () => {
     switch (userSettings.theme) {
@@ -44,9 +37,13 @@ const AppNavigator = () => {
     <NavigationContainer theme={getTheme()}>
       <Stack.Navigator screenOptions={screenOptions}>
         {!isAuthenticated ? (
-          <Stack.Screen name='SignIn' component={SignInNavigator} />
+          <Stack.Screen
+            name='Unauthenticated'
+            component={UnauthenticatedNavigator}
+            options={{ animationTypeForReplace: isSigningOut ? 'pop' : 'push' }}
+          />
         ) : (
-          <Stack.Screen name='Home' component={HomeNavigator} />
+          <Stack.Screen name='Authenticated' component={AuthenticatedNavigator} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

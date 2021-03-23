@@ -1,73 +1,73 @@
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import Animated, { interpolateColor, useAnimatedProps, useDerivedValue } from 'react-native-reanimated';
 import { useTheme } from '@react-navigation/native';
-import Color from 'color';
-import React, { useEffect, useState } from 'react';
-import { View, Animated } from 'react-native';
-import { Svg, Path } from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-const roundedRectData = (w, h, r, startingXPos, gap) => {
-  const leftPadding = gap ? 5 : 0;
-  const rightPadding = gap ? 10 : 0;
-  const width = w - r * 2;
-  const height = h - r * 2;
-
-  return `
-    m ${startingXPos + gap + rightPadding} 0
-    l ${w - (startingXPos + gap + r + rightPadding)} 0
-    a ${r} ${r} 0 0 1 ${r} ${r}
-    l 0 ${height}
-    a ${r} ${r} 0 0 1 -${r} ${r}
-    l -${width} 0
-    a ${r} ${r} 0 0 1 -${r} -${r}
-    l 0 -${height}
-    a ${r} ${r} 0 0 1 ${r} -${r}
-    l ${startingXPos - r - leftPadding} 0
-  `;
-};
-
-const AnimatedInputBorder = ({ style, height, width, borderRadius, labelXPos, gapWidth, animate, borderColour }) => {
-  const [borderAnim] = useState(new Animated.Value(0));
-  const [viewWidth, setViewWidth] = useState(0);
-  const ratio = viewWidth ? width / viewWidth : 1;
+const AnimatedInputBorder = ({
+  inputHeight,
+  inputWidth,
+  borderColour,
+  borderRadius = 5,
+  strokeWidth = 1.5,
+  gapStartX = 30,
+  gapWidth,
+  focusAnimationProgress,
+  style,
+}) => {
+  const [widthRatio, setWidthRatio] = useState(1);
   const { colors } = useTheme();
 
-  const fullRectangle = roundedRectData(width, height, borderRadius, labelXPos, 0);
-  const gapRectangle = roundedRectData(width, height, borderRadius, labelXPos, gapWidth * ratio);
+  const gapValues = useDerivedValue(() => {
+    const maxGap = gapWidth * widthRatio;
+    const padding = gapWidth ? 5 : 0;
 
-  const path = borderAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [fullRectangle, gapRectangle],
-  });
-  const colour = borderAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [
-      'rgb(170, 170, 170)',
-      Color(borderColour || colors.border)
-        .rgb()
-        .string(),
-    ],
+    return {
+      size: focusAnimationProgress.value * maxGap,
+      padding: focusAnimationProgress.value * padding,
+    };
   });
 
-  useEffect(() => {
-    Animated.timing(borderAnim, {
-      toValue: animate ? 1 : 0,
-      duration: 150,
-      useNativeDriver: true,
-    }).start();
-  }, [borderAnim, animate]);
+  const animatedProps = useAnimatedProps(() => {
+    const width = inputWidth;
+    const height = inputHeight;
+    const radius = borderRadius;
+    const widthMinusCorners = width - borderRadius * 2;
+    const heightMinusCorners = height - borderRadius * 2;
+    const { size, padding } = gapValues.value;
+
+    const path = `
+      m ${gapStartX + size + padding} ${strokeWidth / 2}
+      h ${width - (gapStartX + size + radius + padding) - strokeWidth}
+      a ${radius} ${radius} 0 0 1 ${radius} ${radius}
+      v ${heightMinusCorners - strokeWidth}
+      a ${radius} ${radius} 0 0 1 -${radius} ${radius}
+      h -${widthMinusCorners - strokeWidth * 2}
+      a ${radius} ${radius} 0 0 1 -${radius} -${radius}
+      v -${heightMinusCorners - strokeWidth}
+      a ${radius} ${radius} 0 0 1 ${radius} -${radius}
+      h ${gapStartX - radius - padding}
+    `;
+
+    return {
+      d: path,
+      stroke: interpolateColor(focusAnimationProgress.value, [0, 1], [colors.border, borderColour || colors.border]),
+    };
+  });
 
   return (
     <View
-      style={[{ width: '100%', height, position: 'absolute' }, style]}
+      style={[{ width: '100%', height: inputHeight, position: 'absolute' }, style]}
       pointerEvents='none'
       onLayout={event => {
-        const { width: vWidth } = event.nativeEvent.layout;
-        setViewWidth(vWidth);
+        const { width: viewWidth } = event.nativeEvent.layout;
+        setWidthRatio(inputWidth / viewWidth);
       }}
     >
-      <Svg viewBox={`-0.75 0 ${width + 1} ${height}`} width='100%' height={height}>
-        <AnimatedPath d={path} stroke={colour} strokeWidth='0.75' />
+      <Svg viewBox={`0 0 ${inputWidth} ${inputHeight}`}>
+        <AnimatedPath animatedProps={animatedProps} strokeWidth={strokeWidth} />
       </Svg>
     </View>
   );

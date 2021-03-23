@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
-import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
-import LoadingIndicator from '../components/LoadingIndicator';
+import HeaderFlatlist from '../library/components/HeaderFlatlist';
+import LoadingIndicator from '../library/components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import InvitationsIllustration from '../components/SVG/Invitations';
 import InvitationCard from '../components/InvitationCard';
 
-const ALL_INVITATIONS_QUERY = loader('../graphql/allInvitationsQuery.graphql');
+const ALL_INVITATIONS_QUERY = loader('../graphql/queries/getAllInvitations.graphql');
 
 const InvitationRow = ({ invitation, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
@@ -35,7 +35,7 @@ const InvitationsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_INVITATIONS_QUERY);
 
   return (
-    <FlatListAnimatedHeader
+    <HeaderFlatlist
       title='Invitations'
       onRefresh={async () => {
         await refetch();

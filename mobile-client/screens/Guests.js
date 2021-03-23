@@ -3,13 +3,13 @@ import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import GuestCard from '../components/GuestCard';
-import FlatListAnimatedHeader from '../library/components/FlatListAnimatedHeader';
-import LoadingIndicator from '../components/LoadingIndicator';
+import HeaderFlatlist from '../library/components/HeaderFlatlist';
+import LoadingIndicator from '../library/components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import PartyIllustration from '../components/SVG/Party';
 
-const ALL_GUESTS_QUERY = loader('../graphql/allGuestsQuery.graphql');
+const ALL_GUESTS_QUERY = loader('../graphql/queries/getAllGuests.graphql');
 
 const GuestRow = ({ guest, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
@@ -34,7 +34,7 @@ const GuestsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_GUESTS_QUERY);
 
   return (
-    <FlatListAnimatedHeader
+    <HeaderFlatlist
       title='Guests'
       onRefresh={async () => {
         await refetch();

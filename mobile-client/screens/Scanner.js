@@ -19,6 +19,7 @@ const ScannerScreen = ({ navigation }) => {
   const [flashEnabled, setFlashEnabled] = useState(false);
   const [shortId, setShortId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const { signInWithShortId } = useAuth();
   const screenRatio = windowHeight / windowWidth;
 
@@ -41,7 +42,7 @@ const ScannerScreen = ({ navigation }) => {
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<shortId>[A-Za-z0-9_-]{12})/g);
-    const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups;
+    const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups || {};
 
     await attemptSignIn(scannedShortId);
   };
@@ -55,6 +56,9 @@ const ScannerScreen = ({ navigation }) => {
 
   useEffect(() => {
     askForCameraPermission();
+    setTimeout(() => {
+      setShowCamera(true);
+    }, 500);
   }, []);
 
   // set the camera ratio and padding.
@@ -110,7 +114,7 @@ const ScannerScreen = ({ navigation }) => {
           <StandardButton text='Grant Permission' raised onPress={() => askForCameraPermission(true)} />
         </View>
       )}
-      {hasPermission && (
+      {hasPermission && showCamera && (
         <Camera
           ref={cameraRef}
           barCodeScannerSettings={{

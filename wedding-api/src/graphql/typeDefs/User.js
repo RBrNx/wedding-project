@@ -19,7 +19,8 @@ const schema = gql`
     lastName: String!
     email: String
     role: UserRole!
-    attending: AttendanceStatus!
+    attendanceStatus: AttendanceStatus!
+    rsvpForm: [RSVPFormTuple!]
   }
 
   type UserMutationResponse implements MutationResponse {
@@ -43,6 +44,7 @@ const schema = gql`
 
   extend type Query {
     getAllGuests: [User]
+    getCurrentUser: User
   }
 
   extend type Mutation {

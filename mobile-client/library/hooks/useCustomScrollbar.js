@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { Animated } from 'react-native';
+import {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated';
 
 const useCustomScrollbar = scrollY => {
   const [totalScrollbarHeight, setTotalScrollbarHeight] = useState(1);
   const [visibleScrollbarHeight, setVisibleScrollbarHeight] = useState(0);
-  const [scrollbarOpacity] = useState(new Animated.Value(0));
+  const scrollbarOpacity = useSharedValue(0);
 
   const scrollbarHandleSize =
     totalScrollbarHeight > visibleScrollbarHeight
@@ -13,29 +20,21 @@ const useCustomScrollbar = scrollY => {
 
   const difference = visibleScrollbarHeight > scrollbarHandleSize ? visibleScrollbarHeight - scrollbarHandleSize : 1;
 
-  const scrollbarHandlePosition = Animated.multiply(scrollY, visibleScrollbarHeight / totalScrollbarHeight).interpolate(
-    {
-      inputRange: [0, difference],
-      outputRange: [0, difference],
-      extrapolate: 'clamp',
-    },
-  );
+  const animatedHandleStyle = useAnimatedStyle(() => {
+    const value = scrollY.value * (visibleScrollbarHeight / totalScrollbarHeight);
+    const translateY = interpolate(value, [0, difference], [0, difference], Extrapolate.CLAMP);
+
+    return {
+      transform: [{ translateY }],
+    };
+  });
 
   const showScrollbar = () => {
-    Animated.timing(scrollbarOpacity, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    scrollbarOpacity.value = withTiming(1, { duration: 200 });
   };
 
   const hideScrollbar = () => {
-    Animated.timing(scrollbarOpacity, {
-      toValue: 0,
-      delay: 200,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    scrollbarOpacity.value = withDelay(200, withTiming(0, { duration: 200 }));
   };
 
   return {
@@ -43,7 +42,7 @@ const useCustomScrollbar = scrollY => {
     setVisibleScrollbarHeight,
     scrollbarOpacity,
     scrollbarHandleSize,
-    scrollbarHandlePosition,
+    animatedHandleStyle,
     showScrollbar,
     hideScrollbar,
   };

@@ -1,10 +1,7 @@
-import { connectToDatabase } from '../../lib/database';
-
-const fetchTempLoginCredentials = async (parent, { input }) => {
+const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
   try {
     const { shortId } = input;
 
-    const db = await connectToDatabase();
     const TempLoginDetailsModel = db.model('TempLoginDetails');
 
     const loginDetails = await TempLoginDetailsModel.findOne({ shortId });

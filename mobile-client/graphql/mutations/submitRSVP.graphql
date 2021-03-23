@@ -1,0 +1,6 @@
+mutation SUBMIT_RSVP_FORM($input: SubmitRSVPInput!) {
+  submitRSVPForm(input: $input) {
+    success
+    message
+  }
+}

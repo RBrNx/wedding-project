@@ -1,10 +1,8 @@
-import { connectToDatabase } from '../../lib/database';
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
 import { createCognitoAdminUser, createCognitoUser, generateTemporaryCredentials } from '../../lib/helpers/users';
 
-const getAllGuests = async () => {
+const getAllGuests = async (parent, args, { db }) => {
   try {
-    const db = await connectToDatabase();
     const UserModel = db.model('User');
 
     const guests = await UserModel.find({ role: UserRole.GUEST }).exec();
@@ -15,13 +13,12 @@ const getAllGuests = async () => {
   }
 };
 
-const createGuest = async (parent, { guest }, { currentUser }) => {
+const createGuest = async (parent, { guest }, { currentUser, db }) => {
   let session;
 
   try {
     const { firstName, lastName } = guest;
 
-    const db = await connectToDatabase();
     session = await db.startSession();
     session.startTransaction();
 
@@ -52,7 +49,11 @@ const createGuest = async (parent, { guest }, { currentUser }) => {
       { session },
     );
 
-    const cognitoUser = await createCognitoUser({ userId: userDoc._id.toString(), username, password });
+    const cognitoUser = await createCognitoUser({
+      userId: userDoc._id.toString(),
+      username,
+      password,
+    });
     const cognitoUserId = cognitoUser.Attributes.find(({ Name }) => Name === 'sub')?.Value;
 
     await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
@@ -94,13 +95,12 @@ const createGuest = async (parent, { guest }, { currentUser }) => {
 //   }
 // };
 
-const createAdmin = async (parent, { input }, { currentUser }) => {
+const createAdmin = async (parent, { input }, { currentUser, db }) => {
   let session;
 
   try {
     const { firstName, lastName, email, password, eventId } = input;
 
-    const db = await connectToDatabase();
     session = await db.startSession();
     session.startTransaction();
 
@@ -141,33 +141,46 @@ const createAdmin = async (parent, { input }, { currentUser }) => {
   }
 };
 
-const attending = async parent => {
-  const { _id } = parent;
+const attendanceStatus = async (parent, args, { db }) => {
+  const { _id: userId, eventId } = parent;
 
-  const db = await connectToDatabase();
-  const QuestionModel = db.model('Question');
-  const AnswerModel = db.model('Answer');
+  const RSVPResponseModel = db.model('RSVPResponse');
 
-  const attendanceQuestion = await QuestionModel.findOne({ type: QuestionType.ATTENDANCE });
-  const answerDoc = await AnswerModel.findOne({ guestId: _id, questionId: attendanceQuestion?._id });
+  const rsvpResponse = await RSVPResponseModel.findOne({ userId, eventId }).populate('rsvpForm.question');
 
-  if (!attendanceQuestion || !answerDoc) return AttendanceStatus.AWAITING_RSVP;
+  if (!rsvpResponse) return AttendanceStatus.AWAITING_RSVP;
 
-  const { answer } = answerDoc;
-  const userChoice = attendanceQuestion.choices.find(choice => choice._id.toString() === answer);
+  const attendanceTuple = rsvpResponse.rsvpForm.find(({ question }) => question.type === QuestionType.ATTENDANCE);
+  const userChoice = attendanceTuple.question.choices.find(choice => choice.label === attendanceTuple.answer);
 
   return userChoice.value;
+};
+
+const rsvpForm = async (parent, args, { db }) => {
+  const { _id, eventId } = parent;
+
+  const RSVPResponseModel = db.model('RSVPResponse');
+
+  const rsvpResponse = await RSVPResponseModel.findOne({ eventId, userId: _id }).populate('rsvpForm.question');
+
+  return rsvpResponse?.rsvpForm;
+};
+
+const getCurrentUser = (parent, args, { currentUser }) => {
+  return currentUser;
 };
 
 export default {
   Query: {
     getAllGuests,
+    getCurrentUser,
   },
   Mutation: {
     createGuest,
     createAdmin,
   },
   User: {
-    attending,
+    attendanceStatus,
+    rsvpForm,
   },
 };

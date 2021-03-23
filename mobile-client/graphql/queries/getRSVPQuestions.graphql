@@ -1,0 +1,30 @@
+query GET_RSVP_QUESTIONS {
+  getRSVPQuestions {
+    _id
+    type
+    title
+    choices {
+      _id
+      label
+      value
+    }
+    responseType
+    isFollowUp
+    order
+    followUpQuestions {
+      matchesChoice
+      question {
+        _id
+        type
+        title
+        choices {
+          _id
+          label
+          value
+        }
+        responseType
+        order
+      }
+    }
+  }
+}

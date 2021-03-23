@@ -24,13 +24,13 @@ const InvitationCard = ({ guests, uniqueCode, type }) => {
       <View style={styles.bodyRow}>
         <View style={styles.guestContainer}>
           {guests.map((guest, guestIndex) => {
-            const { firstName, lastName, attending } = guest;
+            const { firstName, lastName, attendanceStatus } = guest;
             const isFirst = guestIndex === 0;
             const isLast = guestIndex === guests.length - 1;
 
             return (
               <View key={guest._id} style={styles.guestRow}>
-                <StatusLine status={attending} isFirst={isFirst} isLast={isLast} />
+                <StatusLine status={attendanceStatus} isFirst={isFirst} isLast={isLast} />
                 <Text style={[styles.name, { color: colors.headerText }]}>
                   {firstName} {lastName}
                 </Text>

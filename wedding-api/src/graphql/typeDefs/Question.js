@@ -19,24 +19,22 @@ const schema = gql`
   }
 
   type FollowUp {
-    to: ID
-    matchesChoice: ID
+    question: Question!
+    matchesChoice: ID!
   }
 
   type Question {
-    _id: ID
-    type: QuestionType
-    title: String
+    _id: ID!
+    eventId: ID!
+    type: QuestionType!
+    title: String!
     label: String
     choices: [Choice]
     specificGuests: [User]
-    responseType: ResponseType
-    followUp: FollowUp
-  }
-
-  type AnswerMutationResponse implements MutationResponse {
-    success: Boolean
-    message: String
+    responseType: ResponseType!
+    followUpQuestions: [FollowUp]
+    order: Int!
+    isFollowUp: Boolean!
   }
 
   type QuestionMutationResponse implements MutationResponse {
@@ -51,34 +49,41 @@ const schema = gql`
   }
 
   input FollowUpInput {
-    to: ID!
+    question: ID!
     matchesChoice: ID!
   }
 
-  input QuestionInput {
+  input CreateQuestionInput {
     type: QuestionType!
     title: String!
     label: String
     choices: [ChoiceInput]
     specificGuests: [ID]
     responseType: ResponseType!
-    followUp: FollowUpInput
+    followUpQuestions: [FollowUpInput!]
+    order: Int!
+    isFollowUp: Boolean!
   }
 
-  input TextAnswerInput {
-    questionId: ID!
-    answer: String!
+  input UpdateQuestionInput {
+    type: QuestionType
+    title: String
+    label: String
+    choices: [ChoiceInput]
+    specificGuests: [ID]
+    responseType: ResponseType
+    followUpQuestions: [FollowUpInput!]
+    order: Int!
+    isFollowUp: Boolean!
   }
 
-  input ChoiceAnswerInput {
-    questionId: ID!
-    answer: ID!
+  extend type Query {
+    getRSVPQuestions: [Question]
   }
 
   extend type Mutation {
-    createQuestion(question: QuestionInput!): QuestionMutationResponse
-    answerTextQuestion(guestId: ID!, answerInput: TextAnswerInput!): AnswerMutationResponse
-    answerChoiceQuestion(guestId: ID!, answerInput: ChoiceAnswerInput!): AnswerMutationResponse
+    createQuestion(question: CreateQuestionInput!): QuestionMutationResponse
+    updateQuestion(id: ID!, question: UpdateQuestionInput!): QuestionMutationResponse
   }
 `;
 

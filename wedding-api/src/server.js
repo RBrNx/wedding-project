@@ -1,5 +1,6 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers } from './graphql/index';
+import { connectToDatabase } from './lib/database';
 import { getUserFromRequest } from './lib/helpers/users';
 
 const server = new ApolloServer({
@@ -14,6 +15,7 @@ const server = new ApolloServer({
   context: async ({ event, context }) => {
     const { requestContext } = event;
     const currentUser = await getUserFromRequest(requestContext);
+    const db = await connectToDatabase();
 
     return {
       headers: event.headers,
@@ -21,10 +23,13 @@ const server = new ApolloServer({
       event,
       context,
       currentUser,
+      db,
     };
   },
   tracing: false,
-  playground: true,
+  playground: {
+    endpoint: '/dev/admin',
+  },
 });
 
 const unauthenticatedServer = new ApolloServer({
@@ -36,17 +41,26 @@ const unauthenticatedServer = new ApolloServer({
   formatResponse: response => {
     return response;
   },
-  context: ({ event, context }) => ({
-    headers: event.headers,
-    functionName: context.functionName,
-    event,
-    context,
-  }),
+  context: async ({ event, context }) => {
+    const db = await connectToDatabase();
+
+    return {
+      headers: event.headers,
+      functionName: context.functionName,
+      event,
+      context,
+      db,
+    };
+  },
   tracing: false,
-  playground: true,
+  playground: {
+    endpoint: '/dev/api',
+  },
 });
 
 exports.authenticatedGQLHandler = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
   const handler = server.createHandler({
     cors: {
       origin: '*',
@@ -59,6 +73,8 @@ exports.authenticatedGQLHandler = (event, context, callback) => {
 };
 
 exports.unauthenticatedGQLHandler = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
   const handler = unauthenticatedServer.createHandler({
     cors: {
       origin: '*',
