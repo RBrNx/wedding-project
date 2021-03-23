@@ -1,17 +1,22 @@
-import { useNavigation } from '@react-navigation/core';
-import { useEffect } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/core';
 
 const usePreventGoingBack = decisionFunc => {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    navigation.addListener('beforeRemove', e => {
+  useFocusEffect(() => {
+    const preventGoingBack = e => {
       const shouldPreventGoingBack = decisionFunc?.() ?? true;
 
       if (shouldPreventGoingBack) e.preventDefault();
       else navigation.dispatch(e.data.action);
-    });
-  }, [navigation, decisionFunc]);
+    };
+
+    navigation.addListener('beforeRemove', preventGoingBack);
+
+    return () => {
+      navigation.removeListener('beforeRemove', preventGoingBack);
+    };
+  });
 };
 
 export default usePreventGoingBack;
