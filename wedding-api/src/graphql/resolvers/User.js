@@ -141,23 +141,20 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
   }
 };
 
-// const attending = async parent => {
-//   const { _id } = parent;
+const attendanceStatus = async (parent, args, { db }) => {
+  const { _id: userId, eventId } = parent;
 
-//   const db = await connectToDatabase();
-//   const QuestionModel = db.model('Question');
-//   const AnswerModel = db.model('Answer');
+  const RSVPResponseModel = db.model('RSVPResponse');
 
-//   const attendanceQuestion = await QuestionModel.findOne({ type: QuestionType.ATTENDANCE });
-//   const answerDoc = await AnswerModel.findOne({ guestId: _id, questionId: attendanceQuestion?._id });
+  const rsvpResponse = await RSVPResponseModel.findOne({ userId, eventId }).populate('rsvpForm.question');
 
-//   if (!attendanceQuestion || !answerDoc) return AttendanceStatus.AWAITING_RSVP;
+  if (!rsvpResponse) return AttendanceStatus.AWAITING_RSVP;
 
-//   const { answer } = answerDoc;
-//   const userChoice = attendanceQuestion.choices.find(choice => choice._id.toString() === answer);
+  const attendanceTuple = rsvpResponse.rsvpForm.find(({ question }) => question.type === QuestionType.ATTENDANCE);
+  const userChoice = attendanceTuple.question.choices.find(choice => choice.label === attendanceTuple.answer);
 
-//   return userChoice.value;
-// };
+  return userChoice.value;
+};
 
 const rsvpForm = async (parent, args, { db }) => {
   const { _id, eventId } = parent;
@@ -183,7 +180,7 @@ export default {
     createAdmin,
   },
   User: {
-    // attending,
+    attendanceStatus,
     rsvpForm,
   },
 };
