@@ -169,12 +169,14 @@ const rsvpForm = async (parent, args, { db }) => {
   return rsvpResponse?.rsvpForm;
 };
 
-  return userChoice.value;
+const getCurrentUser = (parent, args, { currentUser }) => {
+  return currentUser;
 };
 
 export default {
   Query: {
     getAllGuests,
+    getCurrentUser,
   },
   Mutation: {
     createGuest,

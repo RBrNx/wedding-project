@@ -44,6 +44,7 @@ const schema = gql`
 
   extend type Query {
     getAllGuests: [User]
+    getCurrentUser: User
   }
 
   extend type Mutation {

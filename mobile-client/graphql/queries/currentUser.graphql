@@ -1,5 +1,18 @@
 query GET_CURRENT_USER {
   getCurrentUser {
+    eventId
+    firstName
+    lastName
+    email
     role
+    attendanceStatus
+    rsvpForm {
+      question {
+        type
+        title
+        label
+      }
+      answer
+    }
   }
 }

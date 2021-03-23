@@ -2,6 +2,7 @@ import { Auth } from 'aws-amplify';
 import { loader } from 'graphql.macro';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import client from '../utils/apiClient';
+import useLazyQuery from '../library/hooks/useLazyQuery';
 
 const FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION = loader('../graphql/mutations/fetchTempLoginCredentials.graphql');
 const GET_CURRENT_USER_QUERY = loader('../graphql/queries/currentUser.graphql');
@@ -15,16 +16,24 @@ const AuthProvider = ({ children }) => {
 
 const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
+  const [fetchCurrentUser] = useLazyQuery(GET_CURRENT_USER_QUERY, { fetchPolicy: 'network-only' });
+  const isAuthenticated = !!user && !!currentUser;
 
   const signIn = async (emailAddress, password) => {
     if (!emailAddress || !password) return null;
 
     const lowercaseEmail = emailAddress.toLowerCase();
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
+    const { data } = await fetchCurrentUser();
+    const dbUser = data?.getCurrentUser;
+
     setUser(cognitoUser);
-    return cognitoUser;
+    setCurrentUser(dbUser);
+
+    return cognitoUser && dbUser;
   };
 
   const signInWithShortId = async shortId => {
@@ -54,6 +63,7 @@ const useProviderAuth = () => {
     setIsSigningOut(true);
     await Auth.signOut();
     setUser(null);
+    setCurrentUser(null);
     setIsSigningOut(false);
   };
 
@@ -61,7 +71,11 @@ const useProviderAuth = () => {
     const checkForAuthenticatedUser = async () => {
       try {
         const cognitoUser = await Auth.currentAuthenticatedUser();
+        const { data } = await fetchCurrentUser();
+        const dbUser = data?.getCurrentUser;
+
         setUser(cognitoUser);
+        setCurrentUser(dbUser);
       } catch (err) {
         console.log(err);
       } finally {
@@ -74,10 +88,11 @@ const useProviderAuth = () => {
 
   return {
     user,
+    currentUser,
     signIn,
     signInWithShortId,
     signOut,
-    isAuthenticated: !!user,
+    isAuthenticated,
     isSigningOut,
     bootstrapComplete,
   };
