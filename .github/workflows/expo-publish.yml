@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - develop
+    paths:
+    - 'mobile-client/**'
 jobs:
   publish:
     name: Publish Dev Build
