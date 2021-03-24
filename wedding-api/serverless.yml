@@ -39,7 +39,6 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: eu-west-2
-  profile: terminal-admin
   memorySize: 512
   timeout: 30
   # To load environment variables externally
