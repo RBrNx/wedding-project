@@ -5,6 +5,9 @@ on:
       - develop
     paths:
     - 'mobile-client/**'
+defaults:
+  run:
+    working-directory: ./mobile-client
 jobs:
   publish:
     name: Publish Dev Build
