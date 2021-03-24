@@ -54,7 +54,7 @@ const unauthenticatedServer = new ApolloServer({
   },
   tracing: false,
   playground: {
-    endpoint: '/dev/api2',
+    endpoint: '/dev/api',
   },
 });
 
