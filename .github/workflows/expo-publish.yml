@@ -5,7 +5,7 @@ on:
       - develop
 jobs:
   publish:
-    name: Install and publish
+    name: Publish Dev Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
