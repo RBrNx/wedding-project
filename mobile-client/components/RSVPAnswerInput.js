@@ -9,6 +9,7 @@ const { width } = Dimensions.get('window');
 const RSVPAnswerInput = ({
   questionId,
   questionType,
+  placeholder,
   answerChoices,
   answerValue,
   setRSVPAnswer,
@@ -39,6 +40,7 @@ const RSVPAnswerInput = ({
           borderColourFocused='#2991cc'
           multiline
           value={answerValue}
+          placeholder={placeholder}
           onChangeText={value => setRSVPAnswer(questionId, value)}
         />
       )}

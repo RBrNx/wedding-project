@@ -29,6 +29,7 @@ const QuestionSchema = new Schema({
   type: { type: String, enum: mapEnumValues(QuestionType), required: true },
   title: { type: String, required: true },
   label: { type: String },
+  placeholder: { type: String },
   choices: [{ type: ChoiceSchema }],
   specificGroups: [{ type: ObjectId, ref: 'Group' }],
   specificGuests: [{ type: ObjectId, ref: 'Guest' }],

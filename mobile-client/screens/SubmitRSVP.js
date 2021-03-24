@@ -147,7 +147,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   };
 
   const renderAnswerInput = ({ step, index }) => {
-    const { _id: id, type, choices } = step || {};
+    const { _id: id, type, choices, placeholder } = step || {};
     const answer = rsvpForm[id];
 
     if (step?.componentType === 'overview')
@@ -167,6 +167,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         key={`answer_${step._id}`}
         questionId={id}
         questionType={type}
+        placeholder={placeholder}
         answerChoices={choices}
         answerValue={answer}
         setRSVPAnswer={setFormValue}
