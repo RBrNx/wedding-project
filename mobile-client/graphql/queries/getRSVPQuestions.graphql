@@ -3,6 +3,7 @@ query GET_RSVP_QUESTIONS {
     _id
     type
     title
+    placeholder
     choices {
       _id
       label

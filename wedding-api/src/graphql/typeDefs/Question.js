@@ -29,6 +29,7 @@ const schema = gql`
     type: QuestionType!
     title: String!
     label: String
+    placeholder: String
     choices: [Choice]
     specificGuests: [User]
     responseType: ResponseType!
