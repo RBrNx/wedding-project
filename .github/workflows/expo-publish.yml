@@ -9,6 +9,15 @@ defaults:
   run:
     working-directory: ./mobile-client
 jobs:
+  lint:
+    name: Lint Mobile Client
+    runs-on: ubuntu-lastest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: yarn lint
   publish:
     name: Publish Dev Build
     runs-on: ubuntu-latest

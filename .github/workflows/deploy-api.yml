@@ -10,6 +10,15 @@ defaults:
   run:
     working-directory: ./wedding-api
 jobs:
+  lint:
+    name: Lint API
+    runs-on: ubuntu-lastest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: yarn lint
   deploy:
     name: Deploy Dev API
     runs-on: ubuntu-latest
