@@ -2,6 +2,8 @@ const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
   try {
     const { shortId } = input;
 
+    console.log('I AM HERE', db);
+
     const TempLoginDetailsModel = db.model('TempLoginDetails');
 
     const loginDetails = await TempLoginDetailsModel.findOne({ shortId });
