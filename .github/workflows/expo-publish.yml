@@ -20,6 +20,7 @@ jobs:
         run: yarn lint
   publish:
     name: Publish Dev Build
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
