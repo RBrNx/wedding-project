@@ -11,7 +11,7 @@ const { MONGODB_URI } = process.env;
 let cachedDb = null;
 
 const connectToDatabase = async () => {
-  if (!MONGODB_URI) throw new Error('MONGODB_URI is required.');
+  if (!MONGODB_URI) throw new Error('MONGODB_URI is required');
 
   try {
     if (cachedDb == null) {
