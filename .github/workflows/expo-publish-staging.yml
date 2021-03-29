@@ -18,9 +18,26 @@ jobs:
         run: yarn
       - name: Run ESLint
         run: yarn lint
+
+  create-release:
+    name: Create Staging Release
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install dependencies
+        run: yarn
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish:
     name: Publish Staging Build
-    needs: lint
+    needs: create-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
