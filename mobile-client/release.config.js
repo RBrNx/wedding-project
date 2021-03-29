@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   branches: ['staging'],
   verifyConditions: [
     'semantic-release-expo',
