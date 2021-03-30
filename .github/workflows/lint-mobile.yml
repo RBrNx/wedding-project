@@ -1,0 +1,23 @@
+name: Lint Mobile Client on PR
+
+on:
+  pull-request:
+    branches:
+      - develop
+      - staging
+      - production
+    paths:
+      - 'mobile-client/**'
+defaults:
+  run:
+    working-directory: ./mobile-client
+jobs:
+  lint:
+    name: Lint API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: yarn lint
