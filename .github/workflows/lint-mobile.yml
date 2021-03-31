@@ -1,5 +1,4 @@
 name: Lint Mobile Client on PR
-
 on:
   pull_request:
     branches:
@@ -13,11 +12,12 @@ defaults:
     working-directory: ./mobile-client
 jobs:
   lint:
-    name: Lint API
+    name: Lint Mobile Client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install modules
-        run: yarn
-      - name: Run ESLint
-        run: yarn lint
+      - uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-pr-review
+          level: error
+          github_token: ${{ secrets.GH_TOKEN }}
