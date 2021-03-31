@@ -19,7 +19,7 @@ jobs:
         with:
           reporter: github-pr-review
           level: error
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           eslint_flags: './'
           fail_on_error: true
           workdir: ./mobile-client
