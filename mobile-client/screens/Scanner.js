@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Text, View, StyleSheet, Dimensions, StatusBar, Platform, Alert, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
+import { Ionicons } from '@expo/vector-icons';
 import ScannerCard from '../components/ScannerCard';
 import { useAuth } from '../context';
 import QRScanner from '../components/QRScanner';
 import StandardButton from '../library/components/StandardButton';
+import CameraViewfinder from '../components/CameraViewfinder';
+import StandardPressable from '../library/components/StandardPressable';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -22,6 +25,16 @@ const ScannerScreen = ({ navigation }) => {
   const [showCamera, setShowCamera] = useState(false);
   const { signInWithShortId } = useAuth();
   const screenRatio = windowHeight / windowWidth;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <StandardPressable onPress={() => setFlashEnabled(!flashEnabled)} style={{ marginRight: 15 }}>
+          <Ionicons name={flashEnabled ? 'flash-outline' : 'flash-off-outline'} size={24} color='#fff' />
+        </StandardPressable>
+      ),
+    });
+  }, [navigation, flashEnabled]);
 
   const attemptSignIn = async scannedShortId => {
     try {
@@ -115,22 +128,25 @@ const ScannerScreen = ({ navigation }) => {
         </View>
       )}
       {hasPermission && showCamera && (
-        <Camera
-          ref={cameraRef}
-          barCodeScannerSettings={{
-            barCodeTypes: ['qr'],
-          }}
-          style={[styles.cameraPreview, { marginBottom: imagePadding + StatusBar.currentHeight }]}
-          ratio={ratio}
-          onCameraReady={async () => {
-            if (!isRatioSet) {
-              await prepareRatio();
-            }
-          }}
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
-        />
+        <>
+          <Camera
+            ref={cameraRef}
+            barCodeScannerSettings={{
+              barCodeTypes: ['qr'],
+            }}
+            style={[styles.cameraPreview, { marginBottom: imagePadding + StatusBar.currentHeight }]}
+            ratio={ratio}
+            onCameraReady={async () => {
+              if (!isRatioSet) {
+                await prepareRatio();
+              }
+            }}
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
+          />
+        </>
       )}
+      <CameraViewfinder />
       <ScannerCard
         onClose={() => navigation.pop()}
         onFlashPress={() => setFlashEnabled(!flashEnabled)}
@@ -163,6 +179,10 @@ const styles = StyleSheet.create({
   },
   permissionText: {
     textAlign: 'center',
+  },
+  cameraViewfinder: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 
