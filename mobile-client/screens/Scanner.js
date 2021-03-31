@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, Platform, Alert, Linking } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Platform, Alert, Linking, Vibration } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
@@ -53,6 +53,7 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const handleBarCodeScanned = async ({ data }) => {
+    Vibration.vibrate();
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<shortId>[A-Za-z0-9_-]{12})/g);
