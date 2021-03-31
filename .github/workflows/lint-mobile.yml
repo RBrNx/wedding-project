@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
-        run: yarn
+        run: cd mobile-client && yarn
       - uses: reviewdog/action-eslint@v1
         with:
           reporter: github-pr-review
