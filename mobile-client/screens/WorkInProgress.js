@@ -9,7 +9,7 @@ const WorkInProgressScreen = () => {
       <InProgressIllustration size='100%' style={styles.heroImage} />
       <Spacer size={50} />
       <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Sorry, we haven't finished this yet.</Text>
+        <Text style={styles.heading}>Sorry, we haven&apos;t finished this yet.</Text>
         <Spacer size={15} />
         <Text style={styles.subHeading}>Please check back here in the future for some awesome features!</Text>
       </View>

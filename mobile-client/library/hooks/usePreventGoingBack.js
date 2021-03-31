@@ -1,4 +1,4 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/core';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const usePreventGoingBack = decisionFunc => {
   const navigation = useNavigation();
