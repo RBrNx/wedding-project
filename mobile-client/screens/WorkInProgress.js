@@ -4,9 +4,6 @@ import InProgressIllustration from '../components/SVG/InProgress';
 import Spacer from '../library/components/Spacer';
 
 const WorkInProgressScreen = () => {
-  const x = 2;
-  const y = 3;
-
   return (
     <View style={styles.container}>
       <InProgressIllustration size='100%' style={styles.heroImage} />

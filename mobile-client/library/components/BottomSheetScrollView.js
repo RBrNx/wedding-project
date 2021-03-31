@@ -23,6 +23,7 @@ const BottomSheetScrollView = ({
   topOffset,
   collapsedPosition = 350,
   unlockFullScroll = false,
+  enableRefreshControl = false,
 }) => {
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -92,7 +93,7 @@ const BottomSheetScrollView = ({
           onScroll={scrollHandler}
           scrollEventThrottle={1}
           showsVerticalScrollIndicator={false}
-          // refreshControl={renderRefreshControl()}
+          refreshControl={enableRefreshControl ? renderRefreshControl() : null}
           onContentSizeChange={(contentWidth, contentHeight) => {
             setTotalScrollbarHeight(contentHeight);
           }}
