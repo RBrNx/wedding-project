@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, StatusBar, Platform, Alert, Linking } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Platform, Alert, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import QRScanner from '../components/QRScanner';
 import StandardButton from '../library/components/StandardButton';
 import CameraViewfinder from '../components/CameraViewfinder';
 import StandardPressable from '../library/components/StandardPressable';
+import Spacer from '../library/components/Spacer';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -134,7 +135,7 @@ const ScannerScreen = ({ navigation }) => {
             barCodeScannerSettings={{
               barCodeTypes: ['qr'],
             }}
-            style={[styles.cameraPreview, { marginBottom: imagePadding + StatusBar.currentHeight }]}
+            style={[styles.cameraPreview, { width: windowWidth + imagePadding }]}
             ratio={ratio}
             onCameraReady={async () => {
               if (!isRatioSet) {
@@ -143,11 +144,17 @@ const ScannerScreen = ({ navigation }) => {
             }}
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
+            autoFocus={Camera.Constants.AutoFocus.on}
           />
         </>
       )}
       <CameraViewfinder />
-      <ScannerCard
+      <View style={styles.textContainer}>
+        <Text style={styles.heading}>Scan QR Code</Text>
+        <Spacer size={15} />
+        <Text style={styles.subHeading}>Scan the QR code from your invitation, or enter the code manually.</Text>
+      </View>
+      {/* <ScannerCard
         onClose={() => navigation.pop()}
         onFlashPress={() => setFlashEnabled(!flashEnabled)}
         flashEnabled={flashEnabled}
@@ -155,7 +162,7 @@ const ScannerScreen = ({ navigation }) => {
         shortId={shortId}
         setShortId={setShortId}
         isLoading={isLoading}
-      />
+      /> */}
     </View>
   );
 };
@@ -163,10 +170,9 @@ const ScannerScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
   },
   cameraPreview: {
-    flex: 1,
+    ...StyleSheet.absoluteFill,
   },
   permissionContainer: {
     width: '90%',
@@ -180,9 +186,21 @@ const styles = StyleSheet.create({
   permissionText: {
     textAlign: 'center',
   },
-  cameraViewfinder: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  textContainer: {
+    top: '15%',
+  },
+  heading: {
+    fontFamily: 'Muli_700Bold',
+    fontSize: 32,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  subHeading: {
+    fontSize: 18,
+    color: '#ccc',
+    textAlign: 'center',
+    paddingHorizontal: '5%',
+    fontFamily: 'Muli_400Regular',
   },
 });
 
