@@ -5,6 +5,7 @@ import Spacer from '../library/components/Spacer';
 
 const WorkInProgressScreen = () => {
   const x = 2;
+  const y = 3;
 
   return (
     <View style={styles.container}>
