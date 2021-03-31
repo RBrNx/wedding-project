@@ -7,6 +7,9 @@ on:
       - production
     paths:
       - 'mobile-client/**'
+defaults:
+  run:
+    working-directory: ./mobile-client
 jobs:
   lint:
     name: Lint Mobile Client
@@ -14,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
-        run: cd mobile-client && yarn
+        run: yarn
       - uses: reviewdog/action-eslint@v1
         with:
           reporter: github-pr-review
