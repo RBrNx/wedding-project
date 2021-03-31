@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Dimensions, Platform, Alert, Linking, Vibration
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
-import ScannerCard from '../components/ScannerCard';
+import ScannerButtonCard from '../components/ScannerButtonCard';
 import { useAuth } from '../context';
 import QRScanner from '../components/QRScanner';
 import StandardButton from '../library/components/StandardButton';
@@ -24,6 +24,7 @@ const ScannerScreen = ({ navigation }) => {
   const [shortId, setShortId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [inKeyboardMode, setInKeyboardMode] = useState(false);
   const { signInWithShortId } = useAuth();
   const screenRatio = windowHeight / windowWidth;
 
@@ -155,15 +156,7 @@ const ScannerScreen = ({ navigation }) => {
         <Spacer size={15} />
         <Text style={styles.subHeading}>Scan the QR code from your invitation, or enter the code manually.</Text>
       </View>
-      {/* <ScannerCard
-        onClose={() => navigation.pop()}
-        onFlashPress={() => setFlashEnabled(!flashEnabled)}
-        flashEnabled={flashEnabled}
-        onSubmit={() => attemptSignIn()}
-        shortId={shortId}
-        setShortId={setShortId}
-        isLoading={isLoading}
-      /> */}
+      <ScannerButtonCard inKeyboardMode={inKeyboardMode} setInKeyboardMode={setInKeyboardMode} />
     </View>
   );
 };
@@ -171,6 +164,7 @@ const ScannerScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
   },
   cameraPreview: {
     ...StyleSheet.absoluteFill,
