@@ -1,15 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
+import Animated from 'react-native-reanimated';
 import StandardPressable from '../library/components/StandardPressable';
 import Spacer from '../library/components/Spacer';
+import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
 
 const ScannerButtonCard = ({ inKeyboardMode, setInKeyboardMode }) => {
+  const { avoidKeyboardStyle } = useAvoidKeyboard();
   const { colors } = useTheme();
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.card,
         {
@@ -17,6 +20,7 @@ const ScannerButtonCard = ({ inKeyboardMode, setInKeyboardMode }) => {
             .fade(0.5)
             .toString(),
         },
+        avoidKeyboardStyle,
       ]}
     >
       <StandardPressable
@@ -32,7 +36,7 @@ const ScannerButtonCard = ({ inKeyboardMode, setInKeyboardMode }) => {
       >
         <Text style={styles.text}>Enter code</Text>
       </StandardPressable>
-    </View>
+    </Animated.View>
   );
 };
 
