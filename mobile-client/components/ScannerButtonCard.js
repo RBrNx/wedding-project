@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Color from 'color';
-import Animated from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import StandardPressable from '../library/components/StandardPressable';
 import Spacer from '../library/components/Spacer';
 import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
 
-const ScannerButtonCard = ({ inKeyboardMode, setInKeyboardMode }) => {
+const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
+  const [buttonWidth, setButtonWidth] = useState(0);
   const { avoidKeyboardStyle } = useAvoidKeyboard();
   const { colors } = useTheme();
+
+  const animatedBackgroundStyle = useAnimatedStyle(() => {
+    const initialPadding = styles.card.padding;
+    const spacing = scannerModeIndex.value * 5;
+    const xPosition = scannerModeIndex.value * buttonWidth;
+
+    return {
+      translateX: initialPadding + xPosition + spacing,
+    };
+  });
 
   return (
     <Animated.View
@@ -23,17 +34,19 @@ const ScannerButtonCard = ({ inKeyboardMode, setInKeyboardMode }) => {
         avoidKeyboardStyle,
       ]}
     >
+      <Animated.View style={[styles.buttonBackground, animatedBackgroundStyle, { width: buttonWidth }]} />
       <StandardPressable
-        style={[styles.button, inKeyboardMode ? {} : styles.selectedButton]}
-        onPress={() => setInKeyboardMode(false)}
+        style={[styles.button]}
+        onPress={() => onButtonPress(0)}
+        onLayout={event => {
+          const { width } = event.nativeEvent.layout;
+          setButtonWidth(width);
+        }}
       >
         <Text style={styles.text}>Scan code</Text>
       </StandardPressable>
       <Spacer size={5} />
-      <StandardPressable
-        style={[styles.button, inKeyboardMode ? styles.selectedButton : {}]}
-        onPress={() => setInKeyboardMode(true)}
-      >
+      <StandardPressable style={[styles.button]} onPress={() => onButtonPress(1)}>
         <Text style={styles.text}>Enter code</Text>
       </StandardPressable>
     </Animated.View>
@@ -58,8 +71,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  selectedButton: {
+  buttonBackground: {
     backgroundColor: '#fff',
+    borderRadius: 10,
+    position: 'absolute',
+    height: '100%',
   },
   text: {
     fontSize: 16,

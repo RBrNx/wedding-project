@@ -3,13 +3,16 @@ import { Text, View, StyleSheet, Dimensions, Platform, Alert, Linking, Vibration
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
+import { Easing } from 'react-native-reanimated';
 import ScannerButtonCard from '../components/ScannerButtonCard';
 import { useAuth } from '../context';
 import QRScanner from '../components/QRScanner';
 import StandardButton from '../library/components/StandardButton';
 import CameraViewfinder from '../components/CameraViewfinder';
 import StandardPressable from '../library/components/StandardPressable';
-import Spacer from '../library/components/Spacer';
+import ScannerHeading from '../components/ScannerHeading';
+import StepTransition from '../library/components/StepTransition';
+import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -24,9 +27,20 @@ const ScannerScreen = ({ navigation }) => {
   const [shortId, setShortId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const [inKeyboardMode, setInKeyboardMode] = useState(false);
   const { signInWithShortId } = useAuth();
+  const { animIndex: scannerModeIndex, moveToStep } = useAnimatedStepTransition({
+    duration: 200,
+    easing: Easing.out(Easing.ease),
+  });
+
   const screenRatio = windowHeight / windowWidth;
+  const scannerModeHeadings = [
+    { heading: 'Scan QR Code', subHeading: 'Scan the QR code from your invitation, or enter the code manually.' },
+    {
+      heading: 'Enter Invitation ID',
+      subHeading: 'Enter the 12 digit code from your Invitation, or scan the QR Code.',
+    },
+  ];
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -119,6 +133,19 @@ const ScannerScreen = ({ navigation }) => {
     }
   };
 
+  const renderHeading = ({ step, index }) => {
+    const { heading, subHeading } = step;
+    return (
+      <ScannerHeading
+        key={index}
+        heading={heading}
+        subHeading={subHeading}
+        scannerModeIndex={scannerModeIndex}
+        index={index}
+      />
+    );
+  };
+
   return (
     <View style={[styles.container, !hasPermission ? { alignItems: 'center' } : {}]}>
       {!hasPermission && (
@@ -151,12 +178,8 @@ const ScannerScreen = ({ navigation }) => {
         </>
       )}
       <CameraViewfinder />
-      <View style={styles.textContainer}>
-        <Text style={styles.heading}>Scan QR Code</Text>
-        <Spacer size={15} />
-        <Text style={styles.subHeading}>Scan the QR code from your invitation, or enter the code manually.</Text>
-      </View>
-      <ScannerButtonCard inKeyboardMode={inKeyboardMode} setInKeyboardMode={setInKeyboardMode} />
+      <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
+      <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
     </View>
   );
 };
@@ -180,22 +203,6 @@ const styles = StyleSheet.create({
   },
   permissionText: {
     textAlign: 'center',
-  },
-  textContainer: {
-    top: '15%',
-  },
-  heading: {
-    fontFamily: 'Muli_700Bold',
-    fontSize: 32,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  subHeading: {
-    fontSize: 18,
-    color: '#ccc',
-    textAlign: 'center',
-    paddingHorizontal: '5%',
-    fontFamily: 'Muli_400Regular',
   },
 });
 
