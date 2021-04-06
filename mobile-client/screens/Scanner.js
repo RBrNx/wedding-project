@@ -5,7 +5,7 @@ import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
 import { Easing } from 'react-native-reanimated';
 import ScannerButtonCard from '../components/ScannerButtonCard';
-import { useAuth } from '../context';
+import { useAuth, useAlert } from '../context';
 import QRScanner from '../components/QRScanner';
 import StandardButton from '../library/components/StandardButton';
 import CameraViewfinder from '../components/CameraViewfinder';
@@ -15,6 +15,7 @@ import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 import DismissKeyboard from '../library/components/DismissKeyboard';
 import ScannerInputCard from '../components/ScannerInputCard';
+import { AlertType } from '../library/enums';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -30,6 +31,7 @@ const ScannerScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const { signInWithShortId } = useAuth();
+  const { showAlert } = useAlert();
   const { animIndex: scannerModeIndex, moveToStep } = useAnimatedStepTransition({
     duration: 200,
     easing: Easing.out(Easing.ease),
@@ -65,7 +67,10 @@ const ScannerScreen = ({ navigation }) => {
       setIsLoading(false);
       setScanned(false);
       console.log(err);
-      Alert.alert('Oops!', err.message);
+      showAlert({
+        message: err.message,
+        type: AlertType.WARNING,
+      });
     }
   };
 
