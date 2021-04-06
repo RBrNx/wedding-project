@@ -8,7 +8,7 @@ module.exports = {
   devtool: 'source-map',
   // Since 'aws-sdk' is not compatible with webpack,
   // we exclude all node dependencies
-  externals: [nodeExternals()],
+  externals: [nodeExternals(), { saslprep: 'saslprep' }],
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
   optimization: {
     // We do not want to minimize our code.
