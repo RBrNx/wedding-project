@@ -1,13 +1,12 @@
 #org: rbrnx
 app: wedding-project
-# NOTE: update this with your service name
 service: wedding-api
 
 # Use the serverless-webpack plugin to transpile ES6
+useDotenv: true
 plugins:
   - serverless-webpack
   - serverless-offline
-  - serverless-dotenv-plugin
   - serverless-domain-manager
 
 # serverless-webpack configuration
@@ -28,6 +27,8 @@ custom:
     endpointType: 'regional'
     stage: '${self:provider.stage}'
     certificateName: 'thewatsonwedding.com'
+    # certificateRegion: 'eu-west-2'
+    # certificateArn: 'arn:aws:acm:eu-west-2:463245273964:certificate/0a5b9ea9-ee14-4527-9fbe-9f04f179deb7'
     createRoute53Record: true
     securityPolicy: tls_1_2
     apiType: rest
