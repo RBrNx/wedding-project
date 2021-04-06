@@ -3,7 +3,6 @@ app: wedding-project
 service: wedding-api
 
 # Use the serverless-webpack plugin to transpile ES6
-useDotenv: true
 plugins:
   - serverless-webpack
   - serverless-offline
@@ -35,6 +34,9 @@ custom:
     autoDomain: true
     enabled: true
 
+useDotenv: true
+disabledDeprecations:
+  - CLI_OPTIONS_SCHEMA
 provider:
   name: aws
   runtime: nodejs12.x
@@ -42,6 +44,7 @@ provider:
   region: eu-west-2
   memorySize: 512
   timeout: 30
+  lambdaHashingVersion: 20201221
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
     COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
