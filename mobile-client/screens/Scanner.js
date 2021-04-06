@@ -13,6 +13,7 @@ import StandardPressable from '../library/components/StandardPressable';
 import ScannerHeading from '../components/ScannerHeading';
 import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
+import ScannerInputCard from '../components/ScannerInputCard';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -179,6 +180,13 @@ const ScannerScreen = ({ navigation }) => {
       )}
       <CameraViewfinder scannerModeIndex={scannerModeIndex} />
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
+      <ScannerInputCard
+        scannerModeIndex={scannerModeIndex}
+        shortId={shortId}
+        setShortId={setShortId}
+        onSubmit={() => attemptSignIn()}
+        isLoading={isLoading}
+      />
       <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
     </View>
   );
