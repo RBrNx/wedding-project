@@ -7,6 +7,7 @@ import DismissKeyboard from '../library/components/DismissKeyboard';
 import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
 import Spacer from '../library/components/Spacer';
+import AppVersion from '../library/components/AppVersion';
 
 const SignInScreen = () => {
   const [emailAddress, setEmailAddress] = useState(null);
@@ -53,6 +54,7 @@ const SignInScreen = () => {
           />
         </View>
         <StandardButton text='Sign In' raised onPress={attemptLogin} loading={signingIn} />
+        <AppVersion />
       </View>
     </DismissKeyboard>
   );
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: '5%',
-    paddingBottom: 25,
     paddingTop: 75,
   },
   headingContainer: {
