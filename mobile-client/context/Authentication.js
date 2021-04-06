@@ -37,7 +37,7 @@ const useProviderAuth = () => {
   };
 
   const signInWithShortId = async shortId => {
-    if (!shortId) return null;
+    if (!shortId || shortId.length !== 12) throw new Error('Invitation ID must be 12 characters long.');
 
     const { data } = await client.mutate({
       mutation: FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION,
