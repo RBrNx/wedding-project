@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
+import { Text, StyleSheet, Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import ScannerButtonCard from '../components/ScannerButtonCard';
 import { useAuth, useAlert } from '../context';
 import QRScanner from '../components/QRScanner';
@@ -64,6 +64,9 @@ const ScannerScreen = ({ navigation }) => {
       opacity: withTiming(hasScannedQRCode ? 1 : 0, { duration: 200, easing: Easing.out(Easing.exp) }),
     };
   });
+  const animatedPermissionStyles = useAnimatedStyle(() => ({
+    opacity: interpolate(scannerModeIndex.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+  }));
 
   const attemptSignIn = async scannedInvitationId => {
     try {
@@ -163,15 +166,15 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   return (
-    <DismissKeyboard style={[styles.container, !hasPermission ? { alignItems: 'center' } : {}]}>
+    <DismissKeyboard style={[styles.container]}>
       {!hasPermission && (
-        <View style={styles.permissionContainer}>
+        <Animated.View style={[styles.permissionContainer, animatedPermissionStyles]} pointerEvents='box-none'>
           <Text style={styles.permissionText}>
             To scan your invitation, we require your permission to access the Camera
           </Text>
-          <QRScanner size={400} />
+          <QRScanner size={100} />
           <StandardButton text='Grant Permission' raised onPress={() => askForCameraPermission(true)} />
-        </View>
+        </Animated.View>
       )}
       {hasPermission && showCamera && (
         <>
@@ -223,9 +226,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 15,
     padding: 15,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    flex: 0.4,
+    position: 'absolute',
+    zIndex: 2,
+    height: 300,
+    top: windowHeight / 2 - 150 + StatusBar.currentHeight,
   },
   permissionText: {
     textAlign: 'center',
