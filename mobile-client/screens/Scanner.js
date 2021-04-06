@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, Platform, Alert, Linking, Vibration } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
-import { Easing } from 'react-native-reanimated';
+import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import ScannerButtonCard from '../components/ScannerButtonCard';
 import { useAuth, useAlert } from '../context';
 import QRScanner from '../components/QRScanner';
@@ -15,6 +15,7 @@ import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 import DismissKeyboard from '../library/components/DismissKeyboard';
 import ScannerInputCard from '../components/ScannerInputCard';
+import LoadingIndicator from '../library/components/LoadingIndicator';
 import { AlertType } from '../library/enums';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
@@ -55,6 +56,14 @@ const ScannerScreen = ({ navigation }) => {
       ),
     });
   }, [navigation, flashEnabled]);
+
+  const animatedLoadingStyles = useAnimatedStyle(() => {
+    const hasScannedQRCode = isLoading && scannerModeIndex.value === 0;
+
+    return {
+      opacity: withTiming(hasScannedQRCode ? 1 : 0, { duration: 200, easing: Easing.out(Easing.exp) }),
+    };
+  });
 
   const attemptSignIn = async scannedShortId => {
     try {
@@ -185,6 +194,9 @@ const ScannerScreen = ({ navigation }) => {
         </>
       )}
       <CameraViewfinder scannerModeIndex={scannerModeIndex} />
+      <Animated.View style={[styles.loadingCard, animatedLoadingStyles]} pointerEvents='none'>
+        <LoadingIndicator size={100} />
+      </Animated.View>
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
       <ScannerInputCard
         scannerModeIndex={scannerModeIndex}
@@ -200,7 +212,7 @@ const ScannerScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: windowHeight,
     alignItems: 'center',
   },
   cameraPreview: {
@@ -217,6 +229,17 @@ const styles = StyleSheet.create({
   },
   permissionText: {
     textAlign: 'center',
+  },
+  loadingCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: windowHeight / 2 - 125 + StatusBar.currentHeight,
+    height: 250,
+    width: 250,
+    zIndex: 1,
   },
 });
 
