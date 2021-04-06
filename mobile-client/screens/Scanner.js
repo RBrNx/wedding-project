@@ -28,10 +28,10 @@ const ScannerScreen = ({ navigation }) => {
   const [ratio, setRatio] = useState('4:3');
   const [isRatioSet, setIsRatioSet] = useState(false);
   const [flashEnabled, setFlashEnabled] = useState(false);
-  const [shortId, setShortId] = useState(null);
+  const [invitationId, setInvitationId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const { signInWithShortId } = useAuth();
+  const { signInWithInvitationId } = useAuth();
   const { showAlert } = useAlert();
   const { animIndex: scannerModeIndex, moveToStep } = useAnimatedStepTransition({
     duration: 200,
@@ -65,11 +65,11 @@ const ScannerScreen = ({ navigation }) => {
     };
   });
 
-  const attemptSignIn = async scannedShortId => {
+  const attemptSignIn = async scannedInvitationId => {
     try {
       setIsLoading(true);
 
-      const signedIn = await signInWithShortId(scannedShortId || shortId);
+      const signedIn = await signInWithInvitationId(scannedInvitationId || invitationId);
 
       if (!signedIn) setIsLoading(false);
     } catch (err) {
@@ -87,10 +87,10 @@ const ScannerScreen = ({ navigation }) => {
     Vibration.vibrate();
     setScanned(true);
 
-    const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<shortId>[A-Za-z0-9_-]{12})/g);
-    const { shortId: scannedShortId } = invitationRegex.exec(data)?.groups || {};
+    const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<invitationId>[A-Za-z0-9_-]{12})/g);
+    const { invitationId: scannedInvitationId } = invitationRegex.exec(data)?.groups || {};
 
-    await attemptSignIn(scannedShortId);
+    await attemptSignIn(scannedInvitationId);
   };
 
   const askForCameraPermission = async manuallyTriggered => {
@@ -200,8 +200,8 @@ const ScannerScreen = ({ navigation }) => {
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
       <ScannerInputCard
         scannerModeIndex={scannerModeIndex}
-        shortId={shortId}
-        setShortId={setShortId}
+        invitationId={invitationId}
+        setInvitationId={setInvitationId}
         onSubmit={() => attemptSignIn()}
         isLoading={isLoading}
       />

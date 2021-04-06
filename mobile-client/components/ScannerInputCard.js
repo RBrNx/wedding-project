@@ -8,7 +8,7 @@ import StandardRoundPressable from '../library/components/StandardRoundPressable
 
 const { height } = Dimensions.get('window');
 
-const ScannerInputCard = ({ scannerModeIndex, shortId, setShortId, onSubmit, isLoading }) => {
+const ScannerInputCard = ({ scannerModeIndex, invitationId, setInvitationId, onSubmit, isLoading }) => {
   const { colors } = useTheme();
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -22,8 +22,8 @@ const ScannerInputCard = ({ scannerModeIndex, shortId, setShortId, onSubmit, isL
         inputStyle={styles.input}
         label='Invitation ID'
         placeholder='E.g epYchHq5k86l'
-        value={shortId}
-        onChangeText={value => setShortId(value)}
+        value={invitationId}
+        onChangeText={value => setInvitationId(value)}
       />
       <StandardRoundPressable
         colour={colors.button}

@@ -1,12 +1,10 @@
 const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
   try {
-    const { shortId } = input;
-
-    console.log('I AM HERE', db);
+    const { invitationId } = input;
 
     const TempLoginDetailsModel = db.model('TempLoginDetails');
 
-    const loginDetails = await TempLoginDetailsModel.findOne({ shortId });
+    const loginDetails = await TempLoginDetailsModel.findOne({ invitationId });
 
     if (!loginDetails)
       return {
