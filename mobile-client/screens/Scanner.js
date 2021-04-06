@@ -177,7 +177,7 @@ const ScannerScreen = ({ navigation }) => {
           />
         </>
       )}
-      <CameraViewfinder />
+      <CameraViewfinder scannerModeIndex={scannerModeIndex} />
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
       <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
     </View>
