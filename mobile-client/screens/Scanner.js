@@ -13,6 +13,7 @@ import StandardPressable from '../library/components/StandardPressable';
 import ScannerHeading from '../components/ScannerHeading';
 import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
+import DismissKeyboard from '../library/components/DismissKeyboard';
 import ScannerInputCard from '../components/ScannerInputCard';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
@@ -148,7 +149,7 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={[styles.container, !hasPermission ? { alignItems: 'center' } : {}]}>
+    <DismissKeyboard style={[styles.container, !hasPermission ? { alignItems: 'center' } : {}]}>
       {!hasPermission && (
         <View style={styles.permissionContainer}>
           <Text style={styles.permissionText}>
@@ -188,7 +189,7 @@ const ScannerScreen = ({ navigation }) => {
         isLoading={isLoading}
       />
       <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
-    </View>
+    </DismissKeyboard>
   );
 };
 
