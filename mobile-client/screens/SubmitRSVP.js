@@ -8,7 +8,7 @@ import StandardActionButton from '../library/components/StandardActionButton';
 import { calculateQuestions, formatRSVP } from '../library/helpers/RSVP';
 import useLazyQuery from '../library/hooks/useLazyQuery';
 import parseError from '../library/helpers/parseError';
-import { useAlert } from '../context/Alert';
+import { useAlert } from '../context';
 import { AlertType } from '../library/enums';
 import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
 import Spacer from '../library/components/Spacer';
@@ -94,7 +94,6 @@ const SubmitRSVPScreen = ({ navigation }) => {
       showAlert({
         message,
         type: AlertType.WARNING,
-        position: 'top',
       });
     }
   };
