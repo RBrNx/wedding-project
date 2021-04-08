@@ -1,22 +1,24 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Text, StyleSheet, Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
+import { Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import styled from 'styled-components/native';
 import ScannerButtonCard from '../components/ScannerButtonCard';
 import { useAuth, useAlert } from '../context';
 import QRScanner from '../components/QRScanner';
 import StandardButton from '../library/components/StandardButton';
 import CameraViewfinder from '../components/CameraViewfinder';
 import StandardPressable from '../library/components/StandardPressable';
-import ScannerHeading from '../components/ScannerHeading';
+import ScannerModeHeading from '../components/ScannerModeHeading';
 import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 import DismissKeyboard from '../library/components/DismissKeyboard';
 import ScannerInputCard from '../components/ScannerInputCard';
 import LoadingIndicator from '../library/components/LoadingIndicator';
 import { AlertType } from '../library/enums';
+import { Layout, Outlines, Theme } from '../styles';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -155,7 +157,7 @@ const ScannerScreen = ({ navigation }) => {
   const renderHeading = ({ step, index }) => {
     const { heading, subHeading } = step;
     return (
-      <ScannerHeading
+      <ScannerModeHeading
         key={index}
         heading={heading}
         subHeading={subHeading}
@@ -166,40 +168,38 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   return (
-    <DismissKeyboard style={[styles.container]}>
+    <StyledDismissKeyboard>
       {!hasPermission && (
-        <Animated.View style={[styles.permissionContainer, animatedPermissionStyles]} pointerEvents='box-none'>
-          <Text style={styles.permissionText}>
-            To scan your invitation, we require your permission to access the Camera
-          </Text>
+        <PermissionCard style={animatedPermissionStyles} pointerEvents='box-none'>
+          <PermissionText>To scan your invitation, we require your permission to access the Camera</PermissionText>
           <QRScanner size={100} />
           <StandardButton text='Grant Permission' raised onPress={() => askForCameraPermission(true)} />
-        </Animated.View>
+        </PermissionCard>
       )}
       {hasPermission && showCamera && (
         <>
-          <Camera
+          <StyledCamera
             ref={cameraRef}
+            style={{ width: windowWidth + imagePadding }}
+            ratio={ratio}
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
+            autoFocus={Camera.Constants.AutoFocus.on}
             barCodeScannerSettings={{
               barCodeTypes: ['qr'],
             }}
-            style={[styles.cameraPreview, { width: windowWidth + imagePadding }]}
-            ratio={ratio}
             onCameraReady={async () => {
               if (!isRatioSet) {
                 await prepareRatio();
               }
             }}
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
-            autoFocus={Camera.Constants.AutoFocus.on}
           />
         </>
       )}
       <CameraViewfinder scannerModeIndex={scannerModeIndex} />
-      <Animated.View style={[styles.loadingCard, animatedLoadingStyles]} pointerEvents='none'>
+      <LoadingCard style={animatedLoadingStyles} pointerEvents='none'>
         <LoadingIndicator size={100} />
-      </Animated.View>
+      </LoadingCard>
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
       <ScannerInputCard
         scannerModeIndex={scannerModeIndex}
@@ -209,44 +209,45 @@ const ScannerScreen = ({ navigation }) => {
         isLoading={isLoading}
       />
       <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
-    </DismissKeyboard>
+    </StyledDismissKeyboard>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    height: windowHeight,
-    alignItems: 'center',
-  },
-  cameraPreview: {
-    ...StyleSheet.absoluteFill,
-  },
-  permissionContainer: {
-    width: '90%',
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 15,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'absolute',
-    zIndex: 2,
-    height: 300,
-    top: windowHeight / 2 - 150 + StatusBar.currentHeight,
-  },
-  permissionText: {
-    textAlign: 'center',
-  },
-  loadingCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: windowHeight / 2 - 125 + StatusBar.currentHeight,
-    height: 250,
-    width: 250,
-    zIndex: 1,
-  },
-});
+const StyledDismissKeyboard = styled(DismissKeyboard)`
+  height: ${windowHeight}px;
+  align-items: center;
+`;
+
+const LoadingCard = styled(Animated.View)`
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+  position: absolute;
+  ${Layout.flexCenter};
+  top: ${windowHeight / 2 - 125 + StatusBar.currentHeight}px;
+  height: 250px;
+  width: 250px;
+  z-index: 1;
+`;
+
+const PermissionCard = styled(Animated.View)`
+  width: 90%;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+  padding: 15px;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  z-index: 2;
+  height: 300px;
+  top: ${windowHeight / 2 - 150 + StatusBar.currentHeight}px;
+`;
+
+const PermissionText = styled.Text`
+  text-align: center;
+`;
+
+const StyledCamera = styled(Camera)`
+  ${Layout.absoluteFill};
+`;
 
 export default ScannerScreen;

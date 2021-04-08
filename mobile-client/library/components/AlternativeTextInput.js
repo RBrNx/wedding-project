@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
 import Animated, {
   Easing,
   Extrapolate,
@@ -8,6 +7,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import styled from 'styled-components/native';
+import { Colours, Outlines, Typography } from '../../styles';
 
 const AlternativeTextInput = ({
   label,
@@ -33,7 +34,7 @@ const AlternativeTextInput = ({
     focusAnimation.value = withTiming(0, { duration: 150, easing: Easing.out(Easing.exp) });
   };
 
-  const smallLabelAnimatedStyles = useAnimatedStyle(() => ({
+  const focusedLabelAnimatedStyles = useAnimatedStyle(() => ({
     opacity: interpolate(focusAnimation.value, [0, 1], [0, 1], Extrapolate.CLAMP),
     transform: [{ translateY: interpolate(focusAnimation.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
   }));
@@ -47,12 +48,12 @@ const AlternativeTextInput = ({
   }));
 
   return (
-    <View style={[styles.container, style]}>
-      <Animated.Text style={[styles.smallLabel, smallLabelAnimatedStyles]}>{label.toUpperCase()}</Animated.Text>
-      <Animated.Text style={[styles.regularLabel, regularLabelAnimatedStyles]}>{label}</Animated.Text>
-      <Animated.Text style={[styles.placeholder, placeholderAnimatedStyles]}>{placeholder}</Animated.Text>
-      <TextInput
-        style={[styles.input, inputStyle]}
+    <Container style={style}>
+      <FocusedLabel style={focusedLabelAnimatedStyles}>{label.toUpperCase()}</FocusedLabel>
+      <RegularLabel style={regularLabelAnimatedStyles}>{label}</RegularLabel>
+      <PlaceholderLabel style={placeholderAnimatedStyles}>{placeholder}</PlaceholderLabel>
+      <StyledTextInput
+        style={inputStyle}
         onFocus={onFocus}
         onBlur={onBlur}
         onChangeText={onChangeText}
@@ -62,46 +63,46 @@ const AlternativeTextInput = ({
         multiline={multiline}
         textAlignVertical={multiline ? 'top' : 'center'}
       />
-    </View>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    width: '100%',
-    padding: 10,
-    paddingLeft: 15,
-    paddingTop: 26,
-  },
-  regularLabel: {
-    position: 'absolute',
-    top: 20,
-    left: 15,
-    color: '#aaa',
-    fontSize: 16,
-  },
-  smallLabel: {
-    position: 'absolute',
-    fontSize: 11,
-    left: 15,
-    top: 8,
-    color: '#484848',
-    fontFamily: 'Muli_700Bold',
-  },
-  placeholder: {
-    position: 'absolute',
-    top: 28,
-    left: 15,
-    color: '#aaa',
-    fontSize: 16,
-    fontFamily: 'Muli_400Regular',
-  },
-  input: {
-    fontSize: 16,
-    fontFamily: 'Muli_400Regular',
-  },
-});
+const Container = styled.View`
+  background-color: ${Colours.neutral.white};
+  width: 100%;
+  padding: 10px;
+  padding-left: 15px;
+  padding-top: 26px;
+  ${Outlines.borderRadius};
+`;
+
+const FocusedLabel = styled(Animated.Text)`
+  position: absolute;
+  left: 15px;
+  top: 8px;
+  color: ${Colours.neutral.offBlack};
+  font-family: 'Muli_700Bold';
+  font-size: 11px;
+`;
+
+const RegularLabel = styled(Animated.Text)`
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  color: #aaa;
+  font-size: 16px;
+`;
+
+const PlaceholderLabel = styled(Animated.Text)`
+  position: absolute;
+  left: 15px;
+  top: 28px;
+  color: #aaa;
+  ${Typography.regular};
+`;
+
+const StyledTextInput = styled.TextInput`
+  ${Typography.regular};
+`;
 
 export default AlternativeTextInput;

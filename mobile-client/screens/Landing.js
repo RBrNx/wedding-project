@@ -1,74 +1,74 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import styled from 'styled-components/native';
 import LandingIllustration from '../components/SVG/Landing';
 import Spacer from '../library/components/Spacer';
 import StandardButton from '../library/components/StandardButton';
+import { Colours, Typography } from '../styles';
 
 const LandingScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <LandingIllustration size='100%' style={styles.heroImage} />
+    <Container>
+      <StyledLandingIllustration size='100%' />
       <Spacer size={50} />
-      <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Welcome to the Watson Wedding.</Text>
+      <HeadingContainer>
+        <HeadingText>Welcome to the Watson Wedding.</HeadingText>
         <Spacer size={15} />
-        <Text style={styles.subHeading}>
+        <SubHeadingText>
           Get started by scanning the QR Code on your invitation, or sign in to your existing account.
-        </Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <StandardButton
-          text='Scan Invitation'
-          raised
-          icon={() => <MaterialCommunityIcons name='qrcode-scan' size={22} color='white' style={styles.icon} />}
-          onPress={() => navigation.navigate('Scanner')}
-        />
-        <View style={styles.separator} />
-        <StandardButton text='I already have an account' raised onPress={() => navigation.navigate('SignIn')} />
-      </View>
-    </View>
+        </SubHeadingText>
+      </HeadingContainer>
+      <StandardButton
+        text='Scan Invitation'
+        raised
+        icon={() => <StyledMaterialCommunityIcon name='qrcode-scan' size={22} color='white' />}
+        onPress={() => navigation.navigate('Scanner')}
+      />
+      <Separator />
+      <StandardButton text='I already have an account' raised onPress={() => navigation.navigate('SignIn')} />
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: '5%',
-  },
-  heroImage: {
-    flex: 1,
-    marginTop: 50,
-  },
-  headingContainer: {
-    flex: 1,
-  },
-  heading: {
-    fontFamily: 'Muli_700Bold',
-    fontSize: 32,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  subHeading: {
-    fontSize: 18,
-    color: '#ccc',
-    textAlign: 'center',
-    paddingHorizontal: '5%',
-    fontFamily: 'Muli_400Regular',
-  },
-  buttonContainer: {
-    paddingBottom: 25,
-  },
-  icon: {
-    marginRight: 25,
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#fff',
-    marginVertical: 10,
-    marginHorizontal: 10,
-  },
-});
+const Container = styled.View`
+  flex: 1;
+  align-items: center;
+  padding-horizontal: 5%;
+  padding-bottom: 25px;
+`;
+
+const StyledLandingIllustration = styled(LandingIllustration)`
+  flex: 1;
+  margin-top: 50px;
+`;
+
+const HeadingContainer = styled.View`
+  flex: 1;
+  padding-horizontal: 5%;
+`;
+
+const HeadingText = styled.Text`
+  ${Typography.heading}
+  text-align: center;
+  color: ${Colours.neutral.white};
+`;
+
+const SubHeadingText = styled.Text`
+  ${Typography.subheading}
+  text-align: center;
+  color: ${Colours.neutral.grey};
+`;
+
+const Separator = styled.View`
+  height: ${StyleSheet.hairlineWidth}px;
+  background-color: ${Colours.neutral.white};
+  margin-vertical: 10px;
+  width: 90%;
+`;
+
+const StyledMaterialCommunityIcon = styled(MaterialCommunityIcons)`
+  margin-right: 15px;
+`;
 
 export default LandingScreen;

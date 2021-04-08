@@ -1,23 +1,25 @@
 import React from 'react';
-import { Dimensions, StatusBar, StyleSheet } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import Svg, { Defs, Rect, Mask } from 'react-native-svg';
+import styled from 'styled-components/native';
+import { Layout } from '../styles';
 
 const { width, height } = Dimensions.get('window');
 
 const CameraViewfinder = ({ style, size = 250, scannerModeIndex }) => {
-  const qrViewfinderStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scannerModeIndex.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+  const squareViewfinderAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scannerModeIndex.value, [0.5, 1], [1, 0], Extrapolate.CLAMP),
   }));
 
-  const fullViewfinderStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scannerModeIndex.value, [0, 1], [0, 1], Extrapolate.CLAMP),
+  const fullViewfinderAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scannerModeIndex.value, [0, 0.5], [0, 1], Extrapolate.CLAMP),
   }));
 
   return (
     <>
-      <Animated.View style={[styles.viewfinder, styles.fullViewfinder, style, fullViewfinderStyle]} />
-      <Animated.View style={[styles.viewfinder, style, qrViewfinderStyle]}>
+      <FullViewfinder style={[style, fullViewfinderAnimatedStyle]} />
+      <SquareViewfinder style={[style, squareViewfinderAnimatedStyle]}>
         <Svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
           <Defs>
             <Mask id='Mask'>
@@ -34,20 +36,18 @@ const CameraViewfinder = ({ style, size = 250, scannerModeIndex }) => {
           </Defs>
           <Rect width='100%' height='100%' fill='rgba(0, 0, 0, .75)' mask='url(#Mask)' />
         </Svg>
-      </Animated.View>
+      </SquareViewfinder>
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  viewfinder: {
-    height: '100%',
-    width: '100%',
-    ...StyleSheet.absoluteFill,
-  },
-  fullViewfinder: {
-    backgroundColor: 'rgba(0, 0, 0, .75)',
-  },
-});
+const FullViewfinder = styled(Animated.View)`
+  background-color: rgba(0, 0, 0, 0.75);
+  ${Layout.absoluteFill};
+`;
+
+const SquareViewfinder = styled(Animated.View)`
+  ${Layout.absoluteFill};
+`;
 
 export default CameraViewfinder;

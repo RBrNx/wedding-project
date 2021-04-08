@@ -1,26 +1,25 @@
 import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions } from 'react-native';
+import styled from 'styled-components/native';
 
 const { width } = Dimensions.get('window');
 
 const StepTransition = ({ steps = [], renderStep = () => null, renderCount = 3, animIndex }) => {
   return (
-    <View style={styles.container}>
+    <Container>
       {steps.map((step, index) => {
         const indexOutOfRange = Math.abs(index - animIndex.value > renderCount);
         if (indexOutOfRange || !step) return null;
 
         return renderStep({ step, index });
       })}
-    </View>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    width,
-  },
-});
+const Container = styled.View`
+  flex-direction: row;
+  width: ${width}px;
+`;
 
 export default StepTransition;

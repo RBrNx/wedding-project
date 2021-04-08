@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import Color from 'color';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import styled from 'styled-components/native';
+import theme from 'styled-theming';
 import StandardPressable from '../library/components/StandardPressable';
 import Spacer from '../library/components/Spacer';
 import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
+import { Colours, Outlines, Theme, Typography } from '../styles';
+import { fade } from '../library/helpers/colours';
 
 const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
   const [buttonWidth, setButtonWidth] = useState(0);
   const { avoidKeyboardStyle } = useAvoidKeyboard();
-  const { colors } = useTheme();
 
   const animatedBackgroundStyle = useAnimatedStyle(() => {
-    const initialPadding = styles.card.padding;
+    const initialPadding = 8;
     const spacing = scannerModeIndex.value * 5;
     const xPosition = scannerModeIndex.value * buttonWidth;
 
@@ -23,64 +23,56 @@ const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
   });
 
   return (
-    <Animated.View
-      style={[
-        styles.card,
-        {
-          backgroundColor: Color(colors.card)
-            .fade(0.5)
-            .toString(),
-        },
-        avoidKeyboardStyle,
-      ]}
-    >
-      <Animated.View style={[styles.buttonBackground, animatedBackgroundStyle, { width: buttonWidth }]} />
-      <StandardPressable
-        style={[styles.button]}
+    <ButtonContainer style={avoidKeyboardStyle}>
+      <ButtonBackground style={[animatedBackgroundStyle, { width: buttonWidth }]} />
+      <Button
         onPress={() => onButtonPress(0)}
         onLayout={event => {
           const { width } = event.nativeEvent.layout;
           setButtonWidth(width);
         }}
       >
-        <Text style={styles.text}>Scan code</Text>
-      </StandardPressable>
+        <ButtonText>Scan code</ButtonText>
+      </Button>
       <Spacer size={5} />
-      <StandardPressable style={[styles.button]} onPress={() => onButtonPress(1)}>
-        <Text style={styles.text}>Enter code</Text>
-      </StandardPressable>
-    </Animated.View>
+      <Button onPress={() => onButtonPress(1)}>
+        <ButtonText>Enter code</ButtonText>
+      </Button>
+    </ButtonContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-    position: 'absolute',
-    bottom: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%',
-    borderRadius: 10,
-    padding: 8,
-  },
-  button: {
-    padding: 15,
-    borderRadius: 5,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonBackground: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    position: 'absolute',
-    height: '100%',
-  },
-  text: {
-    fontSize: 16,
-    fontFamily: 'Muli_400Regular',
-  },
-});
+const ButtonContainer = styled(Animated.View)`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  width: 90%;
+  ${Outlines.borderRadius}
+  position: absolute;
+  bottom: 15px;
+  padding: 8px;
+  background-color: ${theme('theme', {
+    light: fade(Colours.neutral.white, 0.2),
+    dark: fade(Colours.neutral.black, 0.2),
+  })};
+`;
+
+const Button = styled(StandardPressable)`
+  padding: 15px;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ButtonBackground = styled(Animated.View)`
+  ${Outlines.borderRadius}
+  position: absolute;
+  height: 100%;
+  background-color: ${Theme.card};
+`;
+
+const ButtonText = styled.Text`
+  ${Typography.regular}
+`;
 
 export default ScannerButtonCard;

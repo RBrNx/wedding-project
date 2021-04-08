@@ -1,67 +1,52 @@
-import { useTheme } from '@react-navigation/native';
-import Color from 'color';
-import React, { useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
-import { constantStyles } from '../../styles/theming';
+import React from 'react';
+import styled from 'styled-components/native';
+import { Colours, Outlines, Typography } from '../../styles';
+import Pressable from './Pressable';
+import { darken } from '../helpers/colours';
 
 const StandardButton = ({ onPress, raised, text, loading, icon }) => {
-  const [buttonHeight, setButtonHeight] = useState(0);
-  const { colors } = useTheme();
-  const backgroundColor = colors.secondary;
-  const pressedColour = Color(colors.secondary)
-    .darken(0.2)
-    .toString();
-
-  const renderButtonStyles = ({ pressed }) => {
-    const buttonStyles = [
-      styles.button,
-      {
-        backgroundColor: pressed ? pressedColour : backgroundColor,
-        borderRadius: buttonHeight / 2,
-      },
-    ];
-
-    if (raised) buttonStyles.push({ ...constantStyles.inputShadow });
-
-    return buttonStyles;
-  };
-
   return (
-    <Pressable
-      style={renderButtonStyles}
+    <StyledPressable
+      style={({ pressed }) => ({ backgroundColor: pressed ? darken(Colours.secondary, 0.2) : Colours.secondary })}
+      raised={raised}
       onPress={onPress}
-      onLayout={event => {
-        const { height } = event.nativeEvent.layout;
-        setButtonHeight(height);
-      }}
     >
-      <View style={{ opacity: 0 }}>{!loading && icon && icon()}</View>
-      {!loading && <Text style={styles.text}>{text}</Text>}
-      {!loading && icon && icon()}
-      {loading && <ActivityIndicator color='#fff' style={styles.loadingSpinner} />}
-    </Pressable>
+      {!loading && (
+        <>
+          <InvisibleIcon>{icon && icon()}</InvisibleIcon>
+          <ButtonText>{text}</ButtonText>
+          {icon && icon()}
+        </>
+      )}
+      {loading && <StyledActivityIndicator color='#fff' />}
+    </StyledPressable>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 5,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  text: {
-    color: '#fff',
-    textAlign: 'center',
-    flex: 1,
-    paddingVertical: 15,
-    fontSize: 16,
-    fontFamily: 'Muli_400Regular',
-  },
-  loadingSpinner: {
-    paddingVertical: 15,
-  },
-});
+const StyledPressable = styled(Pressable)`
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  height: 50px;
+  border-radius: 25px;
+  ${props => props.raised && Outlines.boxShadow}
+`;
+
+const ButtonText = styled.Text`
+  ${Typography.regular};
+  color: ${Colours.neutral.white};
+  flex: 1;
+  text-align: center;
+  padding-vertical: 15px;
+`;
+
+const StyledActivityIndicator = styled.ActivityIndicator`
+  padding-vertical: 15px;
+`;
+
+const InvisibleIcon = styled.View`
+  opacity: 0;
+`;
 
 export default StandardButton;

@@ -1,39 +1,26 @@
-import Color from 'color';
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import styled from 'styled-components/native';
+import { Colours, Layout } from '../../styles';
+import { darken } from '../helpers/colours';
+import Pressable from './Pressable';
 
-const StandardRoundPressable = ({ size = 56, colour, icon, style, pressedStyle, onPress }) => {
-  const renderPressableStyles = ({ pressed }) => {
-    const pressableStyles = [
-      styles.pressable,
-      { height: size, width: size, borderRadius: size / 2, backgroundColor: colour },
-      style,
-    ];
-
-    if (pressed)
-      pressableStyles.push({
-        backgroundColor: Color(colour)
-          .darken(0.25)
-          .rgb()
-          .toString(),
-        ...pressedStyle,
-      });
-
-    return pressableStyles;
-  };
-
+const StandardRoundPressable = ({ size = 56, colour = Colours.secondary, style, icon, onPress }) => {
   return (
-    <Pressable style={renderPressableStyles} onPress={onPress}>
+    <StyledPressable
+      size={size}
+      style={({ pressed }) => [{ backgroundColor: pressed ? darken(colour, 0.2) : colour }, style]}
+      onPress={onPress}
+    >
       {icon && icon()}
-    </Pressable>
+    </StyledPressable>
   );
 };
 
-export default StandardRoundPressable;
+const StyledPressable = styled(Pressable)`
+  ${Layout.flexCenter};
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
+  border-radius: ${props => props.size / 2}px;
+`;
 
-const styles = StyleSheet.create({
-  pressable: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+export default StandardRoundPressable;
