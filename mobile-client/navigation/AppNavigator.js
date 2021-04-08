@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useColorScheme } from 'react-native';
-import { darkTheme, lightTheme } from '../styles/theming';
+import { ThemeProvider } from 'styled-components';
 import AuthenticatedNavigator from './AuthenticatedNavigator';
 import UnauthenticatedNavigator from './UnauthenticatedNavigator';
 import { useAuth, useSettings } from '../context';
 import { Theme } from '../library/enums';
 import NavigationPresets from '../library/helpers/NavigationPresets';
+import { Colours } from '../styles';
 
 const Stack = createStackNavigator();
 
@@ -21,32 +22,27 @@ const AppNavigator = () => {
   const { isAuthenticated, isSigningOut } = useAuth();
   const { userSettings } = useSettings();
 
-  const getTheme = () => {
-    switch (userSettings.theme) {
-      case Theme.DARK:
-        return darkTheme;
-      case Theme.LIGHT:
-        return lightTheme;
-      case Theme.AUTO:
-      default:
-        return systemLevelTheme === 'dark' ? darkTheme : lightTheme;
-    }
-  };
+  const theme = useMemo(() => {
+    if (userSettings.theme === Theme.AUTO) return systemLevelTheme;
+    return userSettings.theme;
+  }, [userSettings.theme, systemLevelTheme]);
 
   return (
-    <NavigationContainer theme={getTheme()}>
-      <Stack.Navigator screenOptions={screenOptions}>
-        {!isAuthenticated ? (
-          <Stack.Screen
-            name='Unauthenticated'
-            component={UnauthenticatedNavigator}
-            options={{ animationTypeForReplace: isSigningOut ? 'pop' : 'push' }}
-          />
-        ) : (
-          <Stack.Screen name='Authenticated' component={AuthenticatedNavigator} />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={{ theme }}>
+      <NavigationContainer theme={{ colors: { background: Colours.primary } }}>
+        <Stack.Navigator screenOptions={screenOptions}>
+          {!isAuthenticated ? (
+            <Stack.Screen
+              name='Unauthenticated'
+              component={UnauthenticatedNavigator}
+              options={{ animationTypeForReplace: isSigningOut ? 'pop' : 'push' }}
+            />
+          ) : (
+            <Stack.Screen name='Authenticated' component={AuthenticatedNavigator} />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 
