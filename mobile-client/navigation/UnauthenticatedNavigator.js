@@ -20,7 +20,7 @@ const UnauthenticatedNavigator = () => {
       <UnauthenticatedStack.Screen
         name='Scanner'
         component={ScannerScreen}
-        options={NavigationPresets.OnlyBackButton}
+        options={{ ...NavigationPresets.OnlyBackButton, ...NavigationPresets.TransparentHeader }}
       />
     </UnauthenticatedStack.Navigator>
   );

@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { Colours } from '../../styles';
 
 const NavigationPresets = {
   NoHeader: {
@@ -6,9 +7,15 @@ const NavigationPresets = {
   },
   OnlyBackButton: {
     headerShown: true,
-    headerTransparent: true,
+    headerTransparent: false,
     headerTintColor: '#fff',
     headerTitle: '',
+    headerBackTitleVisible: false,
+    headerLeftContainerStyle: { marginLeft: Platform.select({ ios: 15, android: 0 }) },
+    headerStyle: { backgroundColor: Colours.primary, elevation: 0, shadowOpacity: 0 },
+  },
+  TransparentHeader: {
+    headerTransparent: true,
   },
   DefaultTabBar: {
     activeTintColor: '#2991cc',
