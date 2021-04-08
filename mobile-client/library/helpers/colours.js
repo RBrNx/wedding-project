@@ -12,4 +12,16 @@ const lighten = (color, percentage) => {
     .toString();
 };
 
-export { darken, lighten };
+const fade = (color, percentage) => {
+  return Color(color)
+    .fade(percentage)
+    .toString();
+};
+
+const opaque = (color, percentage) => {
+  return Color(color)
+    .opaquer(percentage)
+    .toString();
+};
+
+export { darken, lighten, fade, opaque };
