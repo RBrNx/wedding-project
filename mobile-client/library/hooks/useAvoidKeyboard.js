@@ -25,7 +25,7 @@ const useAvoidKeyboard = ({ padding = 25, showDuration = 400, hideDuration = 200
   });
 
   const avoidKeyboardStyle = useAnimatedStyle(() => ({
-    marginBottom: keyboardHeight.value,
+    transform: [{ translateY: -keyboardHeight.value }],
   }));
 
   return {

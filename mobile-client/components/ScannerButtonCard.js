@@ -18,7 +18,7 @@ const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
     const xPosition = scannerModeIndex.value * buttonWidth;
 
     return {
-      translateX: initialPadding + xPosition + spacing,
+      transform: [{ translateX: initialPadding + xPosition + spacing }],
     };
   });
 
