@@ -1,56 +1,50 @@
-import { useTheme } from '@react-navigation/native';
-import Color from 'color';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { constantStyles } from '../../styles/theming';
+import styled from 'styled-components/native';
+import { Colours, Layout, Outlines, Theme, Typography } from '../../styles';
+import { lighten } from '../helpers/colours';
+import Spacer from './Spacer';
 import StandardPressable from './StandardPressable';
 
 const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
-  const { colors } = useTheme();
-
-  const selectedStyle = {
-    borderColor: colors.secondary,
-    backgroundColor: Color(colors.secondary)
-      .fade(0.8)
-      .string(),
-  };
-
   return (
-    <View style={styles.choiceContainer}>
-      {options.map(option => {
+    <ChoiceContainer>
+      {options.map((option, index) => {
         const isSelected = option._id === selectedValue;
 
         return (
-          <StandardPressable
-            key={option._id}
-            style={[styles.questionChoice, { borderColor: colors.border }, isSelected ? selectedStyle : {}]}
-            onPress={() => setSelectedValue(option._id)}
-          >
-            <Text style={[styles.choiceText, { color: colors.bodyText }]}>{option.label}</Text>
-          </StandardPressable>
+          <React.Fragment key={option._id}>
+            <StyledStandardPressable isSelected={isSelected} onPress={() => setSelectedValue(option._id)}>
+              <ChoiceLabel>{option.label}</ChoiceLabel>
+            </StyledStandardPressable>
+            {index < options.length - 1 && <Spacer size={15} />}
+          </React.Fragment>
         );
       })}
-    </View>
+    </ChoiceContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  choiceContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
-  questionChoice: {
-    ...constantStyles.inputBorder,
-    padding: 15,
-    marginBottom: 15,
-    width: '100%',
-  },
-  choiceText: {
-    fontSize: 16,
-  },
-});
+const ChoiceContainer = styled.View`
+  flex: 1;
+  ${Layout.flexCenter};
+  width: 100%;
+`;
+
+const StyledStandardPressable = styled(StandardPressable)`
+  padding: 15px;
+  width: 100%;
+  ${Outlines.inputBorder}
+  border-color: ${props => (props.isSelected ? Colours.secondary : Colours.neutral.grey)};
+  background-color: ${props => (props.isSelected ? lighten(Colours.secondary, 0.9) : Colours.neutral.offWhite)};
+  ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
+  border-width: ${props => (props.isSelected ? 1.5 : 0.5)}px;
+  elevation: ${props => (props.isSelected ? 4 : 0)};
+`;
+
+const ChoiceLabel = styled.Text`
+  ${Typography.regular};
+  color: ${Theme.bodyTextColour};
+`;
 
 export default StandardRadioInput;

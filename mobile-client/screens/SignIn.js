@@ -7,7 +7,7 @@ import DismissKeyboard from '../library/components/DismissKeyboard';
 import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
 import Spacer from '../library/components/Spacer';
-import AlternativeTextInput from '../library/components/AlternativeTextInput';
+import StandardTextInput from '../library/components/StandardTextInput';
 import AppVersion from '../library/components/AppVersion';
 import { Colours, Typography } from '../styles';
 
@@ -39,14 +39,14 @@ const SignInScreen = () => {
         <SubHeadingText>You&apos;ve been missed!</SubHeadingText>
       </HeadingContainer>
       <InputContainer>
-        <AlternativeTextInput
+        <StandardTextInput
           value={emailAddress}
           label='Email address'
           onChangeText={value => setEmailAddress(value)}
           themeColourOverride='#fff'
         />
         <Spacer size={15} />
-        <AlternativeTextInput
+        <StandardTextInput
           value={password}
           label='Password'
           onChangeText={value => setPassword(value)}

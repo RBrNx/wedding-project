@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import StandardRadioInput from '../library/components/StandardRadioInput';
-import AlternativeTextInput from '../library/components/AlternativeTextInput';
+import StandardTextInput from '../library/components/StandardTextInput';
 
 const { width } = Dimensions.get('window');
 
@@ -33,7 +33,7 @@ const RSVPAnswerInput = ({
         />
       )}
       {questionType === 'TEXT' && (
-        <AlternativeTextInput
+        <StandardTextInput
           value={answerValue}
           label={label}
           placeholder={placeholder}

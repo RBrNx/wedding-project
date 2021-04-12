@@ -3,7 +3,7 @@ import React from 'react';
 import { ActivityIndicator, Dimensions } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import AlternativeTextInput from '../library/components/AlternativeTextInput';
+import StandardTextInput from '../library/components/StandardTextInput';
 import StandardRoundPressable from '../library/components/StandardRoundPressable';
 import { Layout, Outlines } from '../styles';
 
@@ -17,7 +17,7 @@ const ScannerInputCard = ({ scannerModeIndex, invitationId, setInvitationId, onS
 
   return (
     <InputContainer style={animatedContainerStyle}>
-      <AlternativeTextInput
+      <StandardTextInput
         label='Invitation ID'
         placeholder='E.g epYchHq5k86l'
         value={invitationId}
