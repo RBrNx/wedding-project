@@ -9,4 +9,8 @@ const borderRadius = css`
   border-radius: 10px;
 `;
 
-export { boxShadow, borderRadius };
+const inputBorder = css`
+  border-width: 1.5px;
+`;
+
+export { boxShadow, borderRadius, inputBorder };
