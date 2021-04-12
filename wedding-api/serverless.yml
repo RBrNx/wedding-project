@@ -16,6 +16,7 @@ custom:
     includeModules: true
   serverless-offline:
     port: 4000
+    noPrependStageInUrl: true
   domains:
     prod: api.thewatsonwedding.com
     staging: staging-api.thewatsonwedding.com
