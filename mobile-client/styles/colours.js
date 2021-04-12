@@ -4,7 +4,10 @@ const tertiary = '#ff4d56';
 const neutral = {
   white: '#fff',
   offWhite: '#f5f5f5',
+  cream: '#eee',
+  lightGrey: '#e0e0e0',
   grey: '#ccc',
+  darkGrey: '#444',
   offBlack: '#1d1d1d',
   black: '#000',
 };
