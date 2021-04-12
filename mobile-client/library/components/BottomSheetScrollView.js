@@ -1,6 +1,5 @@
-import { useTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, RefreshControl, View, Dimensions } from 'react-native';
+import { RefreshControl, Dimensions } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -8,7 +7,9 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import styled from 'styled-components/native';
 import ListHandle from '../../components/ListHandle';
+import { Colours, Layout, Theme } from '../../styles';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
 import Spacer from './Spacer';
@@ -27,7 +28,6 @@ const BottomSheetScrollView = ({
 }) => {
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { colors } = useTheme();
   const {
     setTotalScrollbarHeight,
     setVisibleScrollbarHeight,
@@ -70,61 +70,67 @@ const BottomSheetScrollView = ({
           await onRefresh();
           setIsRefreshing(false);
         }}
-        progressBackgroundColor='#14233c'
-        colors={['#fff']}
-        tintColor='#2991cc'
+        progressBackgroundColor={Colours.primary}
+        colors={[Colours.neutral.white]}
+        tintColor={Colours.primary}
       />
     );
   };
 
   return (
-    <View style={[styles.container, { top: topOffset }]}>
+    <Container topOffset={topOffset}>
       <ListHandle animatedHandleContainerStyle={animatedHandleContainerStyle} />
-      <View style={styles.scrollviewContainer}>
-        <Animated.ScrollView
-          contentContainerStyle={{
-            backgroundColor: colors.cardBackground,
-            marginTop: collapsedPosition,
-            minHeight: unlockFullScroll
-              ? height - topOffset + collapsedPosition
-              : height - collapsedPosition - HANDLE_HEIGHT,
-            alignItems: 'center',
-          }}
+      <ScrollViewContainer>
+        <StyledAnimatedScrollView
+          topOffset={topOffset}
+          unlockFullScroll={unlockFullScroll}
+          collapsedPosition={collapsedPosition}
           onScroll={scrollHandler}
           scrollEventThrottle={1}
           showsVerticalScrollIndicator={false}
           refreshControl={enableRefreshControl ? renderRefreshControl() : null}
+          onScrollBeginDrag={showScrollbar}
+          onMomentumScrollEnd={hideScrollbar}
+          overScrollMode='never'
           onContentSizeChange={(contentWidth, contentHeight) => {
             setTotalScrollbarHeight(contentHeight);
           }}
           onLayout={e => {
             setVisibleScrollbarHeight(e.nativeEvent.layout.height);
           }}
-          onScrollBeginDrag={showScrollbar}
-          onMomentumScrollEnd={hideScrollbar}
-          overScrollMode='never'
         >
           {children}
           {unlockFullScroll && <Spacer size={collapsedPosition} />}
-        </Animated.ScrollView>
+        </StyledAnimatedScrollView>
         <CustomScrollbar
           handleSize={scrollbarHandleSize}
           animatedHandleStyle={animatedHandleStyle}
           style={animatedScrollbarStyle}
         />
-      </View>
-    </View>
+      </ScrollViewContainer>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
+const Container = styled.View`
+  ${Layout.absoluteFill};
+  top: ${props => props.topOffset}px;
+`;
+
+const ScrollViewContainer = styled.View`
+  flex: 1;
+  flex-direction: row;
+`;
+
+const StyledAnimatedScrollView = styled(Animated.ScrollView).attrs(props => ({
+  contentContainerStyle: {
+    backgroundColor: Theme.background(props),
+    marginTop: props.collapsedPosition,
+    minHeight: props.unlockFullScroll
+      ? height - props.topOffset + props.collapsedPosition
+      : height - props.collapsedPosition - HANDLE_HEIGHT,
+    alignItems: 'center',
   },
-  scrollviewContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-});
+}))``;
 
 export default BottomSheetScrollView;

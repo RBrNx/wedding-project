@@ -1,39 +1,33 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
+import styled from 'styled-components';
+import { Colours } from '../../styles';
 
-const scrollbarSpacing = 10;
+const SCROLLBAR_SPACING = 10;
 
 const CustomScrollbar = ({ handleSize, animatedHandleStyle, style, handleStyle }) => {
   return (
-    <Animated.View style={[styles.scrollbarContainer, style]}>
-      <Animated.View
-        style={[
-          styles.scrollbarHandle,
-          { height: handleSize - scrollbarSpacing * 2 },
-          animatedHandleStyle,
-          handleStyle,
-        ]}
-      />
-    </Animated.View>
+    <ScrollbarContainer style={style}>
+      <ScrollbarHandle handleSize={handleSize} style={[animatedHandleStyle, handleStyle]} />
+    </ScrollbarContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollbarContainer: {
-    position: 'absolute',
-    right: 2,
-    width: 6,
-    borderRadius: 8,
-    backgroundColor: 'transparent',
-    height: '100%',
-  },
-  scrollbarHandle: {
-    width: 2,
-    borderRadius: 8,
-    backgroundColor: 'darkgray',
-    marginTop: scrollbarSpacing,
-  },
-});
+const ScrollbarContainer = styled(Animated.View)`
+  position: absolute;
+  height: 100%;
+  right: 2px;
+  width: 6px;
+  border-radius: 8px;
+  background-color: transparent;
+`;
+
+const ScrollbarHandle = styled(Animated.View)`
+  width: 2px;
+  border-radius: 8px;
+  background-color: ${Colours.neutral.grey};
+  margin-top: ${SCROLLBAR_SPACING}px;
+  height: ${props => props.handleSize - SCROLLBAR_SPACING * 2}px;
+`;
 
 export default CustomScrollbar;

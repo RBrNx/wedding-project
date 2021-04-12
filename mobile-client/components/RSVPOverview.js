@@ -1,22 +1,19 @@
 import { AntDesign } from '@expo/vector-icons';
-import { useTheme } from '@react-navigation/native';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated';
-import { constantStyles } from '../styles/theming';
+import { Dimensions } from 'react-native';
+import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import styled from 'styled-components/native';
 import Spacer from '../library/components/Spacer';
 import StandardRoundPressable from '../library/components/StandardRoundPressable';
+import { Colours, Layout, Outlines, Theme, Typography } from '../styles';
 
 const { width } = Dimensions.get('window');
 
 const RSVPOverviewTitle = ({ index, animIndex }) => {
-  const normalisedAnim = useDerivedValue(() => {
-    return index - animIndex.value;
-  });
-
   const animatedStepStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(normalisedAnim.value, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
-    const translateX = interpolate(normalisedAnim.value, [-0.5, 0, 0.5], [-15, 0, 15], Extrapolate.CLAMP);
+    const normalisedAnim = index - animIndex.value;
+    const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
+    const translateX = interpolate(normalisedAnim, [-0.5, 0, 0.5], [-15, 0, 15], Extrapolate.CLAMP);
 
     return {
       opacity,
@@ -25,92 +22,99 @@ const RSVPOverviewTitle = ({ index, animIndex }) => {
   });
 
   return (
-    <Animated.View style={[styles.header, animatedStepStyle]}>
-      <Text style={styles.questionTitle}>Please review your answers</Text>
-    </Animated.View>
+    <HeaderContainer style={animatedStepStyle}>
+      <HeaderText>Please review your answers</HeaderText>
+    </HeaderContainer>
   );
 };
 
 const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, style }) => {
-  const { colors } = useTheme();
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateX = (index - animIndex.value) * width;
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: (index - animIndex.value) * width }],
+  }));
 
   return (
-    <Animated.View style={[styles.container, animatedStyle, style]}>
+    <Container style={[animatedStyle, style]}>
       {questions.map((question, questionIndex) => {
         const isMultipleChoice = question?.choices?.length;
         const formValue = formValues[question._id];
         const answer = isMultipleChoice ? question.choices.find(choice => choice._id === formValue)?.label : formValue;
 
         return (
-          <View style={[styles.card, { backgroundColor: colors.card }]} key={question._id}>
-            <Text style={styles.questionNumber}>{`Q${questionIndex + 1}`}</Text>
+          <Card key={question._id}>
+            <QuestionNumber>{`Q${questionIndex + 1}`}</QuestionNumber>
             <Spacer size={10} />
-            <View style={styles.textContainer}>
-              <Text style={{ color: colors.bodyText, fontSize: 16, opacity: 0.9 }}>{question.title}</Text>
+            <TextContainer>
+              <QuestionTitle>{question.title}</QuestionTitle>
               <Spacer size={10} />
-              <Text style={{ color: colors.secondary, fontSize: 18 }}>{answer}</Text>
-            </View>
+              <AnswerText>{answer}</AnswerText>
+            </TextContainer>
             <StandardRoundPressable
-              size={45}
+              colour={Colours.neutral.lightGrey}
+              size={40}
               icon={() => (
-                <AntDesign name='edit' color={colors.componentBackground} size={25} style={{ alignSelf: 'center' }} />
+                <AntDesign name='edit' color={Colours.neutral.darkGrey} size={20} style={{ alignSelf: 'center' }} />
               )}
               onPress={() => onEditPress(question, questionIndex)}
             />
-          </View>
+          </Card>
         );
       })}
-    </Animated.View>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: '5%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 50,
-  },
-  card: {
-    width: '100%',
-    borderRadius: 10,
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-    ...constantStyles.cardShadow,
-  },
-  textContainer: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  questionNumber: {
-    color: '#ccc',
-    alignSelf: 'flex-start',
-    fontSize: 16,
-  },
-  header: {
-    paddingLeft: '5%',
-    paddingRight: '15%',
-    paddingBottom: 30,
-    height: 300,
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    width: '100%',
-  },
-  questionTitle: {
-    fontSize: 30,
-    color: '#fff',
-  },
-});
+const HeaderContainer = styled(Animated.View)`
+  position: absolute;
+  width: 100%;
+  height: 300px;
+  padding-left: 5%;
+  padding-right: 15%;
+  padding-bottom: 30px;
+  justify-content: flex-end;
+`;
+
+const HeaderText = styled(Animated.Text)`
+  ${Typography.heading}
+  font-family: 'Muli_400Regular';
+  color: ${Theme.headerTextColour};
+`;
+
+const Container = styled(Animated.View)`
+  flex: 1;
+  padding-horizontal: 5%;
+  padding-top: 50px;
+  ${Layout.flexCenter}
+`;
+
+const Card = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: ${Theme.card} ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
+`;
+
+const QuestionNumber = styled.Text`
+  color: ${Colours.neutral.grey};
+  align-self: flex-start;
+  ${Typography.regular}
+`;
+
+const TextContainer = styled.View`
+  flex: 1;
+`;
+
+const QuestionTitle = styled.Text`
+  color: ${Theme.bodyTextColour};
+  ${Typography.regular}
+`;
+
+const AnswerText = styled.Text`
+  color: ${Colours.secondary};
+  ${Typography.regular}
+`;
 
 export { RSVPOverviewTitle, RSVPOverview };

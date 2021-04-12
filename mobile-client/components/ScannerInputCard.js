@@ -5,7 +5,7 @@ import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-nati
 import styled from 'styled-components/native';
 import AlternativeTextInput from '../library/components/AlternativeTextInput';
 import StandardRoundPressable from '../library/components/StandardRoundPressable';
-import { Layout } from '../styles';
+import { Layout, Outlines } from '../styles';
 
 const { height } = Dimensions.get('window');
 
@@ -47,6 +47,7 @@ const SubmitButton = styled(StandardRoundPressable)`
   border-radius: 25px;
   padding: 10px;
   ${Layout.flexCenter}
+  ${Outlines.boxShadow};
 `;
 
 export default ScannerInputCard;

@@ -1,8 +1,9 @@
-import { useTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { constantStyles } from '../../styles/theming';
+import styled from 'styled-components';
+import { Colours, Layout, Outlines, Typography } from '../../styles';
+import { darken } from '../helpers/colours';
 import useAnimatedActionButton from '../hooks/useAnimatedActionButton';
 
 const { width } = Dimensions.get('window');
@@ -22,7 +23,6 @@ const StandardActionButton = ({
   animationDuration = 300,
 }) => {
   const [isPressed, setIsPressed] = useState(false);
-  const { colors } = useTheme();
   const { animatedExpansionStyle, animatedIconStyle, animatedMessageStyle, isExpanded } = useAnimatedActionButton({
     size,
     expandToFullSize,
@@ -31,50 +31,46 @@ const StandardActionButton = ({
   });
 
   return (
-    <View style={styles.fullscreenContainer} pointerEvents='box-none'>
-      <AnimatedPressable
+    <FullscreenContainer pointerEvents='box-none'>
+      <StyledPressable
         style={[
-          styles.expansion,
-          {
-            height: size,
-            borderRadius: size / 2,
-            backgroundColor: isPressed ? colors.buttonPressed : colors.button,
-          },
+          { backgroundColor: isPressed ? darken(Colours.secondary, 0.2) : Colours.secondary },
           animatedExpansionStyle,
           expansionStyle,
         ]}
+        size={size}
         onPress={isExpanded ? onFullSizePress : onPress}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
       >
-        <Animated.Text style={[styles.label, animatedMessageStyle, messageStyle]}>{label}</Animated.Text>
+        <ExpandedLabel style={[animatedMessageStyle, messageStyle]}>{label}</ExpandedLabel>
         <Animated.View style={[animatedIconStyle, iconStyle]}>{!isExpanded && icon && icon()}</Animated.View>
-      </AnimatedPressable>
-    </View>
+      </StyledPressable>
+    </FullscreenContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  fullscreenContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 99,
-  },
-  expansion: {
-    display: 'flex',
-    position: 'absolute',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-    ...constantStyles.cardShadow,
-  },
-  label: {
-    color: '#fff',
-    textAlign: 'center',
-    marginRight: 0,
-    marginLeft: 0,
-    fontSize: 16,
-  },
-});
+const FullscreenContainer = styled.View`
+  ${Layout.absoluteFill};
+  z-index: 99;
+`;
+
+const StyledPressable = styled(AnimatedPressable)`
+  position: absolute;
+  flex-direction: row;
+  ${Layout.flexCenter};
+  ${Outlines.boxShadow};
+  overflow: hidden;
+  height: ${props => props.size}px;
+  border-radius: ${props => props.size / 2}px;
+`;
+
+const ExpandedLabel = styled(Animated.Text)`
+  color: ${Colours.neutral.white};
+  text-align: center;
+  margin-right: 0;
+  margin-left: 0;
+  ${Typography.regular}
+`;
 
 export default StandardActionButton;
