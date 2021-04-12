@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Easing, runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 
-const useAnimatedStepTransition = ({ duration = 300, easing = Easing.linear } = {}) => {
+const useAnimatedStepTransition = ({ duration = 300, easing = Easing.inOut(Easing.quad) } = {}) => {
   const [currIndex, setCurrIndex] = useState(0);
   const animIndex = useSharedValue(0);
 
