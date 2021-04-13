@@ -8,7 +8,7 @@ const NavigationPresets = {
   OnlyBackButton: {
     headerShown: true,
     headerTransparent: false,
-    headerTintColor: '#fff',
+    headerTintColor: Colours.neutral.white,
     headerTitle: '',
     headerBackTitleVisible: false,
     headerLeftContainerStyle: { marginLeft: Platform.select({ ios: 15, android: 0 }) },
@@ -18,7 +18,8 @@ const NavigationPresets = {
     headerTransparent: true,
   },
   DefaultTabBar: {
-    activeTintColor: '#2991cc',
+    activeTintColor: Colours.secondary,
+    showLabel: false,
     style: {
       borderTopWidth: 0,
       height: Platform.OS === 'android' ? 65 : 80,
