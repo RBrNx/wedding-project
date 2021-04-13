@@ -6,10 +6,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import Amplify from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import client from './utils/apiClient';
-import { SettingsProvider, AuthProvider } from './context';
+import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from './context';
 import awsConfig from './awsExports';
 import AppNavigator from './navigation/AppNavigator';
-import { AlertProvider } from './context/Alert';
 import AppLoader from './components/AppLoader';
 
 Amplify.configure({
@@ -31,13 +30,15 @@ const App = () => {
     <AppearanceProvider>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <AlertProvider defaultPosition='top'>
-            <SettingsProvider>
-              <AppLoader>
-                <AppNavigator />
-              </AppLoader>
-            </SettingsProvider>
-          </AlertProvider>
+          <SettingsProvider>
+            <CurrentThemeProvider>
+              <AlertProvider>
+                <AppLoader>
+                  <AppNavigator />
+                </AppLoader>
+              </AlertProvider>
+            </CurrentThemeProvider>
+          </SettingsProvider>
         </AuthProvider>
       </ApolloProvider>
     </AppearanceProvider>
