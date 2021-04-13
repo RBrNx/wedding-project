@@ -6,9 +6,9 @@ import { ThemeProvider } from 'styled-components';
 import AuthenticatedNavigator from './AuthenticatedNavigator';
 import UnauthenticatedNavigator from './UnauthenticatedNavigator';
 import { useAuth, useSettings } from '../context';
-import { Theme } from '../library/enums';
+import { Theme as ThemeEnum } from '../library/enums';
 import NavigationPresets from '../library/helpers/NavigationPresets';
-import { Colours } from '../styles';
+import { Colours, Theme } from '../styles';
 
 const Stack = createStackNavigator();
 
@@ -23,13 +23,24 @@ const AppNavigator = () => {
   const { userSettings } = useSettings();
 
   const theme = useMemo(() => {
-    if (userSettings.theme === Theme.AUTO) return systemLevelTheme;
+    if (userSettings.theme === ThemeEnum.AUTO) return systemLevelTheme;
     return userSettings.theme;
   }, [userSettings.theme, systemLevelTheme]);
 
+  // Create the props structure expect by styled-components
+  const styledProps = { theme: { theme } };
+
   return (
     <ThemeProvider theme={{ theme }}>
-      <NavigationContainer theme={{ colors: { background: Colours.primary } }}>
+      <NavigationContainer
+        theme={{
+          colors: {
+            background: Colours.primary,
+            card: Theme.card(styledProps),
+            text: Theme.bodyTextColour(styledProps),
+          },
+        }}
+      >
         <Stack.Navigator screenOptions={screenOptions}>
           {!isAuthenticated ? (
             <Stack.Screen
