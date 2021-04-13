@@ -1,7 +1,8 @@
-import { useTheme } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, StatusBar, View } from 'react-native';
+import { StatusBar } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import styled from 'styled-components/native';
+import { Colours, Layout, Typography } from '../../styles';
 import BottomSheetFlatList from './BottomSheetFlatList';
 
 const HEADER_MAX_HEIGHT = 350;
@@ -17,7 +18,6 @@ const HeaderFlatlist = ({
   ListEmptyComponent,
   ListFooterComponent,
 }) => {
-  const { colors } = useTheme();
   const scrollY = useSharedValue(0);
 
   const scrollHandler = event => {
@@ -51,11 +51,11 @@ const HeaderFlatlist = ({
   });
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={styles.headerContainer} pointerEvents='none'>
-        <Animated.View style={[styles.headerImage, animatedImageStyle]}>{renderImage && renderImage()}</Animated.View>
-        <Text style={styles.headerTitle}>{title}</Text>
-      </Animated.View>
+    <Container>
+      <HeaderContainer pointerEvents='none'>
+        <HeaderImage style={animatedImageStyle}>{renderImage && renderImage()}</HeaderImage>
+        <HeaderText>{title}</HeaderText>
+      </HeaderContainer>
       <BottomSheetFlatList
         data={data}
         onScroll={scrollHandler}
@@ -64,57 +64,56 @@ const HeaderFlatlist = ({
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={ListFooterComponent}
       />
-      <Animated.View style={[styles.navigationBar, animatedNavBarStyle, { backgroundColor: colors.background }]}>
-        <Text style={styles.barTitle}>{title}</Text>
-      </Animated.View>
-    </View>
+      <NavigationBar style={animatedNavBarStyle}>
+        <NavigationBarTitle>{title}</NavigationBarTitle>
+      </NavigationBar>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  headerContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    overflow: 'hidden',
-    height: HEADER_MAX_HEIGHT,
-    padding: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerImage: {
-    width: '100%',
-    resizeMode: 'contain',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    position: 'absolute',
-    fontSize: 36,
-    color: '#fff',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-    textShadowColor: '#000',
-    bottom: 15,
-  },
-  navigationBar: {
-    height: HEADER_MIN_HEIGHT,
-    paddingTop: StatusBar.currentHeight || HEADER_MIN_HEIGHT / 2 - 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-  },
-  barTitle: {
-    color: '#fff',
-    fontSize: 24,
-  },
-});
+const Container = styled.View`
+  flex: 1;
+`;
+
+const HeaderContainer = styled.View`
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: ${HEADER_MAX_HEIGHT}px;
+  padding: 40px;
+  ${Layout.flexCenter};
+  overflow: hidden;
+`;
+
+const HeaderImage = styled(Animated.View)`
+  width: 100%;
+  resize-mode: contain;
+  ${Layout.flexCenter};
+`;
+
+const HeaderText = styled.Text`
+  position: absolute;
+  ${Typography.heading};
+  color: ${Colours.neutral.white};
+  bottom: 15px;
+  text-shadow: 0px 1px 2px;
+`;
+
+const NavigationBar = styled(Animated.View)`
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  ${Layout.flexCenter};
+  height: ${HEADER_MIN_HEIGHT}px;
+  padding-top: ${StatusBar.currentHeight || HEADER_MIN_HEIGHT / 2 - 12}px;
+  background-color: ${Colours.primary};
+`;
+
+const NavigationBarTitle = styled.Text`
+  font-size: 24px;
+  color: ${Colours.neutral.white};
+`;
 
 export default HeaderFlatlist;
