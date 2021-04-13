@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import theme from 'styled-theming';
 import StandardPressable from '../library/components/StandardPressable';
 import Spacer from '../library/components/Spacer';
 import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
-import { Colours, Outlines, Theme, Typography } from '../styles';
+import { Colours, Outlines, Typography } from '../styles';
 import { fade } from '../library/helpers/colours';
 
 const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
@@ -51,10 +50,7 @@ const ButtonContainer = styled(Animated.View)`
   position: absolute;
   bottom: 15px;
   padding: 8px;
-  background-color: ${theme('theme', {
-    light: fade(Colours.neutral.white, 0.2),
-    dark: fade(Colours.neutral.black, 0.2),
-  })};
+  background-color: ${fade(Colours.neutral.white, 0.2)};
 `;
 
 const Button = styled(StandardPressable)`
@@ -68,7 +64,7 @@ const ButtonBackground = styled(Animated.View)`
   ${Outlines.borderRadius}
   position: absolute;
   height: 100%;
-  background-color: ${Theme.card};
+  background-color: ${Colours.neutral.white};
 `;
 
 const ButtonText = styled.Text`

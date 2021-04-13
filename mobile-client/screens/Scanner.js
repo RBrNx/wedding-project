@@ -19,6 +19,7 @@ import ScannerInputCard from '../components/ScannerInputCard';
 import LoadingIndicator from '../library/components/LoadingIndicator';
 import { AlertType } from '../library/enums';
 import { Layout, Outlines, Theme } from '../styles';
+import parseError from '../library/helpers/parseError';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -80,9 +81,11 @@ const ScannerScreen = ({ navigation }) => {
     } catch (err) {
       setIsLoading(false);
       setScanned(false);
-      console.log(err);
+
+      const { message } = parseError(err);
+      console.log(message);
       showAlert({
-        message: err.message,
+        message,
         type: AlertType.WARNING,
       });
     }
