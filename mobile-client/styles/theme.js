@@ -1,9 +1,15 @@
 import theme from 'styled-theming';
+import { darken, lighten } from '../library/helpers/colours';
 import { neutral } from './colours';
 
 const card = theme('theme', {
   light: neutral.white,
-  dark: neutral.black,
+  dark: neutral.darkerGrey,
+});
+
+const cardPressed = theme('theme', {
+  light: darken(neutral.white, 0.2),
+  dark: lighten(neutral.offBlack, 0.2),
 });
 
 const background = theme('theme', {
@@ -21,4 +27,4 @@ const bodyTextColour = theme('theme', {
   dark: neutral.cream,
 });
 
-export { card, background, headerTextColour, bodyTextColour };
+export { card, cardPressed, background, headerTextColour, bodyTextColour };
