@@ -9,7 +9,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
-const useAnimatedAlert = ({ position, isVisible, isStatusBarTranslucent, breathingSpace, alertHeight } = {}) => {
+const useAnimatedAlert = ({ position, isVisible, isStatusBarTranslucent, breathingSpace, alertHeight = 100 } = {}) => {
   const alertEntrance = useSharedValue(0);
   const { height } = useWindowDimensions();
   const statusBarPadding = isStatusBarTranslucent ? StatusBar.currentHeight : 0;
