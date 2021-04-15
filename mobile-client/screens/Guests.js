@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
+import styled from 'styled-components/native';
 import GuestCard from '../components/GuestCard';
 import HeaderFlatlist from '../library/components/HeaderFlatlist';
 import LoadingIndicator from '../library/components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import PartyIllustration from '../components/SVG/Party';
+import { Layout } from '../styles';
 
 const ALL_GUESTS_QUERY = loader('../graphql/queries/getAllGuests.graphql');
 
@@ -24,9 +26,9 @@ const GuestRow = ({ guest, index }) => {
   }, [index, translateY]);
 
   return (
-    <Animated.View style={[styles.cardContainer, { transform: [{ translateY }] }]}>
+    <CardContainer style={{ transform: [{ translateY }] }}>
       <GuestCard guest={guest} index={index} />
-    </Animated.View>
+    </CardContainer>
   );
 };
 
@@ -36,35 +38,31 @@ const GuestsScreen = () => {
   return (
     <HeaderFlatlist
       title='Guests'
-      onRefresh={async () => {
-        await refetch();
-      }}
+      onRefresh={async () => refetch()}
       renderItem={({ item, index }) => <GuestRow guest={item} index={index} />}
       data={data?.getAllGuests}
       renderImage={() => <PartyIllustration size='100%' />}
       ListEmptyComponent={() => (
-        <View style={styles.emptyContainer}>
+        <ListEmptyContainer>
           {loading && <LoadingIndicator size={100} />}
           {error && (
             <ErrorMessage size={125} message='We encountered an error when loading your Guests, please try again.' />
           )}
           {!error && !loading && <EmptyMessage size={125} />}
-        </View>
+        </ListEmptyContainer>
       )}
     />
   );
 };
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    paddingHorizontal: '4%',
-  },
-  emptyContainer: {
-    flex: 1,
-    paddingHorizontal: '4%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+const CardContainer = styled(Animated.View)`
+  padding-horizontal: 5%;
+`;
+
+const ListEmptyContainer = styled.View`
+  flex: 1;
+  padding-horizontal: 5%;
+  ${Layout.flexCenter};
+`;
 
 export default GuestsScreen;

@@ -1,17 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
 import Constants from 'expo-constants';
+import styled from 'styled-components/native';
 import { version } from '../../package.json';
+import { Colours } from '../../styles';
 
 const AppVersion = ({ style }) => {
   const versionString = __DEV__ ? version : `${Constants.nativeAppVersion} (${Constants.nativeBuildVersion})`;
-  return <Text style={[styles.text, style]}>{`v${versionString}`}</Text>;
+  return <VersionText style={style}>{`v${versionString}`}</VersionText>;
 };
 
-const styles = StyleSheet.create({
-  text: {
-    color: '#fff',
-    marginVertical: 5,
-  },
-});
+const VersionText = styled.Text`
+  color: ${Colours.neutral.grey3};
+  margin-vertical: 5px;
+`;
+
 export default AppVersion;

@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withDelay } from 'react-native-reanimated';
-import ConfettoImage from '../../assets/confetti.png';
+import styled from 'styled-components/native';
+import ConfettoSprite from '../../assets/confetti.png';
+import { Layout } from '../../styles';
 import { colours } from '../../styles/theming';
 import withVelocity from '../animations/withVelocity';
 
 const NUM_CONFETTI = 50;
-const COLOURS = [colours.lightBlue, colours.coral];
 const CONFETTI_SIZE = 16;
+const COLOURS = [colours.lightBlue, colours.coral];
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 const createConfetti = () => {
@@ -75,9 +77,9 @@ const Confetto = ({ colour, animatedParams }) => {
   });
 
   return (
-    <Animated.View style={[styles.confettoContainer, animatedStyle]}>
-      <Image source={ConfettoImage} tintColor={colour} style={styles.confetto} />
-    </Animated.View>
+    <ConfettoContainer style={animatedStyle}>
+      <ConfettoImage source={ConfettoSprite} tintColor={colour} />
+    </ConfettoContainer>
   );
 };
 
@@ -85,26 +87,29 @@ const ConfettiCannon = ({ initialDelay = 0 }) => {
   const confetti = useMemo(createConfetti, []);
 
   return (
-    <View pointerEvents='none' style={StyleSheet.absoluteFill}>
+    <CannonContainer pointerEvents='none'>
       {confetti.map(({ key, colour, delay, ...animatedParams }) => {
         return (
           <Confetto key={key} colour={colour} animatedParams={{ ...animatedParams, delay: initialDelay + delay }} />
         );
       })}
-    </View>
+    </CannonContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  confettoContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  confetto: {
-    width: CONFETTI_SIZE,
-    height: CONFETTI_SIZE,
-  },
-});
+const CannonContainer = styled.View`
+  ${Layout.absoluteFill};
+`;
+
+const ConfettoContainer = styled(Animated.View)`
+  position: absolute;
+  top: 0px;
+  left: 0px;
+`;
+
+const ConfettoImage = styled.Image`
+  width: ${CONFETTI_SIZE}px;
+  height: ${CONFETTI_SIZE}px;
+`;
 
 export default ConfettiCannon;
