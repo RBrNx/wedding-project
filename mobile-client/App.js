@@ -32,11 +32,11 @@ const App = () => {
         <AuthProvider>
           <SettingsProvider>
             <CurrentThemeProvider>
-              <AlertProvider>
-                <AppLoader>
+              <AppLoader>
+                <AlertProvider>
                   <AppNavigator />
-                </AppLoader>
-              </AlertProvider>
+                </AlertProvider>
+              </AppLoader>
             </CurrentThemeProvider>
           </SettingsProvider>
         </AuthProvider>
