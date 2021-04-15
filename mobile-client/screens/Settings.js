@@ -115,7 +115,7 @@ const SettingCard = styled(StandardPressable).attrs(props => ({
   justify-content: space-between;
   padding: 20px;
   margin-horizontal: 20px;
-  margin-vertical: 5px;
+  margin-bottom: 10px;
   background-color: ${Theme.card};
   ${Outlines.borderRadius};
 `;
