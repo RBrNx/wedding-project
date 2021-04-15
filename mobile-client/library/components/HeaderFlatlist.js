@@ -3,11 +3,10 @@ import { StatusBar } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { Colours, Layout, Typography } from '../../styles';
+import { BottomSheet } from '../helpers/constants';
 import BottomSheetFlatList from './BottomSheetFlatList';
 
-const HEADER_MAX_HEIGHT = 350;
-const HEADER_MIN_HEIGHT = 100;
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+const { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
 
 const HeaderFlatlist = ({
   title,

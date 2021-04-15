@@ -12,10 +12,9 @@ import { Colours, Theme } from '../../styles';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
 import ListHandle from '../../components/ListHandle';
+import { BottomSheet } from '../helpers/constants';
 
-const HEADER_MAX_HEIGHT = 350;
-const HEADER_MIN_HEIGHT = 100;
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+const { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyComponent, ListFooterComponent }) => {

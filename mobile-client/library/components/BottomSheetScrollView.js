@@ -10,10 +10,12 @@ import Animated, {
 import styled from 'styled-components/native';
 import ListHandle from '../../components/ListHandle';
 import { Colours, Layout, Theme } from '../../styles';
+import { BottomSheet } from '../helpers/constants';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
 import Spacer from './Spacer';
 
+const { HEADER_MAX_HEIGHT } = BottomSheet;
 const { height } = Dimensions.get('window');
 const HANDLE_HEIGHT = 20;
 
@@ -22,7 +24,7 @@ const BottomSheetScrollView = ({
   onRefresh,
   onScroll,
   topOffset,
-  collapsedPosition = 350,
+  collapsedPosition = HEADER_MAX_HEIGHT,
   unlockFullScroll = false,
   enableRefreshControl = false,
 }) => {
