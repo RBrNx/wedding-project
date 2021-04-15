@@ -10,7 +10,9 @@
             "margin-horizontal",
             "margin-vertical",
             "shadow-radius",
-            "elevation"
+            "elevation",
+            "tint-color",
+            "resize-mode"
           ]
         }
       }
