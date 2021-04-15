@@ -73,12 +73,12 @@ const HeadingContainer = styled.View`
 `;
 
 const HeadingText = styled.Text`
-  ${Typography.heading};
+  ${Typography.h1};
   color: ${Colours.neutral.white};
 `;
 
 const SubHeadingText = styled.Text`
-  ${Typography.heading};
+  ${Typography.h1};
   color: ${Colours.neutral.white};
   font-family: 'Muli_400Regular';
 `;

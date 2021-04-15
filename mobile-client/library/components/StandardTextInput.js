@@ -90,7 +90,7 @@ const Container = styled.View`
 `;
 
 const FlatContainer = styled(Container)`
-  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey)};
+  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey3)};
   background-color: ${props => (props.isFocused ? Colours.neutral.white : Colours.neutral.offWhite)};
   border-width: ${props => (props.isFocused ? 1.5 : 0.5)}px;
   elevation: ${props => (props.isFocused ? 4 : 0)};

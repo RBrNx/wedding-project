@@ -34,13 +34,13 @@ const Container = styled(Animated.View)`
 `;
 
 const QuestionNumber = styled.Text`
-  ${Typography.heading};
+  ${Typography.h1};
   font-family: 'Muli_400Regular';
   color: ${Colours.secondary};
 `;
 
 const QuestionTitle = styled.Text`
-  ${Typography.heading};
+  ${Typography.h1};
   font-family: 'Muli_400Regular';
   color: ${Colours.neutral.white};
 `;

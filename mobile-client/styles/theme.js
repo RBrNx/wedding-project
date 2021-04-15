@@ -4,7 +4,7 @@ import { neutral } from './colours';
 
 const card = theme('theme', {
   light: neutral.white,
-  dark: neutral.darkerGrey,
+  dark: neutral.grey5,
 });
 
 const cardPressed = theme('theme', {
@@ -18,13 +18,23 @@ const background = theme('theme', {
 });
 
 const headerTextColour = theme('theme', {
-  light: neutral.white,
-  dark: neutral.black,
+  light: neutral.black,
+  dark: neutral.white,
 });
 
 const bodyTextColour = theme('theme', {
-  light: neutral.darkGrey,
+  light: neutral.grey4,
   dark: neutral.cream,
 });
 
-export { card, cardPressed, background, headerTextColour, bodyTextColour };
+const detailTextColour = theme('theme', {
+  light: neutral.grey4,
+  dark: neutral.grey3,
+});
+
+const icon = theme('theme', {
+  light: neutral.grey2,
+  dark: neutral.grey3,
+});
+
+export { card, cardPressed, background, headerTextColour, bodyTextColour, detailTextColour, icon };

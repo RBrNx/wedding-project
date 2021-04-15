@@ -49,15 +49,15 @@ const HeadingContainer = styled.View`
 `;
 
 const HeadingText = styled.Text`
-  ${Typography.heading}
+  ${Typography.h1}
   text-align: center;
   color: ${Colours.neutral.white};
 `;
 
 const SubHeadingText = styled.Text`
-  ${Typography.subheading}
+  ${Typography.h3}
   text-align: center;
-  color: ${Colours.neutral.grey};
+  color: ${Colours.neutral.grey3};
 `;
 
 const Separator = styled.View`

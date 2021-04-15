@@ -1,7 +1,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { Colours, Layout, Theme } from '../styles';
+import { Layout, Theme } from '../styles';
 
 const ListHandle = ({ animatedHandleContainerStyle }) => {
   return (
@@ -24,7 +24,7 @@ const Handle = styled.View`
   width: 30px;
   height: 5px;
   border-radius: 5px;
-  background-color: ${Colours.neutral.grey};
+  background-color: ${Theme.icon};
 `;
 
 export default ListHandle;

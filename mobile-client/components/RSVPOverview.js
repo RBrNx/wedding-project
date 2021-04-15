@@ -50,10 +50,10 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
               <AnswerText>{answer}</AnswerText>
             </TextContainer>
             <StandardRoundPressable
-              colour={Colours.neutral.lightGrey}
+              colour={Colours.neutral.grey3}
               size={40}
               icon={() => (
-                <AntDesign name='edit' color={Colours.neutral.darkGrey} size={20} style={{ alignSelf: 'center' }} />
+                <AntDesign name='edit' color={Colours.neutral.grey4} size={20} style={{ alignSelf: 'center' }} />
               )}
               onPress={() => onEditPress(question, questionIndex)}
             />
@@ -75,7 +75,7 @@ const HeaderContainer = styled(Animated.View)`
 `;
 
 const HeaderText = styled(Animated.Text)`
-  ${Typography.heading}
+  ${Typography.h1}
   font-family: 'Muli_400Regular';
   color: ${Theme.headerTextColour};
 `;
@@ -93,12 +93,13 @@ const Card = styled.View`
   align-items: center;
   padding: 10px;
   margin-bottom: 10px;
-  background-color: ${Theme.card} ${Outlines.borderRadius};
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
   ${Outlines.boxShadow};
 `;
 
 const QuestionNumber = styled.Text`
-  color: ${Colours.neutral.grey};
+  color: ${Colours.neutral.grey3};
   align-self: flex-start;
   ${Typography.regular}
 `;

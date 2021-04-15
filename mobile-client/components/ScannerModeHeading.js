@@ -35,14 +35,14 @@ const HeadingContainer = styled(Animated.View)`
 `;
 
 const HeadingText = styled.Text`
-  ${Typography.heading};
+  ${Typography.h1};
   color: ${Colours.neutral.white};
   text-align: center;
 `;
 
 const SubHeadingText = styled.Text`
-  ${Typography.subheading};
-  color: ${Colours.neutral.grey};
+  ${Typography.h3};
+  color: ${Colours.neutral.grey3};
   text-align: center;
 `;
 

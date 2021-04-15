@@ -94,7 +94,7 @@ const HeaderImage = styled(Animated.View)`
 
 const HeaderText = styled.Text`
   position: absolute;
-  ${Typography.heading};
+  ${Typography.h1};
   color: ${Colours.neutral.white};
   bottom: 15px;
   text-shadow: 0px 1px 2px;

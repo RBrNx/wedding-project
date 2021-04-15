@@ -1,6 +1,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
+import theme from 'styled-theming';
 import { Colours } from '../../styles';
 
 const SCROLLBAR_SPACING = 10;
@@ -25,7 +26,10 @@ const ScrollbarContainer = styled(Animated.View)`
 const ScrollbarHandle = styled(Animated.View)`
   width: 2px;
   border-radius: 8px;
-  background-color: ${Colours.neutral.grey};
+  background-color: ${theme('theme', {
+    light: Colours.neutral.grey3,
+    dark: Colours.neutral.grey4,
+  })};
   margin-top: ${SCROLLBAR_SPACING}px;
   height: ${props => props.handleSize - SCROLLBAR_SPACING * 2}px;
 `;

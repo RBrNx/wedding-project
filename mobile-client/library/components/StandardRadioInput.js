@@ -34,7 +34,7 @@ const StyledStandardPressable = styled(StandardPressable)`
   padding: 15px;
   width: 100%;
   ${Outlines.inputBorder}
-  border-color: ${props => (props.isSelected ? Colours.secondary : Colours.neutral.grey)};
+  border-color: ${props => (props.isSelected ? Colours.secondary : Colours.neutral.grey3)};
   background-color: ${props => (props.isSelected ? lighten(Colours.secondary, 0.9) : Colours.neutral.offWhite)};
   ${Outlines.borderRadius};
   ${Outlines.boxShadow};

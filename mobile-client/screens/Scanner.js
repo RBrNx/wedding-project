@@ -18,7 +18,7 @@ import DismissKeyboard from '../library/components/DismissKeyboard';
 import ScannerInputCard from '../components/ScannerInputCard';
 import LoadingIndicator from '../library/components/LoadingIndicator';
 import { AlertType } from '../library/enums';
-import { Layout, Outlines, Theme } from '../styles';
+import { Colours, Layout, Outlines } from '../styles';
 import parseError from '../library/helpers/parseError';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
@@ -222,7 +222,7 @@ const StyledDismissKeyboard = styled(DismissKeyboard)`
 `;
 
 const LoadingCard = styled(Animated.View)`
-  background-color: ${Theme.card};
+  background-color: ${Colours.neutral.white};
   ${Outlines.borderRadius};
   position: absolute;
   ${Layout.flexCenter};
@@ -234,7 +234,7 @@ const LoadingCard = styled(Animated.View)`
 
 const PermissionCard = styled(Animated.View)`
   width: 90%;
-  background-color: ${Theme.card};
+  background-color: ${Colours.neutral.white};
   ${Outlines.borderRadius};
   padding: 15px;
   justify-content: space-between;
