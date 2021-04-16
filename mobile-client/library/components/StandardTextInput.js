@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Animated, {
   Easing,
   Extrapolate,
@@ -8,7 +8,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { Colours, Outlines, Typography } from '../../styles';
+import theme from 'styled-theming';
+import { Colours, Outlines, Theme, Typography } from '../../styles';
 
 const StandardTextInput = ({
   label,
@@ -23,6 +24,7 @@ const StandardTextInput = ({
   inputStyle,
   flat,
 }) => {
+  const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
   const focusAnimation = useSharedValue(value ? 1 : 0);
   const ContainerComponent = flat ? FlatContainer : Container;
@@ -53,7 +55,7 @@ const StandardTextInput = ({
   }));
 
   return (
-    <ContainerComponent style={style} isFocused={isFocused}>
+    <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
       <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
       <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
         {label}
@@ -62,6 +64,7 @@ const StandardTextInput = ({
         {placeholder}
       </PlaceholderLabel>
       <StyledTextInput
+        ref={textInput}
         value={value}
         style={inputStyle}
         onFocus={onFocus}
@@ -77,8 +80,8 @@ const StandardTextInput = ({
   );
 };
 
-const Container = styled.View`
-  background-color: ${Colours.neutral.white};
+const Container = styled.Pressable`
+  background-color: ${Theme.card};
   width: 100%;
   padding: 10px;
   padding-left: 15px;
@@ -90,8 +93,8 @@ const Container = styled.View`
 `;
 
 const FlatContainer = styled(Container)`
+  background-color: ${Theme.card};
   border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey3)};
-  background-color: ${props => (props.isFocused ? Colours.neutral.white : Colours.neutral.offWhite)};
   border-width: ${props => (props.isFocused ? 1.5 : 0.5)}px;
   elevation: ${props => (props.isFocused ? 4 : 0)};
 `;
@@ -100,9 +103,12 @@ const FocusedLabel = styled(Animated.Text)`
   position: absolute;
   left: 15px;
   top: 8px;
-  color: ${Colours.neutral.offBlack};
   font-family: 'Muli_700Bold';
   font-size: 11px;
+  color: ${theme('theme', {
+    light: Colours.neutral.offBlack,
+    dark: Colours.neutral.offWhite,
+  })};
 `;
 
 const RegularLabel = styled(Animated.Text)`
