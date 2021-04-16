@@ -16,7 +16,8 @@ const StandardActionButton = ({
   onPress,
   onFullSizePress,
   expandToFullSize,
-  expansionStyle = { right: 16, bottom: 16 },
+  position = { right: 16, bottom: 16 },
+  style,
   iconStyle,
   messageStyle,
   maxExpansionWidth = width,
@@ -36,9 +37,10 @@ const StandardActionButton = ({
         style={[
           { backgroundColor: isPressed ? darken(Colours.secondary, 0.2) : Colours.secondary },
           animatedExpansionStyle,
-          expansionStyle,
+          style,
         ]}
         size={size}
+        position={position}
         onPress={isExpanded ? onFullSizePress : onPress}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
@@ -63,6 +65,7 @@ const StyledPressable = styled(AnimatedPressable)`
   overflow: hidden;
   height: ${props => props.size}px;
   border-radius: ${props => props.size / 2}px;
+  ${props => props.position};
 `;
 
 const ExpandedLabel = styled(Animated.Text)`

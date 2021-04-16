@@ -20,6 +20,7 @@ import BackButton from '../library/components/BackButton';
 import { RSVPOverview, RSVPOverviewTitle } from '../components/RSVPOverview';
 import BackButtonImage from '../library/components/BackButtonImage';
 import { Colours } from '../styles';
+import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
 
 const { width, height } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
@@ -38,6 +39,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
+  const { avoidKeyboardStyle } = useAvoidKeyboard();
 
   const isLoading = loading || submitting;
   const sheetMinHeight = height - SHEET_COLLAPSED_POS - HANDLE_HEIGHT;
@@ -193,7 +195,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         collapsedPosition={SHEET_COLLAPSED_POS}
         unlockFullScroll={!isLoading}
       >
-        {isLoading && <LoadingIndicator size={100} />}
+        {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (
           <ContentContainer>
             <StyledBackButton onPress={onPrev} />
@@ -202,6 +204,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         )}
       </BottomSheetScrollView>
       <StandardActionButton
+        style={avoidKeyboardStyle}
         label='Submit RSVP'
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNext}
@@ -215,6 +218,10 @@ const SubmitRSVPScreen = ({ navigation }) => {
 };
 
 const ContentContainer = styled.View`
+  flex: 1;
+`;
+
+const StyledLoadingIndictor = styled(LoadingIndicator)`
   flex: 1;
 `;
 
