@@ -3,13 +3,12 @@ import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withDelay } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import ConfettoSprite from '../../assets/confetti.png';
-import { Layout } from '../../styles';
-import { colours } from '../../styles/theming';
+import { Colours, Layout } from '../../styles';
 import withVelocity from '../animations/withVelocity';
 
 const NUM_CONFETTI = 50;
 const CONFETTI_SIZE = 16;
-const COLOURS = [colours.lightBlue, colours.coral];
+const COLOURS = [Colours.secondary, Colours.tertiary];
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 const createConfetti = () => {
