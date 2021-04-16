@@ -3,6 +3,7 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
+import theme from 'styled-theming';
 import Spacer from '../library/components/Spacer';
 import StandardRoundPressable from '../library/components/StandardRoundPressable';
 import { Colours, Layout, Outlines, Theme, Typography } from '../styles';
@@ -49,12 +50,9 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
               <Spacer size={10} />
               <AnswerText>{answer}</AnswerText>
             </TextContainer>
-            <StandardRoundPressable
-              colour={Colours.neutral.grey3}
+            <StyledRoundPressable
               size={40}
-              icon={() => (
-                <AntDesign name='edit' color={Colours.neutral.grey4} size={20} style={{ alignSelf: 'center' }} />
-              )}
+              icon={() => <StyledIcon name='edit' size={20} />}
               onPress={() => onEditPress(question, questionIndex)}
             />
           </Card>
@@ -116,6 +114,22 @@ const QuestionTitle = styled.Text`
 const AnswerText = styled.Text`
   color: ${Colours.secondary};
   ${Typography.regular}
+`;
+
+const StyledRoundPressable = styled(StandardRoundPressable).attrs(props => ({
+  colour: theme('theme', {
+    light: Colours.neutral.grey3,
+    dark: Colours.neutral.grey4,
+  })(props),
+}))``;
+
+const StyledIcon = styled(AntDesign).attrs(props => ({
+  color: theme('theme', {
+    light: Colours.neutral.grey4,
+    dark: Colours.neutral.grey2,
+  })(props),
+}))`
+  align-self: center;
 `;
 
 export { RSVPOverviewTitle, RSVPOverview };
