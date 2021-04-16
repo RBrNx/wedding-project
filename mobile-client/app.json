@@ -30,6 +30,19 @@
       "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "redbarongames",
+            "project": "watson-wedding-mobile",
+            "authToken": "90b31aac9b6c48b0b649a4e32c494d83a9c52d30a0e2444b8b59b1afc0a6ca8f",
+            "setCommits": true
+          }
+        }
+      ]
     }
   }
 }
