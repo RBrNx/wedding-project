@@ -93,7 +93,6 @@ const Container = styled.Pressable`
 `;
 
 const FlatContainer = styled(Container)`
-  background-color: ${Theme.card};
   border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey3)};
   border-width: ${props => (props.isFocused ? 1.5 : 0.5)}px;
   elevation: ${props => (props.isFocused ? 4 : 0)};
@@ -131,6 +130,10 @@ const PlaceholderLabel = styled(Animated.Text)`
 
 const StyledTextInput = styled.TextInput`
   ${Typography.regular};
+  color: ${theme('theme', {
+    light: Colours.neutral.offBlack,
+    dark: Colours.neutral.offWhite,
+  })};
   min-height: ${props => (props.multiline ? 150 : 0)}px;
   margin-top: ${props => (props.multiline ? 5 : 0)}px;
 `;
