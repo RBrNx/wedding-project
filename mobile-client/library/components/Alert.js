@@ -24,7 +24,7 @@ const Alert = ({
   isStatusBarTranslucent = true,
   breathingSpace = 15,
 }) => {
-  const [alertHeight, setAlertHeight] = useState(0);
+  const [alertHeight, setAlertHeight] = useState(undefined);
   const { animatedAlertStyle } = useAnimatedAlert({
     isVisible,
     isStatusBarTranslucent,

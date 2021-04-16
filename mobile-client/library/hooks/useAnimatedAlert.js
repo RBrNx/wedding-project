@@ -18,6 +18,7 @@ const useAnimatedAlert = ({ position, isVisible, isStatusBarTranslucent, breathi
   useEffect(() => {
     if (isVisible) alertEntrance.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.exp) });
     else alertEntrance.value = withTiming(0, { duration: 300, easing: Easing.inOut(Easing.exp) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible]);
 
   const animatedAlertStyle = useAnimatedStyle(() => {
