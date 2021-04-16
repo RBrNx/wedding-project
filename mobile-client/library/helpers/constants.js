@@ -9,5 +9,7 @@ const BottomSheet = {
   HEADER_SCROLL_DISTANCE,
 };
 
+const myEslintError = null;
+
 // eslint-disable-next-line import/prefer-default-export
 export { BottomSheet };
