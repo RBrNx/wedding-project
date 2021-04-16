@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import theme from 'styled-theming';
 import { Colours, Layout, Outlines, Theme, Typography } from '../../styles';
-import { lighten } from '../helpers/colours';
+import { darken, lighten } from '../helpers/colours';
 import Spacer from './Spacer';
 import StandardPressable from './StandardPressable';
 
@@ -35,7 +36,13 @@ const StyledStandardPressable = styled(StandardPressable)`
   width: 100%;
   ${Outlines.inputBorder}
   border-color: ${props => (props.isSelected ? Colours.secondary : Colours.neutral.grey3)};
-  background-color: ${props => (props.isSelected ? lighten(Colours.secondary, 0.9) : Colours.neutral.offWhite)};
+  background-color: ${props =>
+    props.isSelected
+      ? theme('theme', {
+          light: lighten(Colours.secondary, 0.9),
+          dark: darken(Colours.secondary, 0.9),
+        })
+      : Theme.card};
   ${Outlines.borderRadius};
   ${Outlines.boxShadow};
   border-width: ${props => (props.isSelected ? 1.5 : 0.5)}px;
