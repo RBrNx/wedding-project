@@ -3,6 +3,7 @@ import { RefreshControl, Dimensions } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
+  useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -11,6 +12,7 @@ import styled from 'styled-components/native';
 import ListHandle from '../../components/ListHandle';
 import { Colours, Layout, Theme } from '../../styles';
 import { BottomSheet } from '../helpers/constants';
+import useAvoidKeyboard from '../hooks/useAvoidKeyboard';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
 import Spacer from './Spacer';
@@ -29,7 +31,9 @@ const BottomSheetScrollView = ({
   enableRefreshControl = false,
 }) => {
   const scrollY = useSharedValue(0);
+  const scrollView = useAnimatedRef();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const {
     setTotalScrollbarHeight,
     setVisibleScrollbarHeight,
@@ -39,6 +43,16 @@ const BottomSheetScrollView = ({
     showScrollbar,
     hideScrollbar,
   } = useCustomScrollbar(scrollY);
+  useAvoidKeyboard({
+    handleShow: event => {
+      const { height: keyboardHeight } = event.endCoordinates;
+      setLastScrollY(scrollY.value);
+      scrollView.current.scrollTo({ x: 0, y: keyboardHeight, animated: true });
+    },
+    handleHide: () => {
+      scrollView.current.scrollTo({ x: 0, y: lastScrollY, animated: true });
+    },
+  });
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
@@ -84,6 +98,7 @@ const BottomSheetScrollView = ({
       <ListHandle animatedHandleContainerStyle={animatedHandleContainerStyle} />
       <ScrollViewContainer>
         <StyledAnimatedScrollView
+          ref={scrollView}
           topOffset={topOffset}
           unlockFullScroll={unlockFullScroll}
           collapsedPosition={collapsedPosition}
