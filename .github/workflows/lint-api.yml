@@ -24,5 +24,4 @@ jobs:
           level: error
           github_token: ${{ secrets.GITHUB_TOKEN }}
           eslint_flags: './'
-          fail_on_error: true
           workdir: ./wedding-api
