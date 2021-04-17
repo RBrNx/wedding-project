@@ -12,7 +12,7 @@ const getInvitationGroup = async (parent, { id }, { db }) => {
 
 const getAllInvitationGroups = async (parent, args, { db }) => {
   try {
-    const InvitationGroupModel = db.model('Invitation');
+    const InvitationGroupModel = db.model('InvitationGroup');
 
     const invitationGroups = await InvitationGroupModel.find().populate('guests').exec();
 

@@ -1,12 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { useColorScheme } from 'react-native';
-import { darkTheme, lightTheme } from '../styles/theming';
 import AuthenticatedNavigator from './AuthenticatedNavigator';
 import UnauthenticatedNavigator from './UnauthenticatedNavigator';
-import { useAuth, useSettings } from '../context';
-import { Theme } from '../library/enums';
+import { useAuth, useCurrentTheme } from '../context';
 import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const Stack = createStackNavigator();
@@ -17,24 +14,11 @@ const screenOptions = {
 };
 
 const AppNavigator = () => {
-  const systemLevelTheme = useColorScheme();
   const { isAuthenticated, isSigningOut } = useAuth();
-  const { userSettings } = useSettings();
-
-  const getTheme = () => {
-    switch (userSettings.theme) {
-      case Theme.DARK:
-        return darkTheme;
-      case Theme.LIGHT:
-        return lightTheme;
-      case Theme.AUTO:
-      default:
-        return systemLevelTheme === 'dark' ? darkTheme : lightTheme;
-    }
-  };
+  const { reactNavigationTheme } = useCurrentTheme();
 
   return (
-    <NavigationContainer theme={getTheme()}>
+    <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator screenOptions={screenOptions}>
         {!isAuthenticated ? (
           <Stack.Screen

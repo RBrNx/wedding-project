@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Dimensions, StatusBar, StyleSheet } from 'react-native';
+import { Dimensions, StatusBar } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useMutation } from '@apollo/react-hooks';
-import { useTheme } from '@react-navigation/native';
+import styled from 'styled-components/native';
 import LoadingIndicator from '../library/components/LoadingIndicator';
 import StandardActionButton from '../library/components/StandardActionButton';
 import { calculateQuestions, formatRSVP } from '../library/helpers/RSVP';
 import useLazyQuery from '../library/hooks/useLazyQuery';
 import parseError from '../library/helpers/parseError';
-import { useAlert } from '../context/Alert';
+import { useAlert } from '../context';
 import { AlertType } from '../library/enums';
 import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
 import Spacer from '../library/components/Spacer';
@@ -19,6 +19,8 @@ import RSVPAnswerInput from '../components/RSVPAnswerInput';
 import BackButton from '../library/components/BackButton';
 import { RSVPOverview, RSVPOverviewTitle } from '../components/RSVPOverview';
 import BackButtonImage from '../library/components/BackButtonImage';
+import { Colours } from '../styles';
+import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
 
 const { width, height } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
@@ -37,7 +39,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
-  const { colors } = useTheme();
+  const { avoidKeyboardStyle } = useAvoidKeyboard();
 
   const isLoading = loading || submitting;
   const sheetMinHeight = height - SHEET_COLLAPSED_POS - HANDLE_HEIGHT;
@@ -94,7 +96,6 @@ const SubmitRSVPScreen = ({ navigation }) => {
       showAlert({
         message,
         type: AlertType.WARNING,
-        position: 'top',
       });
     }
   };
@@ -147,7 +148,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   };
 
   const renderAnswerInput = ({ step, index }) => {
-    const { _id: id, type, choices, placeholder } = step || {};
+    const { _id: id, type, choices, placeholder, label } = step || {};
     const answer = rsvpForm[id];
 
     if (step?.componentType === 'overview')
@@ -167,6 +168,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         key={`answer_${step._id}`}
         questionId={id}
         questionType={type}
+        label={label}
         placeholder={placeholder}
         answerChoices={choices}
         answerValue={answer}
@@ -193,36 +195,48 @@ const SubmitRSVPScreen = ({ navigation }) => {
         collapsedPosition={SHEET_COLLAPSED_POS}
         unlockFullScroll={!isLoading}
       >
-        {isLoading && <LoadingIndicator size={100} />}
+        {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (
-          <View style={styles.contentContainer}>
-            <BackButton style={styles.backButton} backImageStyle={{ tintColor: colors.secondary }} onPress={onPrev} />
+          <ContentContainer>
+            <StyledBackButton onPress={onPrev} />
             <StepTransition steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
-          </View>
+          </ContentContainer>
         )}
       </BottomSheetScrollView>
       <StandardActionButton
+        style={avoidKeyboardStyle}
         label='Submit RSVP'
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNext}
         onFullSizePress={onSubmit}
         expandToFullSize={showOverview}
         animationDuration={300}
-        icon={() => <BackButtonImage style={{ transform: [{ rotate: '180deg' }], tintColor: '#fff' }} />}
+        icon={() => <StyledBackButtonImage />}
       />
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-    flexDirection: 'column',
+const ContentContainer = styled.View`
+  flex: 1;
+`;
+
+const StyledLoadingIndictor = styled(LoadingIndicator)`
+  flex: 1;
+`;
+
+const StyledBackButton = styled(BackButton).attrs({
+  backImageStyle: {
+    tintColor: Colours.secondary,
   },
-  backButton: {
-    position: 'absolute',
-    zIndex: 1,
-  },
-});
+})`
+  position: absolute;
+  z-index: 1;
+`;
+
+const StyledBackButtonImage = styled(BackButtonImage)`
+  transform: rotate(180deg);
+  tint-color: ${Colours.neutral.white};
+`;
 
 export default SubmitRSVPScreen;

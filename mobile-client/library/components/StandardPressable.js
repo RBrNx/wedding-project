@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import { constantStyles } from '../../styles/theming';
 
-const StandardPressable = ({ children, style, onPress, raised, pressedStyle }) => {
+const StandardPressable = ({ children, style, onPress, raised, pressedStyle, onLayout }) => {
   const renderPressableStyles = ({ pressed }) => {
     const pressableStyles = [style];
 
@@ -13,7 +13,7 @@ const StandardPressable = ({ children, style, onPress, raised, pressedStyle }) =
   };
 
   return (
-    <Pressable style={renderPressableStyles} onPress={onPress}>
+    <Pressable style={renderPressableStyles} onPress={onPress} onLayout={onLayout}>
       {children}
     </Pressable>
   );

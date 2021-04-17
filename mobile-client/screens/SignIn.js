@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform } from 'react-native';
+import styled from 'styled-components/native';
 import StandardButton from '../library/components/StandardButton';
-import StandardTextInput from '../library/components/StandardTextInput';
 import { useAuth } from '../context';
 import DismissKeyboard from '../library/components/DismissKeyboard';
 import { useAlert } from '../context/Alert';
 import { AlertType } from '../library/enums';
 import Spacer from '../library/components/Spacer';
+import StandardTextInput from '../library/components/StandardTextInput';
+import AppVersion from '../library/components/AppVersion';
+import { Colours, Typography } from '../styles';
 
 const SignInScreen = () => {
   const [emailAddress, setEmailAddress] = useState(null);
@@ -29,62 +32,61 @@ const SignInScreen = () => {
   };
 
   return (
-    <DismissKeyboard>
-      <View style={styles.container}>
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Let&apos;s sign you in.</Text>
-          <Text style={styles.subHeading}>Welcome back,</Text>
-          <Text style={styles.subHeading}>You&apos;ve been missed!</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <StandardTextInput
-            value={emailAddress}
-            label='Email address'
-            onChangeText={value => setEmailAddress(value)}
-            themeColourOverride='#fff'
-          />
-          <Spacer size={15} />
-          <StandardTextInput
-            value={password}
-            label='Password'
-            onChangeText={value => setPassword(value)}
-            secureTextEntry
-            themeColourOverride='#fff'
-          />
-        </View>
-        <StandardButton text='Sign In' raised onPress={attemptLogin} loading={signingIn} />
-      </View>
-    </DismissKeyboard>
+    <StyledDismissKeyboard>
+      <HeadingContainer>
+        <HeadingText>Let&apos;s sign you in.</HeadingText>
+        <SubHeadingText>Welcome back,</SubHeadingText>
+        <SubHeadingText>You&apos;ve been missed!</SubHeadingText>
+      </HeadingContainer>
+      <InputContainer>
+        <StandardTextInput
+          value={emailAddress}
+          label='Email address'
+          onChangeText={value => setEmailAddress(value)}
+          themeColourOverride='#fff'
+        />
+        <Spacer size={15} />
+        <StandardTextInput
+          value={password}
+          label='Password'
+          onChangeText={value => setPassword(value)}
+          secureTextEntry
+          themeColourOverride='#fff'
+        />
+      </InputContainer>
+      <StandardButton text='Sign In' raised onPress={attemptLogin} loading={signingIn} />
+      <AppVersion />
+    </StyledDismissKeyboard>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: '5%',
-    paddingBottom: 25,
-    paddingTop: 75,
-  },
-  headingContainer: {
-    justifyContent: 'center',
-    width: '100%',
-  },
-  heading: {
-    fontSize: 32,
-    color: '#fff',
-    fontFamily: 'Muli_700Bold',
-  },
-  subHeading: {
-    fontSize: 32,
-    color: '#fff',
-    fontFamily: 'Muli_400Regular',
-  },
-  inputContainer: {
-    width: '100%',
-    flex: 1,
-    paddingTop: 100,
-  },
-});
+const StyledDismissKeyboard = styled(DismissKeyboard)`
+  flex: 1;
+  align-items: center;
+  padding-horizontal: 5%;
+  padding-bottom: ${Platform.OS === 'ios' ? 15 : 0}px;
+`;
+
+const HeadingContainer = styled.View`
+  justify-content: center;
+  width: 100%;
+`;
+
+const HeadingText = styled.Text`
+  ${Typography.h1};
+  color: ${Colours.neutral.white};
+`;
+
+const SubHeadingText = styled.Text`
+  ${Typography.h1};
+  color: ${Colours.neutral.white};
+  font-family: 'Muli_400Regular';
+`;
+
+const InputContainer = styled.View`
+  flex: 1;
+  width: 100%;
+  padding-top: 100px;
+`;
 
 export default SignInScreen;

@@ -1,13 +1,11 @@
 #org: rbrnx
 app: wedding-project
-# NOTE: update this with your service name
 service: wedding-api
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
   - serverless-webpack
   - serverless-offline
-  - serverless-dotenv-plugin
   - serverless-domain-manager
 
 # serverless-webpack configuration
@@ -17,7 +15,9 @@ custom:
     webpackConfig: ./webpack.config.js
     includeModules: true
   serverless-offline:
+    host: 0.0.0.0
     port: 4000
+    noPrependStageInUrl: true
   domains:
     prod: api.thewatsonwedding.com
     staging: staging-api.thewatsonwedding.com
@@ -28,12 +28,17 @@ custom:
     endpointType: 'regional'
     stage: '${self:provider.stage}'
     certificateName: 'thewatsonwedding.com'
+    # certificateRegion: 'eu-west-2'
+    # certificateArn: 'arn:aws:acm:eu-west-2:463245273964:certificate/0a5b9ea9-ee14-4527-9fbe-9f04f179deb7'
     createRoute53Record: true
     securityPolicy: tls_1_2
     apiType: rest
     autoDomain: true
     enabled: true
 
+useDotenv: true
+disabledDeprecations:
+  - CLI_OPTIONS_SCHEMA
 provider:
   name: aws
   runtime: nodejs12.x
@@ -41,6 +46,7 @@ provider:
   region: eu-west-2
   memorySize: 512
   timeout: 30
+  lambdaHashingVersion: 20201221
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
     COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}

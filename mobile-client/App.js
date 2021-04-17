@@ -5,11 +5,11 @@ import { AppearanceProvider } from 'react-native-appearance';
 import * as SplashScreen from 'expo-splash-screen';
 import Amplify from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
+import * as Sentry from 'sentry-expo';
 import client from './utils/apiClient';
-import { SettingsProvider, AuthProvider } from './context';
+import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from './context';
 import awsConfig from './awsExports';
 import AppNavigator from './navigation/AppNavigator';
-import { AlertProvider } from './context/Alert';
 import AppLoader from './components/AppLoader';
 
 Amplify.configure({
@@ -19,6 +19,12 @@ Amplify.configure({
     identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
     userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID,
   },
+});
+
+Sentry.init({
+  dsn: 'https://1d8fb9d9632e472ba738538077f16a5e@o439917.ingest.sentry.io/5721792',
+  enableInExpoDevelopment: false,
+  debug: __DEV__,
 });
 
 const App = () => {
@@ -31,13 +37,15 @@ const App = () => {
     <AppearanceProvider>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <AlertProvider defaultPosition='top'>
-            <SettingsProvider>
+          <SettingsProvider>
+            <CurrentThemeProvider>
               <AppLoader>
-                <AppNavigator />
+                <AlertProvider>
+                  <AppNavigator />
+                </AlertProvider>
               </AppLoader>
-            </SettingsProvider>
-          </AlertProvider>
+            </CurrentThemeProvider>
+          </SettingsProvider>
         </AuthProvider>
       </ApolloProvider>
     </AppearanceProvider>

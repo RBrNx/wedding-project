@@ -1,14 +1,20 @@
-query ALL_GUESTS_QUERY {
-  getAllInvitations {
+query ALL_INVITATIONS_QUERY {
+  getAllInvitationGroups {
     _id
-    uniqueCode
+    type
     guests {
       _id
       firstName
       lastName
-      attendanceStatus
       email
+      attendanceStatus
+      rsvpForm {
+        question {
+          title
+          label
+        }
+        answer
+      }
     }
-    type
   }
 }

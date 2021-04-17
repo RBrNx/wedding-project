@@ -1,35 +1,30 @@
-import { useTheme } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import styled from 'styled-components/native';
+import { Layout, Theme } from '../styles';
 
 const ListHandle = ({ animatedHandleContainerStyle }) => {
-  const { colors } = useTheme();
-
   return (
-    <Animated.View
-      style={[styles.background, animatedHandleContainerStyle, { backgroundColor: colors.cardBackground }]}
-    >
-      <View style={styles.handle} />
-    </Animated.View>
+    <HandleContainer style={[animatedHandleContainerStyle]}>
+      <Handle />
+    </HandleContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  background: {
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    width: '100%',
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  handle: {
-    width: 30,
-    height: 5,
-    borderRadius: 5,
-    backgroundColor: '#aaa',
-  },
-});
+const HandleContainer = styled(Animated.View)`
+  width: 100%;
+  height: 20px;
+  background-color: ${Theme.background};
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  ${Layout.flexCenter};
+`;
+
+const Handle = styled.View`
+  width: 30px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: ${Theme.icon};
+`;
 
 export default ListHandle;

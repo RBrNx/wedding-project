@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
+import styled from 'styled-components/native';
 import HeaderFlatlist from '../library/components/HeaderFlatlist';
 import LoadingIndicator from '../library/components/LoadingIndicator';
 import ErrorMessage from '../components/ErrorMessage';
 import EmptyMessage from '../components/EmptyMessage';
 import InvitationsIllustration from '../components/SVG/Invitations';
 import InvitationCard from '../components/InvitationCard';
+import { Layout } from '../styles';
 
 const ALL_INVITATIONS_QUERY = loader('../graphql/queries/getAllInvitations.graphql');
 
 const InvitationRow = ({ invitation, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
-  const { guests, uniqueCode, type } = invitation;
+  const { guests, type } = invitation;
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -25,9 +27,9 @@ const InvitationRow = ({ invitation, index }) => {
   }, [index, translateY]);
 
   return (
-    <Animated.View style={[styles.cardContainer, { transform: [{ translateY }] }]}>
-      <InvitationCard guests={guests} uniqueCode={uniqueCode} type={type} index={index} />
-    </Animated.View>
+    <CardContainer style={{ transform: [{ translateY }] }}>
+      <InvitationCard guests={guests} type={type} index={index} />
+    </CardContainer>
   );
 };
 
@@ -41,27 +43,32 @@ const InvitationsScreen = () => {
         await refetch();
       }}
       renderItem={({ item, index }) => <InvitationRow invitation={item} index={index} />}
-      data={data?.getAllInvitations}
+      data={data?.getAllInvitationGroups}
       renderImage={() => <InvitationsIllustration size='100%' />}
       ListEmptyComponent={() => (
-        <View style={styles.emptyContainer}>
-          {loading && <LoadingIndicator />}
-          {error && <ErrorMessage message='We encountered an error when loading your Invitations, please try again.' />}
-          {!error && !loading && <EmptyMessage />}
-        </View>
+        <ListEmptyContainer>
+          {loading && <LoadingIndicator size={100} />}
+          {error && (
+            <ErrorMessage
+              size={125}
+              message='We encountered an error when loading your Invitations, please try again.'
+            />
+          )}
+          {!error && !loading && <EmptyMessage size={125} />}
+        </ListEmptyContainer>
       )}
     />
   );
 };
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    paddingHorizontal: '4%',
-  },
-  emptyContainer: {
-    flex: 1,
-    paddingHorizontal: '4%',
-  },
-});
+const CardContainer = styled(Animated.View)`
+  padding-horizontal: 5%;
+`;
+
+const ListEmptyContainer = styled.View`
+  flex: 1;
+  padding-horizontal: 5%;
+  ${Layout.flexCenter};
+`;
 
 export default InvitationsScreen;

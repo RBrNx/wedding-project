@@ -9,7 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import Constants from 'expo-constants';
 import * as SplashScreen from 'expo-splash-screen';
-import { StyleSheet } from 'react-native';
+import styled from 'styled-components/native';
+import { Layout } from '../styles';
 
 const AnimatedSplashScreen = ({ children, splashImage, isAppReady }) => {
   const animation = useSharedValue(0);
@@ -20,46 +21,38 @@ const AnimatedSplashScreen = ({ children, splashImage, isAppReady }) => {
       SplashScreen.hideAsync();
       animation.value = withTiming(1, { duration: 200 }, () => runOnJS(setAnimationComplete)(true));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAppReady]);
 
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(animation.value, [0, 1], [1, 0], Extrapolate.CLAMP);
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(animation.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+  }));
 
-    return {
-      opacity,
-    };
-  });
-
-  const animatedSplashStyle = useAnimatedStyle(() => {
-    const scale = interpolate(animation.value, [0, 1], [1, 0], Extrapolate.CLAMP);
-
-    return {
-      transform: [{ scale }],
-    };
-  });
+  const animatedSplashStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: interpolate(animation.value, [0, 1], [1, 0], Extrapolate.CLAMP) }],
+  }));
 
   return (
     <>
       {isAppReady && children}
       {!isSplashAnimationComplete && (
-        <Animated.View pointerEvents='none' style={[styles.container, animatedContainerStyle]}>
-          <Animated.Image style={[styles.splash, animatedSplashStyle]} source={splashImage} fadeDuration={0} />
-        </Animated.View>
+        <Container pointerEvents='none' style={animatedContainerStyle}>
+          <SplashImage style={animatedSplashStyle} source={splashImage} fadeDuration={0} />
+        </Container>
       )}
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: Constants.manifest.splash.backgroundColor,
-  },
-  splash: {
-    width: '100%',
-    height: '100%',
-    resizeMode: Constants.manifest.splash.resizeMode || 'contain',
-  },
-});
+const Container = styled(Animated.View)`
+  ${Layout.absoluteFill};
+  background-color: ${Constants.manifest.splash.backgroundColor};
+`;
+
+const SplashImage = styled(Animated.Image)`
+  width: 100%;
+  height: 100%;
+  resize-mode: ${Constants.manifest.splash.resizeMode || 'contain'};
+`;
 
 export default AnimatedSplashScreen;

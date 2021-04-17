@@ -1,99 +1,99 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
+import styled from 'styled-components/native';
 import StatusLine from './StatusLine';
-import { InvitationType } from '../library/enums';
+import { GuestResponse, InvitationType } from '../library/enums';
 import StandardPressable from '../library/components/StandardPressable';
+import { Colours, Outlines, Theme, Typography } from '../styles';
 
-const InvitationCard = ({ guests, uniqueCode, type }) => {
-  const { colors } = useTheme();
-  const { icon: TypeIcon } = InvitationType[type];
+const InvitationCard = ({ guests, uniqueCode = 12345, type }) => {
+  const { icon: InvitationTypeIcon } = InvitationType[type];
 
   return (
-    <StandardPressable
-      raised
-      style={[styles.card, { backgroundColor: colors.card }]}
-      pressedStyle={{ backgroundColor: colors.cardHover }}
-      onPress={() => {}}
-    >
-      <View style={[styles.headerRow, { borderBottomColor: colors.componentBackground }]}>
-        <TypeIcon style={styles.icon} size={40} />
-        <Text style={[styles.uniqueCode, { color: colors.headerText }]}>{uniqueCode.toUpperCase()}</Text>
-      </View>
-      <View style={styles.bodyRow}>
-        <View style={styles.guestContainer}>
+    <CardContainer raised onPress={() => {}}>
+      <CardHeader>
+        <InvitationTypeIcon size={40} />
+        <InvitationCode>{uniqueCode}</InvitationCode>
+      </CardHeader>
+      <CardBody>
+        <GuestContainer>
           {guests.map((guest, guestIndex) => {
             const { firstName, lastName, attendanceStatus } = guest;
+            const { color: statusColour } = GuestResponse[attendanceStatus];
             const isFirst = guestIndex === 0;
             const isLast = guestIndex === guests.length - 1;
 
             return (
-              <View key={guest._id} style={styles.guestRow}>
-                <StatusLine status={attendanceStatus} isFirst={isFirst} isLast={isLast} />
-                <Text style={[styles.name, { color: colors.headerText }]}>
+              <Guest key={guest._id}>
+                <StatusLine colour={statusColour} isFirst={isFirst} isLast={isLast} />
+                <GuestName>
                   {firstName} {lastName}
-                </Text>
-              </View>
+                </GuestName>
+              </Guest>
             );
           })}
-        </View>
-        <Feather name='chevron-right' color={colors.componentBackground} size={30} />
-      </View>
-    </StandardPressable>
+        </GuestContainer>
+        <StyledIcon name='chevron-right' size={30} />
+      </CardBody>
+    </CardContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 15,
+const CardContainer = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: Theme.cardPressed(props),
   },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 1,
-    borderBottomWidth: 1,
-    paddingBottom: 10,
-  },
-  bodyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  guestContainer: {
-    paddingTop: 12,
-    flex: 1,
-  },
-  guestRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 5,
-    marginVertical: 2,
-  },
-  textContainer: {
-    flex: 1,
-    paddingLeft: 20,
-  },
-  name: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginVertical: 15,
-    paddingLeft: 20,
-  },
-  uniqueCode: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginVertical: 5,
-    flex: 1,
-    paddingLeft: 5,
-  },
-  status: {
-    marginVertical: 5,
-  },
-  icon: {
-    opacity: 0.8,
-  },
-});
+}))`
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+`;
+
+const CardHeader = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 1px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${Colours.neutral.grey1};
+`;
+
+const InvitationCode = styled.Text`
+  ${Typography.regular};
+  font-family: 'Muli_700Bold';
+  margin-vertical: 5px;
+  padding-left: 5px;
+  color: ${Theme.headerTextColour};
+`;
+
+const CardBody = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const GuestContainer = styled.View`
+  flex: 1;
+  padding-top: 12px;
+`;
+
+const Guest = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding-left: 5px;
+  margin-vertical: 2px;
+`;
+
+const GuestName = styled.Text`
+  ${Typography.regular};
+  font-family: 'Muli_700Bold';
+  margin-vertical: 15px;
+  padding-left: 20px;
+  color: ${Theme.headerTextColour};
+`;
+
+const StyledIcon = styled(Feather).attrs(props => ({
+  color: Theme.icon(props),
+}))``;
 
 export default InvitationCard;

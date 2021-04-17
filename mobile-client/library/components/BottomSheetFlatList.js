@@ -1,6 +1,5 @@
-import { useTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, FlatList, RefreshControl, View } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import Animated, {
   Extrapolate,
   interpolate,
@@ -8,18 +7,19 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import styled from 'styled-components/native';
+import { Colours, Theme } from '../../styles';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
+import ListHandle from '../../components/ListHandle';
+import { BottomSheet } from '../helpers/constants';
 
-const HEADER_MAX_HEIGHT = 350;
-const HEADER_MIN_HEIGHT = 100;
-const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+const { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyComponent, ListFooterComponent }) => {
   const scrollY = useSharedValue(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { colors } = useTheme();
   const isFlatlistEmpty = !data?.length;
 
   const {
@@ -65,15 +65,7 @@ const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyC
   });
 
   const renderListHandle = () => {
-    return (
-      <Animated.View
-        style={[styles.handleContainer, animatedHandleContainerStyle, { backgroundColor: colors.background }]}
-      >
-        <View style={[styles.handleBackgound, { backgroundColor: colors.cardBackground }]}>
-          <View style={styles.handle} />
-        </View>
-      </Animated.View>
-    );
+    return <ListHandle animatedHandleContainerStyle={animatedHandleContainerStyle} />;
   };
 
   const renderRefreshControl = () => {
@@ -86,20 +78,17 @@ const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyC
           await onRefresh();
           setIsRefreshing(false);
         }}
-        progressBackgroundColor='#14233c'
-        colors={['#fff']}
-        tintColor='#2991cc'
+        progressBackgroundColor={Colours.primary}
+        colors={[Colours.neutral.white]}
+        tintColor={Colours.primary}
       />
     );
   };
 
   return (
-    <View style={styles.flatlistContainer}>
-      <AnimatedFlatList
-        contentContainerStyle={[
-          isFlatlistEmpty ? styles.flatlistContentEmpty : styles.flatlistContent,
-          { backgroundColor: colors.cardBackground },
-        ]}
+    <FlatListContainer>
+      <StyledAnimatedFlatList
+        isFlatlistEmpty={isFlatlistEmpty}
         scrollEventThrottle={1}
         onScroll={scrollHandler}
         renderItem={renderItem}
@@ -127,40 +116,23 @@ const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyC
         animatedHandleStyle={animatedHandleStyle}
         style={animatedScrollbarStyle}
       />
-    </View>
+    </FlatListContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  flatlistContainer: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  flatlistContent: {
+const FlatListContainer = styled.View`
+  flex: 1;
+  flex-direction: row;
+`;
+
+const StyledAnimatedFlatList = styled(AnimatedFlatList).attrs(props => ({
+  contentContainerStyle: {
     marginTop: HEADER_MAX_HEIGHT,
-    paddingBottom: HEADER_MAX_HEIGHT,
-  },
-  flatlistContentEmpty: {
-    marginTop: HEADER_MAX_HEIGHT,
-    flex: 1,
-  },
-  handleContainer: {
-    marginBottom: 5,
-  },
-  handleBackgound: {
+    backgroundColor: Theme.background(props),
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    width: '100%',
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...(props.isFlatlistEmpty ? { flex: 1 } : { paddingBottom: HEADER_MAX_HEIGHT }),
   },
-  handle: {
-    width: 30,
-    height: 5,
-    borderRadius: 5,
-    backgroundColor: '#aaa',
-  },
-});
+}))``;
 
 export default BottomSheetFlatList;

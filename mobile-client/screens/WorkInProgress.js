@@ -1,60 +1,48 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import styled from 'styled-components/native';
 import InProgressIllustration from '../components/SVG/InProgress';
 import Spacer from '../library/components/Spacer';
+import { Colours, Typography } from '../styles';
 
 const WorkInProgressScreen = () => {
   return (
-    <View style={styles.container}>
-      <InProgressIllustration size='100%' style={styles.heroImage} />
+    <Container>
+      <StyledInProgressIllustration size='100%' />
       <Spacer size={50} />
-      <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Sorry, we haven&apos;t finished this yet.</Text>
+      <HeadingContainer>
+        <HeadingText>Sorry, we haven&apos;t finished this yet.</HeadingText>
         <Spacer size={15} />
-        <Text style={styles.subHeading}>Please check back here in the future for some awesome features!</Text>
-      </View>
-    </View>
+        <SubHeadingText>Please check back here in the future for some awesome features!</SubHeadingText>
+      </HeadingContainer>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: '5%',
-  },
-  heroImage: {
-    flex: 1,
-    marginTop: 50,
-  },
-  headingContainer: {
-    flex: 1,
-  },
-  heading: {
-    fontFamily: 'Muli_700Bold',
-    fontSize: 32,
-    color: '#fff',
-    textAlign: 'center',
-  },
-  subHeading: {
-    fontSize: 18,
-    color: '#ccc',
-    textAlign: 'center',
-    paddingHorizontal: '5%',
-    fontFamily: 'Muli_400Regular',
-  },
-  buttonContainer: {
-    paddingBottom: 25,
-  },
-  icon: {
-    marginRight: 25,
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#fff',
-    marginVertical: 10,
-    marginHorizontal: 10,
-  },
-});
+const Container = styled.View`
+  flex: 1;
+  align-items: center;
+  padding-horizontal: 5%;
+`;
+
+const StyledInProgressIllustration = styled(InProgressIllustration)`
+  flex: 1;
+  margin-top: 50px;
+`;
+
+const HeadingContainer = styled.View`
+  flex: 1;
+`;
+
+const HeadingText = styled.Text`
+  ${Typography.h1};
+  color: ${Colours.neutral.white};
+  text-align: center;
+`;
+
+const SubHeadingText = styled.Text`
+  ${Typography.h3};
+  color: ${Colours.neutral.grey3};
+  text-align: center;
+`;
 
 export default WorkInProgressScreen;

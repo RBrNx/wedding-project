@@ -1,15 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated';
+import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import styled from 'styled-components/native';
+import { Colours, Typography } from '../styles';
 
 const RSVPQuestion = ({ question, animIndex, index }) => {
-  const normalisedAnim = useDerivedValue(() => {
-    return index - animIndex.value;
-  });
-
   const animatedStepStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(normalisedAnim.value, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
-    const translateX = interpolate(normalisedAnim.value, [-0.5, 0, 0.5], [-15, 0, 15], Extrapolate.CLAMP);
+    const normalisedAnim = index - animIndex.value;
+    const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
+    const translateX = interpolate(normalisedAnim, [-0.5, 0, 0.5], [-15, 0, 15], Extrapolate.CLAMP);
 
     return {
       opacity,
@@ -18,31 +16,33 @@ const RSVPQuestion = ({ question, animIndex, index }) => {
   });
 
   return (
-    <Animated.View style={[styles.header, animatedStepStyle]}>
-      <Text style={styles.questionNumber}>{`Q${index + 1}`}</Text>
-      <Text style={styles.questionTitle}>{question.title}</Text>
-    </Animated.View>
+    <Container style={animatedStepStyle}>
+      <QuestionNumber>{`Q${index + 1}`}</QuestionNumber>
+      <QuestionTitle>{question.title}</QuestionTitle>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    paddingLeft: '5%',
-    paddingRight: '15%',
-    paddingBottom: 30,
-    height: 300,
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    width: '100%',
-  },
-  questionNumber: {
-    fontSize: 30,
-    color: '#2991cc',
-  },
-  questionTitle: {
-    fontSize: 30,
-    color: '#fff',
-  },
-});
+const Container = styled(Animated.View)`
+  position: absolute;
+  width: 100%;
+  height: 300px;
+  padding-left: 5%;
+  padding-right: 15%;
+  padding-bottom: 30px;
+  justify-content: flex-end;
+`;
+
+const QuestionNumber = styled.Text`
+  ${Typography.h1};
+  font-family: 'Muli_400Regular';
+  color: ${Colours.secondary};
+`;
+
+const QuestionTitle = styled.Text`
+  ${Typography.h1};
+  font-family: 'Muli_400Regular';
+  color: ${Colours.neutral.white};
+`;
 
 export default RSVPQuestion;

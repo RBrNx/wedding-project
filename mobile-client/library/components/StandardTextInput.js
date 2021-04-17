@@ -1,16 +1,15 @@
-import { useTheme } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
-import { Platform, StyleSheet, View, TextInput } from 'react-native';
 import Animated, {
+  Easing,
   Extrapolate,
   interpolate,
-  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import AnimatedInputBorder from '../../components/AnimatedInputBorder';
-import TextDimensions from '../../components/TextDimensions';
+import styled from 'styled-components/native';
+import theme from 'styled-theming';
+import { Colours, Outlines, Theme, Typography } from '../../styles';
 
 const StandardTextInput = ({
   label,
@@ -20,139 +19,123 @@ const StandardTextInput = ({
   secureTextEntry,
   keyboardType = 'default',
   maxLength,
-  containerStyle,
-  inputStyle,
-  themeColourOverride,
-  borderColourFocused,
   multiline,
+  style,
+  inputStyle,
+  flat,
 }) => {
-  const textInput = useRef(null);
+  const textInput = useRef();
+  const [isFocused, setIsFocused] = useState(!!value);
   const focusAnimation = useSharedValue(value ? 1 : 0);
-  const [inputHeight, setInputHeight] = useState(0);
-  const [inputWidth, setInputWidth] = useState(0);
-  const [labelWidth, setLabelWidth] = useState(0);
-  const { colors } = useTheme();
+  const ContainerComponent = flat ? FlatContainer : Container;
 
   const onFocus = () => {
-    focusAnimation.value = withTiming(1, { duration: 150 });
+    setIsFocused(true);
+    focusAnimation.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.exp) });
   };
 
   const onBlur = () => {
     if (value) return;
 
-    focusAnimation.value = withTiming(0, { duration: 150 });
+    setIsFocused(false);
+    focusAnimation.value = withTiming(0, { duration: 150, easing: Easing.out(Easing.exp) });
   };
 
-  const animatedStyles = useAnimatedStyle(() => {
-    const top = interpolate(
-      focusAnimation.value,
-      [0, 1],
-      [styles.regularLabel.top, styles.smallLabel.top],
-      Extrapolate.CLAMP,
-    );
-    const fontSize = interpolate(
-      focusAnimation.value,
-      [0, 1],
-      [styles.regularLabel.fontSize, styles.smallLabel.fontSize],
-      Extrapolate.CLAMP,
-    );
-    const color = interpolateColor(focusAnimation.value, [0, 1], ['#aaa', themeColourOverride || colors.focusedText]);
-
-    return {
-      top,
-      fontSize,
-      color,
-    };
-  });
+  const focusedLabelAnimatedStyles = useAnimatedStyle(() => ({
+    opacity: interpolate(focusAnimation.value, [0, 1], [0, 1], Extrapolate.CLAMP),
+    transform: [{ translateY: interpolate(focusAnimation.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
+  }));
+  const regularLabelAnimatedStyles = useAnimatedStyle(() => ({
+    opacity: interpolate(focusAnimation.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+    transform: [{ translateX: interpolate(focusAnimation.value, [0.75, 1], [0, -10], Extrapolate.CLAMP) }],
+  }));
+  const placeholderAnimatedStyles = useAnimatedStyle(() => ({
+    opacity: value ? 0 : focusAnimation.value,
+    transform: [{ translateX: interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolate.CLAMP) }],
+  }));
 
   return (
-    <View style={[styles.containerStyle, containerStyle]}>
-      {!!inputHeight && !!inputWidth && (
-        <AnimatedInputBorder
-          inputHeight={inputHeight}
-          inputWidth={inputWidth}
-          borderColour={themeColourOverride || borderColourFocused}
-          gapStartX={styles.input.paddingLeft}
-          gapWidth={labelWidth}
-          focusAnimationProgress={focusAnimation}
-        />
-      )}
-      <TextInput
+    <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
+      <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
+      <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
+        {label}
+      </RegularLabel>
+      <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
+        {placeholder}
+      </PlaceholderLabel>
+      <StyledTextInput
         ref={textInput}
-        onLayout={event => {
-          const { height, width } = event.nativeEvent.layout;
-          setInputHeight(Math.round(height));
-          setInputWidth(Math.round(width));
-        }}
-        style={[
-          styles.input,
-          { color: themeColourOverride || colors.focusedText, minHeight: multiline ? 200 : 0 },
-          inputStyle,
-        ]}
         value={value}
-        placeholder={placeholder}
-        onChangeText={onChangeText}
+        style={inputStyle}
         onFocus={onFocus}
         onBlur={onBlur}
+        onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         maxLength={maxLength}
         multiline={multiline}
         textAlignVertical={multiline ? 'top' : 'center'}
       />
-      <Animated.Text style={[styles.regularLabel, animatedStyles]} onPress={() => textInput.current.focus()}>
-        {label}
-      </Animated.Text>
-      <TextDimensions
-        text={label}
-        style={styles.smallLabel}
-        onDimensions={dimensions => {
-          if (labelWidth) return;
-
-          setLabelWidth(dimensions.width);
-        }}
-      />
-    </View>
+    </ContainerComponent>
   );
 };
 
-const styles = StyleSheet.create({
-  containerStyle: {
-    position: 'relative',
-    width: '100%',
-    maxWidth: '100%',
-  },
-  input: {
-    padding: 15,
-    paddingLeft: 30,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 16,
-    fontFamily: 'Muli_400Regular',
-  },
-  regularLabel: {
-    position: 'absolute',
-    left: 30,
-    top: Platform.select({
-      ios: 16,
-      android: 17,
-    }),
-    fontSize: 16,
-    color: '#aaa',
-    fontFamily: 'Muli_400Regular',
-  },
-  smallLabel: {
-    position: 'absolute',
-    left: 30,
-    top: Platform.select({
-      ios: -5,
-      android: -10,
-    }),
-    fontSize: 14,
-    color: '#fff',
-    fontFamily: 'Muli_400Regular',
-  },
-});
+const Container = styled.Pressable`
+  background-color: ${Theme.card};
+  width: 100%;
+  padding: 10px;
+  padding-left: 15px;
+  padding-top: 26px;
+  ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
+  border-color: ${props => (props.isFocused ? Colours.secondary : 'transparent')};
+  ${Outlines.inputBorder}
+`;
+
+const FlatContainer = styled(Container)`
+  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey3)};
+  border-width: ${props => (props.isFocused ? 1.5 : 0.5)}px;
+  elevation: ${props => (props.isFocused ? 4 : 0)};
+`;
+
+const FocusedLabel = styled(Animated.Text)`
+  position: absolute;
+  left: 15px;
+  top: 8px;
+  font-family: 'Muli_700Bold';
+  font-size: 11px;
+  color: ${theme('theme', {
+    light: Colours.neutral.offBlack,
+    dark: Colours.neutral.offWhite,
+  })};
+`;
+
+const RegularLabel = styled(Animated.Text)`
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  color: #aaa;
+  font-size: 16px;
+  margin-top: ${props => (props.multiline ? 5 : 0)}px;
+`;
+
+const PlaceholderLabel = styled(Animated.Text)`
+  position: absolute;
+  left: 15px;
+  top: 28px;
+  color: #aaa;
+  ${Typography.regular};
+  margin-top: ${props => (props.multiline ? 5 : 0)}px;
+`;
+
+const StyledTextInput = styled.TextInput`
+  ${Typography.regular};
+  color: ${theme('theme', {
+    light: Colours.neutral.offBlack,
+    dark: Colours.neutral.offWhite,
+  })};
+  min-height: ${props => (props.multiline ? 150 : 0)}px;
+  margin-top: ${props => (props.multiline ? 5 : 0)}px;
+`;
 
 export default StandardTextInput;

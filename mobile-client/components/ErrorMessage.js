@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, Animated, View } from 'react-native';
-import LottieView from 'lottie-react-native';
-import { useTheme } from '@react-navigation/native';
+import { Animated } from 'react-native';
+import styled from 'styled-components';
 import ErrorAnimation from '../assets/animations/error.json';
+import LottieAnimation from '../library/components/LottieAnimation';
+import { Layout, Theme, Typography } from '../styles';
 
 const ErrorMessage = ({ message, size, style }) => {
-  const { colors } = useTheme();
   const [opacity] = useState(new Animated.Value(0));
   const errorMessage = message || 'Whoops, something has went wrong!';
 
@@ -18,26 +18,23 @@ const ErrorMessage = ({ message, size, style }) => {
   }, [opacity]);
 
   return (
-    <Animated.View style={[styles.container, { opacity }]}>
-      <View style={[styles.container, { height: size || 50, width: size || 50 }, style]}>
-        <LottieView source={ErrorAnimation} autoPlay speed={1} loop={false} />
-      </View>
-      <Text style={[styles.text, { color: colors.bodyText }]}>{errorMessage}</Text>
-    </Animated.View>
+    <Container style={{ opacity }}>
+      <LottieAnimation style={style} source={ErrorAnimation} size={size} autoPlay />
+      <MessageText>{errorMessage}</MessageText>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 16,
-    flex: 0.5,
-  },
-});
+const Container = styled(Animated.View)`
+  flex: 1;
+  ${Layout.flexCenter};
+`;
+
+const MessageText = styled.Text`
+  flex: 0.5;
+  text-align: center;
+  color: ${Theme.bodyTextColour};
+  ${Typography.regular};
+`;
 
 export default ErrorMessage;

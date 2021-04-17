@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
-import { useTheme } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import styled from 'styled-components/native';
 import HeaderFlatlist from '../library/components/HeaderFlatlist';
 import SettingsIllustration from '../components/SVG/Settings';
 import StandardPressable from '../library/components/StandardPressable';
-import { useAuth, useSettings } from '../context';
+import { useAlert, useAuth, useSettings } from '../context';
+import { Outlines, Theme, Typography } from '../styles';
+import parseError from '../library/helpers/parseError';
+import { AlertType } from '../library/enums';
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [signingOut, setSigningOut] = useState(false);
   const { settings, userSettings, updateSetting } = useSettings();
-  const { colors } = useTheme();
+  const { showAlert } = useAlert();
   const { signOut } = useAuth();
 
   const attemptSignOut = async () => {
@@ -21,8 +24,13 @@ const SettingsScreen = () => {
       setSigningOut(true);
       await signOut();
     } catch (err) {
-      console.log(err);
       setSigningOut(false);
+      const { message } = parseError(err);
+      console.log(message);
+      showAlert({
+        message,
+        type: AlertType.WARNING,
+      });
     }
   };
 
@@ -33,17 +41,15 @@ const SettingsScreen = () => {
         const selectedOption = item.options.find(option => option.value === userSettings[item._id]);
 
         return (
-          <StandardPressable
+          <SettingCard
             onPress={() => {
               setSelectedSetting(item);
               setShowModal(true);
             }}
-            style={[styles.settingsRow, { backgroundColor: colors.card }]}
-            pressedStyle={{ backgroundColor: colors.cardHover }}
           >
-            <Text style={{ color: colors.headerText }}>{item.title}</Text>
-            <Text style={{ color: colors.bodyText }}>{selectedOption?.label}</Text>
-          </StandardPressable>
+            <SettingName>{item.title}</SettingName>
+            <SettingValue>{selectedOption?.label}</SettingValue>
+          </SettingCard>
         );
       default:
         return <View />;
@@ -52,18 +58,16 @@ const SettingsScreen = () => {
 
   const renderModalOptionRow = (option, isSelected) => {
     return (
-      <StandardPressable
-        style={styles.optionRow}
-        pressedStyle={{ backgroundColor: colors.cardHover }}
+      <ModalOption
+        key={option.value}
         onPress={() => {
           setShowModal(false);
           updateSetting(selectedSetting._id, option.value);
         }}
-        key={option.value}
       >
-        <Text style={{ color: colors.bodyText }}>{option.label}</Text>
-        <FontAwesome5 style={{ color: colors.bodyText }} name={isSelected ? 'dot-circle' : 'circle'} size={20} />
-      </StandardPressable>
+        <OptionName>{option.label}</OptionName>
+        <StyledCircleIcon name={isSelected ? 'dot-circle' : 'circle'} size={20} />
+      </ModalOption>
     );
   };
 
@@ -76,14 +80,10 @@ const SettingsScreen = () => {
         renderItem={renderSettingRow}
         ListFooterComponent={() => {
           return (
-            <StandardPressable
-              onPress={attemptSignOut}
-              style={[styles.settingsRow, { backgroundColor: colors.card }]}
-              pressedStyle={{ backgroundColor: colors.cardHover }}
-            >
-              <Text style={{ color: colors.headerText }}>Sign Out</Text>
+            <SettingCard onPress={attemptSignOut}>
+              <SettingName>Sign Out</SettingName>
               {signingOut && <ActivityIndicator />}
-            </StandardPressable>
+            </SettingCard>
           );
         }}
       />
@@ -94,40 +94,66 @@ const SettingsScreen = () => {
         animationIn='fadeIn'
         animationOut='fadeOut'
       >
-        <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
+        <ModalContainer>
           {selectedSetting?.options?.map(option => {
             const isSelected = option.value === userSettings[selectedSetting._id];
             return renderModalOptionRow(option, isSelected);
           })}
-        </View>
+        </ModalContainer>
       </Modal>
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  settingsRow: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between',
-    padding: 20,
-    borderRadius: 10,
-    marginHorizontal: 20,
-    marginVertical: 5,
+const SettingCard = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: Theme.cardPressed(props),
   },
-  modalContainer: {
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden',
+}))`
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+  margin-horizontal: 20px;
+  margin-bottom: 10px;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+`;
+
+const SettingName = styled.Text`
+  color: ${Theme.bodyTextColour};
+  ${Typography.regular}
+`;
+
+const SettingValue = styled.Text`
+  color: ${Theme.bodyTextColour};
+  ${Typography.regular}
+`;
+
+const ModalContainer = styled.View`
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+  overflow: hidden;
+`;
+
+const ModalOption = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: Theme.cardPressed(props),
   },
-  optionRow: {
-    flexDirection: 'row',
-    padding: 20,
-    justifyContent: 'space-between',
-  },
-  outerOptionRow: {
-    borderRadius: 0,
-  },
-});
+}))`
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: ${Theme.card};
+`;
+
+const OptionName = styled.Text`
+  color: ${Theme.bodyTextColour};
+  ${Typography.regular}
+`;
+
+const StyledCircleIcon = styled(FontAwesome5)`
+  color: ${Theme.bodyTextColour};
+`;
 
 export default SettingsScreen;

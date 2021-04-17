@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, StyleSheet, Animated, View } from 'react-native';
-import LottieView from 'lottie-react-native';
-import { useTheme } from '@react-navigation/native';
+import { Animated } from 'react-native';
+import styled from 'styled-components';
 import EmptyAnimation from '../assets/animations/emptyBox.json';
+import { Layout, Theme, Typography } from '../styles';
+import LottieAnimation from '../library/components/LottieAnimation';
 
 const EmptyMessage = ({ message, size, style }) => {
-  const { colors } = useTheme();
   const animation = useRef(null);
   const [opacity] = useState(new Animated.Value(0));
   const emptyMessage = message || "There doesn't seem to be anything here";
@@ -25,33 +25,31 @@ const EmptyMessage = ({ message, size, style }) => {
   };
 
   return (
-    <Animated.View style={[styles.container, { opacity }]}>
-      <View style={[styles.container, { height: size || 50, width: size || 50 }, style]}>
-        <LottieView
-          ref={animation}
-          source={EmptyAnimation}
-          autoPlay
-          speed={0.9}
-          loop={false}
-          onAnimationFinish={onAnimationFinish}
-        />
-      </View>
-      <Text style={[styles.text, { color: colors.bodyText }]}>{emptyMessage}</Text>
-    </Animated.View>
+    <Container style={{ opacity }}>
+      <LottieAnimation
+        ref={animation}
+        style={style}
+        source={EmptyAnimation}
+        size={size}
+        autoPlay
+        speed={0.9}
+        onAnimationFinish={onAnimationFinish}
+      />
+      <MessageText>{emptyMessage}</MessageText>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 16,
-    flex: 0.5,
-  },
-});
+const Container = styled(Animated.View)`
+  flex: 1;
+  ${Layout.flexCenter};
+`;
+
+const MessageText = styled.Text`
+  flex: 0.5;
+  text-align: center;
+  color: ${Theme.bodyTextColour};
+  ${Typography.regular};
+`;
 
 export default EmptyMessage;

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin",
+        "lint": {
+          "validProperties": [
+            "padding-horizontal",
+            "padding-vertical",
+            "margin-horizontal",
+            "margin-vertical",
+            "shadow-radius",
+            "elevation",
+            "tint-color",
+            "resize-mode"
+          ]
+        }
+      }
+    ]
+  },
+  "exclude": ["node_modules"]
+}

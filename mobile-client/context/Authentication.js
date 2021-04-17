@@ -36,14 +36,14 @@ const useProviderAuth = () => {
     return cognitoUser && dbUser;
   };
 
-  const signInWithShortId = async shortId => {
-    if (!shortId) return null;
+  const signInWithInvitationId = async invitationId => {
+    if (!invitationId || invitationId.length !== 12) throw new Error('Invitation ID must be 12 characters long.');
 
     const { data } = await client.mutate({
       mutation: FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION,
       variables: {
         input: {
-          shortId,
+          invitationId,
         },
       },
     });
@@ -90,7 +90,7 @@ const useProviderAuth = () => {
     user,
     currentUser,
     signIn,
-    signInWithShortId,
+    signInWithInvitationId,
     signOut,
     isAuthenticated,
     isSigningOut,

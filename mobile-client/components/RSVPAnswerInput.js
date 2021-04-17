@@ -1,14 +1,16 @@
 import React from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import StandardTextInput from '../library/components/StandardTextInput';
+import styled from 'styled-components/native';
 import StandardRadioInput from '../library/components/StandardRadioInput';
+import StandardTextInput from '../library/components/StandardTextInput';
 
 const { width } = Dimensions.get('window');
 
 const RSVPAnswerInput = ({
   questionId,
   questionType,
+  label,
   placeholder,
   answerChoices,
   answerValue,
@@ -17,16 +19,12 @@ const RSVPAnswerInput = ({
   animIndex,
   style,
 }) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateX = (index - animIndex.value) * width;
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: (index - animIndex.value) * width }],
+  }));
 
   return (
-    <Animated.View style={[styles.container, animatedStyle, style]}>
+    <Container style={[animatedStyle, style]}>
       {!!answerChoices?.length && (
         <StandardRadioInput
           options={answerChoices}
@@ -34,28 +32,26 @@ const RSVPAnswerInput = ({
           selectedValue={answerValue}
         />
       )}
-
       {questionType === 'TEXT' && (
         <StandardTextInput
-          borderColourFocused='#2991cc'
-          multiline
           value={answerValue}
+          label={label}
           placeholder={placeholder}
           onChangeText={value => setRSVPAnswer(questionId, value)}
+          flat
+          multiline
         />
       )}
-    </Animated.View>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    paddingHorizontal: '5%',
-    width: '100%',
-    position: 'absolute',
-    justifyContent: 'center',
-  },
-});
+const Container = styled(Animated.View)`
+  position: absolute;
+  width: 100%;
+  padding-horizontal: 5%;
+  justify-content: center;
+  top: -15px;
+`;
 
 export default RSVPAnswerInput;

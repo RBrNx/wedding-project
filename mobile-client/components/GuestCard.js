@@ -1,64 +1,63 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
+import styled from 'styled-components';
 import StatusLine from './StatusLine';
 import { GuestResponse } from '../library/enums';
 import StandardPressable from '../library/components/StandardPressable';
+import { Outlines, Theme, Typography } from '../styles';
 
 const GuestCard = ({ guest }) => {
   const { firstName, lastName, attendanceStatus } = guest;
   const { text: guestStatus, color: statusColour } = GuestResponse[attendanceStatus];
-  const { colors } = useTheme();
 
   return (
-    <StandardPressable
-      raised
-      style={[styles.card, { backgroundColor: colors.card }]}
-      pressedStyle={{ backgroundColor: colors.cardHover }}
-      onPress={() => {}}
-    >
+    <CardContainer raised onPress={() => {}}>
       <StatusLine colour={statusColour} />
-      <View style={styles.textContainer}>
-        <Text style={[styles.name, { color: colors.headerText }]}>
+      <TextContainer>
+        <GuestName>
           {firstName} {lastName}
-        </Text>
-        <Text style={[styles.status, { color: colors.bodyText }]}>{guestStatus}</Text>
-      </View>
-      <Feather name='chevron-right' color={colors.componentBackground} size={30} />
-    </StandardPressable>
+        </GuestName>
+        <InvitationStatus>{guestStatus}</InvitationStatus>
+      </TextContainer>
+      <StyledIcon name='chevron-right' size={30} />
+    </CardContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    width: '100%',
-    borderRadius: 10,
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+const CardContainer = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: Theme.cardPressed(props),
   },
-  statusLine: {
-    width: 5,
-    borderRadius: 2.5,
-    height: '100%',
-  },
-  textContainer: {
-    flex: 1,
-    paddingLeft: 20,
-  },
-  name: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginVertical: 5,
-  },
-  status: {
-    marginVertical: 5,
-  },
-  icon: {
-    opacity: 0.8,
-  },
-});
+}))`
+  flex-direction: row;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+`;
+
+const TextContainer = styled.View`
+  flex: 100%;
+  padding-left: 15px;
+`;
+
+const GuestName = styled.Text`
+  margin-vertical: 5px;
+  ${Typography.regular};
+  font-family: 'Muli_700Bold';
+  color: ${Theme.headerTextColour};
+`;
+
+const InvitationStatus = styled.Text`
+  margin-vertical: 5px;
+  ${Typography.small};
+  color: ${Theme.detailTextColour};
+`;
+
+const StyledIcon = styled(Feather).attrs(props => ({
+  color: Theme.icon(props),
+}))``;
 
 export default GuestCard;

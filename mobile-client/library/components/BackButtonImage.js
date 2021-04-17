@@ -1,15 +1,14 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
 import { Assets } from '@react-navigation/stack';
+import styled from 'styled-components/native';
+import { Colours } from '../../styles';
 
 const BackButtonImage = ({ style }) => {
-  return <Image source={Assets[0]} fadeDuration={0} style={[styles.backImage, style]} />;
+  return <StyledImage source={Assets[0]} fadeDuration={0} style={style} />;
 };
 
-const styles = StyleSheet.create({
-  backImage: {
-    tintColor: '#000',
-  },
-});
+const StyledImage = styled.Image`
+  tint-color: ${Colours.neutral.black};
+`;
 
 export default BackButtonImage;
