@@ -18,6 +18,7 @@ const HandleContainer = styled(Animated.View)`
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
   ${Layout.flexCenter};
+  z-index: 99;
 `;
 
 const Handle = styled.View`
