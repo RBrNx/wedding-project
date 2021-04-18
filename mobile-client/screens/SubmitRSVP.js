@@ -35,25 +35,26 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [currQuestion, setCurrQuestion] = useState(null);
   const [rsvpForm, setRSVPForm] = useState({});
   const [showOverview, setShowOverview] = useState(false);
-  const [fetchRSVPQuestions, { loading }] = useLazyQuery(GET_RSVP_QUESTIONS);
-  const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchRSVPQuestions] = useLazyQuery(GET_RSVP_QUESTIONS);
+  const [submitRSVPForm] = useMutation(SUBMIT_RSVP_FORM);
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
   const { avoidKeyboardStyle } = useAvoidKeyboard();
 
-  const isLoading = loading || submitting;
   const sheetMinHeight = height - SHEET_COLLAPSED_POS - HANDLE_HEIGHT;
   const currAnswer = rsvpForm[currQuestion?._id];
   const { prevQuestion, nextQuestion } = calculateQuestions({ questions, questionHistory, currQuestion, currAnswer });
 
   useEffect(() => {
     const fetchDataOnMount = async () => {
+      setIsLoading(true);
       const { data } = await fetchRSVPQuestions();
       const { getRSVPQuestions: rsvpQuestions } = data || {};
 
       if (rsvpQuestions) {
         const typedQuestions = rsvpQuestions.map(question => ({ ...question, componentType: 'question' }));
-        const currQ = typedQuestions[0];
+        const [currQ] = typedQuestions;
         const { nextQuestion: nextQ } = calculateQuestions({
           questions: typedQuestions,
           questionHistory,
@@ -64,6 +65,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         setCurrQuestion(currQ);
         setFormSteps([currQ, nextQ]);
       }
+      setIsLoading(false);
     };
 
     fetchDataOnMount();
@@ -77,6 +79,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   const onSubmit = async () => {
     try {
+      setIsLoading(true);
       const formattedRSVP = formatRSVP(rsvpForm, questionHistory);
       const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
       const { submitRSVPForm: formResponse } = data || {};
@@ -84,6 +87,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
       if (formResponse.success) {
         navigation.navigate('RSVPSuccess');
       } else {
+        setIsLoading(false);
         showAlert({
           message: formResponse.message,
           type: AlertType.WARNING,
@@ -91,6 +95,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         });
       }
     } catch (err) {
+      setIsLoading(false);
       const { message } = parseError(err);
       console.error(message);
       showAlert({
