@@ -81,8 +81,7 @@ const HeaderText = styled(Animated.Text)`
 const Container = styled(Animated.View)`
   flex: 1;
   padding-horizontal: 5%;
-  padding-top: 50px;
-  ${Layout.flexCenter}
+  padding-top: 60px;
 `;
 
 const Card = styled.View`
