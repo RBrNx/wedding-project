@@ -75,7 +75,7 @@ const HeaderContainer = styled(Animated.View)`
 const HeaderText = styled(Animated.Text)`
   ${Typography.h1}
   font-family: 'Muli_400Regular';
-  color: ${Theme.headerTextColour};
+  color: ${Colours.neutral.white};
 `;
 
 const Container = styled(Animated.View)`
