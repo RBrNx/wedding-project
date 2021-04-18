@@ -1,6 +1,7 @@
 import React from 'react';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
+import { SubmitRSVP } from '../library/helpers/constants';
 import { Colours, Typography } from '../styles';
 
 const RSVPQuestion = ({ question, animIndex, index }) => {
@@ -26,7 +27,7 @@ const RSVPQuestion = ({ question, animIndex, index }) => {
 const Container = styled(Animated.View)`
   position: absolute;
   width: 100%;
-  height: 300px;
+  height: ${SubmitRSVP.QUESTION_HEIGHT}px;
   padding-left: 5%;
   padding-right: 15%;
   padding-bottom: 30px;

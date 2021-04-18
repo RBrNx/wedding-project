@@ -21,12 +21,13 @@ import { RSVPOverview, RSVPOverviewTitle } from '../components/RSVPOverview';
 import BackButtonImage from '../library/components/BackButtonImage';
 import { Colours } from '../styles';
 import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
+import { SubmitRSVP } from '../library/helpers/constants';
 
 const { width, height } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
 const SUBMIT_RSVP_FORM = loader('../graphql/mutations/submitRSVP.graphql');
 const HANDLE_HEIGHT = 20;
-const SHEET_COLLAPSED_POS = 300;
+const SHEET_COLLAPSED_POS = SubmitRSVP.QUESTION_HEIGHT;
 
 const SubmitRSVPScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);

@@ -6,7 +6,8 @@ import styled from 'styled-components/native';
 import theme from 'styled-theming';
 import Spacer from '../library/components/Spacer';
 import StandardRoundPressable from '../library/components/StandardRoundPressable';
-import { Colours, Layout, Outlines, Theme, Typography } from '../styles';
+import { SubmitRSVP } from '../library/helpers/constants';
+import { Colours, Outlines, Theme, Typography } from '../styles';
 
 const { width } = Dimensions.get('window');
 
@@ -65,7 +66,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
 const HeaderContainer = styled(Animated.View)`
   position: absolute;
   width: 100%;
-  height: 300px;
+  height: ${SubmitRSVP.QUESTION_HEIGHT}px;
   padding-left: 5%;
   padding-right: 15%;
   padding-bottom: 30px;

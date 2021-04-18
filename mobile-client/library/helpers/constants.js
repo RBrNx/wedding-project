@@ -1,3 +1,5 @@
+import { Dimensions } from 'react-native';
+
 // Controls scroll distance for BottomSheet components
 const HEADER_MAX_HEIGHT = 350;
 const HEADER_MIN_HEIGHT = 78.33333587646484; // Navigation Header height reported by React Navigation
@@ -9,4 +11,9 @@ const BottomSheet = {
   HEADER_SCROLL_DISTANCE,
 };
 
-export { BottomSheet };
+const { height } = Dimensions.get('window');
+const SubmitRSVP = {
+  QUESTION_HEIGHT: height * 0.4,
+};
+
+export { BottomSheet, SubmitRSVP };
