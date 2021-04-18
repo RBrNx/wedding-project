@@ -7,6 +7,7 @@ import RSVPSuccessScreen from '../screens/RSVPSuccess';
 import SettingsScreen from '../screens/Settings';
 import NavigationPresets from '../library/helpers/NavigationPresets';
 import WorkInProgressScreen from '../screens/WorkInProgress';
+import { useAuth } from '../context';
 
 const Stack = createStackNavigator();
 
@@ -55,8 +56,13 @@ const GuestHomeNavigator = () => {
 };
 
 const GuestNavigator = () => {
+  const { currentUser } = useAuth();
+
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator
+      screenOptions={screenOptions}
+      initialRouteName={currentUser?.rsvpForm ? 'GuestHome' : 'SubmitRSVP'}
+    >
       <Stack.Screen name='GuestHome' component={GuestHomeNavigator} />
       <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
       <Stack.Screen name='RSVPSuccess' component={RSVPSuccessScreen} />
