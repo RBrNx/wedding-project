@@ -110,6 +110,8 @@ const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyC
         onScrollBeginDrag={showScrollbar}
         onMomentumScrollEnd={hideScrollbar}
         scrollEnabled={!isFlatlistEmpty}
+        overScrollMode='never'
+        bounces={false}
       />
       <CustomScrollbar
         handleSize={scrollbarHandleSize - HEADER_MIN_HEIGHT}
