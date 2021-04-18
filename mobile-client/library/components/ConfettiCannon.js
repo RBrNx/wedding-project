@@ -77,7 +77,7 @@ const Confetto = ({ colour, animatedParams }) => {
 
   return (
     <ConfettoContainer style={animatedStyle}>
-      <ConfettoImage source={ConfettoSprite} tintColor={colour} />
+      <ConfettoImage source={ConfettoSprite} colour={colour} />
     </ConfettoContainer>
   );
 };
@@ -109,6 +109,7 @@ const ConfettoContainer = styled(Animated.View)`
 const ConfettoImage = styled.Image`
   width: ${CONFETTI_SIZE}px;
   height: ${CONFETTI_SIZE}px;
+  tint-color: ${props => props.colour};
 `;
 
 export default ConfettiCannon;

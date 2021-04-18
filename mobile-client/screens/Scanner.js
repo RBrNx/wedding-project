@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
-import * as Permissions from 'expo-permissions';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
@@ -83,7 +82,7 @@ const ScannerScreen = ({ navigation }) => {
       setScanned(false);
 
       const { message } = parseError(err);
-      console.log(message);
+      console.log(err);
       showAlert({
         message,
         type: AlertType.WARNING,
@@ -102,7 +101,7 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const askForCameraPermission = async manuallyTriggered => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    const { status } = await Camera.requestPermissionsAsync();
     setHasPermission(status === 'granted');
 
     if (status === 'denied' && manuallyTriggered) Linking.openSettings();

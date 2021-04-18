@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StatusBar } from 'react-native';
+import { Dimensions } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
@@ -11,7 +11,6 @@ import parseError from '../library/helpers/parseError';
 import { useAlert } from '../context';
 import { AlertType } from '../library/enums';
 import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
-import Spacer from '../library/components/Spacer';
 import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 import RSVPQuestion from '../components/RSVPQuestion';
@@ -21,12 +20,13 @@ import { RSVPOverview, RSVPOverviewTitle } from '../components/RSVPOverview';
 import BackButtonImage from '../library/components/BackButtonImage';
 import { Colours } from '../styles';
 import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
+import { SubmitRSVP } from '../library/helpers/constants';
 
 const { width, height } = Dimensions.get('window');
 const GET_RSVP_QUESTIONS = loader('../graphql/queries/getRSVPQuestions.graphql');
 const SUBMIT_RSVP_FORM = loader('../graphql/mutations/submitRSVP.graphql');
 const HANDLE_HEIGHT = 20;
-const SHEET_COLLAPSED_POS = 300;
+const SHEET_COLLAPSED_POS = SubmitRSVP.QUESTION_HEIGHT;
 
 const SubmitRSVPScreen = ({ navigation }) => {
   const [questions, setQuestions] = useState([]);
@@ -35,25 +35,26 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [currQuestion, setCurrQuestion] = useState(null);
   const [rsvpForm, setRSVPForm] = useState({});
   const [showOverview, setShowOverview] = useState(false);
-  const [fetchRSVPQuestions, { loading }] = useLazyQuery(GET_RSVP_QUESTIONS);
-  const [submitRSVPForm, { loading: submitting }] = useMutation(SUBMIT_RSVP_FORM);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchRSVPQuestions] = useLazyQuery(GET_RSVP_QUESTIONS);
+  const [submitRSVPForm] = useMutation(SUBMIT_RSVP_FORM);
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
   const { avoidKeyboardStyle } = useAvoidKeyboard();
 
-  const isLoading = loading || submitting;
   const sheetMinHeight = height - SHEET_COLLAPSED_POS - HANDLE_HEIGHT;
   const currAnswer = rsvpForm[currQuestion?._id];
   const { prevQuestion, nextQuestion } = calculateQuestions({ questions, questionHistory, currQuestion, currAnswer });
 
   useEffect(() => {
     const fetchDataOnMount = async () => {
+      setIsLoading(true);
       const { data } = await fetchRSVPQuestions();
       const { getRSVPQuestions: rsvpQuestions } = data || {};
 
       if (rsvpQuestions) {
         const typedQuestions = rsvpQuestions.map(question => ({ ...question, componentType: 'question' }));
-        const currQ = typedQuestions[0];
+        const [currQ] = typedQuestions;
         const { nextQuestion: nextQ } = calculateQuestions({
           questions: typedQuestions,
           questionHistory,
@@ -64,6 +65,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         setCurrQuestion(currQ);
         setFormSteps([currQ, nextQ]);
       }
+      setIsLoading(false);
     };
 
     fetchDataOnMount();
@@ -77,6 +79,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   const onSubmit = async () => {
     try {
+      setIsLoading(true);
       const formattedRSVP = formatRSVP(rsvpForm, questionHistory);
       const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
       const { submitRSVPForm: formResponse } = data || {};
@@ -84,6 +87,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
       if (formResponse.success) {
         navigation.navigate('RSVPSuccess');
       } else {
+        setIsLoading(false);
         showAlert({
           message: formResponse.message,
           type: AlertType.WARNING,
@@ -91,6 +95,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         });
       }
     } catch (err) {
+      setIsLoading(false);
       const { message } = parseError(err);
       console.error(message);
       showAlert({
@@ -188,13 +193,8 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   return (
     <>
-      <Spacer size={StatusBar.currentHeight} />
       {!isLoading && <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />}
-      <BottomSheetScrollView
-        topOffset={StatusBar.currentHeight}
-        collapsedPosition={SHEET_COLLAPSED_POS}
-        unlockFullScroll={!isLoading}
-      >
+      <BottomSheetScrollView collapsedPosition={SHEET_COLLAPSED_POS} unlockFullScroll={!isLoading}>
         {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (
           <ContentContainer>
