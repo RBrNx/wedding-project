@@ -1,6 +1,7 @@
 import React from 'react';
 import { Assets } from '@react-navigation/stack';
 import styled from 'styled-components/native';
+import { Platform } from 'react-native';
 import { Colours } from '../../styles';
 
 const BackButtonImage = ({ style }) => {
@@ -9,6 +10,7 @@ const BackButtonImage = ({ style }) => {
 
 const StyledImage = styled.Image`
   tint-color: ${Colours.neutral.black};
+  margin-left: ${Platform.OS === 'ios' ? 2 : 0}px;
 `;
 
 export default BackButtonImage;
