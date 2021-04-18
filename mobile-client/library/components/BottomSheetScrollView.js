@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import styled from 'styled-components/native';
 import ListHandle from '../../components/ListHandle';
 import { Colours, Layout, Theme } from '../../styles';
@@ -25,7 +26,7 @@ const BottomSheetScrollView = ({
   children,
   onRefresh,
   onScroll,
-  topOffset,
+  topOffset = getStatusBarHeight(),
   collapsedPosition = HEADER_MAX_HEIGHT,
   unlockFullScroll = false,
   enableRefreshControl = false,
@@ -109,6 +110,7 @@ const BottomSheetScrollView = ({
           onScrollBeginDrag={showScrollbar}
           onMomentumScrollEnd={hideScrollbar}
           overScrollMode='never'
+          bounces={false}
           onContentSizeChange={(contentWidth, contentHeight) => {
             setTotalScrollbarHeight(contentHeight);
           }}

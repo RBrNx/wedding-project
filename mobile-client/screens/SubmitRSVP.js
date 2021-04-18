@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StatusBar } from 'react-native';
+import { Dimensions } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
@@ -11,7 +11,6 @@ import parseError from '../library/helpers/parseError';
 import { useAlert } from '../context';
 import { AlertType } from '../library/enums';
 import BottomSheetScrollView from '../library/components/BottomSheetScrollView';
-import Spacer from '../library/components/Spacer';
 import StepTransition from '../library/components/StepTransition';
 import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
 import RSVPQuestion from '../components/RSVPQuestion';
@@ -194,13 +193,8 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   return (
     <>
-      <Spacer size={StatusBar.currentHeight} />
       {!isLoading && <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />}
-      <BottomSheetScrollView
-        topOffset={StatusBar.currentHeight}
-        collapsedPosition={SHEET_COLLAPSED_POS}
-        unlockFullScroll={!isLoading}
-      >
+      <BottomSheetScrollView collapsedPosition={SHEET_COLLAPSED_POS} unlockFullScroll={!isLoading}>
         {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (
           <ContentContainer>
