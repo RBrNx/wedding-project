@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import { useFonts, Muli_400Regular, Muli_700Bold } from '@expo-google-fonts/muli';
-import AnimatedSplashScreen from './AnimatedSplashScreen';
-import { useAuth, useSettings } from '../context';
+import { useAuth, useSettings } from 'context';
+import AnimatedSplashScreen from 'library/components/AnimatedSplashScreen';
 
 const AppLoader = ({ children }) => {
   const [isSplashReady, setIsSplashReady] = useState(false);
@@ -16,7 +16,7 @@ const AppLoader = ({ children }) => {
 
   const downloadSplash = async () => {
     // eslint-disable-next-line global-require
-    const asset = await Asset.fromModule(require('../assets/splash.png')).downloadAsync();
+    const asset = await Asset.fromModule(require('../../../assets/splash.png')).downloadAsync();
     setSplashImage(asset);
   };
 

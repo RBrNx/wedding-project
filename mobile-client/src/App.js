@@ -6,11 +6,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import Amplify from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import * as Sentry from 'sentry-expo';
-import client from './utils/apiClient';
-import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from './context';
-import awsConfig from './awsExports';
+import client from 'library/utils/apiClient';
+import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from 'context';
+import AppLoader from 'library/components/AppLoader';
+import awsConfig from 'library/utils/awsExports';
 import AppNavigator from './navigation/AppNavigator';
-import AppLoader from './components/AppLoader';
 
 Amplify.configure({
   Auth: {

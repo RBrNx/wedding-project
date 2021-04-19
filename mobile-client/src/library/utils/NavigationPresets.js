@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { Colours } from '../../styles';
+import { Colours } from 'library/styles';
 
 const NavigationPresets = {
   NoHeader: {
