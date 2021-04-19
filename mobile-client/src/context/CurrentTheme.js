@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native-appearance';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { Theme as ThemeEnum } from 'library/enums';
-import { Colours, Theme } from 'library/styles';
 import { useSettings } from './Settings';
+import { Theme as ThemeEnum } from '../library/enums';
+import { Colours, Theme } from '../styles';
 
 const ThemeContext = createContext();
 

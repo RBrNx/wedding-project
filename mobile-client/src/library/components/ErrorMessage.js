@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Animated } from 'react-native';
 import styled from 'styled-components';
 import LottieAnimation from 'library/components/LottieAnimation';
-import { Layout, Theme, Typography } from 'library/styles';
 import ErrorAnimation from '../../../assets/animations/error.json';
+import { Layout, Theme, Typography } from '../styles';
 
 const ErrorMessage = ({ message, size, style }) => {
   const [opacity] = useState(new Animated.Value(0));
