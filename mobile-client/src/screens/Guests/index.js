@@ -11,7 +11,7 @@ import { Layout } from 'library/styles';
 import PartyIllustration from './PartyIllustration';
 import GuestCard from './GuestCard';
 
-const ALL_GUESTS_QUERY = loader('library/graphql/queries/getAllGuests.graphql');
+const ALL_GUESTS_QUERY = loader('../graphql/queries/getAllGuests.graphql');
 
 const GuestRow = ({ guest, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
