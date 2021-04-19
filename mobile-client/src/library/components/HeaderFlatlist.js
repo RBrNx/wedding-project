@@ -2,9 +2,9 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { Colours, Layout, Typography } from '../../styles';
-import { BottomSheet } from '../helpers/constants';
-import BottomSheetFlatList from './BottomSheetFlatList';
+import { Colours, Layout, Typography } from 'library/styles';
+import { BottomSheet } from 'library/utils/constants';
+import BottomSheetFlatList from 'library/components/BottomSheetFlatList';
 
 const { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
 

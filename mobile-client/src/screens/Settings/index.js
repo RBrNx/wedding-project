@@ -3,13 +3,13 @@ import { View, ActivityIndicator } from 'react-native';
 import Modal from 'react-native-modal';
 import { FontAwesome5 } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-import HeaderFlatlist from '../library/components/HeaderFlatlist';
-import SettingsIllustration from '../components/SVG/Settings';
-import StandardPressable from '../library/components/StandardPressable';
-import { useAlert, useAuth, useSettings } from '../context';
-import { Outlines, Theme, Typography } from '../styles';
-import parseError from '../library/helpers/parseError';
-import { AlertType } from '../library/enums';
+import HeaderFlatlist from 'library/components/HeaderFlatlist';
+import StandardPressable from 'library/components/StandardPressable';
+import { useAlert, useAuth, useSettings } from 'context';
+import { Outlines, Theme, Typography } from 'library/styles';
+import parseError from 'library/utils/parseError';
+import { AlertType } from 'library/enums';
+import SettingsIllustration from './SettingsIllustration';
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);

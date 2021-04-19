@@ -8,11 +8,11 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { Colours, Theme } from '../../styles';
+import { Colours, Theme } from 'library/styles';
+import ListHandle from 'library/components/ListHandle';
+import { BottomSheet } from 'library/utils/constants';
 import useCustomScrollbar from '../hooks/useCustomScrollbar';
 import CustomScrollbar from './CustomScrollbar';
-import ListHandle from '../../components/ListHandle';
-import { BottomSheet } from '../helpers/constants';
 
 const { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
