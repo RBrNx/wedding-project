@@ -10,7 +10,8 @@ import client from 'library/utils/apiClient';
 import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from 'context';
 import AppLoader from 'library/components/AppLoader';
 import AppNavigator from 'navigation/AppNavigator';
-import awsConfig from './awsExports';
+import awsConfig from 'library/utils/awsExports';
+import { registerRootComponent } from 'expo';
 
 Amplify.configure({
   Auth: {
@@ -52,4 +53,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default registerRootComponent(App);
