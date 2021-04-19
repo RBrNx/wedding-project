@@ -1,36 +1,27 @@
-import React, { useState } from 'react';
-import { Pressable } from 'react-native';
+import React from 'react';
 import BackButtonImage from 'library/components/BackButtonImage';
+import styled from 'styled-components';
+import { Layout } from 'library/styles';
+import StandardPressable from './StandardPressable';
 
-const BackButton = ({ size = 48, icon, onPress, onPressIn, onPressOut, style, backImageStyle }) => {
-  const [isPressed, setIsPressed] = useState(false);
-
+const BackButton = ({ size = 48, icon, onPress, style, backImageStyle }) => {
   return (
-    <Pressable
-      style={[
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: isPressed ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-        style,
-      ]}
-      onPress={onPress}
-      onPressIn={() => {
-        setIsPressed(true);
-        if (onPressIn) onPressIn();
-      }}
-      onPressOut={() => {
-        setIsPressed(false);
-        if (onPressIn) onPressOut();
-      }}
-    >
+    <StyledPressable style={style} size={size} onPress={onPress}>
       {icon ? icon() : <BackButtonImage style={backImageStyle} />}
-    </Pressable>
+    </StyledPressable>
   );
 };
+
+const StyledPressable = styled(StandardPressable).attrs(() => ({
+  pressedStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
+}))`
+  width: ${props => props.size}px;
+  height: ${props => props.size}px;
+  border-radius: ${props => props.size / 2}px;
+  background-color: transparent;
+  ${Layout.flexCenter}
+`;
 
 export default BackButton;

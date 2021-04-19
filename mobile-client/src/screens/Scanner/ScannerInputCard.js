@@ -4,8 +4,9 @@ import { ActivityIndicator, Dimensions } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import StandardTextInput from 'library/components/StandardTextInput';
-import StandardRoundPressable from 'library/components/StandardRoundPressable';
-import { Layout, Outlines } from 'library/styles';
+import { Colours, Layout, Outlines } from 'library/styles';
+import StandardPressable from 'library/components/StandardPressable';
+import { darken } from 'library/utils/colours';
 
 const { height } = Dimensions.get('window');
 
@@ -23,12 +24,9 @@ const ScannerInputCard = ({ scannerModeIndex, invitationId, setInvitationId, onS
         value={invitationId}
         onChangeText={value => setInvitationId(value)}
       />
-      <SubmitButton
-        onPress={onSubmit}
-        icon={() =>
-          isLoading ? <ActivityIndicator color='#fff' /> : <Ionicons name='checkmark-sharp' size={24} color='#fff' />
-        }
-      />
+      <SubmitButton onPress={onSubmit}>
+        {isLoading ? <ActivityIndicator color='#fff' /> : <Ionicons name='checkmark-sharp' size={24} color='#fff' />}
+      </SubmitButton>
     </InputContainer>
   );
 };
@@ -39,13 +37,18 @@ const InputContainer = styled(Animated.View)`
   ${Layout.flexCenter}
 `;
 
-const SubmitButton = styled(StandardRoundPressable)`
+const SubmitButton = styled(StandardPressable).attrs(() => ({
+  pressedStyle: {
+    backgroundColor: darken(Colours.secondary, 0.2),
+  },
+}))`
   position: absolute;
   right: 5px;
   height: 50px;
   width: 50px;
   border-radius: 25px;
   padding: 10px;
+  background-color: ${Colours.secondary};
   ${Layout.flexCenter}
   ${Outlines.boxShadow};
 `;

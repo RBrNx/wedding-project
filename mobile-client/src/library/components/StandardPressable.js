@@ -1,18 +1,19 @@
 import { Outlines } from 'library/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/native';
 
 const StandardPressable = ({ children, style, onPress, raised, pressedStyle, onLayout }) => {
-  const renderPressableStyles = ({ pressed }) => {
-    const pressableStyles = [style];
-
-    if (pressed) pressableStyles.push({ ...pressedStyle });
-
-    return pressableStyles;
-  };
+  const [pressed, setPressed] = useState(false);
 
   return (
-    <StyledPressable style={renderPressableStyles} raised={raised} onPress={onPress} onLayout={onLayout}>
+    <StyledPressable
+      style={[style, pressed ? pressedStyle : {}]}
+      raised={raised}
+      onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onLayout={onLayout}
+    >
       {children}
     </StyledPressable>
   );

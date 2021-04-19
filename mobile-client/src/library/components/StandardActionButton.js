@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { Dimensions, Pressable } from 'react-native';
+import React from 'react';
+import { Dimensions } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Colours, Layout, Outlines, Typography } from 'library/styles';
 import { darken } from 'library/utils/colours';
 import { useAnimatedActionButton } from 'library/hooks';
+import StandardPressable from './StandardPressable';
+import withAnimated from './withAnimated';
 
 const { width } = Dimensions.get('window');
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedPressable = withAnimated(StandardPressable);
 
 const StandardActionButton = ({
   size = 56,
@@ -23,7 +25,6 @@ const StandardActionButton = ({
   maxExpansionWidth = width,
   animationDuration = 300,
 }) => {
-  const [isPressed, setIsPressed] = useState(false);
   const { animatedExpansionStyle, animatedIconStyle, animatedMessageStyle, isExpanded } = useAnimatedActionButton({
     size,
     expandToFullSize,
@@ -34,16 +35,10 @@ const StandardActionButton = ({
   return (
     <FullscreenContainer pointerEvents='box-none'>
       <StyledPressable
-        style={[
-          { backgroundColor: isPressed ? darken(Colours.secondary, 0.2) : Colours.secondary },
-          animatedExpansionStyle,
-          style,
-        ]}
+        style={[animatedExpansionStyle, style]}
         size={size}
         position={position}
         onPress={isExpanded ? onFullSizePress : onPress}
-        onPressIn={() => setIsPressed(true)}
-        onPressOut={() => setIsPressed(false)}
       >
         <ExpandedLabel style={[animatedMessageStyle, messageStyle]}>{label}</ExpandedLabel>
         <Animated.View style={[animatedIconStyle, iconStyle]}>{!isExpanded && icon && icon()}</Animated.View>
@@ -57,11 +52,16 @@ const FullscreenContainer = styled.View`
   z-index: 99;
 `;
 
-const StyledPressable = styled(AnimatedPressable)`
+const StyledPressable = styled(AnimatedPressable).attrs(() => ({
+  pressedStyle: {
+    backgroundColor: darken(Colours.secondary, 0.2),
+  },
+}))`
   position: absolute;
   flex-direction: row;
   ${Layout.flexCenter};
   ${Outlines.boxShadow};
+  background-color: ${Colours.secondary};
   overflow: hidden;
   height: ${props => props.size}px;
   border-radius: ${props => props.size / 2}px;

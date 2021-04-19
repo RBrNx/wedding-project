@@ -2,15 +2,11 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { darken } from 'library/utils/colours';
 import { Colours, Outlines, Typography } from 'library/styles';
-import Pressable from 'library/components/Pressable';
+import StandardPressable from './StandardPressable';
 
 const StandardButton = ({ onPress, raised, text, loading, icon }) => {
   return (
-    <StyledPressable
-      style={({ pressed }) => ({ backgroundColor: pressed ? darken(Colours.secondary, 0.2) : Colours.secondary })}
-      raised={raised}
-      onPress={onPress}
-    >
+    <StyledPressable raised={raised} onPress={onPress}>
       {!loading && (
         <>
           <InvisibleIcon>{icon && icon()}</InvisibleIcon>
@@ -23,11 +19,16 @@ const StandardButton = ({ onPress, raised, text, loading, icon }) => {
   );
 };
 
-const StyledPressable = styled(Pressable)`
+const StyledPressable = styled(StandardPressable).attrs(() => ({
+  pressedStyle: {
+    backgroundColor: darken(Colours.secondary, 0.2),
+  },
+}))`
   width: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  background-color: ${Colours.secondary};
   height: 50px;
   border-radius: 25px;
   ${props => props.raised && Outlines.boxShadow}

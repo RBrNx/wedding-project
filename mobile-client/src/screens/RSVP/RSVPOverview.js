@@ -5,9 +5,10 @@ import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-nati
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
 import { SubmitRSVP } from 'library/utils/constants';
-import { Colours, Outlines, Theme, Typography } from 'library/styles';
+import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
-import StandardRoundPressable from 'library/components/StandardRoundPressable';
+import StandardPressable from 'library/components/StandardPressable';
+import { darken } from 'library/utils/colours';
 
 const { width } = Dimensions.get('window');
 
@@ -51,11 +52,9 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
               <Spacer size={10} />
               <AnswerText>{answer}</AnswerText>
             </TextContainer>
-            <StyledRoundPressable
-              size={40}
-              icon={() => <StyledIcon name='edit' size={20} />}
-              onPress={() => onEditPress(question, questionIndex)}
-            />
+            <EditButton size={40} onPress={() => onEditPress(question, questionIndex)}>
+              <StyledIcon name='edit' size={20} />
+            </EditButton>
           </Card>
         );
       })}
@@ -116,12 +115,19 @@ const AnswerText = styled.Text`
   ${Typography.regular}
 `;
 
-const StyledRoundPressable = styled(StandardRoundPressable).attrs(props => ({
-  colour: theme('theme', {
-    light: Colours.neutral.grey3,
-    dark: Colours.neutral.grey4,
-  })(props),
-}))``;
+const editButtonTheme = theme('theme', {
+  light: Colours.neutral.grey3,
+  dark: Colours.neutral.grey4,
+});
+const EditButton = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: darken(editButtonTheme(props), 0.2),
+  },
+}))`
+  background-color: ${editButtonTheme};
+  ${Layout.flexCenter};
+  ${props => Layout.round(props.size)}
+`;
 
 const StyledIcon = styled(AntDesign).attrs(props => ({
   color: theme('theme', {

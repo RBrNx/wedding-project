@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
@@ -8,6 +7,7 @@ import { useAnimatedAlert } from 'library/hooks';
 import { AlertType } from 'library/enums';
 import StatusLine from 'library/components/StatusLine';
 import Spacer from 'library/components/Spacer';
+import StandardPressable from './StandardPressable';
 
 const alertTypeMap = {
   [AlertType.SUCCESS]: { title: 'Yay! Everything worked!', colour: '#21a67a' },
@@ -86,7 +86,7 @@ const Message = styled.Text`
   color: #93959a;
 `;
 
-const PressableIconContainer = styled(Pressable)`
+const PressableIconContainer = styled(StandardPressable)`
   flex: 0.25;
   height: 100%;
   justify-content: center;
