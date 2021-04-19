@@ -2,10 +2,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
-import LandingIllustration from '../components/SVG/Landing';
-import Spacer from '../library/components/Spacer';
-import StandardButton from '../library/components/StandardButton';
-import { Colours, Typography } from '../styles';
+import Spacer from 'library/components/Spacer';
+import StandardButton from 'library/components/StandardButton';
+import { Colours, Typography } from 'library/styles';
+import LandingIllustration from './LandingIllustration';
 
 const LandingScreen = ({ navigation }) => {
   return (
