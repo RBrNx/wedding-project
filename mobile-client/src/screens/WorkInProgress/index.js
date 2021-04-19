@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import InProgressIllustration from '../components/SVG/InProgress';
-import Spacer from '../library/components/Spacer';
-import { Colours, Typography } from '../styles';
+import { Colours, Typography } from 'library/styles';
+import Spacer from 'library/components/Spacer';
+import InProgressIllustration from './InProgressIllustration';
 
 const WorkInProgressScreen = () => {
   return (
