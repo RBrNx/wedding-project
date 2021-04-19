@@ -3,7 +3,7 @@ import { Dimensions, StatusBar } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import Svg, { Defs, Rect, Mask } from 'react-native-svg';
 import styled from 'styled-components/native';
-import { Layout } from '../styles';
+import { Layout } from 'library/styles';
 
 const { width, height } = Dimensions.get('window');
 

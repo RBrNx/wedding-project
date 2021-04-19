@@ -4,21 +4,21 @@ import { Camera } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import ScannerButtonCard from '../components/ScannerButtonCard';
-import { useAuth, useAlert } from '../context';
-import QRScanner from '../components/QRScanner';
-import StandardButton from '../library/components/StandardButton';
-import CameraViewfinder from '../components/CameraViewfinder';
-import StandardPressable from '../library/components/StandardPressable';
-import ScannerModeHeading from '../components/ScannerModeHeading';
-import StepTransition from '../library/components/StepTransition';
-import useAnimatedStepTransition from '../library/hooks/useAnimatedStepTransition';
-import DismissKeyboard from '../library/components/DismissKeyboard';
-import ScannerInputCard from '../components/ScannerInputCard';
-import LoadingIndicator from '../library/components/LoadingIndicator';
-import { AlertType } from '../library/enums';
-import { Colours, Layout, Outlines } from '../styles';
-import parseError from '../library/helpers/parseError';
+import { useAuth, useAlert } from 'context';
+import StandardButton from 'library/components/StandardButton';
+import StandardPressable from 'library/components/StandardPressable';
+import StepTransition from 'library/components/StepTransition';
+import { useAnimatedStepTransition } from 'library/hooks';
+import DismissKeyboard from 'library/components/DismissKeyboard';
+import LoadingIndicator from 'library/components/LoadingIndicator';
+import { AlertType } from 'library/enums';
+import { Colours, Layout, Outlines } from 'library/styles';
+import parseError from 'library/utils/parseError';
+import ScannerInputCard from './ScannerInputCard';
+import ScannerModeHeading from './ScannerModeHeading';
+import CameraViewfinder from './CameraViewfinder';
+import QRScannerAnimation from './QRScannerAnimation';
+import ScannerButtonCard from './ScannerButtonCard';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -174,7 +174,7 @@ const ScannerScreen = ({ navigation }) => {
       {!hasPermission && (
         <PermissionCard style={animatedPermissionStyles} pointerEvents='box-none'>
           <PermissionText>To scan your invitation, we require your permission to access the Camera</PermissionText>
-          <QRScanner size={100} />
+          <QRScannerAnimation size={100} />
           <StandardButton text='Grant Permission' raised onPress={() => askForCameraPermission(true)} />
         </PermissionCard>
       )}

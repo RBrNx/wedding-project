@@ -2,8 +2,8 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import Spacer from '../library/components/Spacer';
-import { Colours, Typography } from '../styles';
+import Spacer from 'library/components/Spacer';
+import { Colours, Typography } from 'library/styles';
 
 const { height } = Dimensions.get('window');
 

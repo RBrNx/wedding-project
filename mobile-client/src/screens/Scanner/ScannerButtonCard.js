@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import StandardPressable from '../library/components/StandardPressable';
-import Spacer from '../library/components/Spacer';
-import useAvoidKeyboard from '../library/hooks/useAvoidKeyboard';
-import { Colours, Outlines, Typography } from '../styles';
-import { fade } from '../library/helpers/colours';
+import StandardPressable from 'library/components/StandardPressable';
+import Spacer from 'library/components/Spacer';
+import { useAvoidKeyboard } from 'library/hooks';
+import { Colours, Outlines, Typography } from 'library/styles';
+import { fade } from 'library/utils/colours';
 
 const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
   const [buttonWidth, setButtonWidth] = useState(0);

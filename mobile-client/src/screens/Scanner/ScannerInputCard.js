@@ -3,9 +3,9 @@ import React from 'react';
 import { ActivityIndicator, Dimensions } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import StandardTextInput from '../library/components/StandardTextInput';
-import StandardRoundPressable from '../library/components/StandardRoundPressable';
-import { Layout, Outlines } from '../styles';
+import StandardTextInput from 'library/components/StandardTextInput';
+import StandardRoundPressable from 'library/components/StandardRoundPressable';
+import { Layout, Outlines } from 'library/styles';
 
 const { height } = Dimensions.get('window');
 
