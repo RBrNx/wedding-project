@@ -2,9 +2,9 @@ import React, { useEffect, useMemo } from 'react';
 import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withDelay } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import ConfettoSprite from '../../assets/confetti.png';
-import { Colours, Layout } from '../../styles';
-import withVelocity from '../animations/withVelocity';
+import { Colours, Layout } from 'library/styles';
+import { withVelocity } from 'library/worklets';
+import ConfettoSprite from '../../../assets/confetti.png';
 
 const NUM_CONFETTI = 50;
 const CONFETTI_SIZE = 16;

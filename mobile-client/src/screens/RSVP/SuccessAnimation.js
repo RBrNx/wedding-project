@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Animated } from 'react-native';
 import styled from 'styled-components/native';
-import SuccessAnimationFile from '../assets/animations/success.json';
-import LottieAnimation from '../library/components/LottieAnimation';
-import { Layout } from '../styles';
+import LottieAnimation from 'library/components/LottieAnimation';
+import { Layout } from 'library/styles';
+import SuccessAnimationFile from '../../../assets/animations/success.json';
 
 const SuccessAnimation = ({ size, style }) => {
   const [opacity] = useState(new Animated.Value(0));

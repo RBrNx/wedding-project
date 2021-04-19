@@ -3,10 +3,10 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import styled from 'styled-components/native';
 import { Colours, Layout, Typography } from 'library/styles';
 import { usePreventGoingBack } from 'library/hooks';
-import SuccessAnimation from '../../../components/SuccessAnimation';
-import ConfettiCannon from '../../../library/components/ConfettiCannon';
-import Spacer from '../../library/components/Spacer';
-import StandardButton from '../../library/components/StandardButton';
+import Spacer from 'library/components/Spacer';
+import StandardButton from 'library/components/StandardButton';
+import ConfettiCannon from './ConfettiCannon';
+import SuccessAnimation from './SuccessAnimation';
 
 const RSVPSuccessScreen = ({ route, navigation }) => {
   const fadeIn = useSharedValue(0);
