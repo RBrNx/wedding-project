@@ -9,8 +9,8 @@ import * as Sentry from 'sentry-expo';
 import client from 'library/utils/apiClient';
 import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from 'context';
 import AppLoader from 'library/components/AppLoader';
+import AppNavigator from 'navigation/AppNavigator';
 import awsConfig from './awsExports';
-import AppNavigator from './navigation/AppNavigator';
 
 Amplify.configure({
   Auth: {

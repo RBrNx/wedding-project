@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { useAuth, useCurrentTheme } from 'context';
 import NavigationPresets from 'library/utils/NavigationPresets';
-import AuthenticatedNavigator from './AuthenticatedNavigator';
-import UnauthenticatedNavigator from './UnauthenticatedNavigator';
+import AuthenticatedNavigator from 'navigation/AuthenticatedNavigator';
+import UnauthenticatedNavigator from 'navigation/UnauthenticatedNavigator';
 
 const Stack = createStackNavigator();
 
