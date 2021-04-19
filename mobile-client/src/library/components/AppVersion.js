@@ -1,8 +1,8 @@
 import React from 'react';
 import Constants from 'expo-constants';
 import styled from 'styled-components/native';
-import { version } from '../../package.json';
-import { Colours } from '../../styles';
+import { Colours } from 'library/styles';
+import { version } from '../../../package.json';
 
 const AppVersion = ({ style }) => {
   const versionString = __DEV__ ? version : `${Constants.nativeAppVersion} (${Constants.nativeBuildVersion})`;

@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
-import StatusLine from '../../components/StatusLine';
-import { Colours, Outlines, Theme, Typography } from '../../styles';
-import { AlertType } from '../enums';
-import useAnimatedAlert from '../hooks/useAnimatedAlert';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
+import StatusLine from '../../../components/StatusLine';
+import { AlertType } from '../../../library/enums';
+import useAnimatedAlert from '../../../library/hooks/useAnimatedAlert';
 import Spacer from './Spacer';
 
 const alertTypeMap = {

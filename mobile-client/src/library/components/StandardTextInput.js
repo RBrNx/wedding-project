@@ -9,7 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
-import { Colours, Outlines, Theme, Typography } from '../../styles';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
 
 const StandardTextInput = ({
   label,

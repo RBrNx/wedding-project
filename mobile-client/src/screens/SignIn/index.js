@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import StandardButton from '../library/components/StandardButton';
-import { useAuth } from '../context';
-import DismissKeyboard from '../library/components/DismissKeyboard';
-import { useAlert } from '../context/Alert';
-import { AlertType } from '../library/enums';
-import Spacer from '../library/components/Spacer';
-import StandardTextInput from '../library/components/StandardTextInput';
-import AppVersion from '../library/components/AppVersion';
-import { Colours, Typography } from '../styles';
+import StandardButton from 'library/components/StandardButton';
+import DismissKeyboard from 'library/components/DismissKeyboard';
+import Spacer from 'library/components/Spacer';
+import StandardTextInput from 'library/components/StandardTextInput';
+import AppVersion from 'library/components/AppVersion';
+import { Colours, Typography } from 'library/styles';
+import { AlertType } from 'library/enums';
+import { useAuth, useAlert } from 'context';
 
 const SignInScreen = () => {
   const [emailAddress, setEmailAddress] = useState(null);
