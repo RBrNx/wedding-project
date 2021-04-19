@@ -3,15 +3,15 @@ import { Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
-import HeaderFlatlist from '../library/components/HeaderFlatlist';
-import LoadingIndicator from '../library/components/LoadingIndicator';
-import ErrorMessage from '../components/ErrorMessage';
-import EmptyMessage from '../components/EmptyMessage';
-import InvitationsIllustration from '../components/SVG/Invitations';
-import InvitationCard from '../components/InvitationCard';
-import { Layout } from '../styles';
+import HeaderFlatlist from 'library/components/HeaderFlatlist';
+import LoadingIndicator from 'library/components/LoadingIndicator';
+import ErrorMessage from 'library/components/ErrorMessage';
+import EmptyMessage from 'library/components/EmptyMessage';
+import { Layout } from 'library/styles';
+import InvitationsIllustration from './InvitationsIllustration';
+import InvitationCard from './InvitationCard';
 
-const ALL_INVITATIONS_QUERY = loader('../graphql/queries/getAllInvitations.graphql');
+const ALL_INVITATIONS_QUERY = loader('library/graphql/queries/getAllInvitations.graphql');
 
 const InvitationRow = ({ invitation, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));

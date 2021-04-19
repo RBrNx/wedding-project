@@ -1,10 +1,10 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-import StatusLine from './StatusLine';
-import { GuestResponse, InvitationType } from '../library/enums';
-import StandardPressable from '../library/components/StandardPressable';
-import { Colours, Outlines, Theme, Typography } from '../styles';
+import StatusLine from 'library/components/StatusLine';
+import { GuestResponse, InvitationType } from 'library/enums';
+import StandardPressable from 'library/components/StandardPressable';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
 
 const InvitationCard = ({ guests, uniqueCode = 12345, type }) => {
   const { icon: InvitationTypeIcon } = InvitationType[type];
