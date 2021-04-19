@@ -13,4 +13,12 @@ const absoluteFill = css`
   right: 0px;
 `;
 
-export { flexCenter, absoluteFill };
+const round = size => {
+  return css`
+    height: ${size}px;
+    width: ${size}px;
+    border-radius: ${size / 2}px;
+  `;
+};
+
+export { flexCenter, absoluteFill, round };
