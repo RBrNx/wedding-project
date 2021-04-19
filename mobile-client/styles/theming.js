@@ -1,6 +1,6 @@
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { Platform } from 'react-native';
-import { darken } from '../library/helpers/colours';
+import { darken } from 'library/utils/colours';
 
 // const black = '#000';
 const white = '#fff';

@@ -1,5 +1,5 @@
-import SunIcon from '../components/SVG/SunIcon';
-import MoonIcon from '../components/SVG/MoonIcon';
+import SunIcon from 'library/components/SunIcon';
+import MoonIcon from 'library/components/MoonIcon';
 
 const GuestResponse = Object.freeze({
   AWAITING_RSVP: { text: 'Awaiting RSVP', color: '#2991cc' },

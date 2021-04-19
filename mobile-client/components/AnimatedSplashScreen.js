@@ -10,7 +10,7 @@ import Animated, {
 import Constants from 'expo-constants';
 import * as SplashScreen from 'expo-splash-screen';
 import styled from 'styled-components/native';
-import { Layout } from '../styles';
+import { Layout } from 'library/styles';
 
 const AnimatedSplashScreen = ({ children, splashImage, isAppReady }) => {
   const animation = useSharedValue(0);
