@@ -41,6 +41,7 @@ const ScannerScreen = ({ navigation }) => {
   });
 
   const screenRatio = windowHeight / windowWidth;
+  const cameraWidth = windowWidth + imagePadding;
   const scannerModeHeadings = [
     { heading: 'Scan QR Code', subHeading: 'Scan the QR code from your invitation, or enter the code manually.' },
     {
@@ -52,9 +53,9 @@ const ScannerScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <StandardPressable onPress={() => setFlashEnabled(!flashEnabled)} style={{ marginRight: 15 }}>
+        <FlashIcon onPress={() => setFlashEnabled(!flashEnabled)}>
           <Ionicons name={flashEnabled ? 'flash-outline' : 'flash-off-outline'} size={24} color='#fff' />
-        </StandardPressable>
+        </FlashIcon>
       ),
     });
   }, [navigation, flashEnabled]);
@@ -182,7 +183,7 @@ const ScannerScreen = ({ navigation }) => {
         <>
           <StyledCamera
             ref={cameraRef}
-            style={{ width: windowWidth + imagePadding }}
+            width={cameraWidth}
             ratio={ratio}
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
@@ -220,6 +221,10 @@ const StyledDismissKeyboard = styled(DismissKeyboard)`
   align-items: center;
 `;
 
+const FlashIcon = styled(StandardPressable)`
+  margin-right: 15px;
+`;
+
 const LoadingCard = styled(Animated.View)`
   background-color: ${Colours.neutral.white};
   ${Outlines.borderRadius};
@@ -250,6 +255,7 @@ const PermissionText = styled.Text`
 
 const StyledCamera = styled(Camera)`
   ${Layout.absoluteFill};
+  width: ${props => props.width}px;
 `;
 
 export default ScannerScreen;
