@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth } from 'context';
-import NavigationPresets from 'library/utils/NavigationPresets';
 import AdminNavigator from './AdminNavigator';
 import GuestNavigator from './GuestNavigator';
+import { useAuth } from '../context';
+import NavigationPresets from '../library/helpers/NavigationPresets';
 
 const AuthenticatedStack = createStackNavigator();
 
