@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Animated } from 'react-native';
 import styled from 'styled-components';
 import LottieAnimation from 'library/components/LottieAnimation';
-import ErrorAnimation from '../../../assets/animations/error.json';
+import ErrorAnimation from 'assets/animations/error.json';
 import { Layout, Theme, Typography } from '../styles';
 
 const ErrorMessage = ({ message, size, style }) => {

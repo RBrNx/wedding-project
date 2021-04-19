@@ -4,8 +4,10 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import { Colours } from 'library/styles';
 
+const [BackImage] = Assets;
+
 const BackButtonImage = ({ style }) => {
-  return <StyledImage source={Assets[0]} fadeDuration={0} style={style} />;
+  return <StyledImage source={BackImage} fadeDuration={0} style={style} />;
 };
 
 const StyledImage = styled.Image`

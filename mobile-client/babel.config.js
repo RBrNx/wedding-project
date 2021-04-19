@@ -14,6 +14,7 @@ module.exports = api => {
             context: './src/context',
             screens: './src/screens',
             navigation: './src/navigation',
+            assets: './assets',
           },
         },
       ],

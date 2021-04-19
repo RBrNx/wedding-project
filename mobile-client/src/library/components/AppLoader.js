@@ -16,7 +16,7 @@ const AppLoader = ({ children }) => {
 
   const downloadSplash = async () => {
     // eslint-disable-next-line global-require
-    const asset = await Asset.fromModule(require('../../../assets/splash.png')).downloadAsync();
+    const asset = await Asset.fromModule(require('assets/splash.png')).downloadAsync();
     setSplashImage(asset);
   };
 

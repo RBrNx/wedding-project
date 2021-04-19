@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withDelay 
 import styled from 'styled-components/native';
 import { Colours, Layout } from 'library/styles';
 import { withVelocity } from 'library/worklets';
-import ConfettoSprite from '../../../assets/confetti.png';
+import ConfettoSprite from 'assets/confetti.png';
 
 const NUM_CONFETTI = 50;
 const CONFETTI_SIZE = 16;

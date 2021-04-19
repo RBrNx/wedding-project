@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 import styled from 'styled-components';
 import LottieAnimation from 'library/components/LottieAnimation';
-import EmptyAnimation from '../../../assets/animations/emptyBox.json';
+import EmptyAnimation from 'assets/animations/emptyBox.json';
 import { Layout, Theme, Typography } from '../styles';
 
 const EmptyMessage = ({ message, size, style }) => {
