@@ -2,7 +2,7 @@ import React from 'react';
 import { Assets } from '@react-navigation/stack';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { Colours } from '../../styles';
+import { Colours } from 'library/styles';
 
 const BackButtonImage = ({ style }) => {
   return <StyledImage source={Assets[0]} fadeDuration={0} style={style} />;

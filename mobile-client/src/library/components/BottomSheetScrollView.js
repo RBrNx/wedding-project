@@ -10,13 +10,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import styled from 'styled-components/native';
-import ListHandle from '../../components/ListHandle';
-import { Colours, Layout, Theme } from '../../styles';
-import { BottomSheet } from '../helpers/constants';
-import useAvoidKeyboard from '../hooks/useAvoidKeyboard';
-import useCustomScrollbar from '../hooks/useCustomScrollbar';
-import CustomScrollbar from './CustomScrollbar';
-import Spacer from './Spacer';
+import { Colours, Layout, Theme } from 'library/styles';
+import { BottomSheet } from 'library/utils/constants';
+import { useAvoidKeyboard, useCustomScrollbar } from 'library/hooks';
+import ListHandle from 'library/components/ListHandle';
+import CustomScrollbar from 'library/components/CustomScrollbar';
+import Spacer from 'library/components/Spacer';
 
 const { HEADER_MAX_HEIGHT } = BottomSheet;
 const { height } = Dimensions.get('window');

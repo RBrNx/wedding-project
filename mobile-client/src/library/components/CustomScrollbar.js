@@ -2,7 +2,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
 import theme from 'styled-theming';
-import { Colours } from '../../styles';
+import { Colours } from 'library/styles';
 
 const SCROLLBAR_SPACING = 10;
 

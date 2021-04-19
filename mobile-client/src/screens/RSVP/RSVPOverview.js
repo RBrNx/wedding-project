@@ -4,10 +4,10 @@ import { Dimensions } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
-import Spacer from '../library/components/Spacer';
-import StandardRoundPressable from '../library/components/StandardRoundPressable';
-import { SubmitRSVP } from '../library/helpers/constants';
-import { Colours, Outlines, Theme, Typography } from '../styles';
+import { SubmitRSVP } from 'library/utils/constants';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
+import Spacer from 'library/components/Spacer';
+import StandardRoundPressable from 'library/components/StandardRoundPressable';
 
 const { width } = Dimensions.get('window');
 

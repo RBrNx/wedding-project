@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Dimensions, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
-import { Colours, Layout, Outlines, Typography } from '../../styles';
-import { darken } from '../helpers/colours';
-import useAnimatedActionButton from '../hooks/useAnimatedActionButton';
+import { Colours, Layout, Outlines, Typography } from 'library/styles';
+import { darken } from 'library/utils/colours';
+import { useAnimatedActionButton } from 'library/hooks';
 
 const { width } = Dimensions.get('window');
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Colours, Outlines, Typography } from '../styles';
-import Pressable from '../../../library/components/Pressable';
-import { darken } from '../../../library/helpers/colours';
+import { darken } from 'library/utils/colours';
+import { Colours, Outlines, Typography } from 'library/styles';
+import Pressable from 'library/components/Pressable';
 
 const StandardButton = ({ onPress, raised, text, loading, icon }) => {
   return (

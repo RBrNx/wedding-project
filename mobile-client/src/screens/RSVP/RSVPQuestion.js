@@ -1,8 +1,8 @@
 import React from 'react';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { SubmitRSVP } from '../library/helpers/constants';
-import { Colours, Typography } from '../styles';
+import { SubmitRSVP } from 'library/utils/constants';
+import { Colours, Typography } from 'library/styles';
 
 const RSVPQuestion = ({ question, animIndex, index }) => {
   const animatedStepStyle = useAnimatedStyle(() => {

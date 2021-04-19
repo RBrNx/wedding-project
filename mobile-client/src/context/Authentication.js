@@ -1,8 +1,8 @@
 import { Auth } from 'aws-amplify';
 import { loader } from 'graphql.macro';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import client from '../utils/apiClient';
-import useLazyQuery from '../library/hooks/useLazyQuery';
+import { useLazyQuery } from 'library/hooks';
+import client from 'library/utils/apiClient';
 
 const FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION = loader('../graphql/mutations/fetchTempLoginCredentials.graphql');
 const GET_CURRENT_USER_QUERY = loader('../graphql/queries/currentUser.graphql');

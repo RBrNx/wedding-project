@@ -1,7 +1,7 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import styled from 'styled-components/native';
-import { Layout } from '../../styles';
+import { Layout } from 'library/styles';
 
 const LottieAnimation = React.forwardRef(
   ({ source, size = 50, autoPlay = false, loop = false, speed = 1, onAnimationFinish, resizeMode, style }, ref) => (

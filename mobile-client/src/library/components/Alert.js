@@ -4,10 +4,10 @@ import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
-import StatusLine from '../../../components/StatusLine';
-import { AlertType } from '../../../library/enums';
-import useAnimatedAlert from '../../../library/hooks/useAnimatedAlert';
-import Spacer from './Spacer';
+import { useAnimatedAlert } from 'library/hooks';
+import { AlertType } from 'library/enums';
+import StatusLine from 'library/components/StatusLine';
+import Spacer from 'library/components/Spacer';
 
 const alertTypeMap = {
   [AlertType.SUCCESS]: { title: 'Yay! Everything worked!', colour: '#21a67a' },

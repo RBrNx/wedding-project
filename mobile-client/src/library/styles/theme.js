@@ -1,5 +1,5 @@
 import theme from 'styled-theming';
-import { darken, lighten } from '../../../library/helpers/colours';
+import { darken, lighten } from 'library/utils/colours';
 import { neutral } from './colours';
 
 const card = theme('theme', {

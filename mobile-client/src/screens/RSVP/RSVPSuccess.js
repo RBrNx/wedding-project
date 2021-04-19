@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import SuccessAnimation from '../components/SuccessAnimation';
-import ConfettiCannon from '../library/components/ConfettiCannon';
-import Spacer from '../library/components/Spacer';
-import StandardButton from '../library/components/StandardButton';
-import usePreventGoingBack from '../library/hooks/usePreventGoingBack';
-import { Colours, Layout, Typography } from '../styles';
+import { Colours, Layout, Typography } from 'library/styles';
+import { usePreventGoingBack } from 'library/hooks';
+import SuccessAnimation from '../../../components/SuccessAnimation';
+import ConfettiCannon from '../../../library/components/ConfettiCannon';
+import Spacer from '../../library/components/Spacer';
+import StandardButton from '../../library/components/StandardButton';
 
 const RSVPSuccessScreen = ({ route, navigation }) => {
   const fadeIn = useSharedValue(0);

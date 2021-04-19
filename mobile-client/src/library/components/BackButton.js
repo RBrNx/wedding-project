@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Pressable } from 'react-native';
-import BackButtonImage from './BackButtonImage';
+import BackButtonImage from 'library/components/BackButtonImage';
 
 const BackButton = ({ size = 48, icon, onPress, onPressIn, onPressOut, style, backImageStyle }) => {
   const [isPressed, setIsPressed] = useState(false);

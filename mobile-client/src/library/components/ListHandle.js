@@ -1,7 +1,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { Layout, Theme } from '../styles';
+import { Layout, Theme } from 'library/styles';
 
 const ListHandle = ({ animatedHandleContainerStyle }) => {
   return (

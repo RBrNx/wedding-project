@@ -2,8 +2,8 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import StandardRadioInput from '../library/components/StandardRadioInput';
-import StandardTextInput from '../library/components/StandardTextInput';
+import StandardRadioInput from 'library/components/StandardRadioInput';
+import StandardTextInput from 'library/components/StandardTextInput';
 
 const { width } = Dimensions.get('window');
 

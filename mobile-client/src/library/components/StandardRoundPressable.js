@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Colours, Layout } from '../../styles';
-import { darken } from '../helpers/colours';
-import Pressable from './Pressable';
+import { darken } from 'library/utils/colours';
+import { Colours, Layout } from 'library/styles';
+import Pressable from 'library/components/Pressable';
 
 const StandardRoundPressable = ({ size = 56, colour = Colours.secondary, style, icon, onPress }) => {
   return (
