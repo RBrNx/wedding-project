@@ -3,13 +3,13 @@ import { Animated, Easing } from 'react-native';
 import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
-import GuestCard from '../components/GuestCard';
-import HeaderFlatlist from '../library/components/HeaderFlatlist';
-import LoadingIndicator from '../library/components/LoadingIndicator';
-import ErrorMessage from '../components/ErrorMessage';
-import EmptyMessage from '../components/EmptyMessage';
-import PartyIllustration from '../components/SVG/Party';
-import { Layout } from '../styles';
+import HeaderFlatlist from 'library/components/HeaderFlatlist';
+import LoadingIndicator from 'library/components/LoadingIndicator';
+import ErrorMessage from 'library/components/ErrorMessage';
+import EmptyMessage from 'library/components/EmptyMessage';
+import { Layout } from 'library/styles';
+import PartyIllustration from './PartyIllustration';
+import GuestCard from './GuestCard';
 
 const ALL_GUESTS_QUERY = loader('../graphql/queries/getAllGuests.graphql');
 

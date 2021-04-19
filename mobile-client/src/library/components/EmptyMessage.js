@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 import styled from 'styled-components';
-import EmptyAnimation from '../assets/animations/emptyBox.json';
+import LottieAnimation from 'library/components/LottieAnimation';
+import EmptyAnimation from '../../../assets/animations/emptyBox.json';
 import { Layout, Theme, Typography } from '../styles';
-import LottieAnimation from '../library/components/LottieAnimation';
 
 const EmptyMessage = ({ message, size, style }) => {
   const animation = useRef(null);

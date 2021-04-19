@@ -1,10 +1,10 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components';
-import StatusLine from './StatusLine';
-import { GuestResponse } from '../library/enums';
-import StandardPressable from '../library/components/StandardPressable';
-import { Outlines, Theme, Typography } from '../styles';
+import { Outlines, Theme, Typography } from 'library/styles';
+import { GuestResponse } from 'library/enums';
+import StandardPressable from 'library/components/StandardPressable';
+import StatusLine from 'library/components/StatusLine';
 
 const GuestCard = ({ guest }) => {
   const { firstName, lastName, attendanceStatus } = guest;
