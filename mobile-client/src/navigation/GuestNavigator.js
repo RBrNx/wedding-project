@@ -5,9 +5,9 @@ import { Feather } from '@expo/vector-icons';
 import SubmitRSVPScreen from 'screens/RSVP';
 import RSVPSuccessScreen from 'screens/RSVP/RSVPSuccess';
 import NavigationPresets from 'library/utils/NavigationPresets';
-import SettingsScreen from '../screens/Settings';
-import WorkInProgressScreen from '../screens/WorkInProgress';
-import { useAuth } from '../context';
+import SettingsScreen from 'screens/Settings';
+import WorkInProgressScreen from 'screens/WorkInProgress';
+import { useAuth } from 'context';
 
 const Stack = createStackNavigator();
 
