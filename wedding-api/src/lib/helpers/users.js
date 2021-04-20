@@ -90,6 +90,11 @@ const createCognitoAdminUser = async ({ userId, email, password }) => {
   return user;
 };
 
+const deleteCognitoUser = async ({ userId }) => {
+  const cognitoProvider = new AWS.CognitoIdentityServiceProvider();
+  await cognitoProvider.adminDeleteUser({ Username: userId, UserPoolId: COGNITO_USER_POOL_ID }).promise();
+};
+
 const getUserFromRequest = async requestContext => {
   const authProviderRegex = new RegExp(/([\w-]+_[0-9a-zA-Z]+)|([0-9a-zA-Z-]{36})/g);
 
@@ -104,4 +109,10 @@ const getUserFromRequest = async requestContext => {
   return user;
 };
 
-export { generateTemporaryCredentials, createCognitoUser, createCognitoAdminUser, getUserFromRequest };
+export {
+  generateTemporaryCredentials,
+  createCognitoUser,
+  createCognitoAdminUser,
+  deleteCognitoUser,
+  getUserFromRequest,
+};
