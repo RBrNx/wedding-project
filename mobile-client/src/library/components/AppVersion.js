@@ -4,8 +4,11 @@ import styled from 'styled-components/native';
 import { Colours } from 'library/styles';
 import { version } from '../../../package.json';
 
+const { ENV } = Constants.manifest.extra;
+const isProduction = ENV === 'production';
+
 const AppVersion = ({ style }) => {
-  const versionString = __DEV__ ? version : `${Constants.nativeAppVersion} (${Constants.nativeBuildVersion})`;
+  const versionString = isProduction ? `${Constants.nativeAppVersion} (${Constants.nativeBuildVersion})` : version;
   return <VersionText style={style}>{`v${versionString}`}</VersionText>;
 };
 

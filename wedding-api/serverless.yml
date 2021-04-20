@@ -8,8 +8,6 @@ plugins:
   - serverless-offline
   - serverless-domain-manager
 
-# serverless-webpack configuration
-# Enable auto-packing of external modules
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
@@ -28,8 +26,6 @@ custom:
     endpointType: 'regional'
     stage: '${self:provider.stage}'
     certificateName: 'thewatsonwedding.com'
-    # certificateRegion: 'eu-west-2'
-    # certificateArn: 'arn:aws:acm:eu-west-2:463245273964:certificate/0a5b9ea9-ee14-4527-9fbe-9f04f179deb7'
     createRoute53Record: true
     securityPolicy: tls_1_2
     apiType: rest
@@ -42,21 +38,15 @@ disabledDeprecations:
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: eu-west-2
   memorySize: 512
   timeout: 30
   lambdaHashingVersion: 20201221
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
-    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
-    COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID}
-  # To load environment variables externally
-  # rename env.example to env.yml and uncomment
-  # the following line. Also, make sure to not
-  # commit your env.yml.
-  #
-  #environment: ${file(env.yml):${self:provider.stage}}
+    COGNITO_USER_POOL_ID: !Ref CognitoUserPoolWedding
+    COGNITO_APP_CLIENT_ID: !Ref CognitoUserPoolClientAPI
 
 functions:
   unauthenticated:
