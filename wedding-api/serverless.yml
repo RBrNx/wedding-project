@@ -8,8 +8,6 @@ plugins:
   - serverless-offline
   - serverless-domain-manager
 
-# serverless-webpack configuration
-# Enable auto-packing of external modules
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
@@ -28,8 +26,6 @@ custom:
     endpointType: 'regional'
     stage: '${self:provider.stage}'
     certificateName: 'thewatsonwedding.com'
-    # certificateRegion: 'eu-west-2'
-    # certificateArn: 'arn:aws:acm:eu-west-2:463245273964:certificate/0a5b9ea9-ee14-4527-9fbe-9f04f179deb7'
     createRoute53Record: true
     securityPolicy: tls_1_2
     apiType: rest

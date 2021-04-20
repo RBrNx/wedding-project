@@ -4,8 +4,6 @@ import LoadingAnimation from 'assets/animations/loading.json';
 import colouriseLottie from 'library/utils/colouriseLottie';
 import { useCurrentTheme } from 'context';
 
-// Light - #1b1b1b
-// Dark - #a2a2a2
 const indicatorBackground = {
   light: '#1b1b1b',
   dark: '#a2a2a2',
