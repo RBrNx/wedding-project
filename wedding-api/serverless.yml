@@ -38,7 +38,7 @@ disabledDeprecations:
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: eu-west-2
   memorySize: 512
   timeout: 30
