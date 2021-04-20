@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/RBrNx/wedding-project/compare/v0.2.0...v0.3.0) (2021-04-20)
+
+
+### Features
+
+* add staging specific changes, skip ci ([551fcf7](https://github.com/RBrNx/wedding-project/commit/551fcf7a9ba102047c246fc9d223515005c95b93))
+
 # [0.2.0](https://github.com/RBrNx/wedding-project/compare/v0.1.0...v0.2.0) (2021-04-20)
 
 
