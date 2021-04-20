@@ -1,18 +1,13 @@
-import crypto from 'crypto';
 import AWS from 'aws-sdk';
+import { nanoid } from 'nanoid';
 import { connectToDatabase } from '../database';
 import { stripNonAlphaChars } from '../helpers';
 import { UserRole } from '../enums';
 
 const { COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID } = process.env;
 
-const generatePassword = (
-  length = 15,
-  wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$',
-) => {
-  return Array.from(crypto.randomFillSync(new Uint32Array(length)))
-    .map(x => wishlist[x % wishlist.length])
-    .join('');
+const generatePassword = (length = 15) => {
+  return nanoid(length);
 };
 
 const generateTemporaryCredentials = async ({ firstName, lastName }) => {
