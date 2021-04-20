@@ -31,6 +31,9 @@ custom:
     apiType: rest
     autoDomain: true
     enabled: true
+  cognito:
+    userPoolId: !Ref CognitoUserPoolWedding
+    appClientId: !Ref CognitoUserPoolClientAPI
 
 useDotenv: true
 disabledDeprecations:
@@ -45,8 +48,8 @@ provider:
   lambdaHashingVersion: 20201221
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
-    COGNITO_USER_POOL_ID: !Ref CognitoUserPoolWedding
-    COGNITO_APP_CLIENT_ID: !Ref CognitoUserPoolClientAPI
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID, self:custom.cognito.userPoolId}
+    COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID, self:custom.cognito.appClientId}
 
 functions:
   unauthenticated:
