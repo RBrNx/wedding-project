@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import SignInScreen from 'screens/SignIn';
-import ScannerScreen from 'screens/Scanner';
-import LandingScreen from 'screens/Landing';
+import SignInScreen from 'features/SignIn';
+import ScannerScreen from 'features/Scanner';
+import LandingScreen from 'features/Landing';
 import NavigationPresets from 'library/utils/NavigationPresets';
 
 const UnauthenticatedStack = createStackNavigator();

@@ -2,11 +2,11 @@ import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import SubmitRSVPScreen from 'screens/RSVP/SubmitRSVP';
-import RSVPSuccessScreen from 'screens/RSVP/RSVPSuccess';
+import SubmitRSVPScreen from 'features/RSVP/SubmitRSVP';
+import RSVPSuccessScreen from 'features/RSVP/RSVPSuccess';
 import NavigationPresets from 'library/utils/NavigationPresets';
-import SettingsScreen from 'screens/Settings';
-import WorkInProgressScreen from 'screens/WorkInProgress';
+import SettingsScreen from 'features/Settings';
+import WorkInProgressScreen from 'features/WorkInProgress';
 import { useAuth } from 'context';
 
 const Stack = createStackNavigator();

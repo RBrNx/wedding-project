@@ -12,7 +12,7 @@ module.exports = api => {
           alias: {
             library: './src/library',
             context: './src/context',
-            screens: './src/screens',
+            features: './src/features',
             navigation: './src/navigation',
             assets: './assets',
           },
