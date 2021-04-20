@@ -3,7 +3,7 @@ import { Animated } from 'react-native';
 import styled from 'styled-components';
 import LottieAnimation from 'library/components/LottieAnimation';
 import EmptyAnimation from 'assets/animations/emptyBox.json';
-import { Layout, Theme, Typography } from '../styles';
+import { Layout, Theme, Typography } from 'library/styles';
 
 const EmptyMessage = ({ message, size, style }) => {
   const animation = useRef(null);
