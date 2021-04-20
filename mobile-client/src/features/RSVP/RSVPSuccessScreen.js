@@ -58,7 +58,7 @@ const StyledHeaderText = styled.Text`
 const StyledText = styled.Text`
   text-align: center;
   color: ${Colours.neutral.white};
-  ${Typography.regular};
+  ${Typography.body};
 `;
 
 export default RSVPSuccessScreen;

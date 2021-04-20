@@ -62,7 +62,7 @@ const Card = styled.View`
 const QuestionNumber = styled.Text`
   color: ${Colours.neutral.grey3};
   align-self: flex-start;
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 const TextContainer = styled.View`
@@ -71,12 +71,12 @@ const TextContainer = styled.View`
 
 const QuestionTitle = styled.Text`
   color: ${Theme.bodyTextColour};
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 const AnswerText = styled.Text`
   color: ${Colours.secondary};
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 const editButtonTheme = theme('theme', {

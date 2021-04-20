@@ -102,7 +102,7 @@ const FocusedLabel = styled(Animated.Text)`
   position: absolute;
   left: 15px;
   top: 8px;
-  font-family: 'Muli_700Bold';
+  ${Typography.boldFont};
   font-size: 11px;
   color: ${theme('theme', {
     light: Colours.neutral.offBlack,
@@ -124,12 +124,12 @@ const PlaceholderLabel = styled(Animated.Text)`
   left: 15px;
   top: 28px;
   color: #aaa;
-  ${Typography.regular};
+  ${Typography.body};
   margin-top: ${props => (props.multiline ? 5 : 0)}px;
 `;
 
 const StyledTextInput = styled.TextInput`
-  ${Typography.regular};
+  ${Typography.body};
   color: ${theme('theme', {
     light: Colours.neutral.offBlack,
     dark: Colours.neutral.offWhite,

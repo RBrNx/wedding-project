@@ -73,7 +73,7 @@ const ExpandedLabel = styled(Animated.Text)`
   text-align: center;
   margin-right: 0;
   margin-left: 0;
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 export default StandardActionButton;

@@ -122,12 +122,12 @@ const SettingCard = styled(StandardPressable).attrs(props => ({
 
 const SettingName = styled.Text`
   color: ${Theme.bodyTextColour};
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 const SettingValue = styled.Text`
   color: ${Theme.bodyTextColour};
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 const ModalContainer = styled.View`
@@ -149,7 +149,7 @@ const ModalOption = styled(StandardPressable).attrs(props => ({
 
 const OptionName = styled.Text`
   color: ${Theme.bodyTextColour};
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 const StyledCircleIcon = styled(FontAwesome5)`

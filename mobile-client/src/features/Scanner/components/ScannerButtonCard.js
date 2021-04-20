@@ -68,7 +68,7 @@ const ButtonBackground = styled(Animated.View)`
 `;
 
 const ButtonText = styled.Text`
-  ${Typography.regular}
+  ${Typography.body}
 `;
 
 export default ScannerButtonCard;

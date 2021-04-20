@@ -50,7 +50,7 @@ const StyledStandardPressable = styled(StandardPressable)`
 `;
 
 const ChoiceLabel = styled.Text`
-  ${Typography.regular};
+  ${Typography.body};
   color: ${Theme.bodyTextColour};
 `;
 

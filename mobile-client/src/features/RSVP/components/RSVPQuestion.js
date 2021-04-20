@@ -36,13 +36,13 @@ const Container = styled(Animated.View)`
 
 const QuestionNumber = styled.Text`
   ${Typography.h1};
-  font-family: 'Muli_400Regular';
+  ${Typography.regularFont};
   color: ${Colours.secondary};
 `;
 
 const QuestionTitle = styled.Text`
   ${Typography.h1};
-  font-family: 'Muli_400Regular';
+  ${Typography.regularFont};
   color: ${Colours.neutral.white};
 `;
 

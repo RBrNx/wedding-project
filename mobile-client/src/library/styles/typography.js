@@ -15,7 +15,7 @@ const h3 = css`
   font-size: 18px;
 `;
 
-const regular = css`
+const body = css`
   font-family: 'Muli_400Regular';
   font-size: 16px;
 `;
@@ -25,4 +25,12 @@ const small = css`
   font-size: 14px;
 `;
 
-export { h1, h2, h3, regular, small };
+const regularFont = css`
+  font-family: 'Muli_400Regular';
+`;
+
+const boldFont = css`
+  font-family: 'Muli_700Bold';
+`;
+
+export { h1, h2, h3, body, small, regularFont, boldFont };

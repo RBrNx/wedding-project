@@ -77,12 +77,12 @@ const TextContainer = styled.View`
 `;
 
 const Title = styled.Text`
-  ${Typography.regular}
+  ${Typography.body}
   color: ${Theme.headerTextColour};
 `;
 
 const Message = styled.Text`
-  ${Typography.regular};
+  ${Typography.body};
   color: #93959a;
 `;
 

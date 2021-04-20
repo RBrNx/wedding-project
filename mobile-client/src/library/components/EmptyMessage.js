@@ -49,7 +49,7 @@ const MessageText = styled.Text`
   flex: 0.5;
   text-align: center;
   color: ${Theme.bodyTextColour};
-  ${Typography.regular};
+  ${Typography.body};
 `;
 
 export default EmptyMessage;

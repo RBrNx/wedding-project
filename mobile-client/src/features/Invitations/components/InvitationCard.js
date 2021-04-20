@@ -60,8 +60,8 @@ const CardHeader = styled.View`
 `;
 
 const InvitationCode = styled.Text`
-  ${Typography.regular};
-  font-family: 'Muli_700Bold';
+  ${Typography.body};
+  ${Typography.boldFont};
   margin-vertical: 5px;
   padding-left: 5px;
   color: ${Theme.headerTextColour};
@@ -85,8 +85,8 @@ const Guest = styled.View`
 `;
 
 const GuestName = styled.Text`
-  ${Typography.regular};
-  font-family: 'Muli_700Bold';
+  ${Typography.body};
+  ${Typography.boldFont};
   margin-vertical: 15px;
   padding-left: 20px;
   color: ${Theme.headerTextColour};

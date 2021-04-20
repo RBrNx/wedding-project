@@ -35,7 +35,7 @@ const StyledPressable = styled(StandardPressable).attrs(() => ({
 `;
 
 const ButtonText = styled.Text`
-  ${Typography.regular};
+  ${Typography.body};
   color: ${Colours.neutral.white};
   flex: 1;
   text-align: center;

@@ -79,7 +79,7 @@ const HeadingText = styled.Text`
 const SubHeadingText = styled.Text`
   ${Typography.h1};
   color: ${Colours.neutral.white};
-  font-family: 'Muli_400Regular';
+  ${Typography.regularFont};
 `;
 
 const InputContainer = styled.View`

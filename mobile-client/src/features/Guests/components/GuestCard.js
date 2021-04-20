@@ -45,8 +45,8 @@ const TextContainer = styled.View`
 
 const GuestName = styled.Text`
   margin-vertical: 5px;
-  ${Typography.regular};
-  font-family: 'Muli_700Bold';
+  ${Typography.body};
+  ${Typography.boldFont};
   color: ${Theme.headerTextColour};
 `;
 
