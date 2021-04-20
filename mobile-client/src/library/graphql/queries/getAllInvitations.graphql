@@ -1,0 +1,20 @@
+query ALL_INVITATIONS_QUERY {
+  getAllInvitationGroups {
+    _id
+    type
+    guests {
+      _id
+      firstName
+      lastName
+      email
+      attendanceStatus
+      rsvpForm {
+        question {
+          title
+          label
+        }
+        answer
+      }
+    }
+  }
+}

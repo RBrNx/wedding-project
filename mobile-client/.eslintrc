@@ -21,6 +21,7 @@
     "no-underscore-dangle": 0,
     "import/imports-first": ["error", "absolute-first"],
     "import/newline-after-import": "error",
+    "import/prefer-default-export": "warn",
     "prettier/prettier": "error",
     "jsx-a11y/accessible-emoji": "off"
   },
@@ -33,7 +34,8 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".ios.js", ".android.js"]
+        "extensions": [".js", ".ios.js", ".android.js"],
+        "moduleDirectory": ["node_modules", "src/", "./"]
       }
     }
   }

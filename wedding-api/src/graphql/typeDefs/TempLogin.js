@@ -13,7 +13,7 @@ const schema = gql`
   }
 
   input FetchCredentialsInput {
-    shortId: String!
+    invitationId: String!
   }
 
   extend type Mutation {

@@ -1,0 +1,56 @@
+name: Expo Publish (Staging)
+on:
+  push:
+    branches:
+      - staging
+    paths:
+      - 'mobile-client/**'
+defaults:
+  run:
+    working-directory: ./mobile-client
+jobs:
+  lint:
+    name: Lint Mobile Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: yarn lint
+
+  create-release:
+    name: Create Staging Release
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install dependencies
+        run: yarn
+      - name: Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish Staging Build
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+      - run: yarn install
+      - run: expo publish --release-channel staging
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          EXPO_USE_DEV_SERVER: true

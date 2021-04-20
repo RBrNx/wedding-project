@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "The Watson Wedding",
+    "slug": "watson-wedding-dev",
+    "privacy": "unlisted",
+    "platforms": ["ios", "android"],
+    "version": "0.1.0",
+    "entryPoint": "./src/App.js",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#14233c"
+    },
+    "android": {
+      "package": "com.rbrnx.watsonwedding",
+      "versionCode": 2,
+      "permissions": [],
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "androidStatusBar": {
+      "barStyle": "light-content"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "extra": {
+      "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
+      "AUTH_ENDPOINT": "admin",
+      "UNAUTH_ENDPOINT": "api"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "redbarongames",
+            "project": "watson-wedding-mobile",
+            "authToken": "90b31aac9b6c48b0b649a4e32c494d83a9c52d30a0e2444b8b59b1afc0a6ca8f",
+            "setCommits": true
+          }
+        }
+      ]
+    }
+  }
+}

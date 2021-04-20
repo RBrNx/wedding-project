@@ -6,4 +6,9 @@ export default {
   DateTime: DateTimeResolver,
   EmailAddress: EmailAddressResolver,
   URL: URLResolver,
+  MutationResponse: {
+    __resolveType() {
+      return null;
+    },
+  },
 };
