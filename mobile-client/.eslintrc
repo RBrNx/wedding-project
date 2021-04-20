@@ -34,7 +34,8 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".ios.js", ".android.js"]
+        "extensions": [".js", ".ios.js", ".android.js"],
+        "moduleDirectory": ["node_modules", "src/", "./"]
       }
     }
   }
