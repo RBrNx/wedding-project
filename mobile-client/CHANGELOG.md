@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/RBrNx/wedding-project/compare/v0.4.0...v0.4.1) (2021-04-20)
+
+
+### Bug Fixes
+
+* allow COGNITO_USER_POOL_ID and COGNITO_APP_CLIENT_ID to be overwritten in local development as !Ref values are not handled well by serverless-offline ([2c40cd6](https://github.com/RBrNx/wedding-project/commit/2c40cd65ad8a066ad933fb5e0c2ed4d6b7c7b92a))
+* set BASE_API_URL to published dev API on develop branch ([4ac56c0](https://github.com/RBrNx/wedding-project/commit/4ac56c0fb0b65b3d6546e89d922a266b2f5642b6))
+* update env variables to use staging ([25ec05f](https://github.com/RBrNx/wedding-project/commit/25ec05f34b32ff7898cddf849815ee33a25bc3db))
+
 # [0.4.0](https://github.com/RBrNx/wedding-project/compare/v0.3.0...v0.4.0) (2021-04-20)
 
 
