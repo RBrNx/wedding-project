@@ -56,7 +56,7 @@ Resources:
     Properties:
       UserPoolId:
         Ref: CognitoUserPoolWedding
-      Domain: 'thewatsonwedding'
+      Domain: 'thewatsonwedding-${self:provider.stage}'
 
 # Print out the Id of the User Pool that is created
 Outputs:
