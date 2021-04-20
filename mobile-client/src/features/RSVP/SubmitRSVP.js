@@ -15,9 +15,10 @@ import BackButton from 'library/components/BackButton';
 import BackButtonImage from 'library/components/BackButtonImage';
 import { Colours } from 'library/styles';
 import { SubmitRSVP } from 'library/utils/constants';
-import { RSVPOverview, RSVPOverviewTitle } from './RSVPOverview';
-import RSVPAnswerInput from './RSVPAnswerInput';
-import RSVPQuestion from './RSVPQuestion';
+import RSVPOverview from './components/RSVPOverview';
+import RSVPOverviewTitle from './components/RSVPOverviewTitle';
+import RSVPAnswerInput from './components/RSVPAnswerInput';
+import RSVPQuestion from './components/RSVPQuestion';
 import { calculateQuestions, formatRSVP } from './helpers';
 
 const { width, height } = Dimensions.get('window');

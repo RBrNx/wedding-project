@@ -5,8 +5,8 @@ import { Colours, Layout, Typography } from 'library/styles';
 import { usePreventGoingBack } from 'library/hooks';
 import Spacer from 'library/components/Spacer';
 import StandardButton from 'library/components/StandardButton';
-import ConfettiCannon from './ConfettiCannon';
-import SuccessAnimation from './SuccessAnimation';
+import ConfettiCannon from './components/ConfettiCannon';
+import SuccessAnimation from './components/SuccessAnimation';
 
 const RSVPSuccessScreen = ({ route, navigation }) => {
   const fadeIn = useSharedValue(0);
