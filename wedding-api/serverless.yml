@@ -45,14 +45,8 @@ provider:
   lambdaHashingVersion: 20201221
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
-    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
-    COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID}
-  # To load environment variables externally
-  # rename env.example to env.yml and uncomment
-  # the following line. Also, make sure to not
-  # commit your env.yml.
-  #
-  #environment: ${file(env.yml):${self:provider.stage}}
+    COGNITO_USER_POOL_ID: !Ref CognitoUserPoolWedding
+    COGNITO_APP_CLIENT_ID: !Ref CognitoUserPoolClientAPI
 
 functions:
   unauthenticated:
