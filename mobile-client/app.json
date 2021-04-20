@@ -1,12 +1,9 @@
 {
   "expo": {
     "name": "The Watson Wedding",
-    "slug": "watson-wedding-dev",
+    "slug": "watson-wedding-staging",
     "privacy": "unlisted",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "0.2.0",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
@@ -29,13 +26,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "extra": {
-      "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
+      "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
-      "UNAUTH_ENDPOINT": "api"
+      "UNAUTH_ENDPOINT": "api",
+      "ENV": "staging"
     },
     "hooks": {
       "postPublish": [
