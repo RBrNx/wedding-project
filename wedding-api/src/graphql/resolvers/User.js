@@ -1,5 +1,10 @@
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
-import { createCognitoAdminUser, createCognitoUser, generateTemporaryCredentials } from '../../lib/helpers/users';
+import {
+  createCognitoAdminUser,
+  createCognitoUser,
+  deleteCognitoUser,
+  generateTemporaryCredentials,
+} from '../../lib/helpers/users';
 
 const getAllGuests = async (parent, args, { db }) => {
   try {
@@ -15,6 +20,7 @@ const getAllGuests = async (parent, args, { db }) => {
 
 const createGuest = async (parent, { guest }, { currentUser, db }) => {
   let session;
+  let userId;
 
   try {
     const { firstName, lastName } = guest;
@@ -36,6 +42,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
       ],
       { session },
     );
+    userId = userDoc._id.toString();
     const { username, password } = await generateTemporaryCredentials({ firstName, lastName });
 
     await TempLoginDetailsModel.create(
@@ -50,7 +57,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
     );
 
     const cognitoUser = await createCognitoUser({
-      userId: userDoc._id.toString(),
+      userId,
       username,
       password,
     });
@@ -67,6 +74,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
     };
   } catch (error) {
     if (session) await session.abortTransaction();
+    await deleteCognitoUser({ userId });
 
     return {
       success: false,
@@ -97,6 +105,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
 
 const createAdmin = async (parent, { input }, { currentUser, db }) => {
   let session;
+  let userId;
 
   try {
     const { firstName, lastName, email, password, eventId } = input;
@@ -118,11 +127,12 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
       ],
       { session },
     );
+    userId = userDoc._id.toString();
 
-    const cognitoUser = await createCognitoAdminUser({ userId: userDoc._id.toString(), email, password });
+    const cognitoUser = await createCognitoAdminUser({ userId, email, password });
     const cognitoUserId = cognitoUser.UserSub;
 
-    await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
+    await UserModel.findOneAndUpdate({ _id: userId }, { cognitoUserId }, { session });
 
     await session.commitTransaction();
 
@@ -133,6 +143,7 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
     };
   } catch (error) {
     if (session) await session.abortTransaction();
+    await deleteCognitoUser({ userId });
 
     return {
       success: false,

@@ -1,18 +1,13 @@
-import crypto from 'crypto';
 import AWS from 'aws-sdk';
+import { nanoid } from 'nanoid';
 import { connectToDatabase } from '../database';
 import { stripNonAlphaChars } from '../helpers';
 import { UserRole } from '../enums';
 
 const { COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID } = process.env;
 
-const generatePassword = (
-  length = 15,
-  wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$',
-) => {
-  return Array.from(crypto.randomFillSync(new Uint32Array(length)))
-    .map(x => wishlist[x % wishlist.length])
-    .join('');
+const generatePassword = (length = 15) => {
+  return nanoid(length);
 };
 
 const generateTemporaryCredentials = async ({ firstName, lastName }) => {
@@ -90,6 +85,11 @@ const createCognitoAdminUser = async ({ userId, email, password }) => {
   return user;
 };
 
+const deleteCognitoUser = async ({ userId }) => {
+  const cognitoProvider = new AWS.CognitoIdentityServiceProvider();
+  await cognitoProvider.adminDeleteUser({ Username: userId, UserPoolId: COGNITO_USER_POOL_ID }).promise();
+};
+
 const getUserFromRequest = async requestContext => {
   const authProviderRegex = new RegExp(/([\w-]+_[0-9a-zA-Z]+)|([0-9a-zA-Z-]{36})/g);
 
@@ -104,4 +104,10 @@ const getUserFromRequest = async requestContext => {
   return user;
 };
 
-export { generateTemporaryCredentials, createCognitoUser, createCognitoAdminUser, getUserFromRequest };
+export {
+  generateTemporaryCredentials,
+  createCognitoUser,
+  createCognitoAdminUser,
+  deleteCognitoUser,
+  getUserFromRequest,
+};
