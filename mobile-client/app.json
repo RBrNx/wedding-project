@@ -28,7 +28,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "extra": {
-      "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
+      "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
       "ENV": "development"
