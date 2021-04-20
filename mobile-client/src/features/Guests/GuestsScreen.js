@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Animated, Easing } from 'react-native';
-import { loader } from 'graphql.macro';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
 import HeaderFlatlist from 'library/components/HeaderFlatlist';
@@ -8,10 +7,9 @@ import LoadingIndicator from 'library/components/LoadingIndicator';
 import ErrorMessage from 'library/components/ErrorMessage';
 import EmptyMessage from 'library/components/EmptyMessage';
 import { Layout } from 'library/styles';
+import ALL_GUESTS_QUERY from 'library/graphql/queries/getAllGuests.graphql';
 import PartyIllustration from './components/PartyIllustration';
 import GuestCard from './components/GuestCard';
-
-const ALL_GUESTS_QUERY = loader('../../library/graphql/queries/getAllGuests.graphql');
 
 const GuestRow = ({ guest, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));

@@ -6,6 +6,7 @@ module.exports = api => {
       'babel-plugin-styled-components',
       'macros',
       'react-native-reanimated/plugin',
+      'import-graphql',
       [
         'module-resolver',
         {

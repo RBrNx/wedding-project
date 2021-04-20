@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
-import { loader } from 'graphql.macro';
 import { useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
 import LoadingIndicator from 'library/components/LoadingIndicator';
@@ -15,6 +14,8 @@ import BackButton from 'library/components/BackButton';
 import BackButtonImage from 'library/components/BackButtonImage';
 import { Colours } from 'library/styles';
 import { SubmitRSVP } from 'library/utils/constants';
+import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
+import SUBMIT_RSVP_FORM from 'library/graphql/mutations/submitRSVP.graphql';
 import RSVPOverview from './components/RSVPOverview';
 import RSVPOverviewTitle from './components/RSVPOverviewTitle';
 import RSVPAnswerInput from './components/RSVPAnswerInput';
@@ -22,8 +23,6 @@ import RSVPQuestion from './components/RSVPQuestion';
 import { calculateQuestions, formatRSVP } from './helpers';
 
 const { width, height } = Dimensions.get('window');
-const GET_RSVP_QUESTIONS = loader('library/graphql/queries/getRSVPQuestions.graphql');
-const SUBMIT_RSVP_FORM = loader('library/graphql/mutations/submitRSVP.graphql');
 const HANDLE_HEIGHT = 20;
 const SHEET_COLLAPSED_POS = SubmitRSVP.QUESTION_HEIGHT;
 
