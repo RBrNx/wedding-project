@@ -9,7 +9,7 @@ import { useAlert, useAuth, useSettings } from 'context';
 import { Outlines, Theme, Typography } from 'library/styles';
 import parseError from 'library/utils/parseError';
 import { AlertType } from 'library/enums';
-import SettingsIllustration from './SettingsIllustration';
+import SettingsIllustration from './components/SettingsIllustration';
 
 const SettingsScreen = () => {
   const [showModal, setShowModal] = useState(false);

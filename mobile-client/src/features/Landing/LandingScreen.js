@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import StandardButton from 'library/components/StandardButton';
 import { Colours, Typography } from 'library/styles';
-import LandingIllustration from './LandingIllustration';
+import LandingIllustration from './components/LandingIllustration';
 
 const LandingScreen = ({ navigation }) => {
   return (

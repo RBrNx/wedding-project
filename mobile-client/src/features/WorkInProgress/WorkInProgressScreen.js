@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { Colours, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
-import InProgressIllustration from './InProgressIllustration';
+import InProgressIllustration from './components/InProgressIllustration';
 
 const WorkInProgressScreen = () => {
   return (

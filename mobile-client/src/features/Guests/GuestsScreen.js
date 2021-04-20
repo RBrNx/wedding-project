@@ -8,14 +8,13 @@ import LoadingIndicator from 'library/components/LoadingIndicator';
 import ErrorMessage from 'library/components/ErrorMessage';
 import EmptyMessage from 'library/components/EmptyMessage';
 import { Layout } from 'library/styles';
-import InvitationsIllustration from './InvitationsIllustration';
-import InvitationCard from './InvitationCard';
+import PartyIllustration from './components/PartyIllustration';
+import GuestCard from './components/GuestCard';
 
-const ALL_INVITATIONS_QUERY = loader('library/graphql/queries/getAllInvitations.graphql');
+const ALL_GUESTS_QUERY = loader('../../library/graphql/queries/getAllGuests.graphql');
 
-const InvitationRow = ({ invitation, index }) => {
+const GuestRow = ({ guest, index }) => {
   const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
-  const { guests, type } = invitation;
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -28,31 +27,26 @@ const InvitationRow = ({ invitation, index }) => {
 
   return (
     <CardContainer style={{ transform: [{ translateY }] }}>
-      <InvitationCard guests={guests} type={type} index={index} />
+      <GuestCard guest={guest} index={index} />
     </CardContainer>
   );
 };
 
-const InvitationsScreen = () => {
-  const { loading, error, data, refetch } = useQuery(ALL_INVITATIONS_QUERY);
+const GuestsScreen = () => {
+  const { loading, error, data, refetch } = useQuery(ALL_GUESTS_QUERY);
 
   return (
     <HeaderFlatlist
-      title='Invitations'
-      onRefresh={async () => {
-        await refetch();
-      }}
-      renderItem={({ item, index }) => <InvitationRow invitation={item} index={index} />}
-      data={data?.getAllInvitationGroups}
-      renderImage={() => <InvitationsIllustration size='100%' />}
+      title='Guests'
+      onRefresh={async () => refetch()}
+      renderItem={({ item, index }) => <GuestRow guest={item} index={index} />}
+      data={data?.getAllGuests}
+      renderImage={() => <PartyIllustration size='100%' />}
       ListEmptyComponent={() => (
         <ListEmptyContainer>
           {loading && <LoadingIndicator size={100} />}
           {error && (
-            <ErrorMessage
-              size={125}
-              message='We encountered an error when loading your Invitations, please try again.'
-            />
+            <ErrorMessage size={125} message='We encountered an error when loading your Guests, please try again.' />
           )}
           {!error && !loading && <EmptyMessage size={125} />}
         </ListEmptyContainer>
@@ -71,4 +65,4 @@ const ListEmptyContainer = styled.View`
   ${Layout.flexCenter};
 `;
 
-export default InvitationsScreen;
+export default GuestsScreen;

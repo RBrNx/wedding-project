@@ -14,11 +14,11 @@ import LoadingIndicator from 'library/components/LoadingIndicator';
 import { AlertType } from 'library/enums';
 import { Colours, Layout, Outlines } from 'library/styles';
 import parseError from 'library/utils/parseError';
-import ScannerInputCard from './ScannerInputCard';
-import ScannerModeHeading from './ScannerModeHeading';
-import CameraViewfinder from './CameraViewfinder';
-import QRScannerAnimation from './QRScannerAnimation';
-import ScannerButtonCard from './ScannerButtonCard';
+import ScannerInputCard from './components/ScannerInputCard';
+import ScannerModeHeading from './components/ScannerModeHeading';
+import CameraViewfinder from './components/CameraViewfinder';
+import QRScannerAnimation from './components/QRScannerAnimation';
+import ScannerButtonCard from './components/ScannerButtonCard';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 

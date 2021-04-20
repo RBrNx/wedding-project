@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import GuestsScreen from 'features/Guests';
-import InvitationsScreen from 'features/Invitations';
-import SettingsScreen from 'features/Settings';
+import GuestsScreen from 'features/Guests/GuestsScreen';
+import InvitationsScreen from 'features/Invitations/InvitationsScreen';
+import SettingsScreen from 'features/Settings/SettingsScreen';
 import NavigationPresets from 'library/utils/NavigationPresets';
 
 const Tab = createBottomTabNavigator();
