@@ -1,4 +1,5 @@
 import { css } from 'styled-components/native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const flexCenter = css`
   justify-content: center;
@@ -21,4 +22,6 @@ const round = size => {
   `;
 };
 
-export { flexCenter, absoluteFill, round };
+const statusBarHeight = getStatusBarHeight();
+
+export { flexCenter, absoluteFill, round, statusBarHeight };
