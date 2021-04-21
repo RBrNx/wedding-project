@@ -41,7 +41,7 @@ const HeadingText = styled.Text`
 `;
 
 const SubHeadingText = styled.Text`
-  ${Typography.h3};
+  ${Typography.h4};
   color: ${Colours.neutral.grey3};
   text-align: center;
 `;
