@@ -32,11 +32,14 @@ const DashboardScreen = ({ navigation }) => {
   );
 };
 
-const Container = styled.View`
+const Container = styled.ScrollView.attrs(() => ({
+  contentContainerStyle: {
+    paddingHorizontal: '5%',
+    paddingTop: Layout.statusBarHeight,
+    paddingBottom: 25,
+  },
+}))`
   flex: 1;
-  padding-horizontal: 5%;
-  padding-top: ${Layout.statusBarHeight}px;
-  padding-bottom: 25px;
 `;
 
 const HeadingText = styled.Text`
