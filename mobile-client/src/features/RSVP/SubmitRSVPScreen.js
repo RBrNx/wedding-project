@@ -124,7 +124,10 @@ const SubmitRSVPScreen = ({ navigation }) => {
   };
 
   const onPrev = () => {
-    if (!prevQuestion) return;
+    if (!prevQuestion) {
+      navigation.pop();
+      return;
+    }
 
     if (showOverview) setShowOverview(false);
 
