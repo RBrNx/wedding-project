@@ -5,7 +5,9 @@ import React from 'react';
 import styled from 'styled-components/native';
 import DashboardHeader from './components/DashboardHeader';
 import MemoriesCard from './components/MemoriesCard';
+import RegistryCard from './components/RegistryCard';
 import RSVPCard from './components/RSVPCard';
+import WeddingDetailsCard from './components/WeddingDetailsCard';
 
 const DashboardScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -20,8 +22,12 @@ const DashboardScreen = ({ navigation }) => {
       <HeadingText>{`Hello,\n${fullName} 👋`}</HeadingText>
       <Spacer size={40} />
       <RSVPCard hasSubmittedRSVP={hasSubmittedRSVP} onPress={() => navigation.navigate('SubmitRSVP')} />
-      <Spacer size={10} />
-      <MemoriesCard />
+      <Spacer size={20} />
+      <MemoriesCard onPress={() => navigation.navigate('Memories')} />
+      <Spacer size={20} />
+      <WeddingDetailsCard />
+      <Spacer size={20} />
+      <RegistryCard onPress={() => navigation.navigate('Registry')} />
     </Container>
   );
 };
