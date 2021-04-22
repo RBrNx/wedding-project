@@ -3,12 +3,13 @@ import StandardPressable from 'library/components/StandardPressable';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import MemoriesIllustration from './MemoriesIllustration';
 
 const MemoriesCard = ({ onPress }) => {
   return (
-    <CardContainer onPress={onPress}>
-      <CardInner>
+    <CardContainer>
+      <CardInner onPress={onPress}>
         <CardTitle>Share your favourite memories!</CardTitle>
         <Spacer size={5} />
         <CardSubTitle>A wedding isn&apos;t just about the big day...</CardSubTitle>
@@ -20,10 +21,10 @@ const MemoriesCard = ({ onPress }) => {
   );
 };
 
-const CardContainer = styled(StandardPressable).attrs(props => ({
-  pressedStyle: {
-    backgroundColor: Theme.cardPressed(props),
-  },
+const CardContainer = styled(LinearGradient).attrs(() => ({
+  colors: [Colours.secondary, Colours.primary],
+  start: { x: 0.1, y: 1 },
+  end: { x: 1, y: 0 },
 }))`
   width: 100%;
   height: 200px;
@@ -32,7 +33,11 @@ const CardContainer = styled(StandardPressable).attrs(props => ({
   background-color: ${Theme.card};
 `;
 
-const CardInner = styled.View`
+const CardInner = styled(StandardPressable).attrs(() => ({
+  pressedStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+}))`
   overflow: hidden;
   flex: 1;
   width: 100%;
@@ -63,7 +68,8 @@ const StyledMemoriesIllustration = styled(MemoriesIllustration)`
 
 const LinkText = styled.Text`
   ${Typography.h4};
-  color: ${Colours.secondary};
+  color: ${Colours.neutral.white};
+  text-decoration-line: underline;
 `;
 
 export default MemoriesCard;
