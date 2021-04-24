@@ -1,3 +1,17 @@
+# [0.6.0](https://github.com/RBrNx/wedding-project/compare/v0.5.0...v0.6.0) (2021-04-24)
+
+
+### Bug Fixes
+
+* checkout HEAD commit instead of event commit when publishing so the latest app.json is included ([7ec61d5](https://github.com/RBrNx/wedding-project/commit/7ec61d54e071dfd60c539028901b620ff78d652c))
+* indentation of expo-publish-staging workflow ([653e5a2](https://github.com/RBrNx/wedding-project/commit/653e5a20fff5e9d9b334f57e8460d9f0dc764e5e))
+
+
+### Features
+
+* add private true flag to package.json ([9a765bc](https://github.com/RBrNx/wedding-project/commit/9a765bce348739b0364c7c78c3f312f54d393ece))
+* install and add semantic-release/npm package to release config ([3a89385](https://github.com/RBrNx/wedding-project/commit/3a89385fa8724c0000e2a7e0e49fa9b9dac956f0))
+
 # [0.5.0](https://github.com/RBrNx/wedding-project/compare/v0.4.1...v0.5.0) (2021-04-24)
 
 
