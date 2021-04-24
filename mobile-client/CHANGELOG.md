@@ -1,3 +1,16 @@
+# [0.5.0](https://github.com/RBrNx/wedding-project/compare/v0.4.1...v0.5.0) (2021-04-24)
+
+
+### Bug Fixes
+
+* replaced custom generatedPassword function with nanoid to generated a random password ([59938a9](https://github.com/RBrNx/wedding-project/commit/59938a902a3d4f85af868328cbd36f083e35f260))
+* update awsExports to point at staging env ([b9161ec](https://github.com/RBrNx/wedding-project/commit/b9161ecb513a8d70191be4db198f7381cb2c1d2e))
+
+
+### Features
+
+* delete cognito user if something goes wrong during creation so that we aren't left with a half created user account ([2134420](https://github.com/RBrNx/wedding-project/commit/2134420a05ea3c76bb65a19c39728b30df9a07e2))
+
 ## [0.4.1](https://github.com/RBrNx/wedding-project/compare/v0.4.0...v0.4.1) (2021-04-20)
 
 
