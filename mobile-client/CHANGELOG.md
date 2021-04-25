@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/RBrNx/wedding-project/compare/v0.6.0...v0.6.1) (2021-04-25)
+
+
+### Bug Fixes
+
+* add revision id to AppVersion component ([69e7254](https://github.com/RBrNx/wedding-project/commit/69e7254b72a88bc71f3681355784cccff8459f63))
+
 # [0.6.0](https://github.com/RBrNx/wedding-project/compare/v0.5.0...v0.6.0) (2021-04-24)
 
 
