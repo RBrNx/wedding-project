@@ -1,3 +1,11 @@
+## [0.6.2](https://github.com/RBrNx/wedding-project/compare/v0.6.1...v0.6.2) (2021-04-25)
+
+
+### Bug Fixes
+
+* add 'stgging' ref to expo-publish-staging workflow to see if the latest commit will be checked out ([e93ee37](https://github.com/RBrNx/wedding-project/commit/e93ee3714acd2c80e82ead4d5bcbc951fe1b810f))
+* temp add "noop" property to app.json to trigger deploy ([5d183ee](https://github.com/RBrNx/wedding-project/commit/5d183ee5fb17b37b69e4d12aee837ad78ea656fd))
+
 ## [0.6.1](https://github.com/RBrNx/wedding-project/compare/v0.6.0...v0.6.1) (2021-04-25)
 
 
