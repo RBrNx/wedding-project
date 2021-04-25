@@ -31,7 +31,8 @@
       "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "staging"
+      "ENV": "staging",
+      "noop": ""
     },
     "hooks": {
       "postPublish": [
