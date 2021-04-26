@@ -8,7 +8,7 @@ const DashboardHeader = ({ fullName }) => {
   return (
     <Container>
       <ScreenTitle>Dashboard</ScreenTitle>
-      <NotificationIcon name='notifications-outline' size={24} color={Colours.neutral.grey3} />
+      <NotificationIcon name='notifications-outline' size={24} color={Colours.neutral.grey2} />
       <UserAvatar size={42} name={fullName} />
     </Container>
   );

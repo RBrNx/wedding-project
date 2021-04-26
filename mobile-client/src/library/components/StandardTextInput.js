@@ -93,7 +93,7 @@ const Container = styled.Pressable`
 `;
 
 const FlatContainer = styled(Container)`
-  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey3)};
+  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey2)};
   border-width: ${props => (props.isFocused ? 1.5 : 0.5)}px;
   elevation: ${props => (props.isFocused ? 4 : 0)};
 `;

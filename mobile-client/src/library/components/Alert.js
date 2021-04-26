@@ -50,7 +50,7 @@ const Alert = ({
         <Message>{message}</Message>
       </TextContainer>
       <PressableIconContainer onPress={dismissAlert}>
-        <StyledIcon name='close-outline' size={24} color={Colours.neutral.grey3} />
+        <StyledIcon name='close-outline' size={24} color={Colours.neutral.grey2} />
       </PressableIconContainer>
     </AlertContainer>
   );

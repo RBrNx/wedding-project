@@ -60,7 +60,7 @@ const Card = styled.View`
 `;
 
 const QuestionNumber = styled.Text`
-  color: ${Colours.neutral.grey3};
+  color: ${Colours.neutral.grey2};
   align-self: flex-start;
   ${Typography.body}
 `;
@@ -80,7 +80,7 @@ const AnswerText = styled.Text`
 `;
 
 const editButtonTheme = theme('theme', {
-  light: Colours.neutral.grey3,
+  light: Colours.neutral.grey2,
   dark: Colours.neutral.grey4,
 });
 const EditButton = styled(StandardPressable).attrs(props => ({
@@ -96,7 +96,7 @@ const EditButton = styled(StandardPressable).attrs(props => ({
 const StyledIcon = styled(AntDesign).attrs(props => ({
   color: theme('theme', {
     light: Colours.neutral.grey4,
-    dark: Colours.neutral.grey2,
+    dark: Colours.neutral.grey3,
   })(props),
 }))`
   align-self: center;

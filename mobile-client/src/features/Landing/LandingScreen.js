@@ -57,7 +57,7 @@ const HeadingText = styled.Text`
 const SubHeadingText = styled.Text`
   ${Typography.h4}
   text-align: center;
-  color: ${Colours.neutral.grey3};
+  color: ${Colours.neutral.grey2};
 `;
 
 const Separator = styled.View`
