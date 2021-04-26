@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions } from 'react-native';
-import { useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components/native';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import StandardActionButton from 'library/components/StandardActionButton';
-import { useLazyQuery, useAvoidKeyboard, useAnimatedStepTransition } from 'library/hooks';
+import { useLazyQuery, useAvoidKeyboard, useAnimatedStepTransition, useSubmitRSVP } from 'library/hooks';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType } from 'library/enums';
@@ -15,7 +14,6 @@ import BackButtonImage from 'library/components/BackButtonImage';
 import { Colours } from 'library/styles';
 import { SubmitRSVP } from 'library/utils/constants';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
-import SUBMIT_RSVP_FORM from 'library/graphql/mutations/submitRSVP.graphql';
 import RSVPOverview from './components/RSVPOverview';
 import RSVPOverviewTitle from './components/RSVPOverviewTitle';
 import RSVPAnswerInput from './components/RSVPAnswerInput';
@@ -35,7 +33,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const [showOverview, setShowOverview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchRSVPQuestions] = useLazyQuery(GET_RSVP_QUESTIONS);
-  const [submitRSVPForm] = useMutation(SUBMIT_RSVP_FORM);
+  const [submitRSVPForm] = useSubmitRSVP();
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
   const { avoidKeyboardStyle } = useAvoidKeyboard();
