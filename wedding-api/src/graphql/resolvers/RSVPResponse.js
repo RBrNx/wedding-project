@@ -6,8 +6,15 @@ const submitRSVPForm = async (parent, args, { currentUser, db }) => {
   try {
     const RSVPResponseModel = db.model('RSVPResponse');
 
-    const rsvpResponseDoc = new RSVPResponseModel({ userId: _id, eventId, rsvpForm });
-    await rsvpResponseDoc.save();
+    const rsvpExists = await RSVPResponseModel.exists({ userId: _id });
+    let rsvpDoc;
+
+    if (rsvpExists) {
+      rsvpDoc = await RSVPResponseModel.updateOne({ userId: _id }, { rsvpForm });
+    } else {
+      rsvpDoc = new RSVPResponseModel({ userId: _id, eventId, rsvpForm });
+      await rsvpDoc.save();
+    }
 
     return {
       success: true,
