@@ -6,6 +6,7 @@ import useCustomScrollbar from './useCustomScrollbar';
 import useLazyQuery from './useLazyQuery';
 import usePreventGoingBack from './usePreventGoingBack';
 import useSubmitRSVP from './useSubmitRSVP';
+import useBackButton from './useBackButton';
 
 export {
   useAnimatedActionButton,
@@ -16,4 +17,5 @@ export {
   useLazyQuery,
   usePreventGoingBack,
   useSubmitRSVP,
+  useBackButton,
 };
