@@ -93,7 +93,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
       const { submitRSVPForm: formResponse } = data || {};
 
       if (formResponse.success) {
-        navigation.navigate('RSVPSuccess');
+        navigation.navigate('RSVPSuccess', { isAttending });
       } else {
         setIsLoading(false);
         showAlert({
