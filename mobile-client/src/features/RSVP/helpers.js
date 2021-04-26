@@ -53,4 +53,21 @@ const formatRSVP = (rsvpForm, questions) => {
   return formattedRSVP;
 };
 
-export { filterQuestions, calculateQuestions, formatRSVP };
+const convertExistingRSVPAnswers = existingForm => {
+  const rsvpForm = {};
+
+  // eslint-disable-next-line array-callback-return
+  existingForm.map(({ question, answer }) => {
+    const { _id, type, choices } = question;
+
+    if (type === 'TEXT') rsvpForm[_id] = answer;
+    else if (choices.length) {
+      const { _id: choiceId } = choices.find(choice => choice.label === answer) || {};
+      rsvpForm[_id] = choiceId;
+    }
+  });
+
+  return rsvpForm;
+};
+
+export { filterQuestions, calculateQuestions, formatRSVP, convertExistingRSVPAnswers };

@@ -18,13 +18,14 @@ import RSVPOverview from './components/RSVPOverview';
 import RSVPOverviewTitle from './components/RSVPOverviewTitle';
 import RSVPAnswerInput from './components/RSVPAnswerInput';
 import RSVPQuestion from './components/RSVPQuestion';
-import { calculateQuestions, formatRSVP } from './helpers';
+import { calculateQuestions, formatRSVP, convertExistingRSVPAnswers } from './helpers';
 
 const { width, height } = Dimensions.get('window');
 const HANDLE_HEIGHT = 20;
 const SHEET_COLLAPSED_POS = SubmitRSVP.QUESTION_HEIGHT;
 
-const SubmitRSVPScreen = ({ navigation }) => {
+const SubmitRSVPScreen = ({ route, navigation }) => {
+  const existingRSVPAnswers = route?.params?.rsvpForm;
   const [questions, setQuestions] = useState([]);
   const [questionHistory, setQuestionHistory] = useState([]);
   const [formSteps, setFormSteps] = useState([]);
@@ -65,6 +66,12 @@ const SubmitRSVPScreen = ({ navigation }) => {
     };
 
     fetchDataOnMount();
+
+    if (existingRSVPAnswers) {
+      const existingRSVPForm = convertExistingRSVPAnswers(existingRSVPAnswers);
+      setRSVPForm(existingRSVPForm);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
