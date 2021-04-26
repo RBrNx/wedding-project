@@ -8,9 +8,15 @@ query GET_CURRENT_USER {
     attendanceStatus
     rsvpForm {
       question {
+        _id
         type
         title
         label
+        choices {
+          _id
+          label
+          value
+        }
       }
       answer
     }
