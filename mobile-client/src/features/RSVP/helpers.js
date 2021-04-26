@@ -16,7 +16,7 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnsw
   // Check to see if our next question is a follow up
   if (followUpQuestions?.length) {
     [nextQuestion] = filterQuestions(followUpQuestions, {
-      filter: ({ matchesChoice }) => matchesChoice === currAnswer,
+      filter: ({ matchesValue }) => matchesValue === currAnswer,
       map: ({ question }) => question,
     });
   } else if (currQuestion.isFollowUp) {
@@ -37,37 +37,34 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnsw
   return { prevQuestion, nextQuestion };
 };
 
-const formatRSVP = (rsvpForm, questions) => {
+const prepareRSVPForSubmission = (rsvpForm, questions) => {
+  let isAttending = null;
   const rsvpResponses = Object.entries(rsvpForm);
-  const formattedRSVP = rsvpResponses.map(([questionId, answer]) => {
-    const { choices } = questions.find(question => question._id === questionId);
-    const isMultipleChoice = !!choices.length;
-    const textAnswer = isMultipleChoice ? choices.find(choice => choice._id === answer)?.label : answer;
+  const formattedRSVP = rsvpResponses.reduce((accumulator, currResponse) => {
+    const [questionId, answer] = currResponse;
+    const matchingQuestion = questions.find(question => question._id === questionId);
 
-    return {
-      question: questionId,
-      answer: textAnswer,
-    };
-  });
+    if (matchingQuestion) {
+      if (!isAttending) isAttending = matchingQuestion.type === 'ATTENDANCE' && answer === 'ATTENDING';
 
-  return formattedRSVP;
-};
+      const isMultipleChoice = !!matchingQuestion.choices.length;
+      const answerLabel = isMultipleChoice
+        ? matchingQuestion.choices.find(choice => choice.value === answer)?.label
+        : answer;
 
-const convertExistingRSVPAnswers = existingForm => {
-  const rsvpForm = {};
-
-  // eslint-disable-next-line array-callback-return
-  existingForm.map(({ question, answer }) => {
-    const { _id, type, choices } = question;
-
-    if (type === 'TEXT') rsvpForm[_id] = answer;
-    else if (choices.length) {
-      const { _id: choiceId } = choices.find(choice => choice.label === answer) || {};
-      rsvpForm[_id] = choiceId;
+      accumulator.push({
+        question: questionId,
+        answer: {
+          label: answerLabel,
+          value: answer,
+        },
+      });
     }
-  });
 
-  return rsvpForm;
+    return accumulator;
+  }, []);
+
+  return { formattedRSVP, isAttending };
 };
 
-export { filterQuestions, calculateQuestions, formatRSVP, convertExistingRSVPAnswers };
+export { filterQuestions, calculateQuestions, prepareRSVPForSubmission };

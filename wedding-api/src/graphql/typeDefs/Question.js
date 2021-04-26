@@ -20,7 +20,7 @@ const schema = gql`
 
   type FollowUp {
     question: Question!
-    matchesChoice: ID!
+    matchesValue: String!
   }
 
   type Question {
@@ -51,7 +51,7 @@ const schema = gql`
 
   input FollowUpInput {
     question: ID!
-    matchesChoice: ID!
+    matchesValue: String!
   }
 
   input CreateQuestionInput {

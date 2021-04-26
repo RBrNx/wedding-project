@@ -21,7 +21,9 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
       {questions.map((question, questionIndex) => {
         const isMultipleChoice = question?.choices?.length;
         const formValue = formValues[question._id];
-        const answer = isMultipleChoice ? question.choices.find(choice => choice._id === formValue)?.label : formValue;
+        const answer = isMultipleChoice
+          ? question.choices.find(choice => choice.value === formValue)?.label
+          : formValue;
 
         return (
           <Card key={question._id}>

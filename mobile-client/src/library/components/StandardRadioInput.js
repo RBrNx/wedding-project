@@ -10,11 +10,11 @@ const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
   return (
     <ChoiceContainer>
       {options.map((option, index) => {
-        const isSelected = option._id === selectedValue;
+        const isSelected = option.value === selectedValue;
 
         return (
           <React.Fragment key={option._id}>
-            <StyledStandardPressable isSelected={isSelected} onPress={() => setSelectedValue(option._id)}>
+            <StyledStandardPressable isSelected={isSelected} onPress={() => setSelectedValue(option.value)}>
               <ChoiceLabel>{option.label}</ChoiceLabel>
             </StyledStandardPressable>
             {index < options.length - 1 && <Spacer size={15} />}

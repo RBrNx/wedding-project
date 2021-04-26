@@ -14,7 +14,7 @@ query GET_RSVP_QUESTIONS {
     isFollowUp
     order
     followUpQuestions {
-      matchesChoice
+      matchesValue
       question {
         _id
         type

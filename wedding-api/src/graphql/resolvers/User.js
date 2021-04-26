@@ -161,10 +161,9 @@ const attendanceStatus = async (parent, args, { db }) => {
 
   if (!rsvpResponse) return AttendanceStatus.AWAITING_RSVP;
 
-  const attendanceTuple = rsvpResponse.rsvpForm.find(({ question }) => question.type === QuestionType.ATTENDANCE);
-  const userChoice = attendanceTuple.question.choices.find(choice => choice.label === attendanceTuple.answer);
+  const { answer } = rsvpResponse.rsvpForm.find(({ question }) => question.type === QuestionType.ATTENDANCE);
 
-  return userChoice.value;
+  return answer.value;
 };
 
 const rsvpForm = async (parent, args, { db }) => {

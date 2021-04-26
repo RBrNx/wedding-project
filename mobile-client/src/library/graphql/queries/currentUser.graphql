@@ -18,7 +18,10 @@ query GET_CURRENT_USER {
           value
         }
       }
-      answer
+      answer {
+        label
+        value
+      }
     }
   }
 }

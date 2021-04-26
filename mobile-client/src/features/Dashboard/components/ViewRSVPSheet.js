@@ -30,7 +30,7 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
                 <Spacer size={5} />
                 <QuestionTitle>{question.title}</QuestionTitle>
                 <Spacer size={20} />
-                <AnswerText>{answer}</AnswerText>
+                <AnswerText>{answer.label}</AnswerText>
                 {index < rsvpForm.length - 1 && <StyledLine />}
               </React.Fragment>
             );

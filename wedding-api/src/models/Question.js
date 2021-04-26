@@ -17,7 +17,7 @@ const ChoiceSchema = new Schema(
 const FollowUpSchema = new Schema(
   {
     question: { type: ObjectId, ref: 'Question', required: true },
-    matchesChoice: { type: ObjectId, required: true },
+    matchesValue: { type: String, required: true },
   },
   {
     _id: false,

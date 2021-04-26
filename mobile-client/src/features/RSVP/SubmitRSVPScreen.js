@@ -18,7 +18,7 @@ import RSVPOverview from './components/RSVPOverview';
 import RSVPOverviewTitle from './components/RSVPOverviewTitle';
 import RSVPAnswerInput from './components/RSVPAnswerInput';
 import RSVPQuestion from './components/RSVPQuestion';
-import { calculateQuestions, formatRSVP, convertExistingRSVPAnswers } from './helpers';
+import { calculateQuestions, prepareRSVPForSubmission } from './helpers';
 
 const { width, height } = Dimensions.get('window');
 const HANDLE_HEIGHT = 20;
@@ -68,7 +68,12 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
     fetchDataOnMount();
 
     if (existingRSVPAnswers) {
-      const existingRSVPForm = convertExistingRSVPAnswers(existingRSVPAnswers);
+      const existingRSVPForm = existingRSVPAnswers.reduce((accumulator, rsvpTuple) => {
+        const { question, answer } = rsvpTuple;
+
+        accumulator[question._id] = answer.value;
+        return accumulator;
+      }, {});
       setRSVPForm(existingRSVPForm);
     }
 
@@ -83,7 +88,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
   const onSubmit = async () => {
     try {
       setIsLoading(true);
-      const formattedRSVP = formatRSVP(rsvpForm, questionHistory);
+      const { formattedRSVP, isAttending } = prepareRSVPForSubmission(rsvpForm, questionHistory);
       const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
       const { submitRSVPForm: formResponse } = data || {};
 
