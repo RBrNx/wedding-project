@@ -38,31 +38,23 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnsw
 };
 
 const prepareRSVPForSubmission = (rsvpForm, questions) => {
-  let isAttending = null;
-  const rsvpResponses = Object.entries(rsvpForm);
-  const formattedRSVP = rsvpResponses.reduce((accumulator, currResponse) => {
-    const [questionId, answer] = currResponse;
-    const matchingQuestion = questions.find(question => question._id === questionId);
+  let isAttending = false;
 
-    if (matchingQuestion) {
-      if (!isAttending) isAttending = matchingQuestion.type === 'ATTENDANCE' && answer === 'ATTENDING';
+  const formattedRSVP = questions.map(question => {
+    const isMultipleChoice = !!question.choices.length;
+    const value = rsvpForm[question._id];
+    const label = isMultipleChoice ? question.choices.find(choice => choice.value === value)?.label : value;
 
-      const isMultipleChoice = !!matchingQuestion.choices.length;
-      const answerLabel = isMultipleChoice
-        ? matchingQuestion.choices.find(choice => choice.value === answer)?.label
-        : answer;
+    if (!isAttending) isAttending = question.type === 'ATTENDANCE' && value === 'ATTENDING';
 
-      accumulator.push({
-        question: questionId,
-        answer: {
-          label: answerLabel,
-          value: answer,
-        },
-      });
-    }
-
-    return accumulator;
-  }, []);
+    return {
+      question: question._id,
+      answer: {
+        label,
+        value,
+      },
+    };
+  });
 
   return { formattedRSVP, isAttending };
 };
