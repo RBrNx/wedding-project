@@ -27,10 +27,12 @@ const BottomSheetModal = ({ active, onDismiss, children }) => {
     return false;
   });
 
+  /* eslint-disable no-unused-expressions */
   useEffect(() => {
-    // eslint-disable-next-line no-unused-expressions
     if (active) bottomSheetModalRef.current?.present();
+    else bottomSheetModalRef.current?.dismiss();
   }, [active]);
+  /* eslint-enable no-unused-expressions */
 
   return (
     <BottomSheetModalProvider>

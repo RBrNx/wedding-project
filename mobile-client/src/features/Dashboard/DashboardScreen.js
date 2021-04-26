@@ -1,7 +1,8 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from 'context';
 import Spacer from 'library/components/Spacer';
 import { Colours, Layout, Typography } from 'library/styles';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components/native';
 import DashboardHeader from './components/DashboardHeader';
 import MemoriesCard from './components/MemoriesCard';
@@ -16,6 +17,14 @@ const DashboardScreen = ({ navigation }) => {
   const { firstName, lastName } = currentUser;
   const fullName = `${firstName} ${lastName}`;
   const hasSubmittedRSVP = !!currentUser?.rsvpForm;
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setTimeout(() => setShowRSVPSheet(false), 1000);
+      };
+    }, []),
+  );
 
   return (
     <>
