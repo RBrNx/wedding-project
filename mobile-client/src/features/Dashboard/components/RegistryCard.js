@@ -48,14 +48,14 @@ const CardInner = styled(StandardPressable).attrs(() => ({
 
 const CardTitle = styled.Text`
   ${Typography.h3};
-  color: ${Theme.headerTextColour};
+  color: ${Colours.neutral.white};
   width: 70%;
   text-align: right;
 `;
 
 const CardSubTitle = styled.Text`
   ${Typography.h4};
-  color: ${Theme.bodyTextColour};
+  color: ${Colours.neutral.offWhite};
   width: 60%;
   text-align: right;
 `;

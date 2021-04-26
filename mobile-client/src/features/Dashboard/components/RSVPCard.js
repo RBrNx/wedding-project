@@ -53,13 +53,13 @@ const CardInner = styled(StandardPressable).attrs(() => ({
 
 const CardTitle = styled.Text`
   ${Typography.h3};
-  color: ${Theme.headerTextColour};
+  color: ${Colours.neutral.white};
   width: 75%;
 `;
 
 const CardSubTitle = styled.Text`
   ${Typography.h4};
-  color: ${Theme.bodyTextColour};
+  color: ${Colours.neutral.offWhite};
   width: 75%;
 `;
 
