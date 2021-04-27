@@ -29,7 +29,7 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
       outerChildren={
         <StandardActionButton
           label='Edit RSVP'
-          icon={() => <StyledIcon name='edit' size={20} />}
+          icon={<StyledIcon name='edit' size={20} />}
           onPress={() => navigate('SubmitRSVP', { rsvpForm })}
           style={animatedStyle}
         />
