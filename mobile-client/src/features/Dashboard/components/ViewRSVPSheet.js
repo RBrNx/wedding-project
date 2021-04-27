@@ -8,12 +8,33 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheetModal from 'library/components/BottomSheetModal';
+import { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
+  const scrollY = useSharedValue(0);
   const { navigate } = useNavigation();
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value, [0.2, 1], [0, 1], Extrapolate.CLAMP),
+      transform: [{ translateY: interpolate(scrollY.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
+    };
+  });
+
   return (
-    <BottomSheetModal active={active} onDismiss={onDismiss}>
+    <BottomSheetModal
+      active={active}
+      onDismiss={onDismiss}
+      animatedIndex={scrollY}
+      outerChildren={
+        <StandardActionButton
+          label='Edit RSVP'
+          icon={() => <StyledIcon name='edit' size={20} />}
+          onPress={() => navigate('SubmitRSVP', { rsvpForm })}
+          style={animatedStyle}
+        />
+      }
+    >
       <StyledBottomSheetScrollView>
         <Spacer size={15} />
         <ModalTitle>Let&apos;s see your RSVP 🎉</ModalTitle>
@@ -37,11 +58,6 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
           })}
         </Card>
       </StyledBottomSheetScrollView>
-      <StandardActionButton
-        label='Edit RSVP'
-        icon={() => <StyledIcon name='edit' size={20} />}
-        onPress={() => navigate('SubmitRSVP', { rsvpForm })}
-      />
     </BottomSheetModal>
   );
 };
