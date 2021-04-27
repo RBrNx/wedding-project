@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import StandardActionButton from 'library/components/StandardActionButton';
@@ -33,6 +33,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
   const [rsvpForm, setRSVPForm] = useState({});
   const [showOverview, setShowOverview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [fetchRSVPQuestions] = useLazyQuery(GET_RSVP_QUESTIONS);
   const [submitRSVPForm] = useSubmitRSVP();
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
@@ -87,7 +88,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
 
   const onSubmit = async () => {
     try {
-      setIsLoading(true);
+      setIsSubmitting(true);
       const { formattedRSVP, isAttending } = prepareRSVPForSubmission(rsvpForm, questionHistory);
       const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
       const { submitRSVPForm: formResponse } = data || {};
@@ -95,7 +96,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
       if (formResponse.success) {
         navigation.navigate('RSVPSuccess', { isAttending });
       } else {
-        setIsLoading(false);
+        setIsSubmitting(false);
         showAlert({
           message: formResponse.message,
           type: AlertType.WARNING,
@@ -103,7 +104,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
         });
       }
     } catch (err) {
-      setIsLoading(false);
+      setIsSubmitting(false);
       const { message } = parseError(err);
       console.error(message);
       showAlert({
@@ -228,9 +229,9 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNext}
         onFullSizePress={onSubmit}
-        expandToFullSize={showOverview}
+        expandToFullSize={showOverview && !isSubmitting}
         animationDuration={300}
-        icon={() => <StyledBackButtonImage />}
+        icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledBackButtonImage />}
       />
     </>
   );
