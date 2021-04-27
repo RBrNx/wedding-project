@@ -13,7 +13,7 @@ const BottomSheetBackdrop = ({ animatedIndex, style }) => {
   return <StyledBackdrop style={[containerAnimatedStyle, style]} />;
 };
 
-const BottomSheetModal = ({ active, onDismiss, children }) => {
+const BottomSheetModal = ({ active, onDismiss, children, outerChildren, animatedIndex }) => {
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '87.5%'], []);
 
@@ -43,9 +43,11 @@ const BottomSheetModal = ({ active, onDismiss, children }) => {
         onDismiss={onDismiss}
         backgroundComponent={BottomSheetBackground}
         backdropComponent={BottomSheetBackdrop}
+        animatedIndex={animatedIndex}
       >
         {children}
       </StyledBottomSheetModal>
+      {active && outerChildren}
     </BottomSheetModalProvider>
   );
 };
