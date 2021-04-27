@@ -28,7 +28,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
   const existingRSVPAnswers = route?.params?.rsvpForm;
   const [questions, setQuestions] = useState([]);
   const [questionHistory, setQuestionHistory] = useState([]);
-  const [formSteps, setFormSteps] = useState([]);
+  const [formSteps, setFormSteps] = useState([{}]);
   const [currQuestion, setCurrQuestion] = useState(null);
   const [rsvpForm, setRSVPForm] = useState({});
   const [showOverview, setShowOverview] = useState(false);
@@ -199,12 +199,20 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
   const renderQuestion = ({ step, index }) => {
     if (step?.componentType === 'overview')
       return <RSVPOverviewTitle key='overview' index={index} animIndex={animIndex} />;
-    return <RSVPQuestion key={`question_${step._id}`} question={step} animIndex={animIndex} index={index} />;
+    return (
+      <RSVPQuestion
+        key={`question_${step._id}`}
+        question={step}
+        animIndex={animIndex}
+        index={index}
+        isLoading={isLoading}
+      />
+    );
   };
 
   return (
     <>
-      {!isLoading && <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />}
+      <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
       <BottomSheetScrollView collapsedPosition={SHEET_COLLAPSED_POS} unlockFullScroll={!isLoading}>
         {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (

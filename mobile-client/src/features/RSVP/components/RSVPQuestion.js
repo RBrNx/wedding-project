@@ -3,8 +3,9 @@ import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-nati
 import styled from 'styled-components/native';
 import { SubmitRSVP } from 'library/utils/constants';
 import { Colours, Typography } from 'library/styles';
+import QuestionLoader from './QuestionLoader';
 
-const RSVPQuestion = ({ question, animIndex, index }) => {
+const RSVPQuestion = ({ question, animIndex, index, isLoading }) => {
   const animatedStepStyle = useAnimatedStyle(() => {
     const normalisedAnim = index - animIndex.value;
     const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
@@ -18,8 +19,13 @@ const RSVPQuestion = ({ question, animIndex, index }) => {
 
   return (
     <Container style={animatedStepStyle}>
-      <QuestionNumber>{`Q${index + 1}`}</QuestionNumber>
-      <QuestionTitle>{question.title}</QuestionTitle>
+      {isLoading && <QuestionLoader />}
+      {!isLoading && (
+        <>
+          <QuestionNumber>{`Q${index + 1}`}</QuestionNumber>
+          <QuestionTitle>{question.title}</QuestionTitle>
+        </>
+      )}
     </Container>
   );
 };
