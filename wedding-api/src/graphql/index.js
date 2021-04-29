@@ -6,6 +6,7 @@ import QuestionResolvers from './resolvers/Question';
 import TempLoginResolvers from './resolvers/TempLogin';
 import EventResolvers from './resolvers/Event';
 import RSVPResponseResolvers from './resolvers/RSVPResponse';
+import MusicResolvers from './resolvers/Music';
 
 // TypeDefs
 import BaseTypeDefs from './typeDefs/Base';
@@ -15,6 +16,7 @@ import QuestionTypeDefs from './typeDefs/Question';
 import TempLoginTypeDefs from './typeDefs/TempLogin';
 import EventTypeDefs from './typeDefs/Event';
 import RSVPResponseTypeDefs from './typeDefs/RSVPResponse';
+import MusicTypeDefs from './typeDefs/Music';
 
 const typeDefs = [
   BaseTypeDefs,
@@ -23,6 +25,7 @@ const typeDefs = [
   QuestionTypeDefs,
   EventTypeDefs,
   RSVPResponseTypeDefs,
+  MusicTypeDefs,
 ];
 const resolvers = [
   BaseResolvers,
@@ -31,6 +34,7 @@ const resolvers = [
   QuestionResolvers,
   EventResolvers,
   RSVPResponseResolvers,
+  MusicResolvers,
 ];
 
 const unauthenticatedTypeDefs = [BaseTypeDefs, TempLoginTypeDefs];

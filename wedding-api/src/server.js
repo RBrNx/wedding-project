@@ -1,4 +1,5 @@
 import { ApolloServer } from 'apollo-server-lambda';
+import SpotifyAPI from './datasources/SpotifyAPI';
 import { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers } from './graphql/index';
 import { connectToDatabase } from './lib/database';
 import { getUserFromRequest } from './lib/helpers/users';
@@ -6,6 +7,9 @@ import { getUserFromRequest } from './lib/helpers/users';
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  dataSources: () => ({
+    spotifyAPI: new SpotifyAPI(),
+  }),
   formatError: error => {
     return error;
   },
