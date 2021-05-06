@@ -10,12 +10,19 @@ class SpotifyAPI extends RESTDataSource {
     this.expiresAt = null;
   }
 
+  async willSendRequest(request) {
+    const { currentUser, db } = this.context;
+    await this.getValidToken(db, currentUser.eventId);
+
+    request.headers.set('Authorization', `Bearer ${this.accessToken}`);
+  }
+
   // eslint-disable-next-line class-methods-use-this
   mapIncomingTrackData(tracks) {
     return tracks.map(track => {
       const artists = track.artists.map(artist => artist.name);
       const albumArt = track.album.images.reduce((accumulator, image) => {
-        return image.height < accumulator.height ? image : accumulator;
+        return image.height === 300 ? image : accumulator;
       });
 
       return {
@@ -49,13 +56,6 @@ class SpotifyAPI extends RESTDataSource {
     }
   }
 
-  async willSendRequest(request) {
-    const { currentUser, db } = this.context;
-    await this.getValidToken(db, currentUser.eventId);
-
-    request.headers.set('Authorization', `Bearer ${this.accessToken}`);
-  }
-
   async searchTracks({ searchTerm }) {
     const { tracks } = await this.get('search', {
       q: searchTerm,
@@ -64,6 +64,22 @@ class SpotifyAPI extends RESTDataSource {
     tracks.items = this.mapIncomingTrackData(tracks.items);
 
     return tracks;
+  }
+
+  async addTrackToPlaylist({ playlistId, trackUri }) {
+    const res = await this.post(`playlists/${playlistId}/tracks`, {
+      uris: [trackUri],
+    });
+
+    return res;
+  }
+
+  async removeTrackFromPlaylist({ playlistId, trackUri }) {
+    const res = await this.delete(`playlists/${playlistId}/tracks`, {
+      tracks: [{ uri: trackUri }],
+    });
+
+    return res;
   }
 }
 
