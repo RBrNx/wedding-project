@@ -44,9 +44,7 @@ const prepareRSVPForSubmission = (rsvpForm, questions) => {
   let isAttending = false;
 
   const formattedRSVP = questions.map(question => {
-    const isMultipleChoice = !!question.choices.length;
-    const value = rsvpForm[question._id];
-    const label = isMultipleChoice ? question.choices.find(choice => choice.value === value)?.label : value;
+    const { label, value } = getAnswer(question, rsvpForm);
 
     if (!isAttending) isAttending = question.type === 'ATTENDANCE' && value === 'ATTENDING';
 
@@ -62,4 +60,26 @@ const prepareRSVPForSubmission = (rsvpForm, questions) => {
   return { formattedRSVP, isAttending };
 };
 
-export { filterQuestions, calculateQuestions, prepareRSVPForSubmission };
+const getAnswer = (question, rsvpForm) => {
+  const { type } = question;
+  const formValue = rsvpForm[question._id];
+  const answer = {
+    label: null,
+    value: null,
+  };
+
+  if (type === 'MULTIPLE_CHOICE' || type === 'ATTENDANCE') {
+    answer.label = question.choices.find(choice => choice.value === formValue)?.label;
+    answer.value = formValue;
+  } else if (type === 'TEXT') {
+    answer.label = formValue;
+    answer.value = formValue;
+  } else if (type === 'SONG_REQUEST') {
+    answer.label = formValue.name;
+    answer.value = formValue.uri;
+  }
+
+  return answer;
+};
+
+export { filterQuestions, calculateQuestions, prepareRSVPForSubmission, getAnswer };

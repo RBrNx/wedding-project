@@ -8,6 +8,7 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import StandardPressable from 'library/components/StandardPressable';
 import { darken } from 'library/utils/colours';
+import { getAnswer } from '../helpers';
 
 const { width } = Dimensions.get('window');
 
@@ -19,11 +20,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
   return (
     <Container style={[animatedStyle, style]}>
       {questions.map((question, questionIndex) => {
-        const isMultipleChoice = question?.choices?.length;
-        const formValue = formValues[question._id];
-        const answer = isMultipleChoice
-          ? question.choices.find(choice => choice.value === formValue)?.label
-          : formValue;
+        const { label } = getAnswer(question, formValues);
 
         return (
           <Card key={question._id}>
@@ -32,7 +29,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
             <TextContainer>
               <QuestionTitle>{question.title}</QuestionTitle>
               <Spacer size={10} />
-              <AnswerText>{answer}</AnswerText>
+              <AnswerText>{label}</AnswerText>
             </TextContainer>
             <EditButton size={40} onPress={() => onEditPress(question, questionIndex)}>
               <StyledIcon name='edit' size={20} />
