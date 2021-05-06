@@ -1,9 +1,14 @@
 import { gql } from 'apollo-server-lambda';
 
 const schema = gql`
+  type Answer {
+    label: String!
+    value: String!
+  }
+
   type RSVPFormTuple {
     question: Question
-    answer: String
+    answer: Answer
   }
 
   type SubmitRSVPResponse implements MutationResponse {
@@ -11,9 +16,14 @@ const schema = gql`
     message: String
   }
 
+  input AnswerInput {
+    label: String!
+    value: String!
+  }
+
   input RSVPFormTupleInput {
     question: ID
-    answer: String
+    answer: AnswerInput
   }
 
   input SubmitRSVPInput {

@@ -34,7 +34,7 @@ const RSVPSuccessScreen = ({ route, navigation }) => {
             : 'Conor & Lyndsay are sorry to hear that you are unable to attend their special day, you will be missed!'}
         </StyledText>
       </TextContainer>
-      <StandardButton text='Continue' raised onPress={() => navigation.navigate('GuestHome')} />
+      <StandardButton text='Continue' raised onPress={() => navigation.navigate('Dashboard')} />
     </Container>
   );
 };

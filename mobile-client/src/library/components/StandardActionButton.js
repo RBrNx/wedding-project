@@ -41,7 +41,7 @@ const StandardActionButton = ({
         onPress={isExpanded ? onFullSizePress : onPress}
       >
         <ExpandedLabel style={[animatedMessageStyle, messageStyle]}>{label}</ExpandedLabel>
-        <Animated.View style={[animatedIconStyle, iconStyle]}>{!isExpanded && icon && icon()}</Animated.View>
+        <Animated.View style={[animatedIconStyle, iconStyle]}>{icon}</Animated.View>
       </StyledPressable>
     </FullscreenContainer>
   );

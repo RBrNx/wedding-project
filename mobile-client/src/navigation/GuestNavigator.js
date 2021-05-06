@@ -57,13 +57,8 @@ const GuestHomeNavigator = () => {
 };
 
 const GuestNavigator = () => {
-  const { currentUser } = useAuth();
-
   return (
-    <Stack.Navigator
-      screenOptions={screenOptions}
-      initialRouteName={currentUser?.rsvpForm ? 'GuestHome' : 'SubmitRSVP'}
-    >
+    <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name='GuestHome' component={GuestHomeNavigator} />
       <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
       <Stack.Screen name='RSVPSuccess' component={RSVPSuccessScreen} />

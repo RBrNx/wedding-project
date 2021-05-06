@@ -29,12 +29,12 @@ const bodyTextColour = theme('theme', {
 
 const detailTextColour = theme('theme', {
   light: neutral.grey4,
-  dark: neutral.grey3,
+  dark: neutral.grey2,
 });
 
 const icon = theme('theme', {
-  light: neutral.grey2,
-  dark: neutral.grey3,
+  light: neutral.grey3,
+  dark: neutral.grey2,
 });
 
 export { card, cardPressed, background, headerTextColour, bodyTextColour, detailTextColour, icon };

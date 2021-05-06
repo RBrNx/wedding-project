@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
-import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import { darken, lighten } from 'library/utils/colours';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
@@ -10,11 +10,11 @@ const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
   return (
     <ChoiceContainer>
       {options.map((option, index) => {
-        const isSelected = option._id === selectedValue;
+        const isSelected = option.value === selectedValue;
 
         return (
           <React.Fragment key={option._id}>
-            <StyledStandardPressable isSelected={isSelected} onPress={() => setSelectedValue(option._id)}>
+            <StyledStandardPressable isSelected={isSelected} onPress={() => setSelectedValue(option.value)}>
               <ChoiceLabel>{option.label}</ChoiceLabel>
             </StyledStandardPressable>
             {index < options.length - 1 && <Spacer size={15} />}
@@ -27,7 +27,6 @@ const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
 
 const ChoiceContainer = styled.View`
   flex: 1;
-  ${Layout.flexCenter};
   width: 100%;
 `;
 
@@ -35,7 +34,7 @@ const StyledStandardPressable = styled(StandardPressable)`
   padding: 15px;
   width: 100%;
   ${Outlines.inputBorder}
-  border-color: ${props => (props.isSelected ? Colours.secondary : Colours.neutral.grey3)};
+  border-color: ${props => (props.isSelected ? Colours.secondary : Colours.neutral.grey2)};
   background-color: ${props =>
     props.isSelected
       ? theme('theme', {

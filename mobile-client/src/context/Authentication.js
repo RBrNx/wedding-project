@@ -1,9 +1,9 @@
 import { Auth } from 'aws-amplify';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useLazyQuery } from 'library/hooks';
 import client from 'library/utils/apiClient';
 import FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION from 'library/graphql/mutations/fetchTempLoginCredentials.graphql';
 import GET_CURRENT_USER_QUERY from 'library/graphql/queries/currentUser.graphql';
+import { useQuery } from '@apollo/react-hooks';
 
 const AuthContext = createContext();
 
@@ -14,10 +14,10 @@ const AuthProvider = ({ children }) => {
 
 const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
-  const [currentUser, setCurrentUser] = useState(null);
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
-  const [fetchCurrentUser] = useLazyQuery(GET_CURRENT_USER_QUERY, { fetchPolicy: 'network-only' });
+  const { data: queryData } = useQuery(GET_CURRENT_USER_QUERY);
+  const currentUser = queryData?.getCurrentUser;
   const isAuthenticated = !!user && !!currentUser;
 
   const signIn = async (emailAddress, password) => {
@@ -25,13 +25,10 @@ const useProviderAuth = () => {
 
     const lowercaseEmail = emailAddress.toLowerCase();
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
-    const { data } = await fetchCurrentUser();
-    const dbUser = data?.getCurrentUser;
 
     setUser(cognitoUser);
-    setCurrentUser(dbUser);
 
-    return cognitoUser && dbUser;
+    return cognitoUser;
   };
 
   const signInWithInvitationId = async invitationId => {
@@ -61,7 +58,6 @@ const useProviderAuth = () => {
     setIsSigningOut(true);
     await Auth.signOut();
     setUser(null);
-    setCurrentUser(null);
     setIsSigningOut(false);
   };
 
@@ -69,20 +65,21 @@ const useProviderAuth = () => {
     const checkForAuthenticatedUser = async () => {
       try {
         const cognitoUser = await Auth.currentAuthenticatedUser();
-        const { data } = await fetchCurrentUser();
-        const dbUser = data?.getCurrentUser;
 
         setUser(cognitoUser);
-        setCurrentUser(dbUser);
       } catch (err) {
         console.log(err);
-      } finally {
-        setBootstrapComplete(true);
       }
     };
 
     checkForAuthenticatedUser();
   }, []);
+
+  useEffect(() => {
+    if (user && currentUser && !bootstrapComplete) {
+      setBootstrapComplete(true);
+    }
+  }, [user, currentUser, bootstrapComplete]);
 
   return {
     user,

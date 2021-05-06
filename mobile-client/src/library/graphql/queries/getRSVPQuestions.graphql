@@ -14,17 +14,20 @@ query GET_RSVP_QUESTIONS {
     isFollowUp
     order
     followUpQuestions {
-      matchesChoice
+      matchesValue
       question {
         _id
         type
         title
+        label
+        placeholder
         choices {
           _id
           label
           value
         }
         responseType
+        isFollowUp
         order
       }
     }

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
-import { useMutation } from '@apollo/react-hooks';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import StandardActionButton from 'library/components/StandardActionButton';
-import { useLazyQuery, useAvoidKeyboard, useAnimatedStepTransition } from 'library/hooks';
+import { useLazyQuery, useAvoidKeyboard, useAnimatedStepTransition, useSubmitRSVP } from 'library/hooks';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType } from 'library/enums';
@@ -15,34 +14,40 @@ import BackButtonImage from 'library/components/BackButtonImage';
 import { Colours } from 'library/styles';
 import { SubmitRSVP } from 'library/utils/constants';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
-import SUBMIT_RSVP_FORM from 'library/graphql/mutations/submitRSVP.graphql';
 import RSVPOverview from './components/RSVPOverview';
 import RSVPOverviewTitle from './components/RSVPOverviewTitle';
 import RSVPAnswerInput from './components/RSVPAnswerInput';
 import RSVPQuestion from './components/RSVPQuestion';
-import { calculateQuestions, formatRSVP } from './helpers';
+import { calculateQuestions, prepareRSVPForSubmission } from './helpers';
 
 const { width, height } = Dimensions.get('window');
 const HANDLE_HEIGHT = 20;
 const SHEET_COLLAPSED_POS = SubmitRSVP.QUESTION_HEIGHT;
 
-const SubmitRSVPScreen = ({ navigation }) => {
+const SubmitRSVPScreen = ({ route, navigation }) => {
+  const existingRSVPAnswers = route?.params?.rsvpForm;
   const [questions, setQuestions] = useState([]);
   const [questionHistory, setQuestionHistory] = useState([]);
-  const [formSteps, setFormSteps] = useState([]);
+  const [formSteps, setFormSteps] = useState([{}]);
   const [currQuestion, setCurrQuestion] = useState(null);
   const [rsvpForm, setRSVPForm] = useState({});
   const [showOverview, setShowOverview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [fetchRSVPQuestions] = useLazyQuery(GET_RSVP_QUESTIONS);
-  const [submitRSVPForm] = useMutation(SUBMIT_RSVP_FORM);
+  const [submitRSVPForm] = useSubmitRSVP();
   const { animIndex, moveToNextStep, moveToPrevStep, moveToStep } = useAnimatedStepTransition();
   const { showAlert } = useAlert();
   const { avoidKeyboardStyle } = useAvoidKeyboard();
 
   const sheetMinHeight = height - SHEET_COLLAPSED_POS - HANDLE_HEIGHT;
   const currAnswer = rsvpForm[currQuestion?._id];
-  const { prevQuestion, nextQuestion } = calculateQuestions({ questions, questionHistory, currQuestion, currAnswer });
+  const { prevQuestion, nextQuestion } = calculateQuestions({
+    questions,
+    questionHistory,
+    currQuestion,
+    answers: rsvpForm,
+  });
 
   useEffect(() => {
     const fetchDataOnMount = async () => {
@@ -67,6 +72,17 @@ const SubmitRSVPScreen = ({ navigation }) => {
     };
 
     fetchDataOnMount();
+
+    if (existingRSVPAnswers) {
+      const existingRSVPForm = existingRSVPAnswers.reduce((accumulator, rsvpTuple) => {
+        const { question, answer } = rsvpTuple;
+
+        accumulator[question._id] = answer.value;
+        return accumulator;
+      }, {});
+      setRSVPForm(existingRSVPForm);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -77,15 +93,15 @@ const SubmitRSVPScreen = ({ navigation }) => {
 
   const onSubmit = async () => {
     try {
-      setIsLoading(true);
-      const formattedRSVP = formatRSVP(rsvpForm, questionHistory);
+      setIsSubmitting(true);
+      const { formattedRSVP, isAttending } = prepareRSVPForSubmission(rsvpForm, questionHistory);
       const { data } = await submitRSVPForm({ variables: { input: { rsvpForm: formattedRSVP } } });
       const { submitRSVPForm: formResponse } = data || {};
 
       if (formResponse.success) {
-        navigation.navigate('RSVPSuccess');
+        navigation.navigate('RSVPSuccess', { isAttending });
       } else {
-        setIsLoading(false);
+        setIsSubmitting(false);
         showAlert({
           message: formResponse.message,
           type: AlertType.WARNING,
@@ -93,7 +109,7 @@ const SubmitRSVPScreen = ({ navigation }) => {
         });
       }
     } catch (err) {
-      setIsLoading(false);
+      setIsSubmitting(false);
       const { message } = parseError(err);
       console.error(message);
       showAlert({
@@ -189,13 +205,25 @@ const SubmitRSVPScreen = ({ navigation }) => {
   const renderQuestion = ({ step, index }) => {
     if (step?.componentType === 'overview')
       return <RSVPOverviewTitle key='overview' index={index} animIndex={animIndex} />;
-    return <RSVPQuestion key={`question_${step._id}`} question={step} animIndex={animIndex} index={index} />;
+    return (
+      <RSVPQuestion
+        key={`question_${step._id}`}
+        question={step}
+        animIndex={animIndex}
+        index={index}
+        isLoading={isLoading}
+      />
+    );
   };
 
   return (
     <>
-      {!isLoading && <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />}
-      <BottomSheetScrollView collapsedPosition={SHEET_COLLAPSED_POS} unlockFullScroll={!isLoading}>
+      <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
+      <BottomSheetScrollView
+        collapsedPosition={SHEET_COLLAPSED_POS}
+        unlockFullScroll={!isLoading}
+        keyboardShouldPersistTaps='handled'
+      >
         {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (
           <ContentContainer>
@@ -210,9 +238,9 @@ const SubmitRSVPScreen = ({ navigation }) => {
         maxExpansionWidth={width * 0.95 - 16}
         onPress={onNext}
         onFullSizePress={onSubmit}
-        expandToFullSize={showOverview}
+        expandToFullSize={showOverview && !isSubmitting}
         animationDuration={300}
-        icon={() => <StyledBackButtonImage />}
+        icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledBackButtonImage />}
       />
     </>
   );
@@ -230,10 +258,7 @@ const StyledBackButton = styled(BackButton).attrs({
   backImageStyle: {
     tintColor: Colours.secondary,
   },
-})`
-  position: absolute;
-  z-index: 1;
-`;
+})``;
 
 const StyledBackButtonImage = styled(BackButtonImage)`
   transform: rotate(180deg);

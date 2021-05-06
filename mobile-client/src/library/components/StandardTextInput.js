@@ -23,6 +23,8 @@ const StandardTextInput = ({
   style,
   inputStyle,
   flat,
+  showCharacterCount = false,
+  placeholderComponent,
 }) => {
   const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
@@ -55,28 +57,38 @@ const StandardTextInput = ({
   }));
 
   return (
-    <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
-      <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
-      <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
-        {label}
-      </RegularLabel>
-      <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
-        {placeholder}
-      </PlaceholderLabel>
-      <StyledTextInput
-        ref={textInput}
-        value={value}
-        style={inputStyle}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        maxLength={maxLength}
-        multiline={multiline}
-        textAlignVertical={multiline ? 'top' : 'center'}
-      />
-    </ContainerComponent>
+    <>
+      <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
+        <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
+        <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
+          {label}
+        </RegularLabel>
+        {!placeholderComponent && (
+          <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
+            {placeholder}
+          </PlaceholderLabel>
+        )}
+        {placeholderComponent && placeholderComponent(placeholderAnimatedStyles, multiline)}
+        <StyledTextInput
+          ref={textInput}
+          value={value}
+          style={inputStyle}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          maxLength={maxLength}
+          multiline={multiline}
+          textAlignVertical={multiline ? 'top' : 'center'}
+        />
+      </ContainerComponent>
+      {showCharacterCount && (
+        <CharacterCount>
+          {value?.length}/{maxLength}
+        </CharacterCount>
+      )}
+    </>
   );
 };
 
@@ -93,7 +105,7 @@ const Container = styled.Pressable`
 `;
 
 const FlatContainer = styled(Container)`
-  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey3)};
+  border-color: ${props => (props.isFocused ? Colours.secondary : Colours.neutral.grey2)};
   border-width: ${props => (props.isFocused ? 1.5 : 0.5)}px;
   elevation: ${props => (props.isFocused ? 4 : 0)};
 `;
@@ -136,6 +148,13 @@ const StyledTextInput = styled.TextInput`
   })};
   min-height: ${props => (props.multiline ? 150 : 0)}px;
   margin-top: ${props => (props.multiline ? 5 : 0)}px;
+`;
+
+const CharacterCount = styled.Text`
+  color: ${Theme.detailTextColour};
+  align-self: flex-end;
+  margin-right: 5px;
+  margin-top: 5px;
 `;
 
 export default StandardTextInput;
