@@ -42,7 +42,7 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
         <ModalSubtitle>You are free to make changes to your answers until 1st September 2021.</ModalSubtitle>
         <Spacer size={45} />
         <Card>
-          {rsvpForm.map((rsvpTuple, index) => {
+          {rsvpForm?.map((rsvpTuple, index) => {
             const { question, answer } = rsvpTuple;
 
             return (
