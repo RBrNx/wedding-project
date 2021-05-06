@@ -23,7 +23,8 @@ const StandardTextInput = ({
   style,
   inputStyle,
   flat,
-  showCharacterCount,
+  showCharacterCount = false,
+  placeholderComponent,
 }) => {
   const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
@@ -62,9 +63,12 @@ const StandardTextInput = ({
         <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
           {label}
         </RegularLabel>
-        <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
-          {placeholder}
-        </PlaceholderLabel>
+        {!placeholderComponent && (
+          <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
+            {placeholder}
+          </PlaceholderLabel>
+        )}
+        {placeholderComponent && placeholderComponent(placeholderAnimatedStyles, multiline)}
         <StyledTextInput
           ref={textInput}
           value={value}
@@ -81,7 +85,7 @@ const StandardTextInput = ({
       </ContainerComponent>
       {showCharacterCount && (
         <CharacterCount>
-          {value.length}/{maxLength}
+          {value?.length}/{maxLength}
         </CharacterCount>
       )}
     </>
