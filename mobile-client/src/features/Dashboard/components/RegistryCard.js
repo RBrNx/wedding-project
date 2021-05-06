@@ -12,7 +12,7 @@ const RegistryCard = ({ onPress }) => {
       <CardInner onPress={onPress}>
         <CardTitle>Last but not least,</CardTitle>
         <Spacer size={5} />
-        <CardSubTitle>Your presence is the best present, but if you insist...</CardSubTitle>
+        <CardSubTitle>Your presence is the only gift we need, but if you insist...</CardSubTitle>
         <StyledRegistryIllustration size={100} />
         <Spacer flex />
         <LinkText>Show me the registry →</LinkText>
@@ -69,7 +69,7 @@ const StyledRegistryIllustration = styled(RegistryIllustration)`
 const LinkText = styled.Text`
   ${Typography.h4};
   color: ${Colours.neutral.white};
-  text-shadow: 0px 1px 2px ${Colours.secondary};
+  text-decoration-line: underline;
 `;
 
 export default RegistryCard;
