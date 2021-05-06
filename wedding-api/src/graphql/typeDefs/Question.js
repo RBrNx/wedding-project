@@ -5,6 +5,7 @@ const schema = gql`
     ATTENDANCE
     MULTIPLE_CHOICE
     TEXT
+    SONG_REQUEST
   }
 
   enum ResponseType {

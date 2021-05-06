@@ -2,6 +2,7 @@ const QuestionType = Object.freeze({
   ATTENDANCE: 'ATTENDANCE',
   MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
   TEXT: 'TEXT',
+  SONG_REQUEST: 'SONG_REQUEST',
 });
 
 const QuestionResponseType = Object.freeze({
