@@ -24,6 +24,8 @@ const RSVPAnswerInput = ({
     transform: [{ translateX: (index - animIndex.value) * width }],
   }));
 
+  const y = 10;
+
   return (
     <Container style={[animatedStyle, style]}>
       {!!answerChoices?.length && (
