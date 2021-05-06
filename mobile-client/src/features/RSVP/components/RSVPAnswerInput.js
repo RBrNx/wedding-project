@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import StandardRadioInput from 'library/components/StandardRadioInput';
 import StandardTextInput from 'library/components/StandardTextInput';
+import SpotifySearchInput from './SpotifySearchInput';
 
 const { width } = Dimensions.get('window');
 
@@ -41,6 +42,9 @@ const RSVPAnswerInput = ({
           flat
           multiline
         />
+      )}
+      {questionType === 'SONG_REQUEST' && (
+        <SpotifySearchInput setSelectedSong={value => setRSVPAnswer(questionId, value)} selectedSong={answerValue} />
       )}
     </Container>
   );
