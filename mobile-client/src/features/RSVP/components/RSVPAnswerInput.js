@@ -41,6 +41,8 @@ const RSVPAnswerInput = ({
           onChangeText={value => setRSVPAnswer(questionId, value)}
           flat
           multiline
+          maxLength={300}
+          showCharacterCount
         />
       )}
       {questionType === 'SONG_REQUEST' && (

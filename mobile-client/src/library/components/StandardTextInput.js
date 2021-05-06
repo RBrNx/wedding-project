@@ -23,6 +23,7 @@ const StandardTextInput = ({
   style,
   inputStyle,
   flat,
+  showCharacterCount,
 }) => {
   const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
@@ -55,28 +56,35 @@ const StandardTextInput = ({
   }));
 
   return (
-    <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
-      <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
-      <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
-        {label}
-      </RegularLabel>
-      <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
-        {placeholder}
-      </PlaceholderLabel>
-      <StyledTextInput
-        ref={textInput}
-        value={value}
-        style={inputStyle}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        maxLength={maxLength}
-        multiline={multiline}
-        textAlignVertical={multiline ? 'top' : 'center'}
-      />
-    </ContainerComponent>
+    <>
+      <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
+        <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
+        <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
+          {label}
+        </RegularLabel>
+        <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
+          {placeholder}
+        </PlaceholderLabel>
+        <StyledTextInput
+          ref={textInput}
+          value={value}
+          style={inputStyle}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          maxLength={maxLength}
+          multiline={multiline}
+          textAlignVertical={multiline ? 'top' : 'center'}
+        />
+      </ContainerComponent>
+      {showCharacterCount && (
+        <CharacterCount>
+          {value.length}/{maxLength}
+        </CharacterCount>
+      )}
+    </>
   );
 };
 
@@ -136,6 +144,13 @@ const StyledTextInput = styled.TextInput`
   })};
   min-height: ${props => (props.multiline ? 150 : 0)}px;
   margin-top: ${props => (props.multiline ? 5 : 0)}px;
+`;
+
+const CharacterCount = styled.Text`
+  color: ${Theme.detailTextColour};
+  align-self: flex-end;
+  margin-right: 5px;
+  margin-top: 5px;
 `;
 
 export default StandardTextInput;
