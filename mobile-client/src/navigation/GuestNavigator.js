@@ -7,7 +7,6 @@ import RSVPSuccessScreen from 'features/RSVP/RSVPSuccessScreen';
 import NavigationPresets from 'library/utils/NavigationPresets';
 import SettingsScreen from 'features/Settings/SettingsScreen';
 import WorkInProgressScreen from 'features/WorkInProgress/WorkInProgressScreen';
-import { useAuth } from 'context';
 import DashboardScreen from 'features/Dashboard/DashboardScreen';
 
 const Stack = createStackNavigator();
