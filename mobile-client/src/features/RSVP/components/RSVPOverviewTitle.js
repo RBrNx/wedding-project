@@ -18,6 +18,7 @@ const RSVPOverviewTitle = ({ index, animIndex }) => {
 
   return (
     <HeaderContainer style={animatedStepStyle}>
+      <HeaderTitle>Overview</HeaderTitle>
       <HeaderText>Please review your answers</HeaderText>
     </HeaderContainer>
   );
@@ -31,6 +32,12 @@ const HeaderContainer = styled(Animated.View)`
   padding-right: 15%;
   padding-bottom: 30px;
   justify-content: flex-end;
+`;
+
+const HeaderTitle = styled.Text`
+  ${Typography.h1};
+  ${Typography.regularFont};
+  color: ${Colours.secondary};
 `;
 
 const HeaderText = styled(Animated.Text)`
