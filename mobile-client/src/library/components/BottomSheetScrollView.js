@@ -29,6 +29,7 @@ const BottomSheetScrollView = ({
   collapsedPosition = HEADER_MAX_HEIGHT,
   unlockFullScroll = false,
   enableRefreshControl = false,
+  keyboardShouldPersistTaps,
 }) => {
   const scrollY = useSharedValue(0);
   const scrollView = useAnimatedRef();
@@ -110,6 +111,7 @@ const BottomSheetScrollView = ({
           onMomentumScrollEnd={hideScrollbar}
           overScrollMode='never'
           bounces={false}
+          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           onContentSizeChange={(contentWidth, contentHeight) => {
             setTotalScrollbarHeight(contentHeight);
           }}

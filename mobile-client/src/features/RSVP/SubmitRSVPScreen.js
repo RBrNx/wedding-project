@@ -219,7 +219,11 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
   return (
     <>
       <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
-      <BottomSheetScrollView collapsedPosition={SHEET_COLLAPSED_POS} unlockFullScroll={!isLoading}>
+      <BottomSheetScrollView
+        collapsedPosition={SHEET_COLLAPSED_POS}
+        unlockFullScroll={!isLoading}
+        keyboardShouldPersistTaps='handled'
+      >
         {isLoading && <StyledLoadingIndictor size={100} />}
         {!isLoading && (
           <ContentContainer>
