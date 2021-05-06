@@ -16,8 +16,6 @@ const SpotifySearchInput = ({ setSelectedSong, selectedSong }) => {
   const [searchTracks, { loading, data }] = useLazyQuery(SEARCH_TRACKS);
   const { items: tracks } = data?.searchTracks || {};
 
-  const x = 2;
-
   useEffect(
     () => {
       const performSearch = async () => {
