@@ -10,7 +10,16 @@ const updateSpotifyConfig = async (res, db, eventId) => {
   const expiresAt = new Date();
   expiresAt.setSeconds(expiresAt.getSeconds() + expiresIn);
 
-  await EventModel.updateOne({ _id: eventId }, { spotifyConfig: { accessToken, refreshToken, scope, expiresAt } });
+  const eventDoc = await EventModel.findById(eventId);
+
+  eventDoc.spotifyConfig.set({
+    ...eventDoc.spotifyConfig,
+    accessToken,
+    scope,
+    expiresAt,
+    refreshToken: refreshToken || eventDoc.spotifyConfig.refreshToken,
+  });
+  await eventDoc.save();
 
   return { accessToken, refreshToken, expiresAt };
 };
