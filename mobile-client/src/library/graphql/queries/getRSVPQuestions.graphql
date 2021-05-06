@@ -19,12 +19,15 @@ query GET_RSVP_QUESTIONS {
         _id
         type
         title
+        label
+        placeholder
         choices {
           _id
           label
           value
         }
         responseType
+        isFollowUp
         order
       }
     }
