@@ -47,7 +47,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
 const Container = styled(Animated.View)`
   flex: 1;
   padding-horizontal: 5%;
-  padding-top: 60px;
+  padding-top: 15px;
 `;
 
 const Card = styled.View`

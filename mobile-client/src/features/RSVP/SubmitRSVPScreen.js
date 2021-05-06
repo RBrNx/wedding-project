@@ -254,10 +254,7 @@ const StyledBackButton = styled(BackButton).attrs({
   backImageStyle: {
     tintColor: Colours.secondary,
   },
-})`
-  position: absolute;
-  z-index: 1;
-`;
+})``;
 
 const StyledBackButtonImage = styled(BackButtonImage)`
   transform: rotate(180deg);

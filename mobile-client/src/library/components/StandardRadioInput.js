@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
-import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import { darken, lighten } from 'library/utils/colours';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
@@ -27,7 +27,6 @@ const StandardRadioInput = ({ options, selectedValue, setSelectedValue }) => {
 
 const ChoiceContainer = styled.View`
   flex: 1;
-  ${Layout.flexCenter};
   width: 100%;
 `;
 

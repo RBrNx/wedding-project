@@ -50,8 +50,7 @@ const Container = styled(Animated.View)`
   position: absolute;
   width: 100%;
   padding-horizontal: 5%;
-  justify-content: center;
-  top: -15px;
+  padding-top: 15px;
 `;
 
 export default RSVPAnswerInput;
