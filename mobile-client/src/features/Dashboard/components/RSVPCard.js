@@ -11,14 +11,17 @@ const RSVPCard = ({ hasSubmittedRSVP, onPress }) => {
   const title = hasSubmittedRSVP ? `Great, you've RSVP'd!` : 'First things first,';
   const subtitle = hasSubmittedRSVP
     ? `you can still view or edit your response`
-    : `let's send your RSVP to the happy couple!`;
+    : `please RSVP to the happy couple by `;
 
   return (
     <CardContainer>
       <CardInner onPress={onPress}>
         <CardTitle>{title}</CardTitle>
         <Spacer size={5} />
-        <CardSubTitle>{subtitle}</CardSubTitle>
+        <CardSubTitle>
+          {subtitle}
+          {!hasSubmittedRSVP && <DateText>1st September 2021</DateText>}
+        </CardSubTitle>
         <StyledRSVPIllustration size={250} />
         <Spacer flex />
         <LinkText>Take me there →</LinkText>
@@ -71,6 +74,12 @@ const StyledRSVPIllustration = styled(RSVPIllustration)`
 `;
 
 const LinkText = styled.Text`
+  ${Typography.h4};
+  color: ${Colours.neutral.white};
+  text-decoration-line: underline;
+`;
+
+const DateText = styled.Text`
   ${Typography.h4};
   color: ${Colours.neutral.white};
   text-decoration-line: underline;
