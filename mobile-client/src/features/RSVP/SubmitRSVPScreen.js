@@ -42,7 +42,12 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
 
   const sheetMinHeight = height - SHEET_COLLAPSED_POS - HANDLE_HEIGHT;
   const currAnswer = rsvpForm[currQuestion?._id];
-  const { prevQuestion, nextQuestion } = calculateQuestions({ questions, questionHistory, currQuestion, currAnswer });
+  const { prevQuestion, nextQuestion } = calculateQuestions({
+    questions,
+    questionHistory,
+    currQuestion,
+    answers: rsvpForm,
+  });
 
   useEffect(() => {
     const fetchDataOnMount = async () => {

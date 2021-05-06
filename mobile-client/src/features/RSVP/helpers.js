@@ -6,26 +6,29 @@ const filterQuestions = (questions, { filter, sort = (a, b) => b.order - a.order
   return filteredQuestions;
 };
 
-const calculateQuestions = ({ questions, questionHistory, currQuestion, currAnswer }) => {
+const calculateQuestions = ({ questions, questionHistory, currQuestion, answers }) => {
+  const currAnswer = answers?.[currQuestion?._id];
   const prevQuestion = questionHistory[questionHistory.length - 1];
   let nextQuestion = null;
   const { followUpQuestions } = currQuestion || {};
 
   if (!questions || !currQuestion) return { prevQuestion, nextQuestion: null };
 
-  // Check to see if our next question is a follow up
+  // Check to see if our next question is a follow up to our current question
   if (followUpQuestions?.length) {
     [nextQuestion] = filterQuestions(followUpQuestions, {
       filter: ({ matchesValue }) => matchesValue === currAnswer,
       map: ({ question }) => question,
     });
   } else if (currQuestion.isFollowUp) {
+    // If the current question is a follow up, check for question siblings
     const parentQuestion = questions.find(question =>
-      question.followUpQuestions.some(({ _id }) => _id === currQuestion._id),
+      question.followUpQuestions.some(({ question: followUpQuestion }) => followUpQuestion._id === currQuestion._id),
     );
+    const parentAnswer = answers[parentQuestion._id];
 
     [nextQuestion] = filterQuestions(parentQuestion.followUpQuestions, {
-      filter: ({ question }) => question.order > currQuestion.order,
+      filter: ({ question, matchesValue }) => matchesValue === parentAnswer && question.order > currQuestion.order,
       map: ({ question }) => question,
     });
   }
