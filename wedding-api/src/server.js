@@ -76,6 +76,8 @@ exports.authenticatedGQLHandler = (event, context, callback) => {
   return handler(event, context, callback);
 };
 
+const abc = 'boooo';
+
 exports.unauthenticatedGQLHandler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
