@@ -62,6 +62,8 @@ const unauthenticatedServer = new ApolloServer({
   },
 });
 
+const z = 10;
+
 exports.authenticatedGQLHandler = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
