@@ -18,8 +18,6 @@ const screenOptions = {
 
 const Tab = createBottomTabNavigator();
 
-const z = 'hello';
-
 const GuestHomeNavigator = () => {
   return (
     <Tab.Navigator tabBarOptions={NavigationPresets.DefaultTabBar}>
