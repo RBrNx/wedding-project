@@ -34,6 +34,8 @@ const App = () => {
     setStatusBarStyle('light');
   }, []);
 
+  const y = 2;
+
   return (
     <AppearanceProvider>
       <ApolloProvider client={client}>
