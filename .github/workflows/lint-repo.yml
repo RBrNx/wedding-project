@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
-        run: yarn
+        run: yarn && cd mobile-client && yarn
       - name: Generate Linting Reports
         run: yarn lint:reports
         continue-on-error: true
