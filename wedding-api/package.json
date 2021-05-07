@@ -9,6 +9,7 @@
     "deploy": "sls deploy -v",
     "test": "jest",
     "lint": "eslint \"{src,tests}/**/*.js\"",
+    "lint:report": "eslint --output-file eslint_report.json --format json src",
     "generate-data": "node -r esm ./src/lib/createSeedData.js"
   },
   "author": "",
