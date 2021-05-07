@@ -50,6 +50,9 @@ provider:
     MONGODB_URI: ${env:MONGODB_URI}
     COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID, self:custom.cognito.userPoolId}
     COGNITO_APP_CLIENT_ID: ${env:COGNITO_APP_CLIENT_ID, self:custom.cognito.appClientId}
+    SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
+    SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
+    EVENT_ID: ${env:EVENT_ID}
 
 functions:
   unauthenticated:
