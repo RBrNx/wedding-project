@@ -1,4 +1,4 @@
-name: Lint API on PR
+name: Lint Repository on PR
 on:
   pull_request:
     branches:
@@ -6,24 +6,25 @@ on:
       - staging
       - production
     paths:
+      - 'mobile-client/**'
       - 'wedding-api/**'
-defaults:
-  run:
-    working-directory: ./wedding-api
+
 jobs:
   lint:
-    name: Lint API
+    name: Lint Repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
         run: yarn
-      - name: Save Code Linting Report JSON
-        run: yarn lint:report
+      - name: Generate Linting Reports
+        run: yarn lint:reports
         continue-on-error: true
+      - name: Combine reports
+        run: jq -s 'map(.[])' mobile-client/eslint_report.json wedding-api/eslint_report.json > eslint_report.json
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@1.2.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          report-json: 'wedding-api/eslint_report.json'
+          report-json: 'eslint_report.json'
           only-pr-files: false
