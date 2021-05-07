@@ -84,6 +84,25 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  spotifyCallback:
+    handler: src/handlers/spotify.authCallback
+    environment:
+      SLS_DEBUG: true
+      SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
+      EVENT_ID: ${env:EVENT_ID}
+    events:
+      - http:
+          path: spotifyCallback
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+      - http:
+          path: spotifyCallback
+          method: get
+          cors: true
+          authorizer: aws_iam
 
 resources:
   # Cognito

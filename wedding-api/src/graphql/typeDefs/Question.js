@@ -5,6 +5,7 @@ const schema = gql`
     ATTENDANCE
     MULTIPLE_CHOICE
     TEXT
+    SONG_REQUEST
   }
 
   enum ResponseType {
@@ -20,7 +21,7 @@ const schema = gql`
 
   type FollowUp {
     question: Question!
-    matchesChoice: ID!
+    matchesValue: String!
   }
 
   type Question {
@@ -51,7 +52,7 @@ const schema = gql`
 
   input FollowUpInput {
     question: ID!
-    matchesChoice: ID!
+    matchesValue: String!
   }
 
   input CreateQuestionInput {

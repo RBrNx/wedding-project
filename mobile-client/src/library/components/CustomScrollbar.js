@@ -27,7 +27,7 @@ const ScrollbarHandle = styled(Animated.View)`
   width: 2px;
   border-radius: 8px;
   background-color: ${theme('theme', {
-    light: Colours.neutral.grey3,
+    light: Colours.neutral.grey2,
     dark: Colours.neutral.grey4,
   })};
   margin-top: ${SCROLLBAR_SPACING}px;

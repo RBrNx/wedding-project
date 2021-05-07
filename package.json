@@ -11,7 +11,8 @@
     "start:web-client": "yarn workspace web-client start",
     "start:mobile-client": "cd mobile-client && yarn start",
     "build:mobile-client": "cd mobile-client && build",
-    "deploy:wedding-api": "yarn workspace wedding-api deploy"
+    "deploy:wedding-api": "yarn workspace wedding-api deploy",
+    "lint:reports": "cd mobile-client && yarn lint:report; cd ../wedding-api && yarn lint:report"
   },
   "workspaces": [
     "web-client",

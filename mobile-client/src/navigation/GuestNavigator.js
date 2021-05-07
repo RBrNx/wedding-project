@@ -7,7 +7,7 @@ import RSVPSuccessScreen from 'features/RSVP/RSVPSuccessScreen';
 import NavigationPresets from 'library/utils/NavigationPresets';
 import SettingsScreen from 'features/Settings/SettingsScreen';
 import WorkInProgressScreen from 'features/WorkInProgress/WorkInProgressScreen';
-import { useAuth } from 'context';
+import DashboardScreen from 'features/Dashboard/DashboardScreen';
 
 const Stack = createStackNavigator();
 
@@ -22,8 +22,8 @@ const GuestHomeNavigator = () => {
   return (
     <Tab.Navigator tabBarOptions={NavigationPresets.DefaultTabBar}>
       <Tab.Screen
-        name='Home'
-        component={WorkInProgressScreen}
+        name='Dashboard'
+        component={DashboardScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Feather name='home' color={color} size={size} />,
         }}
@@ -56,13 +56,8 @@ const GuestHomeNavigator = () => {
 };
 
 const GuestNavigator = () => {
-  const { currentUser } = useAuth();
-
   return (
-    <Stack.Navigator
-      screenOptions={screenOptions}
-      initialRouteName={currentUser?.rsvpForm ? 'GuestHome' : 'SubmitRSVP'}
-    >
+    <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name='GuestHome' component={GuestHomeNavigator} />
       <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
       <Stack.Screen name='RSVPSuccess' component={RSVPSuccessScreen} />

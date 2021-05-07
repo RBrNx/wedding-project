@@ -8,6 +8,7 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import StandardPressable from 'library/components/StandardPressable';
 import { darken } from 'library/utils/colours';
+import { getAnswer } from '../helpers';
 
 const { width } = Dimensions.get('window');
 
@@ -19,9 +20,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
   return (
     <Container style={[animatedStyle, style]}>
       {questions.map((question, questionIndex) => {
-        const isMultipleChoice = question?.choices?.length;
-        const formValue = formValues[question._id];
-        const answer = isMultipleChoice ? question.choices.find(choice => choice._id === formValue)?.label : formValue;
+        const { label } = getAnswer(question, formValues);
 
         return (
           <Card key={question._id}>
@@ -30,7 +29,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
             <TextContainer>
               <QuestionTitle>{question.title}</QuestionTitle>
               <Spacer size={10} />
-              <AnswerText>{answer}</AnswerText>
+              <AnswerText>{label}</AnswerText>
             </TextContainer>
             <EditButton size={40} onPress={() => onEditPress(question, questionIndex)}>
               <StyledIcon name='edit' size={20} />
@@ -45,7 +44,7 @@ const RSVPOverview = ({ questions, formValues, onEditPress, index, animIndex, st
 const Container = styled(Animated.View)`
   flex: 1;
   padding-horizontal: 5%;
-  padding-top: 60px;
+  padding-top: 15px;
 `;
 
 const Card = styled.View`
@@ -60,7 +59,7 @@ const Card = styled.View`
 `;
 
 const QuestionNumber = styled.Text`
-  color: ${Colours.neutral.grey3};
+  color: ${Colours.neutral.grey2};
   align-self: flex-start;
   ${Typography.body}
 `;
@@ -80,7 +79,7 @@ const AnswerText = styled.Text`
 `;
 
 const editButtonTheme = theme('theme', {
-  light: Colours.neutral.grey3,
+  light: Colours.neutral.grey2,
   dark: Colours.neutral.grey4,
 });
 const EditButton = styled(StandardPressable).attrs(props => ({
@@ -96,7 +95,7 @@ const EditButton = styled(StandardPressable).attrs(props => ({
 const StyledIcon = styled(AntDesign).attrs(props => ({
   color: theme('theme', {
     light: Colours.neutral.grey4,
-    dark: Colours.neutral.grey2,
+    dark: Colours.neutral.grey3,
   })(props),
 }))`
   align-self: center;

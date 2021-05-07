@@ -4,9 +4,9 @@ import { darken } from 'library/utils/colours';
 import { Colours, Outlines, Typography } from 'library/styles';
 import StandardPressable from './StandardPressable';
 
-const StandardButton = ({ onPress, raised, text, loading, icon }) => {
+const StandardButton = ({ onPress, raised, text, loading, icon, style }) => {
   return (
-    <StyledPressable raised={raised} onPress={onPress}>
+    <StyledPressable raised={raised} onPress={onPress} style={style}>
       {!loading && (
         <>
           <InvisibleIcon>{icon && icon()}</InvisibleIcon>

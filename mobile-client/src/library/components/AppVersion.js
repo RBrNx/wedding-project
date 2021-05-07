@@ -13,7 +13,7 @@ const AppVersion = ({ style }) => {
 };
 
 const VersionText = styled.Text`
-  color: ${Colours.neutral.grey3};
+  color: ${Colours.neutral.grey2};
   margin-vertical: 5px;
 `;
 
