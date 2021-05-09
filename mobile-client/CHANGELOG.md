@@ -1,3 +1,10 @@
+## [0.7.2](https://github.com/RBrNx/wedding-project/compare/v0.7.1...v0.7.2) (2021-05-09)
+
+
+### Bug Fixes
+
+* set bootstrapComplete if user isn't logged in at all ([72a56b9](https://github.com/RBrNx/wedding-project/commit/72a56b954db91d7ee9357b6e1118881e171f2e70))
+
 ## [0.7.1](https://github.com/RBrNx/wedding-project/compare/v0.7.0...v0.7.1) (2021-05-09)
 
 
