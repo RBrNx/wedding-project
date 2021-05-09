@@ -77,7 +77,16 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
       const existingRSVPForm = existingRSVPAnswers.reduce((accumulator, rsvpTuple) => {
         const { question, answer } = rsvpTuple;
 
-        accumulator[question._id] = answer.value;
+        if (question.type === 'SONG_REQUEST') {
+          const [songName, artistList] = answer.label.split('-');
+
+          accumulator[question._id] = {
+            id: answer.value.split(':')[2],
+            name: songName.trim(),
+            uri: answer.value,
+            artists: artistList.split(', '),
+          };
+        } else accumulator[question._id] = answer.value;
         return accumulator;
       }, {});
       setRSVPForm(existingRSVPForm);
