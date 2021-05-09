@@ -85,7 +85,7 @@ const StandardTextInput = ({
       </ContainerComponent>
       {showCharacterCount && (
         <CharacterCount>
-          {value?.length}/{maxLength}
+          {value?.length || 0}/{maxLength}
         </CharacterCount>
       )}
     </>
