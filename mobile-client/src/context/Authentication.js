@@ -69,6 +69,7 @@ const useProviderAuth = () => {
         setUser(cognitoUser);
       } catch (err) {
         console.log(err);
+        setBootstrapComplete(true);
       }
     };
 
