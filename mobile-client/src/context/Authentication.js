@@ -16,7 +16,8 @@ const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
-  const { data: queryData } = useQuery(GET_CURRENT_USER_QUERY);
+  const [attemptedSignIn, setAttemptedSignIn] = useState(false);
+  const { data: queryData } = useQuery(GET_CURRENT_USER_QUERY, { skip: !attemptedSignIn });
   const currentUser = queryData?.getCurrentUser;
   const isAuthenticated = !!user && !!currentUser;
 
@@ -26,6 +27,7 @@ const useProviderAuth = () => {
     const lowercaseEmail = emailAddress.toLowerCase();
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
 
+    setAttemptedSignIn(true);
     setUser(cognitoUser);
 
     return cognitoUser;
@@ -67,6 +69,7 @@ const useProviderAuth = () => {
         const cognitoUser = await Auth.currentAuthenticatedUser();
 
         setUser(cognitoUser);
+        setAttemptedSignIn(true);
       } catch (err) {
         console.log(err);
         setBootstrapComplete(true);
