@@ -11,7 +11,7 @@ import SpotifyResults from './SpotifyResults';
 import SpotifyLogo from './SpotifyLogo';
 
 const SpotifySearchInput = ({ setSelectedSong, selectedSong }) => {
-  const [searchTerm, setSearchTerm] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(selectedSong?.name || null);
   const debouncedSearchTerm = useDebounceValue(searchTerm, 1000);
   const [searchTracks, { loading, data }] = useLazyQuery(SEARCH_TRACKS);
   const { items: tracks } = data?.searchTracks || {};

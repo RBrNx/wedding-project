@@ -75,8 +75,10 @@ class SpotifyAPI extends RESTDataSource {
   }
 
   async removeTrackFromPlaylist({ playlistId, trackUri }) {
-    const res = await this.delete(`playlists/${playlistId}/tracks`, {
-      tracks: [{ uri: trackUri }],
+    const res = await this.delete(`playlists/${playlistId}/tracks`, null, {
+      body: {
+        tracks: [{ uri: trackUri }],
+      },
     });
 
     return res;

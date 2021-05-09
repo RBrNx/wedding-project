@@ -75,7 +75,7 @@ const getAnswer = (question, rsvpForm) => {
     answer.label = formValue;
     answer.value = formValue;
   } else if (type === 'SONG_REQUEST') {
-    answer.label = formValue.name;
+    answer.label = `${formValue.name} - ${formValue.artists.join(', ')}`;
     answer.value = formValue.uri;
   }
 
