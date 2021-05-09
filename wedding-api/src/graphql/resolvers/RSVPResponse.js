@@ -24,20 +24,21 @@ const submitRSVPForm = async (parent, args, { currentUser, db, dataSources }) =>
     const { spotifyConfig } = await EventModel.findById(eventId);
 
     if (songRequestQuestion) {
-      if (existingRSVP) {
-        const existingTrackUri = existingRSVP.rsvpForm.find(
-          ({ question }) => question === songRequestQuestion._id.toString(),
-        )?.answer;
+      const existingTrackUri = existingRSVP?.rsvpForm.find(({ question }) => question.type === 'SONG_REQUEST')?.answer;
+
+      if (existingRSVP && existingTrackUri) {
         await dataSources.spotifyAPI.removeTrackFromPlaylist({
           playlistId: spotifyConfig.playlistId,
           trackUri: existingTrackUri.value,
         });
       }
 
-      await dataSources.spotifyAPI.addTrackToPlaylist({
-        playlistId: spotifyConfig.playlistId,
-        trackUri: songRequestAnswer.value,
-      });
+      if (songRequestAnswer) {
+        await dataSources.spotifyAPI.addTrackToPlaylist({
+          playlistId: spotifyConfig.playlistId,
+          trackUri: songRequestAnswer.value,
+        });
+      }
     }
 
     return {
