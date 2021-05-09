@@ -1,3 +1,14 @@
+## [0.7.1](https://github.com/RBrNx/wedding-project/compare/v0.7.0...v0.7.1) (2021-05-09)
+
+
+### Bug Fixes
+
+* add artist name to song request answer ([4fe4bef](https://github.com/RBrNx/wedding-project/commit/4fe4befcbb620889f1a6b57cd592520779ef146c))
+* add extra checks around handling of spotify tracks and fixed issues with removeTrackFromPlaylist sending parameters as a query string ([938e16c](https://github.com/RBrNx/wedding-project/commit/938e16c821d698e95160a4ecbe6a3df84ea13882))
+* add missing environment variables ([934526f](https://github.com/RBrNx/wedding-project/commit/934526ff35149e8dba1b0276f4ef65982ce20fed))
+* default char count value to 0 if value is null ([b71a33a](https://github.com/RBrNx/wedding-project/commit/b71a33abdec1c8270dfabb21fe6f44ef11857d12))
+* improve handling of existing RSVP form so SpotifySearchInput is pre-populated ([b237533](https://github.com/RBrNx/wedding-project/commit/b23753311c2190f557af9c0ba07de6f7bebc77b6))
+
 # [0.7.0](https://github.com/RBrNx/wedding-project/compare/v0.6.2...v0.7.0) (2021-05-07)
 
 
