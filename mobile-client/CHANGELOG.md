@@ -1,3 +1,10 @@
+## [0.7.3](https://github.com/RBrNx/wedding-project/compare/v0.7.2...v0.7.3) (2021-05-09)
+
+
+### Bug Fixes
+
+* skip initial getCurrentUser call as cognito credentials seem to be getting cached somehow which is causing "authenticated" to still be false when the Auth component re-renders ([1400b96](https://github.com/RBrNx/wedding-project/commit/1400b96dfbe02bc5296ad31e645c594fd66daf7a))
+
 ## [0.7.2](https://github.com/RBrNx/wedding-project/compare/v0.7.1...v0.7.2) (2021-05-09)
 
 
