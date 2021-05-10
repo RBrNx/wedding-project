@@ -4,12 +4,14 @@ module.exports = {
     'semantic-release-expo',
     '@semantic-release/changelog',
     '@semantic-release/git',
+    '@semantic-release/npm',
     '@semantic-release/github',
   ],
   generateNotes: ['@semantic-release/release-notes-generator'],
   prepare: [
     'semantic-release-expo',
     '@semantic-release/changelog',
+    '@semantic-release/npm',
     {
       path: '@semantic-release/git',
       assets: ['CHANGELOG.md', 'package.json', 'yarn.lock', 'app.json'],

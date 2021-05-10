@@ -9,7 +9,7 @@ const isProduction = ENV === 'production';
 
 const AppVersion = ({ style }) => {
   const versionString = isProduction ? `${Constants.nativeAppVersion} (${Constants.nativeBuildVersion})` : version;
-  return <VersionText style={style}>{`v${versionString}`}</VersionText>;
+  return <VersionText style={style}>{`v${versionString} (Revision: ${Constants.manifest.revisionId})`}</VersionText>;
 };
 
 const VersionText = styled.Text`
