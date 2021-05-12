@@ -7,13 +7,14 @@ import ImageLoader from './ImageLoader';
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
 
-const GalleryItem = ({ image, onPressIn, onPressOut, onLongPress }) => {
+const GalleryItem = ({ image, onPressIn, onPressOut, onLongPress, onPress }) => {
   return (
     <Container>
       <Pressable
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         onLongPress={onLongPress}
+        onPress={onPress}
         delayLongPress={300}
         pressRetentionOffset={Number.MAX_VALUE}
       >

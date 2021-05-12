@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import GET_MEMORIES from 'library/graphql/queries/getMemories.graphql';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
 import ImageModal from './ImageModal';
 import GalleryItem from './GalleryItem';
 
@@ -11,6 +12,7 @@ const NUM_COLUMNS = 3;
 const loadingData = new Array(30).fill(null).map((_, index) => ({ id: index, isLoading: true }));
 
 const Gallery = () => {
+  const { navigate } = useNavigation();
   const modalVisibility = useSharedValue(0);
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -37,6 +39,7 @@ const Gallery = () => {
           setScrollEnabled(true);
           modalVisibility.value = withSpring(0);
         }}
+        onPress={() => navigate('ViewMemory', { image })}
       />
     );
   };
