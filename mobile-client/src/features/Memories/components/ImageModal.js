@@ -34,14 +34,7 @@ const ImageModal = ({ image, modalVisibility }) => {
           <Spacer size={10} />
           <UserName>Conor Watson</UserName>
         </Header>
-        {image && (
-          <StyledImage
-            cacheKey={`${image?.id}`}
-            source={{ uri: image?.downloadUrl }}
-            aspectRatio={aspectRatio}
-            resizeMode='contain'
-          />
-        )}
+        {image && <StyledImage source={{ uri: image?.downloadUrl }} aspectRatio={aspectRatio} resizeMode='contain' />}
       </Modal>
     </ModalContainer>
   );
