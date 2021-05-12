@@ -9,6 +9,7 @@ import SettingsScreen from 'features/Settings/SettingsScreen';
 import WorkInProgressScreen from 'features/WorkInProgress/WorkInProgressScreen';
 import DashboardScreen from 'features/Dashboard/DashboardScreen';
 import MemoriesScreen from 'features/Memories/MemoriesScreen';
+import ViewMemoryScreen from 'features/Memories/ViewMemoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -62,6 +63,11 @@ const GuestNavigator = () => {
       <Stack.Screen name='GuestHome' component={GuestHomeNavigator} />
       <Stack.Screen name='SubmitRSVP' component={SubmitRSVPScreen} />
       <Stack.Screen name='RSVPSuccess' component={RSVPSuccessScreen} />
+      <Stack.Screen
+        name='ViewMemory'
+        component={ViewMemoryScreen}
+        options={{ ...NavigationPresets.OnlyBackButton, ...NavigationPresets.TransparentHeader }}
+      />
     </Stack.Navigator>
   );
 };
