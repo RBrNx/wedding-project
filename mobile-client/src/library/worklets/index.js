@@ -1,3 +1,4 @@
 import withVelocity from './withVelocity';
+import clamp from './clamp';
 
-export { withVelocity };
+export { withVelocity, clamp };
