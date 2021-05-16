@@ -1,3 +1,4 @@
+import useVector from 'library/hooks/useVector';
 import { clamp } from 'library/worklets';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, Keyboard, Platform } from 'react-native';
@@ -93,10 +94,8 @@ const useImageGalleryGestures = ({ visible, images }) => {
   /**
    * Shared values for movement
    */
-  const offsetX = useSharedValue(0);
-  const offsetY = useSharedValue(0);
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
+  const offset = useVector(0, 0);
+  const translate = useVector(0, 0);
   const offsetScale = useSharedValue(1);
   const scale = useSharedValue(1);
   const translationX = useSharedValue(0);
@@ -104,18 +103,11 @@ const useImageGalleryGestures = ({ visible, images }) => {
   /**
    * Shared values for touch tracking
    */
-  const originX = useSharedValue(0);
-  const originY = useSharedValue(0);
-  const focalX = useSharedValue(0);
-  const focalY = useSharedValue(0);
-  const oldFocalX = useSharedValue(0);
-  const oldFocalY = useSharedValue(0);
-  const focalOffsetX = useSharedValue(0);
-  const focalOffsetY = useSharedValue(0);
-  const adjustedFocalX = useSharedValue(0);
-  const adjustedFocalY = useSharedValue(0);
-  const tapX = useSharedValue(0);
-  const tapY = useSharedValue(0);
+  const origin = useVector(0, 0);
+  const oldFocal = useVector(0, 0);
+  const focalOffset = useVector(0, 0);
+  const adjustedFocal = useVector(0, 0);
+  const tap = useVector(0, 0);
 
   /**
    * Shared values for gesture tracking
@@ -131,14 +123,9 @@ const useImageGalleryGestures = ({ visible, images }) => {
   const resetTouchValues = () => {
     'worklet';
 
-    focalX.value = 0;
-    focalY.value = 0;
-    oldFocalX.value = 0;
-    oldFocalY.value = 0;
-    originX.value = 0;
-    originY.value = 0;
-    focalOffsetX.value = 0;
-    focalOffsetY.value = 0;
+    origin.set({ x: 0, y: 0 });
+    oldFocal.set({ x: 0, y: 0 });
+    focalOffset.set({ x: 0, y: 0 });
     numberOfPinchFingers.value = 0;
     isPinch.value = false;
     isSwiping.value = IsSwiping.UNDETERMINED;
@@ -150,8 +137,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
   const resetMovementValues = () => {
     'worklet';
 
-    translateX.value = 0;
-    translateY.value = 0;
+    translate.set({ x: 0, y: 0 });
     scale.value = 1;
     offsetScale.value = 1;
   };
@@ -165,12 +151,9 @@ const useImageGalleryGestures = ({ visible, images }) => {
     resetTouchValues();
     resetMovementValues();
     headerFooterVisible.value = 1;
-    offsetX.value = 0;
-    offsetY.value = 0;
-    adjustedFocalX.value = 0;
-    adjustedFocalY.value = 0;
-    tapX.value = 0;
-    tapY.value = 0;
+    offset.set({ x: 0, y: 0 });
+    adjustedFocal.set({ x: 0, y: 0 });
+    tap.set({ x: 0, y: 0 });
   };
 
   useEffect(() => {
@@ -222,10 +205,8 @@ const useImageGalleryGestures = ({ visible, images }) => {
           if (isAndroid && hasPinched.value === HasPinched.TRUE) {
             hasPinched.value = HasPinched.FALSE;
             isSwiping.value = IsSwiping.FALSE;
-            offsetX.value = translateX.value + evt.translationX;
-            offsetY.value = translateY.value - evt.translationY;
+            offset.set({ x: translate.x.value + evt.translationX, y: translate.y.value - evt.translationY });
           }
-
           /**
            * isSwiping is used to prevent Y movement if a clear swipe to next
            * or previous is begun when at the edge of a photo. The value is
@@ -236,8 +217,8 @@ const useImageGalleryGestures = ({ visible, images }) => {
             const maxXYRatio = isAndroid ? 1 : 0.25;
             if (
               Math.abs(evt.translationX / evt.translationY) > maxXYRatio &&
-              (Math.abs(-halfScreenWidth * (scale.value - 1) - offsetX.value) < 3 ||
-                Math.abs(halfScreenWidth * (scale.value - 1) - offsetX.value) < 3)
+              (Math.abs(-halfScreenWidth * (scale.value - 1) - offset.x.value) < 3 ||
+                Math.abs(halfScreenWidth * (scale.value - 1) - offset.x.value) < 3)
             ) {
               isSwiping.value = IsSwiping.TRUE;
             }
@@ -245,12 +226,10 @@ const useImageGalleryGestures = ({ visible, images }) => {
               isSwiping.value = IsSwiping.FALSE;
             }
           }
-
           /**
            * localEvtScale is used for swipe away
            */
           const localEvtScale = scale.value / offsetScale.value;
-
           /**
            * If not swiping, translate the image in X and Y to the event
            * translation plus offset. If swiping only translate X, if
@@ -260,29 +239,27 @@ const useImageGalleryGestures = ({ visible, images }) => {
            */
           const scaleDifference = scale.value !== offsetScale.value ? localEvtScale : 1;
           if (isSwiping.value !== IsSwiping.TRUE) {
-            translateY.value = offsetY.value * scaleDifference + evt.translationY;
+            translate.y.value = offset.y.value * scaleDifference + evt.translationY;
           }
-          translateX.value = offsetX.value * scaleDifference - evt.translationX;
+          translate.x.value = offset.x.value * scaleDifference - evt.translationX;
 
           /**
            * If swiping down start scaling down the image for swipe
            * away effect
            */
-          if (currentImageHeight * offsetScale.value < screenHeight && translateY.value > 0) {
-            scale.value = offsetScale.value * (1 - (1 / 3) * (translateY.value / screenHeight));
+          if (currentImageHeight * offsetScale.value < screenHeight && translate.y.value > 0) {
+            scale.value = offsetScale.value * (1 - (1 / 3) * (translate.y.value / screenHeight));
           } else if (
             currentImageHeight * offsetScale.value > screenHeight &&
-            translateY.value > (currentImageHeight / 2) * offsetScale.value - halfScreenHeight
+            translate.y.value > (currentImageHeight / 2) * offsetScale.value - halfScreenHeight
           ) {
             scale.value =
               offsetScale.value *
               (1 -
                 (1 / 3) *
-                  ((translateY.value - ((currentImageHeight / 2) * offsetScale.value - halfScreenHeight)) /
+                  ((translate.y.value - ((currentImageHeight / 2) * offsetScale.value - halfScreenHeight)) /
                     screenHeight));
           }
-
-          // overlayOpacity.value = localEvtScale;
         }
       },
       onFinish: evt => {
@@ -294,7 +271,6 @@ const useImageGalleryGestures = ({ visible, images }) => {
            */
           const finalXPosition = evt.translationX - evt.velocityX * 0.3;
           const finalYPosition = evt.translationY + evt.velocityY * 0.1;
-
           /**
            * If there is a next photo, the image is lined up to the right
            * edge, the swipe is to the left, and the final position is more
@@ -302,8 +278,8 @@ const useImageGalleryGestures = ({ visible, images }) => {
            */
           if (
             index.value < imageLength - 1 &&
-            Math.abs(halfScreenWidth * (scale.value - 1) + offsetX.value) < 3 &&
-            translateX.value < 0 &&
+            Math.abs(halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+            translate.x.value < 0 &&
             finalXPosition < -halfScreenWidth &&
             isSwiping.value === IsSwiping.TRUE
           ) {
@@ -320,7 +296,6 @@ const useImageGalleryGestures = ({ visible, images }) => {
                 runOnJS(setSelectedIndex)(index.value);
               },
             );
-
             /**
              * If there is a previous photo, the image is lined up to the left
              * edge, the swipe is to the right, and the final position is more
@@ -328,8 +303,8 @@ const useImageGalleryGestures = ({ visible, images }) => {
              */
           } else if (
             index.value > 0 &&
-            Math.abs(-halfScreenWidth * (scale.value - 1) + offsetX.value) < 3 &&
-            translateX.value > 0 &&
+            Math.abs(-halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+            translate.x.value > 0 &&
             finalXPosition > halfScreenWidth &&
             isSwiping.value === IsSwiping.TRUE
           ) {
@@ -347,7 +322,6 @@ const useImageGalleryGestures = ({ visible, images }) => {
               },
             );
           }
-
           /**
            * When the pan is finished if the scale is less than 1 return the
            * photo to center, if the photo is inside the edges of the screen
@@ -358,23 +332,22 @@ const useImageGalleryGestures = ({ visible, images }) => {
           const rightEdge = halfScreenWidth * (scale.value - 1);
           const leftEdge = -halfScreenWidth * (scale.value - 1);
           if (scale.value < 1) {
-            translateX.value = withTiming(0);
-          } else if (translateX.value > rightEdge) {
-            translateX.value = withTiming(rightEdge, {
+            translate.x.value = withTiming(0);
+          } else if (translate.x.value > rightEdge) {
+            translate.x.value = withTiming(rightEdge, {
               duration: 200,
             });
-          } else if (translateX.value < leftEdge) {
-            translateX.value = withTiming(leftEdge, {
+          } else if (translate.x.value < leftEdge) {
+            translate.x.value = withTiming(leftEdge, {
               duration: 200,
             });
           } else {
-            translateX.value = withDecay({
+            translate.x.value = withDecay({
               clamp: [leftEdge, rightEdge],
               deceleration: 0.99,
               velocity: -evt.velocityX,
             });
           }
-
           /**
            * When the pan is finished if the height is less than the screen
            * height return the photo to center, if the photo is inside the
@@ -385,27 +358,24 @@ const useImageGalleryGestures = ({ visible, images }) => {
           const topEdge = (-currentImageHeight / 2) * scale.value + halfScreenHeight;
           const bottomEdge = (currentImageHeight / 2) * scale.value - halfScreenHeight;
           if (currentImageHeight * scale.value < screenHeight) {
-            translateY.value = withTiming(0);
-          } else if (translateY.value > bottomEdge) {
-            translateY.value = withTiming(bottomEdge);
-          } else if (translateY.value < topEdge) {
-            translateY.value = withTiming(topEdge);
+            translate.y.value = withTiming(0);
+          } else if (translate.y.value > bottomEdge) {
+            translate.y.value = withTiming(bottomEdge);
+          } else if (translate.y.value < topEdge) {
+            translate.y.value = withTiming(topEdge);
           } else {
-            translateY.value = withDecay({
+            translate.y.value = withDecay({
               clamp: [topEdge, bottomEdge],
               deceleration: 0.99,
               velocity: evt.velocityY,
             });
           }
-
           resetTouchValues();
-
           /**
            * If the scale has been reduced below one, i.e. zoomed out, translate
            * the zoom back to one
            */
           scale.value = scale.value !== offsetScale.value ? withTiming(offsetScale.value) : offsetScale.value;
-
           /**
            * If the photo is centered or at the top of the screen if scaled larger
            * than the screen, and not paging left or right, and the final Y position
@@ -414,22 +384,22 @@ const useImageGalleryGestures = ({ visible, images }) => {
            */
           if (
             finalYPosition > halfScreenHeight &&
-            offsetY.value + 8 >= (currentImageHeight / 2) * scale.value - halfScreenHeight &&
+            offset.y.value + 8 >= (currentImageHeight / 2) * scale.value - halfScreenHeight &&
             isSwiping.value !== IsSwiping.TRUE &&
-            translateY.value !== 0 &&
+            translate.y.value !== 0 &&
             !(
-              Math.abs(halfScreenWidth * (scale.value - 1) + offsetX.value) < 3 &&
-              translateX.value < 0 &&
+              Math.abs(halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+              translate.x.value < 0 &&
               finalXPosition < -halfScreenWidth
             ) &&
             !(
-              Math.abs(-halfScreenWidth * (scale.value - 1) + offsetX.value) < 3 &&
-              translateX.value > 0 &&
+              Math.abs(-halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+              translate.x.value > 0 &&
               finalXPosition > halfScreenWidth
             )
           ) {
-            cancelAnimation(translateX);
-            cancelAnimation(translateY);
+            cancelAnimation(translate.x);
+            cancelAnimation(translate.y);
             cancelAnimation(scale);
             // overlayOpacity.value = withTiming(
             //   0,
@@ -447,7 +417,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
               duration: 200,
               easing: Easing.out(Easing.ease),
             });
-            translateY.value =
+            translate.y.value =
               evt.velocityY > 1000
                 ? withDecay({
                     velocity: evt.velocityY,
@@ -456,7 +426,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
                     duration: 200,
                     easing: Easing.out(Easing.ease),
                   });
-            translateX.value = withDecay({
+            translate.x.value = withDecay({
               velocity: -evt.velocityX,
             });
           }
@@ -469,13 +439,11 @@ const useImageGalleryGestures = ({ visible, images }) => {
            * Cancel any previous motion animation on translations when a touch
            * begins to interrupt the animation and take over the position handling
            */
-          cancelAnimation(translateX);
-          cancelAnimation(translateY);
+          cancelAnimation(translate.x);
+          cancelAnimation(translate.y);
           cancelAnimation(scale);
-          offsetX.value = translateX.value;
-          offsetY.value = translateY.value;
+          offset.set(translate);
         }
-
         /**
          * Reset hasPinched for Android single finger offset
          */
@@ -504,39 +472,34 @@ const useImageGalleryGestures = ({ visible, images }) => {
            * state adjusts the offset
            */
           hasPinched.value = HasPinched.TRUE;
-
           /**
            * Cancel any previous motion animation on translations when a touch
            * begins to interrupt the animation and take over the position handling
            */
-          cancelAnimation(translateX);
-          cancelAnimation(translateY);
+          cancelAnimation(translate.x);
+          cancelAnimation(translate.y);
           cancelAnimation(scale);
-
           /**
            * Reset isSwiping as now the pan gesture handler is no longer running
            */
           isSwiping.value = IsSwiping.UNDETERMINED;
-
           /**
            * Set initial values for pinch gesture interaction handler
            */
           numberOfPinchFingers.value = evt.numberOfPointers;
-          offsetX.value = translateX.value;
-          offsetY.value = translateY.value;
-          adjustedFocalX.value = evt.focalX - (halfScreenWidth - offsetX.value);
-          adjustedFocalY.value = evt.focalY - (halfScreenHeight + offsetY.value);
-          originX.value = adjustedFocalX.value;
-          originY.value = adjustedFocalY.value;
+          offset.set(translate);
+          adjustedFocal.set({
+            x: evt.focalX - (halfScreenWidth - offset.x.value),
+            y: evt.focalY - (halfScreenHeight + offset.y.value),
+          });
+          origin.set(adjustedFocal);
           offsetScale.value = scale.value;
         }
-
         /**
          * Set pinch to true to stop all pan gesture interactions, we do this
          * again here for Android outside the check that creates type
          */
         isPinch.value = true;
-
         /**
          * The scale is clamped to a minimum of MIN_SCALE and maximum of MAX_SCALE for aesthetics.
          * We use the clamped value to determine a local event scale so the focal
@@ -546,7 +509,6 @@ const useImageGalleryGestures = ({ visible, images }) => {
          */
         scale.value = clamp(offsetScale.value * evt.scale, MIN_SCALE, MAX_SCALE);
         const localEvtScale = scale.value / offsetScale.value;
-
         /**
          * When we hit the top or bottom of the scale clamping we run a haptic
          * trigger, we track if it has been run to not spam the trigger
@@ -561,14 +523,14 @@ const useImageGalleryGestures = ({ visible, images }) => {
           hasHitBottomScale.value = 1;
           // runOnJS(triggerHaptic)('impactLight');
         }
-
         /**
          * We calculate the adjusted focal point on the photo using the events
          * focal position on the screen, screen size, and current photo offset
          */
-        adjustedFocalX.value = evt.focalX - (halfScreenWidth - offsetX.value);
-        adjustedFocalY.value = evt.focalY - (halfScreenHeight + offsetY.value);
-
+        adjustedFocal.set({
+          x: evt.focalX - (halfScreenWidth - offset.x.value),
+          y: evt.focalY - (halfScreenHeight + offset.y.value),
+        });
         /**
          * If the number of fingers on the screen changes, the position of the
          * focal point will change and this needs to be accounted for, e.g. if
@@ -583,14 +545,17 @@ const useImageGalleryGestures = ({ visible, images }) => {
         if (numberOfPinchFingers.value !== evt.numberOfPointers) {
           numberOfPinchFingers.value = evt.numberOfPointers;
           if (evt.numberOfPointers === 1) {
-            focalOffsetX.value = oldFocalX.value - adjustedFocalX.value;
-            focalOffsetY.value = oldFocalY.value - adjustedFocalY.value;
+            focalOffset.set({
+              x: oldFocal.x.value - adjustedFocal.x.value,
+              y: oldFocal.y.value - adjustedFocal.y.value,
+            });
           } else if (numberOfPinchFingers.value > 1) {
-            originX.value -= oldFocalX.value / localEvtScale - adjustedFocalX.value / localEvtScale;
-            originY.value -= oldFocalY.value / localEvtScale - adjustedFocalY.value / localEvtScale;
+            origin.subtract({
+              x: oldFocal.x.value / localEvtScale - adjustedFocal.x.value / localEvtScale,
+              y: oldFocal.y.value / localEvtScale - adjustedFocal.y.value / localEvtScale,
+            });
           }
         }
-
         /**
          * If pinch handler has been activated via two fingers then the fingers
          * reduced to one we keep track of the old focal using the focal offset
@@ -598,21 +563,25 @@ const useImageGalleryGestures = ({ visible, images }) => {
          * taking into account the offset, focal, focal offset, origin, and scale.
          */
         if (numberOfPinchFingers.value === 1) {
-          oldFocalX.value = adjustedFocalX.value + focalOffsetX.value;
-          oldFocalY.value = adjustedFocalY.value + focalOffsetY.value;
-          translateX.value = offsetX.value - oldFocalX.value + localEvtScale * originX.value;
-          translateY.value = offsetY.value + oldFocalY.value - localEvtScale * originY.value;
-
+          oldFocal.set({
+            x: adjustedFocal.x.value + focalOffset.x.value,
+            y: adjustedFocal.y.value + focalOffset.y.value,
+          });
+          translate.set({
+            x: offset.x.value - oldFocal.x.value + localEvtScale * origin.x.value,
+            y: offset.y.value + oldFocal.y.value - localEvtScale * origin.y.value,
+          });
           /**
            * If the number of fingers in the gesture is greater than one the
            * adjusted focal point is saved as the old focal and the photo is
            * translated taking into account the offset, focal, origin, and scale.
            */
         } else if (numberOfPinchFingers.value > 1) {
-          oldFocalX.value = adjustedFocalX.value;
-          oldFocalY.value = adjustedFocalY.value;
-          translateX.value = offsetX.value - adjustedFocalX.value + localEvtScale * originX.value;
-          translateY.value = offsetY.value + adjustedFocalY.value - localEvtScale * originY.value;
+          oldFocal.set(adjustedFocal);
+          translate.set({
+            x: offset.x.value - adjustedFocal.x.value + localEvtScale * origin.x.value,
+            y: offset.y.value + adjustedFocal.y.value - localEvtScale * origin.y.value,
+          });
         }
       },
       onFinish: () => {
@@ -623,17 +592,15 @@ const useImageGalleryGestures = ({ visible, images }) => {
            * return the photo to line up with the edges, otherwise leave the
            * photo in its current position
            */
-
           const rightEdge = halfScreenWidth * (scale.value - 1);
           const leftEdge = -halfScreenWidth * (scale.value - 1);
           if (scale.value < 1) {
-            translateX.value = withTiming(0);
-          } else if (translateX.value > rightEdge) {
-            translateX.value = withTiming(rightEdge);
-          } else if (translateX.value < leftEdge) {
-            translateX.value = withTiming(leftEdge);
+            translate.x.value = withTiming(0);
+          } else if (translate.x.value > rightEdge) {
+            translate.x.value = withTiming(rightEdge);
+          } else if (translate.x.value < leftEdge) {
+            translate.x.value = withTiming(leftEdge);
           }
-
           /**
            * When the pinch is finished if the height is less than the screen
            * height return the photo to center, if the photo is inside the
@@ -643,13 +610,12 @@ const useImageGalleryGestures = ({ visible, images }) => {
           const topEdge = (currentImageHeight / 2) * scale.value - screenHeight / 2;
           const bottomEdge = (-currentImageHeight / 2) * scale.value + screenHeight / 2;
           if (currentImageHeight * scale.value < screenHeight) {
-            translateY.value = withTiming(0);
-          } else if (translateY.value > topEdge) {
-            translateY.value = withTiming(topEdge);
-          } else if (translateY.value < bottomEdge) {
-            translateY.value = withTiming(bottomEdge);
+            translate.y.value = withTiming(0);
+          } else if (translate.y.value > topEdge) {
+            translate.y.value = withTiming(topEdge);
+          } else if (translate.y.value < bottomEdge) {
+            translate.y.value = withTiming(bottomEdge);
           }
-
           /**
            * If the scale has been reduced below one, i.e. zoomed out, translate
            * the zoom back to one
@@ -670,33 +636,29 @@ const useImageGalleryGestures = ({ visible, images }) => {
            * Cancel any previous motion animation on translations when a touch
            * begins to interrupt the animation and take over the position handling
            */
-          cancelAnimation(translateX);
-          cancelAnimation(translateY);
+          cancelAnimation(translate.x);
+          cancelAnimation(translate.y);
           cancelAnimation(scale);
-
           /**
            * Set pinch to true to stop all pan gesture interactions
            */
           isPinch.value = true;
-
           /**
            * Reset isSwiping as now the pan gesture handler is no longer running
            */
           isSwiping.value = IsSwiping.UNDETERMINED;
-
           /**
            * Set initial values for pinch gesture interaction handler
            */
           numberOfPinchFingers.value = evt.numberOfPointers;
-          offsetX.value = translateX.value;
-          offsetY.value = translateY.value;
-          adjustedFocalX.value = evt.focalX - (halfScreenWidth - offsetX.value);
-          adjustedFocalY.value = evt.focalY - (halfScreenHeight + offsetY.value);
-          originX.value = adjustedFocalX.value;
-          originY.value = adjustedFocalY.value;
+          offset.set(translate);
+          adjustedFocal.set({
+            x: evt.focalX - (halfScreenWidth - offset.x.value),
+            y: evt.focalY - (halfScreenHeight + offset.y.value),
+          });
+          origin.set(adjustedFocal);
           offsetScale.value = scale.value;
         }
-
         /**
          * Reset hasPinched for Android single finger offset
          */
@@ -721,14 +683,14 @@ const useImageGalleryGestures = ({ visible, images }) => {
    */
   const onDoubleTap = useAnimatedGestureHandler({
     onActive: evt => {
-      if (Math.abs(tapX.value - evt.absoluteX) < 64 && Math.abs(tapY.value - evt.absoluteY) < 64) {
-        if (offsetScale.value === 1 && offsetX.value === 0 && offsetY.value === 0) {
+      if (Math.abs(tap.x.value - evt.absoluteX) < 64 && Math.abs(tap.y.value - evt.absoluteY) < 64) {
+        if (offsetScale.value === 1 && offset.x.value === 0 && offset.y.value === 0) {
           offsetScale.value = 2;
           scale.value = withTiming(2, {
             duration: 200,
             easing: Easing.out(Easing.ease),
           });
-          translateX.value = withTiming(evt.absoluteX - halfScreenWidth, {
+          translate.x.value = withTiming(evt.absoluteX - halfScreenWidth, {
             duration: 200,
             easing: Easing.out(Easing.ease),
           });
@@ -737,7 +699,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
               evt.absoluteY > halfScreenHeight
                 ? -(currentImageHeight * 2 - screenHeight) / 2
                 : (currentImageHeight * 2 - screenHeight) / 2;
-            translateY.value = withTiming(translateYTopBottom, {
+            translate.y.value = withTiming(translateYTopBottom, {
               duration: 200,
               easing: Easing.out(Easing.ease),
             });
@@ -748,13 +710,12 @@ const useImageGalleryGestures = ({ visible, images }) => {
             duration: 200,
             easing: Easing.out(Easing.ease),
           });
-          offsetX.value = 0;
-          offsetY.value = 0;
-          translateX.value = withTiming(0, {
+          offset.set({ x: 0, y: 0 });
+          translate.x.value = withTiming(0, {
             duration: 200,
             easing: Easing.out(Easing.ease),
           });
-          translateY.value = withTiming(0, {
+          translate.y.value = withTiming(0, {
             duration: 200,
             easing: Easing.out(Easing.ease),
           });
@@ -766,8 +727,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
       }
     },
     onStart: evt => {
-      tapX.value = evt.absoluteX;
-      tapY.value = evt.absoluteY;
+      tap.set({ x: evt.absoluteX, y: evt.absoluteY });
     },
   });
 
@@ -776,14 +736,16 @@ const useImageGalleryGestures = ({ visible, images }) => {
    * image is swiped downward
    */
   const headerFooterOpacity = useDerivedValue(() => {
-    if (currentImageHeight * scale.value < screenHeight && translateY.value > 0) {
-      return 1 - translateY.value / quarterScreenHeight;
+    if (currentImageHeight * scale.value < screenHeight && translate.y.value > 0) {
+      return 1 - translate.y.value / quarterScreenHeight;
     }
     if (
       currentImageHeight * scale.value > screenHeight &&
-      translateY.value > (currentImageHeight / 2) * scale.value - halfScreenHeight
+      translate.y.value > (currentImageHeight / 2) * scale.value - halfScreenHeight
     ) {
-      return 1 - (translateY.value - ((currentImageHeight / 2) * scale.value - halfScreenHeight)) / quarterScreenHeight;
+      return (
+        1 - (translate.y.value - ((currentImageHeight / 2) * scale.value - halfScreenHeight)) / quarterScreenHeight
+      );
     }
 
     return 1;
@@ -843,8 +805,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
     showGalleryStyle,
     containerBackgroundStyle,
     wizardStyle,
-    translateX,
-    translateY,
+    translate,
     translationX,
     scale,
     offsetScale,

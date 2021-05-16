@@ -22,8 +22,7 @@ const ImageGallery = ({ visible = true, images }) => {
     showGalleryStyle,
     containerBackgroundStyle,
     wizardStyle,
-    translateX,
-    translateY,
+    translate,
     scale,
     offsetScale,
     selectedIndex,
@@ -70,8 +69,7 @@ const ImageGallery = ({ visible = true, images }) => {
                             offsetScale={offsetScale}
                             isPrevious={selectedIndex > i}
                             isSelected={selectedIndex === i}
-                            translateX={translateX}
-                            translateY={translateY}
+                            translate={translate}
                             shouldRender={Math.abs(selectedIndex - i) < 4}
                           />
                         ))}

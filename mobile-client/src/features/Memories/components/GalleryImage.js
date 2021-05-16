@@ -7,7 +7,7 @@ const halfScreenWidth = screenWidth / 2;
 const oneEight = 1 / 8;
 
 const GalleryImage = React.memo(
-  ({ index, offsetScale, image, isPrevious, scale, isSelected, shouldRender, translateX, translateY, style }) => {
+  ({ index, offsetScale, image, isPrevious, scale, isSelected, shouldRender, translate, style }) => {
     /**
      * The current image, designated by selected is scaled and translated
      * based on the gestures. The rendered images before and after the
@@ -20,16 +20,16 @@ const GalleryImage = React.memo(
       const xScaleOffset = -7 * screenWidth * (0.5 + index);
       const yScaleOffset = -screenHeight * 3.5;
       const _translateX = (() => {
-        if (isSelected) return translateX.value + xScaleOffset;
+        if (isSelected) return translate.x.value + xScaleOffset;
         if (scale.value < 1 || scale.value !== offsetScale.value) return xScaleOffset;
-        if (isPrevious) return translateX.value - halfScreenWidth * (scale.value - 1) + xScaleOffset;
-        return translateX.value + halfScreenWidth * (scale.value - 1) + xScaleOffset;
+        if (isPrevious) return translate.x.value - halfScreenWidth * (scale.value - 1) + xScaleOffset;
+        return translate.x.value + halfScreenWidth * (scale.value - 1) + xScaleOffset;
       })();
 
       return {
         transform: [
           { translateX: _translateX },
-          { translateY: isSelected ? translateY.value + yScaleOffset : yScaleOffset },
+          { translateY: isSelected ? translate.y.value + yScaleOffset : yScaleOffset },
           { scale: isSelected ? scale.value / 8 : oneEight },
           { scaleX: -1 },
         ],
@@ -60,7 +60,7 @@ const GalleryImage = React.memo(
               { scaleX: -1 },
               { translateY: -screenHeight * 3.5 },
               {
-                translateX: -translateX.value + 7 * screenWidth * (0.5 + index),
+                translateX: -translate.x.value + 7 * screenWidth * (0.5 + index),
               },
               { scale: oneEight },
             ],
