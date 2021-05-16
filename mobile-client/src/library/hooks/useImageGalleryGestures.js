@@ -792,7 +792,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
   /**
    * This transition and scaleX reverse lets use scroll left
    */
-  const pagerStyle = useAnimatedStyle(
+  const wizardStyle = useAnimatedStyle(
     () => ({
       transform: [
         { scaleX: -1 },
@@ -816,10 +816,10 @@ const useImageGalleryGestures = ({ visible, images }) => {
   );
 
   /**
-   * Show screen style as component is always rendered we hide it
+   * Show gallery style as component is always rendered we hide it
    * down and up and set opacity to 0 for good measure
    */
-  const showScreenStyle = useAnimatedStyle(
+  const showGalleryStyle = useAnimatedStyle(
     () => ({
       opacity: interpolate(showScreen.value, [0, 0.01, 1], [0, 1, 1]),
       transform: [
@@ -840,9 +840,9 @@ const useImageGalleryGestures = ({ visible, images }) => {
     onPinch,
     onSingleTap,
     onDoubleTap,
-    showScreenStyle,
+    showGalleryStyle,
     containerBackgroundStyle,
-    pagerStyle,
+    wizardStyle,
     translateX,
     translateY,
     translationX,
