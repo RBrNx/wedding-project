@@ -1,13 +1,13 @@
 import React from 'react';
-import { Dimensions, Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import { PanGestureHandler, PinchGestureHandler, TapGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import useImageGalleryGestures from 'library/hooks/useImageGalleryGestures';
+import styled from 'styled-components';
+import { Layout } from 'library/styles';
 import GalleryImage from './GalleryImage';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const isAndroid = Platform.OS === 'android';
-const MARGIN = 32;
 
 const ImageGallery = ({ visible = true, images }) => {
   const {
@@ -19,10 +19,9 @@ const ImageGallery = ({ visible = true, images }) => {
     onPinch,
     onSingleTap,
     onDoubleTap,
-    showScreenStyle,
+    showGalleryStyle,
     containerBackgroundStyle,
-    pagerStyle,
-    translationX,
+    wizardStyle,
     translateX,
     translateY,
     scale,
@@ -31,8 +30,8 @@ const ImageGallery = ({ visible = true, images }) => {
   } = useImageGalleryGestures({ visible, images });
 
   return (
-    <Animated.View pointerEvents={visible ? 'auto' : 'none'} style={[StyleSheet.absoluteFillObject, showScreenStyle]}>
-      <Animated.View style={[StyleSheet.absoluteFillObject, containerBackgroundStyle]} />
+    <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
+      <GalleryBackground style={containerBackgroundStyle} />
       <TapGestureHandler
         minPointers={1}
         numberOfTaps={1}
@@ -40,7 +39,7 @@ const ImageGallery = ({ visible = true, images }) => {
         ref={singleTapRef}
         waitFor={[panRef, pinchRef, doubleTapRef]}
       >
-        <Animated.View style={StyleSheet.absoluteFillObject}>
+        <GestureHandlerView>
           <TapGestureHandler
             maxDeltaX={8}
             maxDeltaY={8}
@@ -50,9 +49,9 @@ const ImageGallery = ({ visible = true, images }) => {
             onGestureEvent={onDoubleTap}
             ref={doubleTapRef}
           >
-            <Animated.View style={StyleSheet.absoluteFillObject}>
+            <GestureHandlerView>
               <PinchGestureHandler onGestureEvent={onPinch} ref={pinchRef} simultaneousHandlers={[panRef]}>
-                <Animated.View style={StyleSheet.absoluteFill}>
+                <GestureHandlerView>
                   <PanGestureHandler
                     maxPointers={isAndroid ? undefined : 1}
                     minDist={10}
@@ -60,58 +59,50 @@ const ImageGallery = ({ visible = true, images }) => {
                     ref={panRef}
                     simultaneousHandlers={[pinchRef]}
                   >
-                    <Animated.View style={StyleSheet.absoluteFill}>
-                      <Animated.View
-                        style={[
-                          styles.animatedContainer,
-                          pagerStyle,
-                          {
-                            transform: [
-                              { scaleX: -1 }, // Also only here for opening, wrong direction when not included
-                              {
-                                translateX: translationX.value, // Only here for opening, wrong index when this is not included
-                              },
-                            ],
-                          },
-                        ]}
-                      >
+                    <GestureHandlerView>
+                      <GalleryWizard style={wizardStyle}>
                         {images.map((image, i) => (
                           <GalleryImage
                             key={`${image.id}`}
                             index={i}
-                            offsetScale={offsetScale}
                             image={image}
-                            isPrevious={selectedIndex > i}
                             scale={scale}
+                            offsetScale={offsetScale}
+                            isPrevious={selectedIndex > i}
                             isSelected={selectedIndex === i}
-                            shouldRender={Math.abs(selectedIndex - i) < 4}
-                            style={{
-                              height: screenHeight * 8,
-                              marginRight: MARGIN,
-                              width: screenWidth * 8,
-                            }}
                             translateX={translateX}
                             translateY={translateY}
+                            shouldRender={Math.abs(selectedIndex - i) < 4}
                           />
                         ))}
-                      </Animated.View>
-                    </Animated.View>
+                      </GalleryWizard>
+                    </GestureHandlerView>
                   </PanGestureHandler>
-                </Animated.View>
+                </GestureHandlerView>
               </PinchGestureHandler>
-            </Animated.View>
+            </GestureHandlerView>
           </TapGestureHandler>
-        </Animated.View>
+        </GestureHandlerView>
       </TapGestureHandler>
-    </Animated.View>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  animatedContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-});
+const Container = styled(Animated.View)`
+  ${Layout.absoluteFill};
+`;
+
+const GalleryBackground = styled(Animated.View)`
+  ${Layout.absoluteFill};
+`;
+
+const GestureHandlerView = styled(Animated.View)`
+  ${Layout.absoluteFill};
+`;
+
+const GalleryWizard = styled(Animated.View)`
+  flex-direction: row;
+  align-items: center;
+`;
 
 export default ImageGallery;

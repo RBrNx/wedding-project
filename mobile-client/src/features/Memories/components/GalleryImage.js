@@ -53,6 +53,9 @@ const GalleryImage = React.memo(
           style,
           animatedGalleryImageStyle,
           {
+            // Not yet sure why these are needed
+            height: screenHeight * 8,
+            width: screenWidth * 8,
             transform: [
               { scaleX: -1 },
               { translateY: -screenHeight * 3.5 },
