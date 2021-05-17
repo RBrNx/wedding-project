@@ -8,15 +8,15 @@ const useVector = (x1 = 0, y1) => {
   const set = ({ x: _x, y: _y }) => {
     'worklet';
 
-    if (_x) x.value = _x?.value ?? _x;
-    if (_y) y.value = _y?.value ?? _y;
+    if (_x != null) x.value = _x?.value ?? _x;
+    if (_y != null) y.value = _y?.value ?? _y;
   };
 
   const subtract = ({ x: _x, y: _y }) => {
     'worklet';
 
-    if (_x) x.value -= _x?.value ?? _x;
-    if (_y) y.value -= _y?.value ?? _y;
+    if (_x != null) x.value -= _x?.value ?? _x;
+    if (_y != null) y.value -= _y?.value ?? _y;
   };
 
   return { x, y, set, subtract };
