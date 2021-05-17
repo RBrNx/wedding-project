@@ -4,15 +4,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import GET_MEMORIES from 'library/graphql/queries/getMemories.graphql';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
-import { useNavigation } from '@react-navigation/native';
 import ImageModal from './ImageModal';
 import GalleryItem from './GalleryItem';
 
 const NUM_COLUMNS = 3;
 const loadingData = new Array(30).fill(null).map((_, index) => ({ id: index, isLoading: true }));
 
-const Gallery = () => {
-  const { navigate } = useNavigation();
+const GalleryGrid = ({ setSelectedImage }) => {
   const modalVisibility = useSharedValue(0);
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -28,7 +26,6 @@ const Gallery = () => {
         isLoading={isLoading}
         image={image}
         modalVisibility={modalVisibility}
-        setPressedImage={setPressedImage}
         onPressIn={() => setPressedImage(image)}
         onLongPress={() => {
           setScrollEnabled(false);
@@ -39,7 +36,7 @@ const Gallery = () => {
           setScrollEnabled(true);
           modalVisibility.value = withSpring(0);
         }}
-        onPress={() => navigate('ViewMemory', { image })}
+        onPress={() => setSelectedImage(image)}
       />
     );
   };
@@ -52,7 +49,7 @@ const Gallery = () => {
         renderItem={renderGalleryItem}
         scrollEnabled={scrollEnabled}
         initialNumToRender={20}
-        ListHeaderComponent={<DashboardHeader title='Memories' style={{ paddingHorizontal: '5%', marginBottom: 15 }} />}
+        ListHeaderComponent={<DashboardHeader title='Memories' style={{ paddingHorizontal: '5%', marginBottom: 10 }} />}
       />
       <ImageModal modalVisibility={modalVisibility} image={pressedImage} />
     </>
@@ -63,4 +60,4 @@ const StyledFlatlist = styled.FlatList`
   flex: 1;
 `;
 
-export default Gallery;
+export default GalleryGrid;

@@ -9,7 +9,7 @@ import GalleryImage from './GalleryImage';
 
 const isAndroid = Platform.OS === 'android';
 
-const ImageGallery = ({ visible = true, images }) => {
+const ImageGallery = ({ visible, images, onDismiss }) => {
   const {
     panRef,
     pinchRef,
@@ -26,7 +26,7 @@ const ImageGallery = ({ visible = true, images }) => {
     scale,
     offsetScale,
     selectedIndex,
-  } = useImageGalleryGestures({ visible, images });
+  } = useImageGalleryGestures({ visible, images, onDismiss });
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>

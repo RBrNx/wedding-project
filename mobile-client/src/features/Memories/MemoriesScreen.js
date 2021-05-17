@@ -1,12 +1,17 @@
 import { Layout } from 'library/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/native';
-import Gallery from './components/Gallery';
+import GalleryGrid from './components/GalleryGrid';
+import ImageGallery from './components/ImageGallery';
 
 const MemoriesScreen = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const images = selectedImage ? [selectedImage] : [];
+
   return (
     <Container>
-      <Gallery />
+      <GalleryGrid setSelectedImage={image => setSelectedImage(image)} />
+      <ImageGallery visible={images.length} images={images} onDismiss={() => setSelectedImage(null)} />
     </Container>
   );
 };

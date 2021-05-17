@@ -35,7 +35,7 @@ const MARGIN = 32;
 const MIN_SCALE = 1;
 const MAX_SCALE = 8;
 
-const useImageGalleryGestures = ({ visible, images }) => {
+const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
   /**
    * Fade animation for screen, it is always rendered with pointerEvents
    * set to none for fast opening
@@ -56,7 +56,10 @@ const useImageGalleryGestures = ({ visible, images }) => {
   useEffect(() => {
     if (visible) {
       Keyboard.dismiss();
+    } else {
+      resetVisibleValues();
     }
+
     fadeScreen(visible);
   }, [visible]);
 
@@ -76,12 +79,6 @@ const useImageGalleryGestures = ({ visible, images }) => {
    * Header visible value for animating in out
    */
   const headerFooterVisible = useSharedValue(1);
-
-  /**
-   * Values to track scale for haptic feedback firing
-   */
-  const hasHitBottomScale = useSharedValue(1);
-  const hasHitTopScale = useSharedValue(0);
 
   /**
    * Gesture handler refs
@@ -155,12 +152,6 @@ const useImageGalleryGestures = ({ visible, images }) => {
     adjustedFocal.set({ x: 0, y: 0 });
     tap.set({ x: 0, y: 0 });
   };
-
-  useEffect(() => {
-    if (!visible) {
-      resetVisibleValues();
-    }
-  }, [visible]);
 
   /**
    * Photos length needs to be kept as a const here so if the length
@@ -401,22 +392,18 @@ const useImageGalleryGestures = ({ visible, images }) => {
             cancelAnimation(translate.x);
             cancelAnimation(translate.y);
             cancelAnimation(scale);
-            // overlayOpacity.value = withTiming(
-            //   0,
-            //   {
-            //     duration: 200,
-            //     easing: Easing.out(Easing.ease),
-            //   },
-            //   () => {
-            //     showScreen.value = 0;
-            //     runOnJS(setOverlay)('none');
-            //     runOnJS(setBlurType)(undefined);
-            //   },
-            // );
-            scale.value = withTiming(0.6, {
-              duration: 200,
-              easing: Easing.out(Easing.ease),
-            });
+
+            scale.value = withTiming(
+              0.6,
+              {
+                duration: 200,
+                easing: Easing.out(Easing.ease),
+              },
+              () => {
+                showScreen.value = 0;
+                runOnJS(onDismiss)();
+              },
+            );
             translate.y.value =
               evt.velocityY > 1000
                 ? withDecay({
@@ -509,20 +496,7 @@ const useImageGalleryGestures = ({ visible, images }) => {
          */
         scale.value = clamp(offsetScale.value * evt.scale, MIN_SCALE, MAX_SCALE);
         const localEvtScale = scale.value / offsetScale.value;
-        /**
-         * When we hit the top or bottom of the scale clamping we run a haptic
-         * trigger, we track if it has been run to not spam the trigger
-         */
-        if (scale.value !== MAX_SCALE && scale.value !== MIN_SCALE) {
-          hasHitTopScale.value = 0;
-          hasHitBottomScale.value = 0;
-        } else if (scale.value === MAX_SCALE && hasHitTopScale.value === 0) {
-          hasHitTopScale.value = 1;
-          // runOnJS(triggerHaptic)('impactLight');
-        } else if (scale.value === MIN_SCALE && hasHitBottomScale.value === 0) {
-          hasHitBottomScale.value = 1;
-          // runOnJS(triggerHaptic)('impactLight');
-        }
+
         /**
          * We calculate the adjusted focal point on the photo using the events
          * focal position on the screen, screen size, and current photo offset
