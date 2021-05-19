@@ -31,13 +31,12 @@ const isAndroid = Platform.OS === 'android';
 const halfScreenHeight = screenHeight / 2;
 const quarterScreenHeight = screenHeight / 4;
 const halfScreenWidth = screenWidth / 2;
-const MARGIN = 32;
 const MIN_SCALE = 1;
 const MAX_SCALE = 8;
 const STOP_BUFFER = 3; // Allows an excess buffer when checking that motion has stopped
 const SWIPE_SCALE_MODIFIER = 0.5;
 
-const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
+const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }) => {
   /**
    * Fade animation for screen, it is always rendered with pointerEvents
    * set to none for fast opening
@@ -278,7 +277,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
           ) {
             cancelAnimation(translationX);
             translationX.value = withTiming(
-              -(screenWidth + MARGIN) * (index.value + 1),
+              -(screenWidth + imageMargin) * (index.value + 1),
               {
                 duration: 200,
                 easing: Easing.out(Easing.ease),
@@ -303,7 +302,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
           ) {
             cancelAnimation(translationX);
             translationX.value = withTiming(
-              -(screenWidth + MARGIN) * (index.value - 1),
+              -(screenWidth + imageMargin) * (index.value - 1),
               {
                 duration: 200,
                 easing: Easing.out(Easing.ease),

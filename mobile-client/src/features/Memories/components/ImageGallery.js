@@ -8,6 +8,7 @@ import { Layout } from 'library/styles';
 import GalleryImage from './GalleryImage';
 
 const isAndroid = Platform.OS === 'android';
+const imageMargin = 16;
 
 const ImageGallery = ({ visible, images, onDismiss }) => {
   const {
@@ -26,7 +27,7 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
     scale,
     offsetScale,
     selectedIndex,
-  } = useImageGalleryGestures({ visible, images, onDismiss });
+  } = useImageGalleryGestures({ visible, images, onDismiss, imageMargin });
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
@@ -61,7 +62,7 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
                     <GestureHandlerView>
                       <GalleryWizard style={wizardStyle}>
                         {images.map((image, i) => (
-                          <GalleryImage
+                          <StyledGalleryImage
                             key={`${image.id}`}
                             index={i}
                             image={image}
@@ -101,6 +102,10 @@ const GestureHandlerView = styled(Animated.View)`
 const GalleryWizard = styled(Animated.View)`
   flex-direction: row;
   align-items: center;
+`;
+
+const StyledGalleryImage = styled(GalleryImage)`
+  margin-right: ${imageMargin}px;
 `;
 
 export default ImageGallery;
