@@ -1,10 +1,12 @@
 import React from 'react';
 import { Dimensions, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import styled from 'styled-components';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const halfScreenWidth = screenWidth / 2;
-const oneEight = 1 / 8;
+const IMAGE_SCALE_MODIFIER = 8;
+const IMAGE_SCALE = 1 / IMAGE_SCALE_MODIFIER;
 
 const GalleryImage = React.memo(
   ({ index, offsetScale, image, isPrevious, scale, isSelected, shouldRender, translate, style }) => {
@@ -30,7 +32,7 @@ const GalleryImage = React.memo(
         transform: [
           { translateX: _translateX },
           { translateY: isSelected ? translate.y.value + yScaleOffset : yScaleOffset },
-          { scale: isSelected ? scale.value / 8 : oneEight },
+          { scale: isSelected ? scale.value / IMAGE_SCALE_MODIFIER : IMAGE_SCALE },
         ],
       };
     }, [isPrevious, isSelected]);
@@ -41,23 +43,14 @@ const GalleryImage = React.memo(
      * load on memory.
      */
     if (!shouldRender) {
-      return <View style={[style, { transform: [{ scale: oneEight }] }]} />;
+      return <View style={[style, { transform: [{ scale: IMAGE_SCALE }] }]} />;
     }
 
     return (
-      <Animated.Image
+      <StyledImage
         resizeMode='contain'
         source={{ uri: image?.downloadUrl }}
-        style={[
-          style,
-          animatedGalleryImageStyle,
-          {
-            // Not yet sure why these are needed
-            height: screenHeight * 8,
-            width: screenWidth * 8,
-            marginRight: 32,
-          },
-        ]}
+        style={[style, animatedGalleryImageStyle]}
       />
     );
   },
@@ -74,5 +67,11 @@ const GalleryImage = React.memo(
     return false;
   },
 );
+
+const StyledImage = styled(Animated.Image)`
+  height: ${screenHeight * IMAGE_SCALE_MODIFIER}px;
+  width: ${screenWidth * IMAGE_SCALE_MODIFIER}px;
+  margin-right: 32px;
+`;
 
 export default GalleryImage;

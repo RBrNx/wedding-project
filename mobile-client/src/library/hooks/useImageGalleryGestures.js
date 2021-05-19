@@ -34,6 +34,8 @@ const halfScreenWidth = screenWidth / 2;
 const MARGIN = 32;
 const MIN_SCALE = 1;
 const MAX_SCALE = 8;
+const STOP_BUFFER = 3; // Allows an excess buffer when checking that motion has stopped
+const SWIPE_SCALE_MODIFIER = 0.5;
 
 const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
   /**
@@ -208,8 +210,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
             const maxXYRatio = isAndroid ? 1 : 0.25;
             if (
               Math.abs(evt.translationX / evt.translationY) > maxXYRatio &&
-              (Math.abs(-halfScreenWidth * (scale.value - 1) - offset.x.value) < 3 ||
-                Math.abs(halfScreenWidth * (scale.value - 1) - offset.x.value) < 3)
+              (Math.abs(-halfScreenWidth * (scale.value - 1) - offset.x.value) < STOP_BUFFER ||
+                Math.abs(halfScreenWidth * (scale.value - 1) - offset.x.value) < STOP_BUFFER)
             ) {
               isSwiping.value = IsSwiping.TRUE;
             }
@@ -239,7 +241,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
            * away effect
            */
           if (currentImageHeight * offsetScale.value < screenHeight && translate.y.value > 0) {
-            scale.value = offsetScale.value * (1 - (1 / 3) * (translate.y.value / screenHeight));
+            scale.value = offsetScale.value * (1 - SWIPE_SCALE_MODIFIER * (translate.y.value / screenHeight));
           } else if (
             currentImageHeight * offsetScale.value > screenHeight &&
             translate.y.value > (currentImageHeight / 2) * offsetScale.value - halfScreenHeight
@@ -247,7 +249,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
             scale.value =
               offsetScale.value *
               (1 -
-                (1 / 3) *
+                SWIPE_SCALE_MODIFIER *
                   ((translate.y.value - ((currentImageHeight / 2) * offsetScale.value - halfScreenHeight)) /
                     screenHeight));
           }
@@ -269,7 +271,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
            */
           if (
             index.value < imageLength - 1 &&
-            Math.abs(-halfScreenWidth * (scale.value - 1) - offset.x.value) < 3 &&
+            Math.abs(-halfScreenWidth * (scale.value - 1) - offset.x.value) < STOP_BUFFER &&
             translate.x.value < 0 &&
             finalXPosition < -halfScreenWidth &&
             isSwiping.value === IsSwiping.TRUE
@@ -294,7 +296,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
              */
           } else if (
             index.value > 0 &&
-            Math.abs(halfScreenWidth * (scale.value - 1) - offset.x.value) < 3 &&
+            Math.abs(halfScreenWidth * (scale.value - 1) - offset.x.value) < STOP_BUFFER &&
             translate.x.value > 0 &&
             finalXPosition > halfScreenWidth &&
             isSwiping.value === IsSwiping.TRUE
@@ -379,12 +381,12 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
             isSwiping.value !== IsSwiping.TRUE &&
             translate.y.value !== 0 &&
             !(
-              Math.abs(halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+              Math.abs(halfScreenWidth * (scale.value - 1) + offset.x.value) < STOP_BUFFER &&
               translate.x.value < 0 &&
               finalXPosition < -halfScreenWidth
             ) &&
             !(
-              Math.abs(-halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+              Math.abs(-halfScreenWidth * (scale.value - 1) + offset.x.value) < STOP_BUFFER &&
               translate.x.value > 0 &&
               finalXPosition > halfScreenWidth
             )
