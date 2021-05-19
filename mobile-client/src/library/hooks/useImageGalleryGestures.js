@@ -127,6 +127,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
     numberOfPinchFingers.value = 0;
     isPinch.value = false;
     isSwiping.value = IsSwiping.UNDETERMINED;
+    hasPinched.value = HasPinched.FALSE;
   };
 
   /**
@@ -148,6 +149,9 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
 
     resetTouchValues();
     resetMovementValues();
+    runOnJS(setSelectedIndex)(0);
+    translationX.value = 0;
+    index.value = 0;
     headerFooterVisible.value = 1;
     offset.set({ x: 0, y: 0 });
     adjustedFocal.set({ x: 0, y: 0 });
