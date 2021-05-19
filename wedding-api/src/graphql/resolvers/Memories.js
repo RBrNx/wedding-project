@@ -8,6 +8,16 @@ const getMemories = async (parent, { filter }, { dataSources }) => {
   }
 };
 
+const getMemoryAlbums = async (parent, { filter }, { dataSources }) => {
+  try {
+    const res = await dataSources.picsumAPI.listImagesAsAlbums(filter);
+
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   Memory: {
     __resolveType(obj) {
@@ -22,5 +32,6 @@ export default {
   },
   Query: {
     getMemories,
+    getMemoryAlbums,
   },
 };

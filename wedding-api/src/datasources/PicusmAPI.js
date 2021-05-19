@@ -19,6 +19,20 @@ class PicsumAPI extends RESTDataSource {
 
     return this.mapIncomingImageData(images);
   }
+
+  async listImagesAsAlbums({ page, limit }) {
+    const album = [];
+    const max = 5;
+    const min = 1;
+    const images = await this.get('list', { page, limit: limit * 2 });
+
+    while (images.length > 0) {
+      const size = Math.min(max, Math.floor(Math.random() * max + min));
+      album.push({ images: this.mapIncomingImageData(images.splice(0, size)) });
+    }
+
+    return album;
+  }
 }
 
 export default PicsumAPI;

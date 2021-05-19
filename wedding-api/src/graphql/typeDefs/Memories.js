@@ -14,6 +14,10 @@ const schema = gql`
     downloadUrl: URL!
   }
 
+  type Album {
+    images: [Memory]
+  }
+
   union Memory = ImageMemory | TextMemory
 
   input MemoryFilterInput {
@@ -23,6 +27,7 @@ const schema = gql`
 
   extend type Query {
     getMemories(filter: MemoryFilterInput!): [Memory]
+    getMemoryAlbums(filter: MemoryFilterInput!): [Album]
   }
 `;
 
