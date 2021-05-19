@@ -232,7 +232,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
           if (isSwiping.value !== IsSwiping.TRUE) {
             translate.y.value = offset.y.value * scaleDifference + evt.translationY;
           }
-          translate.x.value = offset.x.value * scaleDifference - evt.translationX;
+          translate.x.value = offset.x.value * scaleDifference + evt.translationX;
 
           /**
            * If swiping down start scaling down the image for swipe
@@ -260,7 +260,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
            * calculate a final position based on the current position and
            * event velocity
            */
-          const finalXPosition = evt.translationX - evt.velocityX * 0.3;
+          const finalXPosition = evt.translationX + evt.velocityX * 0.3;
           const finalYPosition = evt.translationY + evt.velocityY * 0.1;
           /**
            * If there is a next photo, the image is lined up to the right
@@ -269,7 +269,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
            */
           if (
             index.value < imageLength - 1 &&
-            Math.abs(halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+            Math.abs(-halfScreenWidth * (scale.value - 1) - offset.x.value) < 3 &&
             translate.x.value < 0 &&
             finalXPosition < -halfScreenWidth &&
             isSwiping.value === IsSwiping.TRUE
@@ -294,7 +294,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
              */
           } else if (
             index.value > 0 &&
-            Math.abs(-halfScreenWidth * (scale.value - 1) + offset.x.value) < 3 &&
+            Math.abs(halfScreenWidth * (scale.value - 1) - offset.x.value) < 3 &&
             translate.x.value > 0 &&
             finalXPosition > halfScreenWidth &&
             isSwiping.value === IsSwiping.TRUE
@@ -336,7 +336,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
             translate.x.value = withDecay({
               clamp: [leftEdge, rightEdge],
               deceleration: 0.99,
-              velocity: -evt.velocityX,
+              velocity: evt.velocityX,
             });
           }
           /**
@@ -476,7 +476,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
           numberOfPinchFingers.value = evt.numberOfPointers;
           offset.set(translate);
           adjustedFocal.set({
-            x: evt.focalX - (halfScreenWidth - offset.x.value),
+            x: evt.focalX - (halfScreenWidth + offset.x.value),
             y: evt.focalY - (halfScreenHeight + offset.y.value),
           });
           origin.set(adjustedFocal);
@@ -502,7 +502,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
          * focal position on the screen, screen size, and current photo offset
          */
         adjustedFocal.set({
-          x: evt.focalX - (halfScreenWidth - offset.x.value),
+          x: evt.focalX - (halfScreenWidth + offset.x.value),
           y: evt.focalY - (halfScreenHeight + offset.y.value),
         });
         /**
@@ -542,7 +542,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
             y: adjustedFocal.y.value + focalOffset.y.value,
           });
           translate.set({
-            x: offset.x.value - oldFocal.x.value + localEvtScale * origin.x.value,
+            x: offset.x.value + oldFocal.x.value - localEvtScale * origin.x.value,
             y: offset.y.value + oldFocal.y.value - localEvtScale * origin.y.value,
           });
           /**
@@ -553,7 +553,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
         } else if (numberOfPinchFingers.value > 1) {
           oldFocal.set(adjustedFocal);
           translate.set({
-            x: offset.x.value - adjustedFocal.x.value + localEvtScale * origin.x.value,
+            x: offset.x.value + adjustedFocal.x.value - localEvtScale * origin.x.value,
             y: offset.y.value + adjustedFocal.y.value - localEvtScale * origin.y.value,
           });
         }
@@ -627,7 +627,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
           numberOfPinchFingers.value = evt.numberOfPointers;
           offset.set(translate);
           adjustedFocal.set({
-            x: evt.focalX - (halfScreenWidth - offset.x.value),
+            x: evt.focalX - (halfScreenWidth + offset.x.value),
             y: evt.focalY - (halfScreenHeight + offset.y.value),
           });
           origin.set(adjustedFocal);
@@ -657,7 +657,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
    */
   const onDoubleTap = useAnimatedGestureHandler({
     onActive: evt => {
-      if (Math.abs(tap.x.value - evt.absoluteX) < 64 && Math.abs(tap.y.value - evt.absoluteY) < 64) {
+      const hitSlop = 64;
+      if (Math.abs(tap.x.value - evt.absoluteX) < hitSlop && Math.abs(tap.y.value - evt.absoluteY) < hitSlop) {
         if (offsetScale.value === 1 && offset.x.value === 0 && offset.y.value === 0) {
           offsetScale.value = 2;
           scale.value = withTiming(2, {
@@ -730,12 +731,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss }) => {
    */
   const wizardStyle = useAnimatedStyle(
     () => ({
-      transform: [
-        { scaleX: -1 },
-        {
-          translateX: translationX.value,
-        },
-      ],
+      transform: [{ translateX: translationX.value }],
     }),
     [visible],
   );

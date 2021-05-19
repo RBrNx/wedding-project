@@ -31,7 +31,6 @@ const GalleryImage = React.memo(
           { translateX: _translateX },
           { translateY: isSelected ? translate.y.value + yScaleOffset : yScaleOffset },
           { scale: isSelected ? scale.value / 8 : oneEight },
-          { scaleX: -1 },
         ],
       };
     }, [isPrevious, isSelected]);
@@ -57,14 +56,6 @@ const GalleryImage = React.memo(
             height: screenHeight * 8,
             width: screenWidth * 8,
             marginRight: 32,
-            transform: [
-              { scaleX: -1 },
-              { translateY: -screenHeight * 3.5 },
-              {
-                translateX: -translate.x.value + 7 * screenWidth * (0.5 + index),
-              },
-              { scale: oneEight },
-            ],
           },
         ]}
       />
