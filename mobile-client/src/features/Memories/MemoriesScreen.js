@@ -1,17 +1,24 @@
 import { Layout } from 'library/styles';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import GalleryGrid from './components/GalleryGrid';
 import ImageGallery from './components/ImageGallery';
 
-const MemoriesScreen = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const images = selectedImage ? [selectedImage] : [];
+const MemoriesScreen = ({ navigation }) => {
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
+  const images = selectedAlbum || [];
+  const visible = !!images.length;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      tabBarVisible: !visible,
+    });
+  }, [visible]);
 
   return (
     <Container>
-      <GalleryGrid setSelectedImage={image => setSelectedImage(image)} />
-      <ImageGallery visible={images.length} images={images} onDismiss={() => setSelectedImage(null)} />
+      <GalleryGrid setSelectedAlbum={setSelectedAlbum} />
+      <ImageGallery visible={visible} images={images} onDismiss={() => setSelectedAlbum(null)} />
     </Container>
   );
 };

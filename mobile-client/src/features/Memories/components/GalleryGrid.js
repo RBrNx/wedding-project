@@ -2,30 +2,30 @@ import { useQuery } from '@apollo/react-hooks';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import GET_MEMORIES from 'library/graphql/queries/getMemories.graphql';
+import GET_MEMORY_ALBUMS from 'library/graphql/queries/getMemoryAlbums.graphql';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
 import ImageModal from './ImageModal';
 import GalleryItem from './GalleryItem';
 
 const NUM_COLUMNS = 3;
-const loadingData = new Array(30).fill(null).map((_, index) => ({ id: index, isLoading: true }));
+const loadingData = new Array(30).fill(null).map((_, id) => ({ id }));
 
-const GalleryGrid = ({ setSelectedImage }) => {
+const GalleryGrid = ({ setSelectedAlbum }) => {
   const modalVisibility = useSharedValue(0);
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
-  const { data, loading } = useQuery(GET_MEMORIES, { variables: { filter: { page: 0, limit: 30 } } });
-  const memories = loading ? loadingData : data?.getMemories;
+  const { data, loading } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
+  const memories = loading ? loadingData : data?.getMemoryAlbums?.map((mem, index) => ({ ...mem, id: index }));
 
-  const renderGalleryItem = ({ item: image, index }) => {
-    const { isLoading } = image;
+  const renderGalleryItem = ({ item: album, index }) => {
+    const { images } = album;
+    const [image] = images || [{ id: album.id }];
 
     return (
       <GalleryItem
         key={index}
-        isLoading={isLoading}
         image={image}
-        modalVisibility={modalVisibility}
+        isAlbum={images?.length > 1}
         onPressIn={() => setPressedImage(image)}
         onLongPress={() => {
           setScrollEnabled(false);
@@ -36,7 +36,7 @@ const GalleryGrid = ({ setSelectedImage }) => {
           setScrollEnabled(true);
           modalVisibility.value = withSpring(0);
         }}
-        onPress={() => setSelectedImage(image)}
+        onPress={() => setSelectedAlbum(images)}
       />
     );
   };

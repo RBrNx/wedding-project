@@ -56,6 +56,7 @@ const GalleryImage = React.memo(
             // Not yet sure why these are needed
             height: screenHeight * 8,
             width: screenWidth * 8,
+            marginRight: 32,
             transform: [
               { scaleX: -1 },
               { translateY: -screenHeight * 3.5 },

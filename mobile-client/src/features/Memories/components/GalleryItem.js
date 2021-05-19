@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import CachedImage from 'library/components/CachedImage';
 import React from 'react';
 import { Dimensions, Pressable } from 'react-native';
@@ -7,7 +8,7 @@ import ImageLoader from './ImageLoader';
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
 
-const GalleryItem = ({ image, onPressIn, onPressOut, onLongPress, onPress }) => {
+const GalleryItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress }) => {
   return (
     <Container>
       <Pressable
@@ -19,6 +20,7 @@ const GalleryItem = ({ image, onPressIn, onPressOut, onLongPress, onPress }) => 
         pressRetentionOffset={Number.MAX_VALUE}
       >
         <StyledImage cacheKey={`${image.id}`} source={{ uri: image.downloadUrl }} loadingComponent={<ImageLoader />} />
+        {isAlbum && <StyledIcon name='albums' color='#fff' size={18} />}
       </Pressable>
     </Container>
   );
@@ -34,6 +36,13 @@ const Container = styled.View`
 const StyledImage = styled(CachedImage)`
   height: 100%;
   width: 100%;
+`;
+
+const StyledIcon = styled(Ionicons)`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0.9;
 `;
 
 export default GalleryItem;
