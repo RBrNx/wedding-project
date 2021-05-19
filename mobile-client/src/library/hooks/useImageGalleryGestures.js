@@ -26,6 +26,11 @@ const IsSwiping = Object.freeze({
   FALSE: 2,
 });
 
+const FlingDirection = Object.freeze({
+  UP: -1,
+  DOWN: 1,
+});
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const isAndroid = Platform.OS === 'android';
 const halfScreenHeight = screenHeight / 2;
@@ -243,18 +248,18 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
            * If swiping down start scaling down the image for swipe
            * away effect
            */
-          if (currentImageHeight * offsetScale.value < screenHeight && translate.y.value > 0) {
-            scale.value = offsetScale.value * (1 - SWIPE_SCALE_MODIFIER * (translate.y.value / screenHeight));
+          const translateY = Math.abs(translate.y.value);
+          if (currentImageHeight * offsetScale.value < screenHeight && translateY > 0) {
+            scale.value = offsetScale.value * (1 - SWIPE_SCALE_MODIFIER * (translateY / screenHeight));
           } else if (
             currentImageHeight * offsetScale.value > screenHeight &&
-            translate.y.value > (currentImageHeight / 2) * offsetScale.value - halfScreenHeight
+            translateY > (currentImageHeight / 2) * offsetScale.value - halfScreenHeight
           ) {
             scale.value =
               offsetScale.value *
               (1 -
                 SWIPE_SCALE_MODIFIER *
-                  ((translate.y.value - ((currentImageHeight / 2) * offsetScale.value - halfScreenHeight)) /
-                    screenHeight));
+                  ((translateY - ((currentImageHeight / 2) * offsetScale.value - halfScreenHeight)) / screenHeight));
           }
         }
       },
@@ -267,6 +272,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
            */
           const finalXPosition = evt.translationX + evt.velocityX * 0.3;
           const finalYPosition = evt.translationY + evt.velocityY * 0.1;
+          const flingDirection = finalYPosition < 0 ? -1 : 1;
           /**
            * If there is a next photo, the image is lined up to the right
            * edge, the swipe is to the left, and the final position is more
@@ -379,7 +385,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
            * the overlay
            */
           if (
-            finalYPosition > halfScreenHeight &&
+            Math.abs(finalYPosition) > halfScreenHeight &&
             offset.y.value + 8 >= (currentImageHeight / 2) * scale.value - halfScreenHeight &&
             isSwiping.value !== IsSwiping.TRUE &&
             translate.y.value !== 0 &&
@@ -409,15 +415,22 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
                 runOnJS(onDismiss)();
               },
             );
-            translate.y.value =
-              evt.velocityY > 1000
-                ? withDecay({
-                    velocity: evt.velocityY,
-                  })
-                : withTiming(halfScreenHeight + (currentImageHeight / 2) * scale.value, {
-                    duration: 200,
-                    easing: Easing.out(Easing.ease),
-                  });
+
+            if (Math.abs(evt.velocityY) > 1000) {
+              translate.y.value = withDecay({
+                velocity: evt.velocityY,
+              });
+            } else {
+              const endPosition =
+                flingDirection === FlingDirection.DOWN
+                  ? halfScreenHeight + (currentImageHeight / 2) * scale.value
+                  : -(halfScreenHeight + (currentImageHeight / 2) * scale.value);
+              translate.y.value = withTiming(endPosition, {
+                duration: 200,
+                easing: Easing.out(Easing.ease),
+              });
+            }
+
             translate.x.value = withDecay({
               velocity: -evt.velocityX,
             });
@@ -716,16 +729,9 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
    * image is swiped downward
    */
   const headerFooterOpacity = useDerivedValue(() => {
-    if (currentImageHeight * scale.value < screenHeight && translate.y.value > 0) {
-      return 1 - translate.y.value / quarterScreenHeight;
-    }
-    if (
-      currentImageHeight * scale.value > screenHeight &&
-      translate.y.value > (currentImageHeight / 2) * scale.value - halfScreenHeight
-    ) {
-      return (
-        1 - (translate.y.value - ((currentImageHeight / 2) * scale.value - halfScreenHeight)) / quarterScreenHeight
-      );
+    const translateY = Math.abs(translate.y.value);
+    if (currentImageHeight * scale.value < screenHeight && translateY > 0) {
+      return 1 - translateY / quarterScreenHeight;
     }
 
     return 1;
@@ -785,6 +791,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
     scale,
     offsetScale,
     selectedIndex,
+    currentImageHeight,
+    screenHeight,
   };
 };
 
