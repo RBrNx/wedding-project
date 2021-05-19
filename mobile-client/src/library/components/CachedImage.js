@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import styled from 'styled-components';
-import { Layout } from 'library/styles';
 import { hash } from 'features/Memories/helpers';
+import styled from 'styled-components';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Layout } from 'library/styles';
 
-const CachedImage = ({ source: { uri }, loadingComponent, style, ...otherProps }) => {
-  const cacheKey = uri ? hash(uri) : null;
-  const filesystemURI = `${FileSystem.cacheDirectory}images/${cacheKey}`;
+const CachedImage = ({ source: { uri }, loadingComponent, ...otherProps }) => {
+  const [imgURI, setImgURI] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imgURI, setImgURI] = useState(filesystemURI);
   const componentIsMounted = useRef(true);
   const loaderVisibility = useSharedValue(1);
 
@@ -17,42 +16,52 @@ const CachedImage = ({ source: { uri }, loadingComponent, style, ...otherProps }
     opacity: loaderVisibility.value,
   }));
 
+  const getFilePath = inputUri => {
+    const cacheKey = hash(inputUri);
+    const filesystemURI = `${FileSystem.cacheDirectory}images/${cacheKey}`;
+
+    return filesystemURI;
+  };
+
   useEffect(() => {
-    const loadImage = async ({ fileURI }) => {
-      try {
-        // Use the cached image if it exists
-        const metadata = await FileSystem.getInfoAsync(fileURI);
-        if (!metadata.exists && uri) {
-          // download to cache
-          if (componentIsMounted.current) {
-            setImgURI(null);
-            await FileSystem.downloadAsync(uri, fileURI);
+    const loadImage = async () => {
+      if (uri) {
+        try {
+          const filePath = getFilePath(uri);
+          const metadata = await FileSystem.getInfoAsync(filePath);
+          if (metadata.exists) setImgURI(filePath);
+          else {
+            // download to cache
+            if (componentIsMounted.current) {
+              await FileSystem.downloadAsync(uri, filePath);
+            }
+            if (componentIsMounted.current) {
+              setImgURI(filePath);
+            }
           }
-          if (componentIsMounted.current) {
-            setImgURI(fileURI);
-          }
+        } catch (err) {
+          console.error('Error with paths, falling back to uri', uri, err);
+          setImgURI(uri);
         }
-      } catch (err) {
-        console.log(err); // eslint-disable-line no-console
-        setImgURI(uri);
       }
     };
 
-    loadImage({ fileURI: filesystemURI });
+    loadImage();
+  }, [uri]);
 
+  useEffect(() => {
     return () => {
       componentIsMounted.current = false;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       {loading && <LoaderContainer style={loaderAnimatedStyle}>{loadingComponent}</LoaderContainer>}
-      <Animated.Image
+      <Image
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...otherProps}
-        source={uri ? { uri: imgURI } : null}
-        style={style}
+        source={{ uri: imgURI }}
         onLoad={() => {
           if (uri) {
             loaderVisibility.value = withTiming(0, { duration: 200 }, isFinished => {
