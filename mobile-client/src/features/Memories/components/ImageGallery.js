@@ -6,6 +6,7 @@ import useImageGalleryGestures from 'library/hooks/useImageGalleryGestures';
 import styled from 'styled-components';
 import { Layout } from 'library/styles';
 import GalleryImage from './GalleryImage';
+import ImageGalleryHeader from './ImageGalleryHeader';
 
 const isAndroid = Platform.OS === 'android';
 const imageMargin = 16;
@@ -27,11 +28,18 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
     scale,
     offsetScale,
     selectedIndex,
+    headerFooterOpacity,
   } = useImageGalleryGestures({ visible, images, onDismiss, imageMargin });
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
       <GalleryBackground style={containerBackgroundStyle} />
+      <ImageGalleryHeader
+        headerFooterOpacity={headerFooterOpacity}
+        index={selectedIndex}
+        imageCount={images.length}
+        onDismiss={onDismiss}
+      />
       <TapGestureHandler
         minPointers={1}
         numberOfTaps={1}
