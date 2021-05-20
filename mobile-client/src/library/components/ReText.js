@@ -34,6 +34,7 @@ const Container = styled.View`
 
 const Label = styled.Text`
   margin-right: 15px;
+  color: #fff;
 `;
 
 const StyledTextInput = styled(AnimatedTextInput)`
