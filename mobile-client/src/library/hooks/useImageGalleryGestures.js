@@ -47,7 +47,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
    * set to none for fast opening
    */
   const showScreen = useSharedValue(0);
-  const fadeScreen = show => {
+  const setShowScreen = show => {
     'worklet';
 
     showScreen.value = withTiming(show ? 1 : 0, {
@@ -66,7 +66,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
       resetVisibleValues();
     }
 
-    fadeScreen(visible);
+    setShowScreen(visible);
   }, [visible]);
 
   /**
@@ -733,6 +733,9 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
     if (currentImageHeight * scale.value < screenHeight && translateY > 0) {
       return 1 - translateY / quarterScreenHeight;
     }
+    if (!visible) {
+      return showScreen.value;
+    }
 
     return 1;
   }, [currentImageHeight]);
@@ -793,6 +796,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
     selectedIndex,
     currentImageHeight,
     screenHeight,
+    headerFooterOpacity,
   };
 };
 
