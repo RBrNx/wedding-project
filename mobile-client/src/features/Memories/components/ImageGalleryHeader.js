@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { Ionicons } from '@expo/vector-icons';
 import { Colours } from 'library/styles';
 
-const ImageGalleryHeader = ({ headerFooterOpacity, index, imageCount, onDismiss }) => {
+const ImageGalleryHeader = ({ headerFooterVisible, index, imageCount, onDismiss }) => {
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: headerFooterOpacity.value,
+    opacity: headerFooterVisible.value,
   }));
 
   return (

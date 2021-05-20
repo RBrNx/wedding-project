@@ -28,14 +28,14 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
     scale,
     offsetScale,
     selectedIndex,
-    headerFooterOpacity,
+    headerFooterVisible,
   } = useImageGalleryGestures({ visible, images, onDismiss, imageMargin });
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
       <GalleryBackground style={containerBackgroundStyle} />
       <ImageGalleryHeader
-        headerFooterOpacity={headerFooterOpacity}
+        headerFooterVisible={headerFooterVisible}
         index={selectedIndex}
         imageCount={images.length}
         onDismiss={onDismiss}

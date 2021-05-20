@@ -12,6 +12,7 @@ import {
   useDerivedValue,
   useSharedValue,
   withDecay,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -251,6 +252,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
           const translateY = Math.abs(translate.y.value);
           if (currentImageHeight * offsetScale.value < screenHeight && translateY > 0) {
             scale.value = offsetScale.value * (1 - SWIPE_SCALE_MODIFIER * (translateY / screenHeight));
+            headerFooterVisible.value = 1 - translateY / quarterScreenHeight;
           } else if (
             currentImageHeight * offsetScale.value > screenHeight &&
             translateY > (currentImageHeight / 2) * offsetScale.value - halfScreenHeight
@@ -360,6 +362,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
           const topEdge = (-currentImageHeight / 2) * scale.value + halfScreenHeight;
           const bottomEdge = (currentImageHeight / 2) * scale.value - halfScreenHeight;
           if (currentImageHeight * scale.value < screenHeight) {
+            if (Math.abs(translate.y.value) > 0 && headerFooterVisible.value < 1)
+              headerFooterVisible.value = withDelay(100, withTiming(1));
             translate.y.value = withTiming(0);
           } else if (translate.y.value > bottomEdge) {
             translate.y.value = withTiming(bottomEdge);
@@ -741,7 +745,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
   }, [currentImageHeight]);
 
   /**
-   * This transition and scaleX reverse lets use scroll left
+   * This transition lets us scroll the gallery left -> right
    */
   const wizardStyle = useAnimatedStyle(
     () => ({
@@ -796,7 +800,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
     selectedIndex,
     currentImageHeight,
     screenHeight,
-    headerFooterOpacity,
+    headerFooterVisible,
   };
 };
 
