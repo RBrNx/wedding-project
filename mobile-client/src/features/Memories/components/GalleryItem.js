@@ -19,7 +19,7 @@ const GalleryItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPre
         delayLongPress={300}
         pressRetentionOffset={Number.MAX_VALUE}
       >
-        <StyledImage cacheKey={`${image.id}`} source={{ uri: image.downloadUrl }} loadingComponent={<ImageLoader />} />
+        <StyledImage source={{ uri: image.downloadUrl }} loadingComponent={<ImageLoader />} width={50} />
         {isAlbum && <StyledIcon name='albums' color='#fff' size={18} />}
       </Pressable>
     </Container>
