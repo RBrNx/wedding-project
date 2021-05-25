@@ -7,6 +7,7 @@ plugins:
   - serverless-webpack
   - serverless-offline
   - serverless-domain-manager
+  - serverless-iam-roles-per-function
 
 custom:
   webpack:
@@ -34,6 +35,9 @@ custom:
   cognito:
     userPoolId: !Ref CognitoUserPoolWedding
     appClientId: !Ref CognitoUserPoolClientAPI
+  s3:
+    photosBucket: watson-wedding-${self:provider.stage}-photos
+  cdnDomainName: ${env:CDN_DOMAIN_NAME}
 
 useDotenv: true
 disabledDeprecations:
@@ -65,12 +69,12 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-
       - http:
           path: api
           method: get
           cors: true
           authorizer: aws_iam
+
   authenticated:
     handler: src/server.authenticatedGQLHandler
     environment:
@@ -81,12 +85,12 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-
       - http:
           path: admin
           method: get
           cors: true
           authorizer: aws_iam
+
   spotifyCallback:
     handler: src/handlers/spotify.authCallback
     environment:
@@ -100,14 +104,48 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-
       - http:
           path: spotifyCallback
           method: get
           cors: true
           authorizer: aws_iam
 
+  initiateUpload:
+    handler: src/handlers/image.initiateUpload
+    environment:
+      SLS_DEBUG: true
+      S3_PHOTOS_BUCKET: ${self:custom.s3.photosBucket}
+    events:
+      - http:
+          path: initiateUpload
+          method: post
+          authorizer: aws_iam
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+        Resource: arn:aws:s3:::${self:custom.s3.photosBucket}/*
+
+  processUpload:
+    handler: src/handlers/image.processUpload
+    environment:
+      SLS_DEBUG: true
+      CDN_DOMAIN_NAME: ${env:CDN_DOMAIN_NAME}
+    events:
+      - s3:
+          bucket: ${self:custom.s3.photosBucket}
+          event: s3:ObjectCreated:*
+          existing: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+          - s3:HeadObject
+        Resource: arn:aws:s3:::${self:custom.s3.photosBucket}/*
+
 resources:
   # Cognito
   - ${file(resources/cognito-user-pool.yml)}
   - ${file(resources/cognito-identity-pool.yml)}
+  - ${file(resources/s3-cloudfront.yml)}
