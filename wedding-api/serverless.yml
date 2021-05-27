@@ -37,7 +37,9 @@ custom:
     appClientId: !Ref CognitoUserPoolClientAPI
   s3:
     photosBucket: watson-wedding-${self:provider.stage}-photos
-  cdnDomainName: ${env:CDN_DOMAIN_NAME}
+  cloudfront:
+    domainName: ${env:CDN_DOMAIN_NAME}
+    keyPairId: !Ref SignerPublicKey
 
 useDotenv: true
 disabledDeprecations:
@@ -79,6 +81,7 @@ functions:
     handler: src/server.authenticatedGQLHandler
     environment:
       SLS_DEBUG: true
+      KEY_PAIR_ID: ${env:KEY_PAIR_ID, self:custom.cloudfront.keyPairId}
     events:
       - http:
           path: admin
