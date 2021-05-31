@@ -8,6 +8,7 @@ import NavigationPresets from 'library/utils/NavigationPresets';
 import SettingsScreen from 'features/Settings/SettingsScreen';
 import WorkInProgressScreen from 'features/WorkInProgress/WorkInProgressScreen';
 import DashboardScreen from 'features/Dashboard/DashboardScreen';
+import MemoriesScreen from 'features/Memories/MemoriesScreen';
 
 const Stack = createStackNavigator();
 
@@ -30,7 +31,7 @@ const GuestHomeNavigator = () => {
       />
       <Tab.Screen
         name='Memories'
-        component={WorkInProgressScreen}
+        component={MemoriesScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Feather name='image' color={color} size={size} />,
         }}

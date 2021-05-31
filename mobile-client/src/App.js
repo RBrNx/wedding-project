@@ -6,7 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import Amplify from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import * as Sentry from 'sentry-expo';
-import client from 'library/utils/apiClient';
+import client from 'library/utils/apolloClient';
 import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from 'context';
 import AppLoader from 'library/components/AppLoader';
 import AppNavigator from 'navigation/AppNavigator';

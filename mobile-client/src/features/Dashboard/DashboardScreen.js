@@ -29,7 +29,7 @@ const DashboardScreen = ({ navigation }) => {
   return (
     <>
       <Container>
-        <DashboardHeader fullName={fullName} />
+        <DashboardHeader title='Dashboard' />
         <Spacer size={40} />
         <HeadingText>{`Hello,\n${fullName} 👋`}</HeadingText>
         <Spacer size={40} />

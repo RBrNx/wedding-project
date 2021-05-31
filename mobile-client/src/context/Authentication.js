@@ -1,6 +1,6 @@
 import { Auth } from 'aws-amplify';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import client from 'library/utils/apiClient';
+import client from 'library/utils/apolloClient';
 import FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION from 'library/graphql/mutations/fetchTempLoginCredentials.graphql';
 import GET_CURRENT_USER_QUERY from 'library/graphql/queries/currentUser.graphql';
 import { useQuery } from '@apollo/react-hooks';

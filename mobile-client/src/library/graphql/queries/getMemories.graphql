@@ -1,0 +1,12 @@
+query getMemories($filter: MemoryFilterInput!) {
+  getMemories(filter: $filter) {
+    ... on ImageMemory {
+      id
+      author
+      width
+      height
+      url
+      downloadUrl
+    }
+  }
+}

@@ -1,0 +1,115 @@
+Resources:
+  PhotosBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.s3.photosBucket}
+      AccessControl: Private
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: ['PUT']
+            AllowedOrigins: ['*']
+
+  PhotosBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: PhotosBucket
+      PolicyDocument:
+        Statement:
+          # Read permission for CloudFront
+          - Action: s3:GetObject
+            Effect: 'Allow'
+            Resource: arn:aws:s3:::${self:custom.s3.photosBucket}/*
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'Identity for accessing CloudFront from S3 within stack ${self:service}-${self:provider.stage}'
+
+  # Public Key for CloudFront Trusted Signer
+  SignerPublicKey:
+    Type: AWS::CloudFront::PublicKey
+    Properties:
+      PublicKeyConfig:
+        Name: 'WeddingSignerPublicKey-${self:provider.stage}'
+        CallerReference: 'WeddingSignerPublicKey${self:provider.stage}'
+        Comment: 'Public Key for Wedding App Trusted Signer'
+        EncodedKey: ${env:CLOUDFRONT_SIGNER_PUBLIC_KEY}
+
+  # Key Group for CloudFront Trusted Signer
+  SignerKeyGroup:
+    Type: AWS::CloudFront::KeyGroup
+    Properties:
+      KeyGroupConfig:
+        Name: 'WeddingSignerKeyGroup-${self:provider.stage}'
+        Comment: 'Key Group for Wedding App Trusted Signer'
+        Items:
+          - !Ref SignerPublicKey
+
+  # Cloudfront distro backed by PhotosBucket
+  PhotosCdnDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - ${self:custom.cloudfront.domainName}
+        Origins:
+          # S3 origin for static content
+          - DomainName: ${self:custom.s3.photosBucket}.s3.amazonaws.com
+            Id: PhotosBucketS3Origin
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Join:
+                  - ''
+                  - - 'origin-access-identity/cloudfront/'
+                    - Ref: CloudFrontOriginAccessIdentity
+        Enabled: true
+        Comment: CDN for photos.
+        DefaultRootObject: index.html
+        HttpVersion: http2
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - DELETE
+            - GET
+            - HEAD
+            - OPTIONS
+            - PATCH
+            - POST
+            - PUT
+          Compress: true
+          TargetOriginId: PhotosBucketS3Origin
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+          TrustedKeyGroups:
+            - !Ref SignerKeyGroup
+        ViewerCertificate:
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:463245273964:certificate/7f989223-f435-46b7-b9bd-729e6dc5b514'
+          SslSupportMethod: sni-only
+        PriceClass: PriceClass_200
+
+  # Alias for PhotosBucket
+  WebsiteDNSName:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: 'Z010371026NKWW2PX1HOP' # Taken from the AWS Console
+      RecordSets:
+        - Name: ${self:custom.cloudfront.domainName}
+          Type: A
+          AliasTarget:
+            HostedZoneId: 'Z2FDTNDATAQYW2' # Default for any CloudFront Distro - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html
+            DNSName: !GetAtt [PhotosCdnDistribution, DomainName]
+            EvaluateTargetHealth: false
+
+Outputs:
+  PhotosBucket:
+    Value: !Ref PhotosBucket
+  PhotosCdnDistributionId:
+    Value: !Ref PhotosCdnDistribution
+  PhotosCdnDistributionDomainName:
+    Value: !GetAtt PhotosCdnDistribution.DomainName

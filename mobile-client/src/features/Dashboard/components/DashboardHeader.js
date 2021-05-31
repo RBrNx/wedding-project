@@ -3,11 +3,16 @@ import { Colours, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
 import UserAvatar from 'react-native-user-avatar';
+import { useAuth } from 'context';
 
-const DashboardHeader = ({ fullName }) => {
+const DashboardHeader = ({ title, style }) => {
+  const { currentUser } = useAuth();
+  const { firstName, lastName } = currentUser;
+  const fullName = `${firstName} ${lastName}`;
+
   return (
-    <Container>
-      <ScreenTitle>Dashboard</ScreenTitle>
+    <Container style={style}>
+      <ScreenTitle>{title}</ScreenTitle>
       <NotificationIcon name='notifications-outline' size={24} color={Colours.neutral.grey2} />
       <UserAvatar size={42} name={fullName} />
     </Container>
