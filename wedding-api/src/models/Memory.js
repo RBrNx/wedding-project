@@ -8,6 +8,7 @@ const MemorySchema = new Schema(
     albumId: { type: String, required: true },
     photoId: { type: String, required: true },
     url: { type: String, required: true },
+    thumbnail: { type: String, required: true },
   },
   { timestamps: true },
 );

@@ -11,6 +11,7 @@ const schema = gql`
     photoId: String!
     eventId: ID!
     url: URL!
+    thumbnail: URL!
     createdAt: DateTime!
     updatedAt: DateTime!
   }

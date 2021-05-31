@@ -139,6 +139,8 @@ functions:
       - s3:
           bucket: ${self:custom.s3.photosBucket}
           event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
           existing: true
     iamRoleStatements:
       - Effect: Allow
