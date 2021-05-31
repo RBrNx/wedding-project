@@ -1,18 +1,43 @@
-const getMemories = async (parent, { filter }, { dataSources }) => {
-  try {
-    const res = await dataSources.picsumAPI.listImages(filter);
+import AWS from 'aws-sdk';
 
-    return res;
+const { KEY_PAIR_ID, CLOUDFRONT_SIGNER_PRIVATE_KEY } = process.env;
+const signer = new AWS.CloudFront.Signer(KEY_PAIR_ID, CLOUDFRONT_SIGNER_PRIVATE_KEY);
+
+const getMemories = async (parent, { filter }, { currentUser, db }) => {
+  try {
+    const MemoryModel = db.model('Memory');
+
+    const memories = await MemoryModel.find({ eventId: currentUser.eventId }).lean();
+
+    const expires = new Date(new Date().getTime() + 1000 * 10).getTime();
+    return memories.map(memory => {
+      const signedUrl = signer.getSignedUrl({ url: memory.url, expires });
+
+      return { ...memory, url: signedUrl };
+    });
   } catch (error) {
     return error;
   }
 };
 
-const getMemoryAlbums = async (parent, { filter }, { dataSources }) => {
+const getMemoryAlbums = async (parent, { filter }, { currentUser, db }) => {
   try {
-    const res = await dataSources.picsumAPI.listImagesAsAlbums(filter);
+    const MemoryModel = db.model('Memory');
 
-    return res;
+    const memories = await MemoryModel.find({ eventId: currentUser.eventId }).lean();
+
+    const expires = new Date(new Date().getTime() + 1000 * 10).getTime();
+    const albumGroups = memories.reduce((albums, memory) => {
+      const signedUrl = signer.getSignedUrl({ url: memory.url, expires });
+
+      return {
+        ...albums,
+        [memory.albumId]: [...(albums[memory.albumId] || []), { ...memory, url: signedUrl }],
+      };
+    }, {});
+    const albums = Object.entries(albumGroups).map(([_albumId, album]) => ({ images: album }));
+
+    return albums;
   } catch (error) {
     return error;
   }

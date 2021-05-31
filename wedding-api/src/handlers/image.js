@@ -12,46 +12,52 @@ exports.initiateUpload = async (event, context, callback) => {
 
   const currentUser = await getUserFromRequest(event.requestContext);
   const eventId = currentUser.eventId.toString();
-  const body = JSON.parse(event.body || '{}');
-  const photoMetadata = {
-    contentType: body.contentType,
-    title: body.title,
-    description: body.description,
-  };
-  if (!isValidImageContentType(photoMetadata.contentType)) {
-    return callback(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: `Invalid contentType for image. Valid values are: ${getSupportedContentTypes().join(',')}; Recieved: ${
-          photoMetadata.contentType
-        }`,
-      }),
-    });
-  }
+  const albumId = nanoid();
+  const images = JSON.parse(event.body || '[]');
 
-  // Create the PutObjectRequest that will be embedded in the signed URL
-  const photoId = nanoid();
-  const req = {
-    Bucket: S3_PHOTOS_BUCKET,
-    Key: `event_${eventId}/${photoId}.${getFileSuffixForContentType(photoMetadata.contentType)}`,
-    ContentType: photoMetadata.contentType,
-    CacheControl: 'max-age=31557600', // instructs CloudFront to cache for 1 year
-    // Set Metadata fields to be retrieved post-upload and stored in DynamoDB
-    Metadata: {
-      ...photoMetadata,
-      photoId,
-      eventId,
-    },
-  };
-  // // Get the signed URL from S3 and return to client
-  const s3PutObjectUrl = await s3.getSignedUrlPromise('putObject', req);
-  const result = {
-    photoId,
-    s3PutObjectUrl,
-  };
+  const results = await Promise.all(
+    images.map(async metadata => {
+      const { contentType } = metadata;
+
+      if (!isValidImageContentType(contentType)) {
+        const contentTypes = getSupportedContentTypes().join(',');
+        return callback(null, {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: `Invalid contentType for image. Valid values are: ${contentTypes}; Received: ${contentType}`,
+          }),
+        });
+      }
+
+      // Create the PutObjectRequest that will be embedded in the signed URL
+      const photoId = nanoid();
+      const fileSuffix = getFileSuffixForContentType(contentType);
+      const req = {
+        Bucket: S3_PHOTOS_BUCKET,
+        Key: `uploads/event_${eventId}/${photoId}.${fileSuffix}`,
+        ContentType: contentType,
+        CacheControl: 'max-age=31557600', // instructs CloudFront to cache for 1 year
+        // Set Metadata fields to be retrieved post-upload and stored in MongoDB
+        Metadata: {
+          ...metadata,
+          albumId,
+          photoId,
+          eventId,
+        },
+      };
+
+      // Get the signed URL from S3 and return to client
+      const s3PutObjectUrl = await s3.getSignedUrlPromise('putObject', req);
+      return {
+        photoId,
+        s3PutObjectUrl,
+      };
+    }),
+  );
+
   return {
     statusCode: 201,
-    body: JSON.stringify(result),
+    body: JSON.stringify(results),
   };
 };
 
@@ -68,6 +74,7 @@ exports.processUpload = async (event, context) => {
 
   // S3 metadata field names are converted to lowercase, so need to map them out carefully
   const photoDetails = {
+    albumId: s3Object.Metadata.albumid,
     photoId: s3Object.Metadata.photoid,
     eventId: s3Object.Metadata.eventid,
     description: s3Object.Metadata.description,

@@ -6,12 +6,13 @@ const schema = gql`
   }
 
   type ImageMemory {
-    id: ID!
-    author: String!
-    width: Int!
-    height: Int!
+    _id: ID!
+    albumId: String!
+    photoId: String!
+    eventId: ID!
     url: URL!
-    downloadUrl: URL!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type Album {
