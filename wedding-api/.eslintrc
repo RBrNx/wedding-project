@@ -12,7 +12,8 @@
     "import/newline-after-import": "error",
     "import/prefer-default-export": "warn",
     "prettier/prettier": "error",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }]
   },
   "parser": "babel-eslint"
 }
