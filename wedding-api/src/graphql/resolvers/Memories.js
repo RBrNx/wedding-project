@@ -29,10 +29,14 @@ const getMemoryAlbums = async (parent, args, { currentUser, db }) => {
     const expires = new Date(new Date().getTime() + 1000 * 10).getTime();
     const albumGroups = memories.reduce((albums, memory) => {
       const signedUrl = signer.getSignedUrl({ url: memory.url, expires });
+      const signedThumbnail = signer.getSignedUrl({ url: memory.thumbnail, expires });
 
       return {
         ...albums,
-        [memory.albumId]: [...(albums[memory.albumId] || []), { ...memory, url: signedUrl }],
+        [memory.albumId]: [
+          ...(albums[memory.albumId] || []),
+          { ...memory, url: signedUrl, thumbnail: signedThumbnail },
+        ],
       };
     }, {});
     const albums = Object.entries(albumGroups).map(([_albumId, album]) => ({ images: album }));
