@@ -46,19 +46,13 @@ const GalleryImage = React.memo(
       return <EmptyView style={[style, animatedGalleryImageStyle]} />;
     }
 
-    return (
-      <StyledImage
-        resizeMode='contain'
-        source={{ uri: image?.downloadUrl }}
-        style={[style, animatedGalleryImageStyle]}
-      />
-    );
+    return <StyledImage resizeMode='contain' source={{ uri: image?.url }} style={[style, animatedGalleryImageStyle]} />;
   },
   (prevProps, nextProps) => {
     if (
       prevProps.isSelected === nextProps.isSelected &&
       prevProps.shouldRender === nextProps.shouldRender &&
-      prevProps.image.downloadUrl === nextProps.image.downloadUrl &&
+      prevProps.image.url === nextProps.image.url &&
       prevProps.isPrevious === nextProps.isPrevious &&
       prevProps.index === nextProps.index
     ) {
