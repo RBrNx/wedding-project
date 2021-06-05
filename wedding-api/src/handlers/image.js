@@ -73,23 +73,29 @@ exports.processUpload = async (event, context) => {
     throw new Error(errorMessage);
   }
 
+  console.log('processing upload: ', s3Record.object.key);
   const imageData = s3Object.Body;
+  const convertedImageData = await sharp(imageData).toFormat('jpeg').jpeg({ quality: 80, mozjpeg: true }).toBuffer();
   const resizedImageData = await sharp(imageData)
     .resize(300, 300)
     .toFormat('jpeg')
     .jpeg({ quality: 80, mozjpeg: true })
     .toBuffer();
-  const [filePath, extension] = s3Record.object.key.split('.');
-  const thumbnailKey = `${filePath}_thumbnail.${extension}`.replace('uploads/', '');
+  const [filePath] = s3Record.object.key.split('.');
+  const convertedImageKey = `${filePath}.jpg`.replace('uploads/', '');
+  const thumbnailKey = `${filePath}_thumbnail.jpg`.replace('uploads/', '');
 
-  await s3.putObject({ Bucket: s3Record.bucket.name, Key: thumbnailKey, Body: resizedImageData });
+  console.log('new file paths: ', { convertedImageKey, thumbnailKey });
+
+  await s3.putObject({ Bucket: s3Record.bucket.name, Key: convertedImageKey, Body: convertedImageData }).promise();
+  await s3.putObject({ Bucket: s3Record.bucket.name, Key: thumbnailKey, Body: resizedImageData }).promise();
 
   // S3 metadata field names are converted to lowercase, so need to map them out carefully
   const photoDetails = {
     albumId: s3Object.Metadata.albumid,
     photoId: s3Object.Metadata.photoid,
     eventId: s3Object.Metadata.eventid,
-    contentType: s3Object.Metadata.contenttype,
+    contentType: 'image/jpeg',
     // Map the S3 bucket key to a CloudFront URL to be stored in the DB
     url: `https://${CDN_DOMAIN_NAME}/${s3Record.object.key}`,
     thumbnail: `https://${CDN_DOMAIN_NAME}/${thumbnailKey}`,
