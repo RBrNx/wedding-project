@@ -12,7 +12,9 @@ plugins:
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
-    includeModules: true
+    includeModules:
+      nodeModulesRelativeDir: '../'
+    packager: 'yarn'
   serverless-offline:
     host: 0.0.0.0
     port: 4000
@@ -132,6 +134,7 @@ functions:
 
   processUpload:
     handler: src/handlers/image.processUpload
+    memorySize: 1024
     environment:
       SLS_DEBUG: true
       CDN_DOMAIN_NAME: ${env:CDN_DOMAIN_NAME}
