@@ -8,7 +8,7 @@ import ImageLoader from './ImageLoader';
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
 
-const GalleryItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress }) => {
+const GridItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress }) => {
   return (
     <Container>
       <Pressable
@@ -45,4 +45,4 @@ const StyledIcon = styled(Ionicons)`
   opacity: 0.9;
 `;
 
-export default GalleryItem;
+export default GridItem;

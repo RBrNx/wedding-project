@@ -10,7 +10,7 @@ import { Image, Platform } from 'react-native';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-const ImageModal = ({ image, modalVisibility }) => {
+const QuickPreviewModal = ({ image, modalVisibility }) => {
   const [aspectRatio, setAspectRatio] = useState(0);
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: modalVisibility.value,
@@ -71,4 +71,4 @@ const StyledImage = styled(CachedImage)`
   aspect-ratio: ${props => props.aspectRatio};
 `;
 
-export default ImageModal;
+export default QuickPreviewModal;

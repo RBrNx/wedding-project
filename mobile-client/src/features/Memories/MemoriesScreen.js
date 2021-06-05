@@ -1,7 +1,7 @@
 import { Layout } from 'library/styles';
 import React, { useLayoutEffect, useState } from 'react';
 import styled from 'styled-components/native';
-import GalleryGrid from './components/GalleryGrid';
+import MemoriesGrid from './components/MemoriesGrid';
 import ImageGallery from './components/ImageGallery';
 
 const MemoriesScreen = ({ navigation }) => {
@@ -17,7 +17,7 @@ const MemoriesScreen = ({ navigation }) => {
 
   return (
     <Container>
-      <GalleryGrid setSelectedAlbum={setSelectedAlbum} />
+      <MemoriesGrid setSelectedAlbum={setSelectedAlbum} />
       <ImageGallery visible={visible} images={images} onDismiss={() => setSelectedAlbum(null)} />
     </Container>
   );

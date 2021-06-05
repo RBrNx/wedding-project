@@ -4,25 +4,25 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import GET_MEMORY_ALBUMS from 'library/graphql/queries/getMemoryAlbums.graphql';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
-import ImageModal from './ImageModal';
-import GalleryItem from './GalleryItem';
+import QuickPreviewModal from './QuickPreviewModal';
+import GridItem from './GridItem';
 
 const NUM_COLUMNS = 3;
 const loadingData = new Array(30).fill(null).map((_, _id) => ({ _id }));
 
-const GalleryGrid = ({ setSelectedAlbum }) => {
+const MemoriesGrid = ({ setSelectedAlbum }) => {
   const modalVisibility = useSharedValue(0);
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const { data, loading } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
   const memories = loading ? loadingData : data?.getMemoryAlbums;
 
-  const renderGalleryItem = ({ item: album, index }) => {
+  const renderMemory = ({ item: album, index }) => {
     const { images } = album;
     const [image] = images || [{ _id: album._id }];
 
     return (
-      <GalleryItem
+      <GridItem
         key={index}
         image={image}
         isAlbum={images?.length > 1}
@@ -47,7 +47,7 @@ const GalleryGrid = ({ setSelectedAlbum }) => {
       <StyledFlatlist
         data={memories}
         numColumns={NUM_COLUMNS}
-        renderItem={renderGalleryItem}
+        renderItem={renderMemory}
         scrollEnabled={scrollEnabled}
         initialNumToRender={20}
         keyExtractor={(album, index) => {
@@ -55,7 +55,7 @@ const GalleryGrid = ({ setSelectedAlbum }) => {
         }}
         ListHeaderComponent={<DashboardHeader title='Memories' style={{ paddingHorizontal: '5%', marginBottom: 10 }} />}
       />
-      <ImageModal modalVisibility={modalVisibility} image={pressedImage} />
+      <QuickPreviewModal modalVisibility={modalVisibility} image={pressedImage} />
     </>
   );
 };
@@ -64,4 +64,4 @@ const StyledFlatlist = styled.FlatList`
   flex: 1;
 `;
 
-export default GalleryGrid;
+export default MemoriesGrid;
