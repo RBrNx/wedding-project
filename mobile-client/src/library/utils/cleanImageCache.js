@@ -1,39 +1,39 @@
 import * as FileSystem from 'expo-file-system';
 
 const IMAGE_CACHE_FOLDER = `${FileSystem.cacheDirectory}images/`;
+const CACHE_SIZE = 250 * 1000 * 1000; // 250mb
+const CHUNK_SIZE = 100;
 
 const cleanImageCache = async () => {
   const cacheDirectory = await FileSystem.getInfoAsync(IMAGE_CACHE_FOLDER);
+  let currCacheSize = cacheDirectory.size;
   // create cacheDir if does not exist
   if (!cacheDirectory.exists) {
     await FileSystem.makeDirectoryAsync(IMAGE_CACHE_FOLDER);
   }
 
-  // cleanup old cached files
-  const cachedFiles = await FileSystem.readDirectoryAsync(`${IMAGE_CACHE_FOLDER}`);
+  if (currCacheSize > CACHE_SIZE) {
+    // cleanup old cached files
+    const cachedFiles = await FileSystem.readDirectoryAsync(`${IMAGE_CACHE_FOLDER}`);
+    const chunks = Array(Math.ceil(cachedFiles.length / CHUNK_SIZE))
+      .fill()
+      .map((_, index) => index * CHUNK_SIZE)
+      .map(begin => cachedFiles.slice(begin, begin + CHUNK_SIZE));
 
-  // cleanup cache, leave only up to 1 Gb most recent files
-  const sorted = (
-    await Promise.all(
-      cachedFiles.map(async file => {
-        // the the file metadata, so that we can use it to sort the list of files
-        const info = await FileSystem.getInfoAsync(`${IMAGE_CACHE_FOLDER}${file}`);
-        return Promise.resolve({ file, modificationTime: info.modificationTime, size: info.size });
-      }),
-    )
-  )
-    // sort the files in the list by time
-    .sort((a, b) => a.modificationTime - b.modificationTime);
+    const fileInformation = [];
+    for (let i = 0; i < chunks.length; i += 1) {
+      const chunk = chunks[i];
+      // eslint-disable-next-line no-await-in-loop
+      const info = await Promise.all(chunk.map(file => FileSystem.getInfoAsync(`${IMAGE_CACHE_FOLDER}${file}`)));
+      fileInformation.push(...info);
+    }
+    fileInformation.sort((a, b) => a.modificationTime - b.modificationTime);
 
-  // let's calculate the total size of files in cache
-  let sumSize = sorted.reduce((accumulator, currentValue) => accumulator + Number(currentValue.size), 0);
-
-  // second pass to clean up the cached files
-  for (let i = 0; i < sorted.length; i += 1) {
-    if (sumSize > 1000 * 1000 * 1000) {
-      // 1 GB
-      FileSystem.deleteAsync(`${IMAGE_CACHE_FOLDER}${sorted[i].file}`, { idempotent: true });
-      sumSize -= sorted[i].size;
+    for (let i = 0; i < fileInformation; i += 1) {
+      if (currCacheSize > CACHE_SIZE) {
+        FileSystem.deleteAsync(`${IMAGE_CACHE_FOLDER}${fileInformation[i].file}`);
+        currCacheSize -= fileInformation[i].size;
+      }
     }
   }
 };
