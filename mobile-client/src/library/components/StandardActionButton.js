@@ -22,6 +22,7 @@ const StandardActionButton = ({
   style,
   iconStyle,
   messageStyle,
+  containerStyle,
   maxExpansionWidth = width,
   animationDuration = 300,
 }) => {
@@ -33,7 +34,7 @@ const StandardActionButton = ({
   });
 
   return (
-    <FullscreenContainer pointerEvents='box-none'>
+    <FullscreenContainer pointerEvents='box-none' style={containerStyle}>
       <StyledPressable
         style={[animatedExpansionStyle, style]}
         size={size}
@@ -49,7 +50,6 @@ const StandardActionButton = ({
 
 const FullscreenContainer = styled.View`
   ${Layout.absoluteFill};
-  z-index: 99;
 `;
 
 const StyledPressable = styled(AnimatedPressable).attrs(() => ({
