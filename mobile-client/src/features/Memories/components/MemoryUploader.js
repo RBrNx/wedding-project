@@ -11,10 +11,13 @@ import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import theme from 'styled-theming';
+import StandardActionButton from 'library/components/StandardActionButton';
+import { AntDesign } from '@expo/vector-icons';
 
 const NUM_COLUMNS = 3;
 const MIN_TIME = 750;
@@ -23,18 +26,34 @@ const { width } = Dimensions.get('window');
 const MemoryUploader = ({ active, onDismiss }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
-  const [folders, setFolders] = useState([{ id: null, title: 'All Photos' }]);
+  const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [lastAssetId, setLastAssetId] = useState(null);
-  const x = useSharedValue(0);
+  const [selectedAssets, setSelectedAssets] = useState([]);
+  const sheetPosition = useSharedValue(0);
   const opacityBounce = useSharedValue(0);
+  const uploadButtonVisible = useSharedValue(0);
+  const uploadButtonVisibility = useDerivedValue(() => {
+    if (uploadButtonVisible.value === 1) return sheetPosition.value;
+    return uploadButtonVisible.value;
+  });
+  const folderSelectorVisible = useSharedValue(1);
+  const folderSelectorVisibilty = useDerivedValue(() => {
+    if (folderSelectorVisible.value === 1) return sheetPosition.value;
+    return folderSelectorVisible.value;
+  });
 
   const folderSelectorAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: interpolate(x.value, [0, 1], [50, 0], Extrapolate.CLAMP) }],
+    transform: [{ translateY: interpolate(folderSelectorVisibilty.value, [0, 1], [50, 0], Extrapolate.CLAMP) }],
   }));
 
   const flatlistAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(opacityBounce.value, [0, 0.5, 1], [1, 0, 1], Extrapolate.CLAMP),
+  }));
+
+  const uploadButtonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP),
+    transform: [{ scale: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP) }],
   }));
 
   const requestMediaLibraryPermission = async () => {
@@ -61,7 +80,10 @@ const MemoryUploader = ({ active, onDismiss }) => {
     const initialise = async () => {
       await requestMediaLibraryPermission();
       const albums = await MediaLibrary.getAlbumsAsync();
-      setFolders([...folders, ...albums.filter(a => a.assetCount > 0).sort((a, b) => a.title.localeCompare(b.title))]);
+      setFolders([
+        { id: null, title: 'All Photos' },
+        ...albums.filter(a => a.assetCount > 0).sort((a, b) => a.title.localeCompare(b.title)),
+      ]);
     };
 
     initialise();
@@ -88,9 +110,30 @@ const MemoryUploader = ({ active, onDismiss }) => {
   }, [selectedFolder]);
 
   const renderItem = ({ item: asset }) => {
+    const isSelected = selectedAssets.some(a => a.id === asset.id);
+
     return (
       <Container>
         <StyledImage source={{ uri: asset.uri }} />
+        <SelectorIcon
+          isSelected={isSelected}
+          onPress={() => {
+            if (!isSelected) {
+              setSelectedAssets([...selectedAssets, asset]);
+              uploadButtonVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
+              folderSelectorVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
+            } else {
+              const updatedAssets = selectedAssets.filter(a => a.id !== asset.id);
+              setSelectedAssets(updatedAssets);
+              if (!updatedAssets.length) {
+                uploadButtonVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
+                folderSelectorVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
+              }
+            }
+          }}
+        >
+          {isSelected && <SelectedIndex>{selectedAssets.findIndex(a => a.id === asset.id) + 1}</SelectedIndex>}
+        </SelectorIcon>
       </Container>
     );
   };
@@ -126,7 +169,19 @@ const MemoryUploader = ({ active, onDismiss }) => {
           initialNumToRender={20}
         />
       </ListContainer>
-      <BottomSheetModal active={active} onDismiss={onDismiss} animatedIndex={x}>
+      <BottomSheetModal
+        active={active}
+        onDismiss={onDismiss}
+        animatedIndex={sheetPosition}
+        outerChildren={
+          <StandardActionButton
+            label='Edit RSVP'
+            icon={<StyledIcon name='clouduploado' size={22} />}
+            containerStyle={{ zIndex: 99 }}
+            style={uploadButtonAnimatedStyle}
+          />
+        }
+      >
         <StyledBottomSheetFlatList
           data={assets}
           numColumns={NUM_COLUMNS}
@@ -152,6 +207,10 @@ const ListContainer = styled(Animated.View)`
   bottom: 0;
   z-index: 1;
   background-color: ${Theme.background};
+`;
+
+const StyledIcon = styled(AntDesign)`
+  color: ${Colours.neutral.white};
 `;
 
 const FolderList = styled.FlatList.attrs(() => ({
@@ -193,6 +252,22 @@ const Container = styled.View`
   margin: 3px;
   height: ${width / NUM_COLUMNS}px;
   width: ${width / NUM_COLUMNS}px;
+`;
+
+const SelectorIcon = styled(StandardPressable)`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 15px;
+  border: 1.5px solid ${props => (props.isSelected ? Colours.secondary : 'white')};
+  background-color: ${props => (props.isSelected ? Colours.secondary : 'transparent')};
+  ${Layout.flexCenter}
+`;
+
+const SelectedIndex = styled.Text`
+  color: ${Colours.neutral.white};
 `;
 
 const StyledImage = styled.Image`
