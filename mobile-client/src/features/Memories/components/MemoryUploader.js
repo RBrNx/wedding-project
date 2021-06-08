@@ -25,6 +25,7 @@ const MemoryUploader = ({ active, onDismiss }) => {
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([{ id: null, title: 'All Photos' }]);
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [lastAssetId, setLastAssetId] = useState(null);
   const x = useSharedValue(0);
   const opacityBounce = useSharedValue(0);
 
@@ -41,11 +42,26 @@ const MemoryUploader = ({ active, onDismiss }) => {
     setHasPermission(status === 'granted');
   };
 
+  const loadMoreAssets = async () => {
+    if (lastAssetId) {
+      const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
+        first: 50,
+        album: selectedFolder,
+        after: lastAssetId,
+      });
+
+      const newAssets = [...assets.filter(a => a.uri), ...moreAssets];
+      const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
+      setAssets([...newAssets, ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` }))]);
+      setLastAssetId(hasNextPage ? endCursor : null);
+    }
+  };
+
   useEffect(() => {
     const initialise = async () => {
       await requestMediaLibraryPermission();
       const albums = await MediaLibrary.getAlbumsAsync();
-      setFolders([...folders, ...albums.sort((a, b) => a.title.localeCompare(b.title))]);
+      setFolders([...folders, ...albums.filter(a => a.assetCount > 0).sort((a, b) => a.title.localeCompare(b.title))]);
     };
 
     initialise();
@@ -54,7 +70,10 @@ const MemoryUploader = ({ active, onDismiss }) => {
   useEffect(() => {
     const loadAssets = async () => {
       const startTime = Date.now();
-      const { assets: localAssets } = await MediaLibrary.getAssetsAsync({ first: 50, album: selectedFolder });
+      const { assets: localAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
+        first: 50,
+        album: selectedFolder,
+      });
       const spareSlots = NUM_COLUMNS - (localAssets.length % NUM_COLUMNS);
       const timeDiff = Date.now() - startTime;
       if (timeDiff < MIN_TIME) await new Promise(r => setTimeout(r, MIN_TIME - timeDiff));
@@ -62,6 +81,7 @@ const MemoryUploader = ({ active, onDismiss }) => {
         ...localAssets,
         ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` })),
       ]);
+      setLastAssetId(hasNextPage ? endCursor : null);
     };
 
     loadAssets();
@@ -85,7 +105,6 @@ const MemoryUploader = ({ active, onDismiss }) => {
         onPress={() => {
           setSelectedFolder(id);
           opacityBounce.value = withTiming(0.5, { duration: 1000, easing: Easing.out(Easing.exp) }, () => {
-            // runOnJS(setSelectedFolder)(id);
             opacityBounce.value = withTiming(1, { duration: 750, easing: Easing.out(Easing.exp) });
           });
         }}
@@ -113,7 +132,8 @@ const MemoryUploader = ({ active, onDismiss }) => {
           numColumns={NUM_COLUMNS}
           renderItem={renderItem}
           initialNumToRender={20}
-          onEndReached={() => console.log('end')}
+          onEndReached={loadMoreAssets}
+          onEndReachedThreshold={1}
           style={flatlistAnimatedStyle}
         />
       </BottomSheetModal>
