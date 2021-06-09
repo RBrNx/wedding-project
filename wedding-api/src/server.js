@@ -1,6 +1,5 @@
 import { ApolloServer } from 'apollo-server-lambda';
 import SpotifyAPI from './datasources/SpotifyAPI';
-import PicsumAPI from './datasources/PicusmAPI';
 import { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers } from './graphql/index';
 import { connectToDatabase } from './lib/database';
 import { getUserFromRequest } from './lib/helpers/users';
@@ -10,7 +9,6 @@ const server = new ApolloServer({
   resolvers,
   dataSources: () => ({
     spotifyAPI: new SpotifyAPI(),
-    picsumAPI: new PicsumAPI(),
   }),
   formatError: error => {
     return error;
