@@ -49,6 +49,8 @@ jobs:
         run: sudo apt-get install tree && tree -a -I 'node_modules|.git' -L 4
       - name: Install modules
         run: yarn
+      - name: Install sharp
+        run: rm -rf node_modules/sharp && yarn add sharp --verbose
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
