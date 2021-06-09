@@ -24,7 +24,7 @@ const MIN_TIME = 750;
 const { width } = Dimensions.get('window');
 
 const MemoryUploader = ({ active, onDismiss }) => {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [_hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
