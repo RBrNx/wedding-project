@@ -15,10 +15,6 @@ custom:
     includeModules:
       nodeModulesRelativeDir: '../'
     packager: 'yarn'
-    packagerOptions:
-      scripts:
-        - rm -rf node_modules/sharp
-        - SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install --arch=x64 --platform=linux sharp
   serverless-offline:
     host: 0.0.0.0
     port: 4000
