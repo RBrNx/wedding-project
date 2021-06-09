@@ -42,6 +42,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      - name: Print Working directory
+        run: pwd
       - name: Install and View Tree
         run: sudo apt-get install tree && tree -a -I 'node_modules|.git' -L 4
       - name: Install modules
