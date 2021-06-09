@@ -49,8 +49,6 @@ jobs:
         run: sudo apt-get install tree && tree -a -I 'node_modules|.git' -L 4
       - name: Install modules
         run: yarn
-      - name: Install Sharp
-        run: docker run -v "$PWD":/var/task lambci/lambda:build-nodejs12.x npm install sharp
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
