@@ -6,7 +6,7 @@ on:
       - develop
     paths:
       - 'wedding-api/**'
-      - '.github/deploy-api-dev.yml'
+      - '.github/workflows/deploy-api-dev.yml'
 defaults:
   run:
     working-directory: ./wedding-api
