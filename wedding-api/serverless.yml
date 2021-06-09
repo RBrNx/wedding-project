@@ -84,6 +84,7 @@ functions:
     environment:
       SLS_DEBUG: true
       KEY_PAIR_ID: ${env:KEY_PAIR_ID, self:custom.cloudfront.keyPairId}
+      CLOUDFRONT_SIGNER_PRIVATE_KEY: ${env:CLOUDFRONT_SIGNER_PRIVATE_KEY}
     events:
       - http:
           path: admin
