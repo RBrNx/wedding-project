@@ -47,7 +47,7 @@ jobs:
       - name: Install and View Tree
         run: sudo apt-get install tree && tree -a -I 'node_modules|.git' -L 4
       - name: Install modules
-        run: cd wedding-api && yarn
+        run: yarn
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
