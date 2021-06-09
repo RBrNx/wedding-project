@@ -2,3 +2,4 @@
 .serverless
 .webpack
 .vscode
+.DS_STORE

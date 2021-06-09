@@ -8,7 +8,7 @@ import ImageLoader from './ImageLoader';
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
 
-const GalleryItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress }) => {
+const GridItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress }) => {
   return (
     <Container>
       <Pressable
@@ -19,7 +19,7 @@ const GalleryItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPre
         delayLongPress={300}
         pressRetentionOffset={Number.MAX_VALUE}
       >
-        <StyledImage source={{ uri: image.downloadUrl }} loadingComponent={<ImageLoader />} width={50} />
+        <StyledImage source={{ uri: image.thumbnail }} loadingComponent={<ImageLoader />} width={50} />
         {isAlbum && <StyledIcon name='albums' color='#fff' size={18} />}
       </Pressable>
     </Container>
@@ -45,4 +45,4 @@ const StyledIcon = styled(Ionicons)`
   opacity: 0.9;
 `;
 
-export default GalleryItem;
+export default GridItem;

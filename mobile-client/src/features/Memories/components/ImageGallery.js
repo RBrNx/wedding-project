@@ -71,7 +71,7 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
                       <GalleryWizard style={wizardStyle}>
                         {images.map((image, i) => (
                           <StyledGalleryImage
-                            key={`${image.id}`}
+                            key={`${image._id}`}
                             index={i}
                             image={image}
                             scale={scale}

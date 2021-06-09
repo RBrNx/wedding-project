@@ -12,13 +12,9 @@ plugins:
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
-    includeModules: true
+    includeModules:
+      nodeModulesRelativeDir: '../'
     packager: 'yarn'
-    packagerOptions:
-      noFrozenLockFile: true
-      scripts:
-        - rm -rf node_modules/sharp
-        - SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_arch=x64 npm_config_platform=linux yarn add sharp
   serverless-offline:
     host: 0.0.0.0
     port: 4000
@@ -138,6 +134,7 @@ functions:
 
   processUpload:
     handler: src/handlers/image.processUpload
+    memorySize: 1024
     environment:
       SLS_DEBUG: true
       CDN_DOMAIN_NAME: ${env:CDN_DOMAIN_NAME}

@@ -178,11 +178,11 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
    * to the proper scaled height based on the width being restricted to the
    * screen width when the dimensions are received.
    */
-  const uriForCurrentImage = images[selectedIndex]?.downloadUrl;
+  const uriForCurrentImage = images[selectedIndex]?.url;
   useEffect(() => {
     setCurrentImageHeight(screenHeight);
-    if (images[index.value]?.downloadUrl) {
-      Image.getSize(images[index.value].downloadUrl, (width, height) => {
+    if (images[index.value]?.url) {
+      Image.getSize(images[index.value].url, (width, height) => {
         const imageHeight = Math.floor(height * (screenWidth / width));
         setCurrentImageHeight(imageHeight > screenHeight ? screenHeight : imageHeight);
       });

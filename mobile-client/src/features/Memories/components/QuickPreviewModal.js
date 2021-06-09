@@ -10,7 +10,7 @@ import { Image, Platform } from 'react-native';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-const ImageModal = ({ image, modalVisibility }) => {
+const QuickPreviewModal = ({ image, modalVisibility }) => {
   const [aspectRatio, setAspectRatio] = useState(0);
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: modalVisibility.value,
@@ -21,10 +21,10 @@ const ImageModal = ({ image, modalVisibility }) => {
 
   useEffect(() => {
     if (image)
-      Image.getSize(image.downloadUrl, (width, height) => {
+      Image.getSize(image.url, (width, height) => {
         setAspectRatio(width / height);
       });
-  }, [image?.downloadUrl]);
+  }, [image?.url]);
 
   return (
     <ModalContainer tint='dark' intensity={100} pointerEvents='none' style={containerAnimatedStyle}>
@@ -34,7 +34,7 @@ const ImageModal = ({ image, modalVisibility }) => {
           <Spacer size={10} />
           <UserName>Conor Watson</UserName>
         </Header>
-        {image && <StyledImage source={{ uri: image?.downloadUrl }} aspectRatio={aspectRatio} resizeMode='contain' />}
+        {image && <StyledImage source={{ uri: image?.url }} aspectRatio={aspectRatio} resizeMode='contain' />}
       </Modal>
     </ModalContainer>
   );
@@ -71,4 +71,4 @@ const StyledImage = styled(CachedImage)`
   aspect-ratio: ${props => props.aspectRatio};
 `;
 
-export default ImageModal;
+export default QuickPreviewModal;

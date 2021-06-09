@@ -2,12 +2,13 @@ query getMemoryAlbums($filter: MemoryFilterInput!) {
   getMemoryAlbums(filter: $filter) {
     images {
       ... on ImageMemory {
-        id
-        author
-        width
-        height
+        _id
+        photoId
+        eventId
         url
-        downloadUrl
+        thumbnail
+        createdAt
+        updatedAt
       }
     }
   }
