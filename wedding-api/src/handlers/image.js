@@ -73,7 +73,9 @@ exports.processUpload = async (event, context) => {
     throw new Error(errorMessage);
   }
 
+  // eslint-disable-next-line no-console
   console.log('processing upload: ', s3Record.object.key);
+
   const imageData = s3Object.Body;
   const convertedImageData = await sharp(imageData).toFormat('jpeg').jpeg({ quality: 80, mozjpeg: true }).toBuffer();
   const resizedImageData = await sharp(imageData)
@@ -85,6 +87,7 @@ exports.processUpload = async (event, context) => {
   const convertedImageKey = `${filePath}.jpg`.replace('uploads/', '');
   const thumbnailKey = `${filePath}_thumbnail.jpg`.replace('uploads/', '');
 
+  // eslint-disable-next-line no-console
   console.log('new file paths: ', { convertedImageKey, thumbnailKey });
 
   await s3.putObject({ Bucket: s3Record.bucket.name, Key: convertedImageKey, Body: convertedImageData }).promise();
