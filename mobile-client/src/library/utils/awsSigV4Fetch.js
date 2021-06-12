@@ -20,7 +20,7 @@ const awsSigV4Fetch = async (uri, options = {}) => {
       method,
       headers,
       body,
-      path: pathname,
+      path: pathname.replace('/', ''),
     });
 
     const requestHeaders = signedRequest.headers;
