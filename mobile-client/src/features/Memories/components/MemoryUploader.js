@@ -4,7 +4,7 @@ import { Colours, Layout, Theme } from 'library/styles';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import * as MediaLibrary from 'expo-media-library';
-import { Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import StandardPressable from 'library/components/StandardPressable';
 import Animated, {
   Easing,
@@ -18,18 +18,29 @@ import Animated, {
 import theme from 'styled-theming';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
+import awsSigV4Fetch from 'library/utils/awsSigV4Fetch';
+import { extensionToMimeType } from 'library/utils/mimetypes';
+import Constants from 'expo-constants';
+import { useAlert } from 'context';
+import { AlertType } from 'library/enums';
+import parseError from 'library/utils/parseError';
+import axios from 'axios';
+import RNBlob from 'library/components/RNBlob';
 
+const { BASE_API_URL } = Constants.manifest.extra;
 const NUM_COLUMNS = 3;
 const MIN_TIME = 750;
 const { width } = Dimensions.get('window');
 
-const MemoryUploader = ({ active, onDismiss }) => {
+const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   const [_hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [lastAssetId, setLastAssetId] = useState(null);
   const [selectedAssets, setSelectedAssets] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const { showAlert } = useAlert();
   const sheetPosition = useSharedValue(0);
   const opacityBounce = useSharedValue(0);
   const uploadButtonVisible = useSharedValue(0);
@@ -73,6 +84,67 @@ const MemoryUploader = ({ active, onDismiss }) => {
       const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
       setAssets([...newAssets, ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` }))]);
       setLastAssetId(hasNextPage ? endCursor : null);
+    }
+  };
+
+  const getBlob = async uri => {
+    const res = await fetch(uri);
+    const blob = await res.blob();
+
+    // Axios doesn't support Blob in RN correctly, so we use our own wrapper
+    // https://github.com/axios/axios/issues/2677
+    return new RNBlob([blob]);
+  };
+
+  const uploadImages = async () => {
+    try {
+      setUploading(true);
+      const body = selectedAssets.map(a => {
+        const [_filePath, extension] = a.uri.split('.');
+        return { contentType: extensionToMimeType(extension) };
+      });
+      const initiateUploadResponse = await awsSigV4Fetch(`${BASE_API_URL}initiateUpload`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      const uploadRequests = await initiateUploadResponse.json();
+
+      const albumUpload = {
+        images: uploadRequests.map((request, index) => ({
+          id: request.photoId,
+          uri: selectedAssets[index].uri,
+          thumbnail: selectedAssets[index].uri,
+          presignedUrl: request.s3PutObjectUrl,
+          contentType: body[index].contentType,
+          pendingUpload: true,
+        })),
+      };
+
+      onUploadStart(albumUpload);
+      onDismiss();
+      setUploading(false);
+
+      const res = await Promise.allSettled(
+        albumUpload.images.map(async image => {
+          const { uri, contentType, presignedUrl } = image;
+          const fileBlob = await getBlob(uri);
+
+          return axios.put(presignedUrl, fileBlob, {
+            headers: {
+              'Content-Type': contentType,
+              'Cache-Control': 'max-age=31557600',
+            },
+          });
+        }),
+      );
+    } catch (err) {
+      setUploading(false);
+      const { message } = parseError(err);
+      console.error(message);
+      showAlert({
+        message,
+        type: AlertType.WARNING,
+      });
     }
   };
 
@@ -177,9 +249,10 @@ const MemoryUploader = ({ active, onDismiss }) => {
         outerChildren={
           <StandardActionButton
             label='Edit RSVP'
-            icon={<StyledIcon name='clouduploado' size={22} />}
+            icon={uploading ? <ActivityIndicator color='#fff' /> : <StyledIcon name='clouduploado' size={22} />}
             containerStyle={{ zIndex: 99 }}
             style={uploadButtonAnimatedStyle}
+            onPress={uploadImages}
           />
         }
       >
