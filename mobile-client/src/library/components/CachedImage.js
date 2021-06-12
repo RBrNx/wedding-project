@@ -27,6 +27,11 @@ const CachedImage = ({ source: { uri }, loadingComponent, ...otherProps }) => {
     const loadImage = async () => {
       if (uri) {
         try {
+          if (uri.startsWith('file://')) {
+            setImgURI(uri);
+            return;
+          }
+
           const filePath = getFilePath(uri);
           const metadata = await FileSystem.getInfoAsync(filePath);
           if (metadata.exists) setImgURI(filePath);
