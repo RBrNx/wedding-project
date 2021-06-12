@@ -6,15 +6,7 @@ import styled from 'styled-components/native';
 import * as MediaLibrary from 'expo-media-library';
 import { ActivityIndicator, Dimensions } from 'react-native';
 import StandardPressable from 'library/components/StandardPressable';
-import Animated, {
-  Easing,
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { Easing, withTiming } from 'react-native-reanimated';
 import theme from 'styled-theming';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
@@ -26,6 +18,7 @@ import { AlertType } from 'library/enums';
 import parseError from 'library/utils/parseError';
 import axios from 'axios';
 import RNBlob from 'library/components/RNBlob';
+import { useMemoryUploader } from 'library/hooks';
 
 const { BASE_API_URL } = Constants.manifest.extra;
 const NUM_COLUMNS = 3;
@@ -40,51 +33,20 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   const [selectedAssets, setSelectedAssets] = useState([]);
   const [uploading, setUploading] = useState(false);
   const { showAlert } = useAlert();
-  const sheetPosition = useSharedValue(0);
-  const opacityBounce = useSharedValue(0);
-  const uploadButtonVisible = useSharedValue(0);
-  const uploadButtonVisibility = useDerivedValue(() => {
-    if (uploadButtonVisible.value === 1) return sheetPosition.value;
-    return uploadButtonVisible.value;
-  });
-  const folderSelectorVisible = useSharedValue(1);
-  const folderSelectorVisibilty = useDerivedValue(() => {
-    if (folderSelectorVisible.value === 1) return sheetPosition.value;
-    return folderSelectorVisible.value;
-  });
-
-  const folderSelectorAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: interpolate(folderSelectorVisibilty.value, [0, 1], [50, 0], Extrapolate.CLAMP) }],
-  }));
-
-  const flatlistAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(opacityBounce.value, [0, 0.5, 1], [1, 0, 1], Extrapolate.CLAMP),
-  }));
-
-  const uploadButtonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP),
-    transform: [{ scale: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP) }],
-  }));
+  const {
+    sheetPosition,
+    opacityBounce,
+    uploadButtonVisible,
+    folderSelectorVisible,
+    folderSelectorAnimatedStyle,
+    uploadButtonAnimatedStyle,
+    flatlistAnimatedStyle,
+  } = useMemoryUploader();
 
   const requestMediaLibraryPermission = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     setHasPermission(status === 'granted');
   };
-
-  // const loadMoreAssets = async () => {
-  //   if (lastAssetId) {
-  //     const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
-  //       first: 50,
-  //       album: selectedFolder,
-  //       after: lastAssetId,
-  //     });
-
-  //     const newAssets = [...assets.filter(a => a.uri), ...moreAssets];
-  //     const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
-  //     setAssets([...newAssets, ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` }))]);
-  //     setLastAssetId(hasNextPage ? endCursor : null);
-  //   }
-  // };
 
   const getBlob = async uri => {
     const res = await fetch(uri);
