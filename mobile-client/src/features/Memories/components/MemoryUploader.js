@@ -29,7 +29,6 @@ import RNBlob from 'library/components/RNBlob';
 
 const { BASE_API_URL } = Constants.manifest.extra;
 const NUM_COLUMNS = 3;
-const MIN_TIME = 750;
 const { width } = Dimensions.get('window');
 
 const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
@@ -72,20 +71,20 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     setHasPermission(status === 'granted');
   };
 
-  const loadMoreAssets = async () => {
-    if (lastAssetId) {
-      const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
-        first: 50,
-        album: selectedFolder,
-        after: lastAssetId,
-      });
+  // const loadMoreAssets = async () => {
+  //   if (lastAssetId) {
+  //     const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
+  //       first: 50,
+  //       album: selectedFolder,
+  //       after: lastAssetId,
+  //     });
 
-      const newAssets = [...assets.filter(a => a.uri), ...moreAssets];
-      const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
-      setAssets([...newAssets, ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` }))]);
-      setLastAssetId(hasNextPage ? endCursor : null);
-    }
-  };
+  //     const newAssets = [...assets.filter(a => a.uri), ...moreAssets];
+  //     const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
+  //     setAssets([...newAssets, ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` }))]);
+  //     setLastAssetId(hasNextPage ? endCursor : null);
+  //   }
+  // };
 
   const getBlob = async uri => {
     const res = await fetch(uri);
@@ -118,8 +117,8 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
             const fileBlob = await getBlob(uri);
 
             return {
-              id: photoId,
-              uri,
+              _id: photoId,
+              url: uri,
               thumbnail: uri,
               upload: true,
               promise: axios.put(s3PutObjectUrl, fileBlob, {
@@ -150,6 +149,27 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     }
   };
 
+  const getAssets = async ({ onEndReached } = {}) => {
+    if (onEndReached && !lastAssetId) return;
+
+    const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
+      first: 50,
+      album: selectedFolder,
+      ...(lastAssetId && { after: lastAssetId }),
+      sortBy: MediaLibrary.SortBy.modificationTime,
+    });
+
+    const newAssets = [...(onEndReached ? assets : []), ...moreAssets];
+    const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
+    setAssets([
+      ...newAssets,
+      ...(hasNextPage
+        ? []
+        : new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, spacer: true }))),
+    ]);
+    setLastAssetId(hasNextPage ? endCursor : null);
+  };
+
   useEffect(() => {
     const initialise = async () => {
       await requestMediaLibraryPermission();
@@ -164,24 +184,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   }, []);
 
   useEffect(() => {
-    const loadAssets = async () => {
-      const startTime = Date.now();
-      const { assets: localAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
-        first: 50,
-        album: selectedFolder,
-        sortBy: MediaLibrary.SortBy.modificationTime,
-      });
-      const spareSlots = NUM_COLUMNS - (localAssets.length % NUM_COLUMNS);
-      const timeDiff = Date.now() - startTime;
-      if (timeDiff < MIN_TIME) await new Promise(r => setTimeout(r, MIN_TIME - timeDiff));
-      setAssets([
-        ...localAssets,
-        ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` })),
-      ]);
-      setLastAssetId(hasNextPage ? endCursor : null);
-    };
-
-    loadAssets();
+    setTimeout(() => getAssets(), 750);
   }, [selectedFolder]);
 
   const renderItem = ({ item: asset }) => {
@@ -263,7 +266,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
           numColumns={NUM_COLUMNS}
           renderItem={renderItem}
           initialNumToRender={20}
-          onEndReached={loadMoreAssets}
+          onEndReached={() => getAssets({ onEndReached: true })}
           onEndReachedThreshold={1}
           style={flatlistAnimatedStyle}
         />
