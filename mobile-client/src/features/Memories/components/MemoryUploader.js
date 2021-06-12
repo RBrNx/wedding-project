@@ -110,33 +110,35 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
       const uploadRequests = await initiateUploadResponse.json();
 
       const albumUpload = {
-        images: uploadRequests.map((request, index) => ({
-          id: request.photoId,
-          uri: selectedAssets[index].uri,
-          thumbnail: selectedAssets[index].uri,
-          presignedUrl: request.s3PutObjectUrl,
-          contentType: body[index].contentType,
-          pendingUpload: true,
-        })),
+        images: await Promise.all(
+          uploadRequests.map(async (request, index) => {
+            const { photoId, s3PutObjectUrl } = request;
+            const { uri } = selectedAssets[index];
+            const { contentType } = body[index];
+            const fileBlob = await getBlob(uri);
+
+            return {
+              id: photoId,
+              uri,
+              thumbnail: uri,
+              upload: true,
+              promise: axios.put(s3PutObjectUrl, fileBlob, {
+                headers: {
+                  'Content-Type': contentType,
+                  'Cache-Control': 'max-age=31557600',
+                },
+              }),
+            };
+          }),
+        ),
       };
 
       onUploadStart(albumUpload);
-      onDismiss();
-      setUploading(false);
 
-      const res = await Promise.allSettled(
-        albumUpload.images.map(async image => {
-          const { uri, contentType, presignedUrl } = image;
-          const fileBlob = await getBlob(uri);
-
-          return axios.put(presignedUrl, fileBlob, {
-            headers: {
-              'Content-Type': contentType,
-              'Cache-Control': 'max-age=31557600',
-            },
-          });
-        }),
-      );
+      setTimeout(() => {
+        onDismiss();
+        setUploading(false);
+      }, 1000);
     } catch (err) {
       setUploading(false);
       const { message } = parseError(err);

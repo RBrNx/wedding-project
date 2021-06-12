@@ -8,6 +8,7 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colours } from 'library/styles';
 import { css } from 'styled-components/native';
+import Spacer from 'library/components/Spacer';
 import QuickPreviewModal from './QuickPreviewModal';
 import GridItem from './GridItem';
 import MemoryUploader from './MemoryUploader';
@@ -20,18 +21,29 @@ const MemoriesGrid = ({ setSelectedAlbum }) => {
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploads, setUploads] = useState([]);
   const { data, loading } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
-  const memories = loading ? loadingData : data?.getMemoryAlbums;
+  const memories = loading ? loadingData : [...uploads, ...data?.getMemoryAlbums];
+  const spareSlots = NUM_COLUMNS - (memories.length % NUM_COLUMNS);
+  const paddedMemories = [
+    ...memories,
+    ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, images: [{ spacer: true }] })),
+  ];
 
   const renderMemory = ({ item: album, index }) => {
     const { images } = album;
     const [image] = images || [{ _id: album._id }];
 
+    const uploadPromises = Promise.allSettled(images?.map(i => i.promise) || []);
+
+    if (image.spacer) return <StyledSpacer flex style={{ backgroundColor: 'blue' }} />;
     return (
       <GridItem
         key={index}
         image={image}
         isAlbum={images?.length > 1}
+        isUpload={!!image.upload}
+        uploadPromises={uploadPromises}
         unstable_pressDelay={400}
         onPressIn={() => setPressedImage(image)}
         onLongPress={() => {
@@ -51,7 +63,7 @@ const MemoriesGrid = ({ setSelectedAlbum }) => {
   return (
     <>
       <StyledFlatlist
-        data={memories}
+        data={paddedMemories}
         numColumns={NUM_COLUMNS}
         renderItem={renderMemory}
         scrollEnabled={scrollEnabled}
@@ -68,7 +80,11 @@ const MemoriesGrid = ({ setSelectedAlbum }) => {
         onPress={() => setShowUploadModal(true)}
         showUploadModal={showUploadModal}
       />
-      <MemoryUploader active={showUploadModal} onDismiss={() => setShowUploadModal(false)} />
+      <MemoryUploader
+        active={showUploadModal}
+        onDismiss={() => setShowUploadModal(false)}
+        onUploadStart={upload => setUploads([upload, ...uploads])}
+      />
     </>
   );
 };
@@ -87,6 +103,10 @@ const StyledActionButton = styled(StandardActionButton)`
     css`
       elevation: 0;
     `}
+`;
+
+const StyledSpacer = styled(Spacer)`
+  margin: 1px;
 `;
 
 export default MemoriesGrid;

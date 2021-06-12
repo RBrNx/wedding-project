@@ -1,14 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import CachedImage from 'library/components/CachedImage';
-import React from 'react';
-import { Dimensions, Pressable } from 'react-native';
+import { Layout } from 'library/styles';
+import React, { useState } from 'react';
+
+import { ActivityIndicator, Dimensions, Pressable } from 'react-native';
 import styled from 'styled-components/native';
 import ImageLoader from './ImageLoader';
 
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
 
-const GridItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress }) => {
+const GridItem = ({ image, isAlbum, isUpload, uploadPromises, onPressIn, onPressOut, onLongPress, onPress }) => {
+  const [isPending, setIsPending] = useState(!!isUpload);
+
+  if (isUpload) uploadPromises.then(() => setTimeout(() => setIsPending(false), 3000));
+
   return (
     <Container>
       <Pressable
@@ -22,6 +28,11 @@ const GridItem = ({ image, isAlbum, onPressIn, onPressOut, onLongPress, onPress 
         <StyledImage source={{ uri: image.thumbnail }} loadingComponent={<ImageLoader />} width={50} />
         {isAlbum && <StyledIcon name='albums' color='#fff' size={18} />}
       </Pressable>
+      {isPending && (
+        <LoadingView>
+          <ActivityIndicator color='#fff' />
+        </LoadingView>
+      )}
     </Container>
   );
 };
@@ -43,6 +54,12 @@ const StyledIcon = styled(Ionicons)`
   top: 5px;
   right: 5px;
   opacity: 0.9;
+`;
+
+const LoadingView = styled.View`
+  background-color: 'rgba(0, 0, 0, 0.5)';
+  ${Layout.absoluteFill};
+  ${Layout.flexCenter};
 `;
 
 export default GridItem;
