@@ -95,6 +95,7 @@ const MemoryUploader = ({ active, onDismiss }) => {
       const { assets: localAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
         first: 50,
         album: selectedFolder,
+        sortBy: MediaLibrary.SortBy.modificationTime,
       });
       const spareSlots = NUM_COLUMNS - (localAssets.length % NUM_COLUMNS);
       const timeDiff = Date.now() - startTime;
