@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Image } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import { hash } from 'features/Memories/helpers';
 import styled from 'styled-components';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Layout } from 'library/styles';
+import hash from 'library/utils/hash';
 
 const CachedImage = ({ source: { uri }, loadingComponent, ...otherProps }) => {
   const [imgURI, setImgURI] = useState(null);

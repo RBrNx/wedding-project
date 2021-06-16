@@ -17,9 +17,10 @@ import { useAlert } from 'context';
 import { AlertType } from 'library/enums';
 import parseError from 'library/utils/parseError';
 import axios from 'axios';
-import RNBlob from 'library/components/RNBlob';
 import { useMemoryUploader } from 'library/hooks';
+import Spacer from 'library/components/Spacer';
 import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
+import { getBlob } from '../helpers';
 
 const { width } = Dimensions.get('window');
 const { BASE_API_URL } = Constants.manifest.extra;
@@ -47,15 +48,6 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   const requestMediaLibraryPermission = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     setHasPermission(status === 'granted');
-  };
-
-  const getBlob = async uri => {
-    const res = await fetch(uri);
-    const blob = await res.blob();
-
-    // Axios doesn't support Blob in RN correctly, so we use our own wrapper
-    // https://github.com/axios/axios/issues/2677
-    return new RNBlob([blob]);
   };
 
   const uploadImages = async () => {
@@ -101,8 +93,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
       };
 
       onUploadStart(albumUpload);
-
-      setTimeout(onSheetDismiss, 1000);
+      setTimeout(() => onSheetDismiss(), 100);
     } catch (err) {
       setUploading(false);
       const { message } = parseError(err);
@@ -182,6 +173,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     const selectedAssetIndex = selectedAssets.findIndex(a => a.id === asset.id) + 1;
     const isSelected = selectedAssetIndex > 0;
 
+    if (asset.spacer) return <StyledSpacer flex />;
     return (
       <MemoryUploaderThumbnail
         asset={asset}
@@ -260,10 +252,6 @@ const ListContainer = styled(Animated.View)`
   background-color: ${Theme.background};
 `;
 
-const StyledIcon = styled(AntDesign)`
-  color: ${Colours.neutral.white};
-`;
-
 const FolderList = styled.FlatList.attrs(() => ({
   contentContainerStyle: {
     alignItems: 'center',
@@ -286,6 +274,10 @@ const FolderName = styled.Text`
   color: ${props => (props.isSelected ? Theme.background(props) : FolderColour)};
 `;
 
+const StyledIcon = styled(AntDesign)`
+  color: ${Colours.neutral.white};
+`;
+
 const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   contentContainerStyle: {
     paddingHorizontal: 3,
@@ -296,6 +288,10 @@ const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   },
 }))`
   flex: 1;
+`;
+
+const StyledSpacer = styled(Spacer)`
+  margin: 1px;
 `;
 
 export default MemoryUploader;
