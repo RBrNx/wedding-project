@@ -3,45 +3,44 @@ import CachedImage from 'library/components/CachedImage';
 import { Layout } from 'library/styles';
 import React, { useState } from 'react';
 
-import { ActivityIndicator, Dimensions, Pressable } from 'react-native';
+import { ActivityIndicator, Pressable } from 'react-native';
 import styled from 'styled-components/native';
 import ImageLoader from './ImageLoader';
 
-const { width } = Dimensions.get('window');
-const NUM_COLUMNS = 3;
+const GridItem = React.memo(
+  ({ image, isAlbum, isUpload, size, uploadPromises, onPressIn, onPressOut, onLongPress, onPress }) => {
+    const [isPending, setIsPending] = useState(!!isUpload);
 
-const GridItem = ({ image, isAlbum, isUpload, uploadPromises, onPressIn, onPressOut, onLongPress, onPress }) => {
-  const [isPending, setIsPending] = useState(!!isUpload);
+    if (isUpload) uploadPromises.then(() => setTimeout(() => setIsPending(false), 3000));
 
-  if (isUpload) uploadPromises.then(() => setTimeout(() => setIsPending(false), 3000));
-
-  return (
-    <Container>
-      <Pressable
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
-        onLongPress={onLongPress}
-        onPress={onPress}
-        delayLongPress={300}
-        pressRetentionOffset={Number.MAX_VALUE}
-      >
-        <StyledImage source={{ uri: image.thumbnail }} loadingComponent={<ImageLoader />} width={50} />
-        {isAlbum && <StyledIcon name='albums' color='#fff' size={18} />}
-      </Pressable>
-      {isPending && (
-        <LoadingView>
-          <ActivityIndicator color='#fff' />
-        </LoadingView>
-      )}
-    </Container>
-  );
-};
+    return (
+      <Container size={size}>
+        <Pressable
+          onPressIn={onPressIn}
+          onPressOut={onPressOut}
+          onLongPress={onLongPress}
+          onPress={onPress}
+          delayLongPress={300}
+          pressRetentionOffset={Number.MAX_VALUE}
+        >
+          <StyledImage source={{ uri: image.thumbnail }} loadingComponent={<ImageLoader />} width={50} />
+          {isAlbum && <StyledIcon name='albums' color='#fff' size={18} />}
+        </Pressable>
+        {isPending && (
+          <LoadingView>
+            <ActivityIndicator color='#fff' />
+          </LoadingView>
+        )}
+      </Container>
+    );
+  },
+);
 
 const Container = styled.View`
   flex: 1;
   margin: 1px;
-  height: ${width / NUM_COLUMNS}px;
-  width: ${width / NUM_COLUMNS}px;
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
 `;
 
 const StyledImage = styled(CachedImage)`

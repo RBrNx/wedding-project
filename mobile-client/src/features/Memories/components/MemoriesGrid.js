@@ -9,11 +9,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colours } from 'library/styles';
 import { css } from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
+import { Dimensions } from 'react-native';
 import QuickPreviewModal from './QuickPreviewModal';
 import GridItem from './GridItem';
 import MemoryUploader from './MemoryUploader';
 
+const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
+const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 const loadingData = new Array(30).fill(null).map((_, _id) => ({ _id }));
 
 const MemoriesGrid = ({ setSelectedAlbum, galleryVisible }) => {
@@ -30,23 +33,22 @@ const MemoriesGrid = ({ setSelectedAlbum, galleryVisible }) => {
     ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, images: [{ spacer: true }] })),
   ];
 
-  const renderMemory = ({ item: album, index }) => {
+  const renderMemory = ({ item: album }) => {
     const { images } = album;
     const [image] = images || [{ _id: album._id }];
 
     const uploadPromises = Promise.allSettled(images?.map(i => i.promise) || []);
 
-    if (image.spacer) return <StyledSpacer key={image._id || index} flex />;
+    if (image.spacer) return <StyledSpacer flex />;
     return (
       <GridItem
-        key={image._id || index}
         image={image}
         isAlbum={images?.length > 1}
         isUpload={!!image.upload}
         uploadPromises={uploadPromises}
-        unstable_pressDelay={400}
-        onPressIn={() => setPressedImage(image)}
+        size={THUMBNAIL_SIZE}
         onLongPress={() => {
+          setPressedImage(image);
           setScrollEnabled(false);
           modalVisibility.value = withSpring(1, { damping: 9.075, mass: 0.5 });
         }}
@@ -68,9 +70,8 @@ const MemoriesGrid = ({ setSelectedAlbum, galleryVisible }) => {
         renderItem={renderMemory}
         scrollEnabled={scrollEnabled}
         initialNumToRender={50}
-        keyExtractor={(album, index) => {
-          return album.images?.[0]?._id || index;
-        }}
+        keyExtractor={(album, index) => album.images?.[0]?._id || index}
+        getItemLayout={(_data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
         ListHeaderComponent={<DashboardHeader title='Memories' style={{ paddingHorizontal: '5%', marginBottom: 10 }} />}
       />
       <QuickPreviewModal modalVisibility={modalVisibility} image={pressedImage} />
