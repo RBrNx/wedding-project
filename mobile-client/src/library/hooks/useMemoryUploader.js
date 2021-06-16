@@ -1,6 +1,15 @@
-import { Extrapolate, interpolate, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import { useEffect } from 'react';
+import {
+  Easing,
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
-const useMemoryUploader = () => {
+const useMemoryUploader = ({ selectedAssets }) => {
   const sheetPosition = useSharedValue(0);
   const opacityBounce = useSharedValue(0);
   const uploadButtonVisible = useSharedValue(0);
@@ -27,6 +36,22 @@ const useMemoryUploader = () => {
     transform: [{ scale: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP) }],
   }));
 
+  const resetAnimatedValues = () => {
+    opacityBounce.value = 0;
+    uploadButtonVisible.value = 0;
+    folderSelectorVisible.value = 1;
+  };
+
+  useEffect(() => {
+    if (selectedAssets.length && !uploadButtonVisible.value) {
+      uploadButtonVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
+      folderSelectorVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
+    } else if (!selectedAssets.length) {
+      uploadButtonVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
+      folderSelectorVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
+    }
+  }, [folderSelectorVisible.value, selectedAssets.length, uploadButtonVisible.value]);
+
   return {
     sheetPosition,
     opacityBounce,
@@ -35,6 +60,7 @@ const useMemoryUploader = () => {
     folderSelectorAnimatedStyle,
     flatlistAnimatedStyle,
     uploadButtonAnimatedStyle,
+    resetAnimatedValues,
   };
 };
 

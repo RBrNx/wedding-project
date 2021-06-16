@@ -19,10 +19,12 @@ import parseError from 'library/utils/parseError';
 import axios from 'axios';
 import RNBlob from 'library/components/RNBlob';
 import { useMemoryUploader } from 'library/hooks';
+import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
 
+const { width } = Dimensions.get('window');
 const { BASE_API_URL } = Constants.manifest.extra;
 const NUM_COLUMNS = 3;
-const { width } = Dimensions.get('window');
+const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 
 const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   const [_hasPermission, setHasPermission] = useState(null);
@@ -36,12 +38,11 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   const {
     sheetPosition,
     opacityBounce,
-    uploadButtonVisible,
-    folderSelectorVisible,
     folderSelectorAnimatedStyle,
     uploadButtonAnimatedStyle,
     flatlistAnimatedStyle,
-  } = useMemoryUploader();
+    resetAnimatedValues,
+  } = useMemoryUploader({ selectedAssets });
 
   const requestMediaLibraryPermission = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -101,10 +102,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
 
       onUploadStart(albumUpload);
 
-      setTimeout(() => {
-        onDismiss();
-        setUploading(false);
-      }, 1000);
+      setTimeout(onSheetDismiss, 1000);
     } catch (err) {
       setUploading(false);
       const { message } = parseError(err);
@@ -154,32 +152,35 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     setTimeout(() => getAssets(), 750);
   }, [selectedFolder]);
 
+  const onSheetDismiss = () => {
+    setUploading(false);
+    setSelectedFolder(null);
+    setLastAssetId(null);
+    setSelectedAssets([]);
+    resetAnimatedValues();
+    onDismiss();
+  };
+
+  const onThumbnailSelect = (selectedAsset, isSelected) => {
+    if (!isSelected) {
+      setSelectedAssets(previousAssets => [...previousAssets, selectedAsset]);
+    } else {
+      setSelectedAssets(previousAssets => previousAssets.filter(a => a.id !== selectedAsset.id));
+    }
+  };
+
   const renderThumbnail = ({ item: asset }) => {
-    const isSelected = selectedAssets.some(a => a.id === asset.id);
+    const selectedAssetIndex = selectedAssets.findIndex(a => a.id === asset.id) + 1;
+    const isSelected = selectedAssetIndex > 0;
 
     return (
-      <Container>
-        <StyledImage source={{ uri: asset.uri }} />
-        <SelectorIcon
-          isSelected={isSelected}
-          onPress={() => {
-            if (!isSelected) {
-              setSelectedAssets([...selectedAssets, asset]);
-              uploadButtonVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
-              folderSelectorVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
-            } else {
-              const updatedAssets = selectedAssets.filter(a => a.id !== asset.id);
-              setSelectedAssets(updatedAssets);
-              if (!updatedAssets.length) {
-                uploadButtonVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
-                folderSelectorVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
-              }
-            }
-          }}
-        >
-          {isSelected && <SelectedIndex>{selectedAssets.findIndex(a => a.id === asset.id) + 1}</SelectedIndex>}
-        </SelectorIcon>
-      </Container>
+      <MemoryUploaderThumbnail
+        asset={asset}
+        size={THUMBNAIL_SIZE}
+        isSelected={isSelected}
+        selectedAssetIndex={selectedAssetIndex}
+        onThumbnailSelect={onThumbnailSelect}
+      />
     );
   };
 
@@ -211,12 +212,12 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
           showsHorizontalScrollIndicator={false}
           renderItem={renderFolder}
           keyExtractor={item => item.id}
-          initialNumToRender={20}
+          initialNumToRender={10}
         />
       </ListContainer>
       <BottomSheetModal
         active={active}
-        onDismiss={onDismiss}
+        onDismiss={onSheetDismiss}
         animatedIndex={sheetPosition}
         outerChildren={
           <StandardActionButton
@@ -228,15 +229,18 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
           />
         }
       >
-        <StyledBottomSheetFlatList
-          data={assets}
-          numColumns={NUM_COLUMNS}
-          renderItem={renderThumbnail}
-          initialNumToRender={20}
-          onEndReached={() => getAssets({ onEndReached: true })}
-          onEndReachedThreshold={1}
-          style={flatlistAnimatedStyle}
-        />
+        {active && (
+          <StyledBottomSheetFlatList
+            data={assets}
+            numColumns={NUM_COLUMNS}
+            renderItem={renderThumbnail}
+            initialNumToRender={20}
+            onEndReached={() => getAssets({ onEndReached: true })}
+            onEndReachedThreshold={1}
+            getItemLayout={(data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
+            style={flatlistAnimatedStyle}
+          />
+        )}
       </BottomSheetModal>
     </>
   );
@@ -291,34 +295,6 @@ const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   },
 }))`
   flex: 1;
-`;
-
-const Container = styled.View`
-  flex: ${1 / NUM_COLUMNS - 6 / width / 100};
-  margin: 3px;
-  height: ${width / NUM_COLUMNS}px;
-  width: ${width / NUM_COLUMNS}px;
-`;
-
-const SelectorIcon = styled(StandardPressable)`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 25px;
-  height: 25px;
-  border-radius: 15px;
-  border: 1.5px solid ${props => (props.isSelected ? Colours.secondary : 'white')};
-  background-color: ${props => (props.isSelected ? Colours.secondary : 'transparent')};
-  ${Layout.flexCenter}
-`;
-
-const SelectedIndex = styled.Text`
-  color: ${Colours.neutral.white};
-`;
-
-const StyledImage = styled.Image`
-  width: 100%;
-  height: 100%;
 `;
 
 export default MemoryUploader;
