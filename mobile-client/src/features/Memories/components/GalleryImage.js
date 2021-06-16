@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StatusBar } from 'react-native';
+import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components';
 
@@ -71,7 +71,6 @@ const StyledImage = styled(Animated.Image)`
   height: ${screenHeight * IMAGE_SCALE_MODIFIER}px;
   width: ${screenWidth * IMAGE_SCALE_MODIFIER}px;
   margin-right: 32px;
-  margin-top: ${StatusBar?.currentHeight || 0}px;
 `;
 
 export default GalleryImage;
