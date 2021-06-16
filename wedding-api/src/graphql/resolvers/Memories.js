@@ -39,7 +39,9 @@ const getMemoryAlbums = async (parent, args, { currentUser, db }) => {
         ],
       };
     }, {});
-    const albums = Object.entries(albumGroups).map(([_albumId, album]) => ({ images: album }));
+    const albums = Object.entries(albumGroups)
+      .map(([_albumId, album]) => ({ images: album.sort((a, b) => a.sortIndex - b.sortIndex) }))
+      .sort((a, b) => b.images[0].createdAt - a.images[0].createdAt);
 
     return albums;
   } catch (error) {

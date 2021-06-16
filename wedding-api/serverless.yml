@@ -54,6 +54,8 @@ provider:
   memorySize: 512
   timeout: 30
   lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
     COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID, self:custom.cognito.userPoolId}
@@ -61,12 +63,15 @@ provider:
     SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
     SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
     EVENT_ID: ${env:EVENT_ID}
+    CLOUDFRONT_SIGNER_PRIVATE_KEY: ${env:CLOUDFRONT_SIGNER_PRIVATE_KEY}
 
 functions:
   unauthenticated:
     handler: src/server.unauthenticatedGQLHandler
     environment:
       SLS_DEBUG: true
+      KEY_PAIR_ID: ${env:KEY_PAIR_ID, self:custom.cloudfront.keyPairId}
+      CLOUDFRONT_SIGNER_PRIVATE_KEY: ${env:CLOUDFRONT_SIGNER_PRIVATE_KEY}
     events:
       - http:
           path: api

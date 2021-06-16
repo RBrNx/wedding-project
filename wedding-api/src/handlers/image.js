@@ -18,7 +18,7 @@ exports.initiateUpload = async (event, context, callback) => {
 
   const results = await Promise.all(
     images.map(async metadata => {
-      const { contentType } = metadata;
+      const { contentType, sortIndex, caption } = metadata;
 
       if (!isValidImageContentType(contentType)) {
         const contentTypes = getSupportedContentTypes().join(',');
@@ -44,6 +44,8 @@ exports.initiateUpload = async (event, context, callback) => {
           albumId,
           photoId,
           eventId,
+          sortIndex,
+          caption,
         },
       };
 
@@ -98,6 +100,8 @@ exports.processUpload = async (event, context) => {
     albumId: s3Object.Metadata.albumid,
     photoId: s3Object.Metadata.photoid,
     eventId: s3Object.Metadata.eventid,
+    sortIndex: s3Object.Metadata.sortindex,
+    caption: s3Object.Metadata.caption,
     contentType: 'image/jpeg',
     // Map the S3 bucket key to a CloudFront URL to be stored in the DB
     url: `https://${CDN_DOMAIN_NAME}/${s3Record.object.key}`,

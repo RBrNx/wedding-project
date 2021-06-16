@@ -60,9 +60,14 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   const uploadImages = async () => {
     try {
       setUploading(true);
-      const body = selectedAssets.map(a => {
-        const [_filePath, extension] = a.uri.split('.');
-        return { contentType: extensionToMimeType(extension) };
+      const caption = 'Trip camping with the boys 🏕😎';
+      const body = selectedAssets.map((asset, index) => {
+        const [_filePath, extension] = asset.uri.split('.');
+        return {
+          contentType: extensionToMimeType(extension),
+          sortIndex: index.toString(),
+          caption: encodeURIComponent(caption),
+        };
       });
       const initiateUploadResponse = await awsSigV4Fetch(`${BASE_API_URL}initiateUpload`, {
         method: 'POST',
@@ -149,7 +154,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     setTimeout(() => getAssets(), 750);
   }, [selectedFolder]);
 
-  const renderItem = ({ item: asset }) => {
+  const renderThumbnail = ({ item: asset }) => {
     const isSelected = selectedAssets.some(a => a.id === asset.id);
 
     return (
@@ -226,7 +231,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
         <StyledBottomSheetFlatList
           data={assets}
           numColumns={NUM_COLUMNS}
-          renderItem={renderItem}
+          renderItem={renderThumbnail}
           initialNumToRender={20}
           onEndReached={() => getAssets({ onEndReached: true })}
           onEndReachedThreshold={1}
