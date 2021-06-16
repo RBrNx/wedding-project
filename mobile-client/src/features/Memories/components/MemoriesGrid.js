@@ -16,7 +16,7 @@ import MemoryUploader from './MemoryUploader';
 const NUM_COLUMNS = 3;
 const loadingData = new Array(30).fill(null).map((_, _id) => ({ _id }));
 
-const MemoriesGrid = ({ setSelectedAlbum }) => {
+const MemoriesGrid = ({ setSelectedAlbum, galleryVisible }) => {
   const modalVisibility = useSharedValue(0);
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -24,7 +24,7 @@ const MemoriesGrid = ({ setSelectedAlbum }) => {
   const [uploads, setUploads] = useState([]);
   const { data, loading } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
   const memories = loading ? loadingData : [...uploads, ...data?.getMemoryAlbums];
-  const spareSlots = NUM_COLUMNS - (memories.length % NUM_COLUMNS);
+  const spareSlots = NUM_COLUMNS - (memories.length % NUM_COLUMNS || NUM_COLUMNS);
   const paddedMemories = [
     ...memories,
     ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, images: [{ spacer: true }] })),
@@ -36,10 +36,10 @@ const MemoriesGrid = ({ setSelectedAlbum }) => {
 
     const uploadPromises = Promise.allSettled(images?.map(i => i.promise) || []);
 
-    if (image.spacer) return <StyledSpacer flex style={{ backgroundColor: 'blue' }} />;
+    if (image.spacer) return <StyledSpacer key={image._id || index} flex />;
     return (
       <GridItem
-        key={index}
+        key={image._id || index}
         image={image}
         isAlbum={images?.length > 1}
         isUpload={!!image.upload}
@@ -75,10 +75,11 @@ const MemoriesGrid = ({ setSelectedAlbum }) => {
       />
       <QuickPreviewModal modalVisibility={modalVisibility} image={pressedImage} />
       <StyledActionButton
-        label='Edit RSVP'
+        label='Show Upload Modal'
         icon={<StyledIcon name='image-plus' size={20} />}
         onPress={() => setShowUploadModal(true)}
         showUploadModal={showUploadModal}
+        galleryVisible={galleryVisible}
       />
       <MemoryUploader
         active={showUploadModal}
@@ -99,7 +100,7 @@ const StyledIcon = styled(MaterialCommunityIcons)`
 
 const StyledActionButton = styled(StandardActionButton)`
   ${props =>
-    props.showUploadModal &&
+    (props.showUploadModal || props.galleryVisible) &&
     css`
       elevation: 0;
     `}

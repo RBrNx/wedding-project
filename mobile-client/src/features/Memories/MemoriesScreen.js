@@ -7,18 +7,18 @@ import ImageGallery from './components/ImageGallery';
 const MemoriesScreen = ({ navigation }) => {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const images = selectedAlbum || [];
-  const visible = !!images.length;
+  const galleryVisible = !!images.length;
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      tabBarVisible: !visible,
+      tabBarVisible: !galleryVisible,
     });
-  }, [visible]);
+  }, [galleryVisible]);
 
   return (
     <Container>
-      <MemoriesGrid setSelectedAlbum={setSelectedAlbum} />
-      <ImageGallery visible={visible} images={images} onDismiss={() => setSelectedAlbum(null)} />
+      <MemoriesGrid setSelectedAlbum={setSelectedAlbum} galleryVisible={galleryVisible} />
+      <ImageGallery visible={galleryVisible} images={images} onDismiss={() => setSelectedAlbum(null)} />
     </Container>
   );
 };
