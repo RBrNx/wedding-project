@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Layout } from 'library/styles';
 import GalleryImage from './GalleryImage';
 import ImageGalleryHeader from './ImageGalleryHeader';
+import ImageGalleryFooter from './ImageGalleryFooter';
 
 const isAndroid = Platform.OS === 'android';
 const imageMargin = 16;
@@ -30,6 +31,7 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
     selectedIndex,
     headerFooterVisible,
   } = useImageGalleryGestures({ visible, images, onDismiss, imageMargin });
+  const captions = images.map(image => image.caption);
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
@@ -91,6 +93,7 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
           </TapGestureHandler>
         </GestureHandlerView>
       </TapGestureHandler>
+      <ImageGalleryFooter headerFooterVisible={headerFooterVisible} index={selectedIndex} captions={captions} />
     </Container>
   );
 };
