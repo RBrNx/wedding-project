@@ -126,6 +126,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
 
     const newAssets = [...(onEndReached ? assets : []), ...moreAssets];
     const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
+    opacityBounce.value = withTiming(0.5, { duration: 1000, easing: Easing.out(Easing.exp) });
     setAssets([
       ...newAssets,
       ...(hasNextPage
@@ -133,6 +134,9 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
         : new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, spacer: true }))),
     ]);
     setLastAssetId(hasNextPage ? endCursor : null);
+    opacityBounce.value = withTiming(1, { duration: 750, easing: Easing.out(Easing.exp) }, () => {
+      opacityBounce.value = 0;
+    });
   };
 
   useEffect(() => {
@@ -149,7 +153,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => getAssets(), 750);
+    getAssets();
   }, [selectedFolder]);
 
   const onSheetDismiss = () => {
@@ -159,6 +163,11 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     setSelectedAssets([]);
     resetAnimatedValues();
     onDismiss();
+  };
+
+  const changeSelectedFolder = folderId => {
+    setLastAssetId(null);
+    setSelectedFolder(folderId);
   };
 
   const onThumbnailSelect = (selectedAsset, isSelected) => {
@@ -189,15 +198,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     const isSelected = selectedFolder === id;
 
     return (
-      <Folder
-        isSelected={isSelected}
-        onPress={() => {
-          setSelectedFolder(id);
-          opacityBounce.value = withTiming(0.5, { duration: 1000, easing: Easing.out(Easing.exp) }, () => {
-            opacityBounce.value = withTiming(1, { duration: 750, easing: Easing.out(Easing.exp) });
-          });
-        }}
-      >
+      <Folder isSelected={isSelected} onPress={() => changeSelectedFolder(id)}>
         <FolderName isSelected={isSelected}>{title}</FolderName>
       </Folder>
     );
