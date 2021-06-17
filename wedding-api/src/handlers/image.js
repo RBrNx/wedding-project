@@ -79,8 +79,13 @@ exports.processUpload = async (event, context) => {
   console.log('processing upload: ', s3Record.object.key);
 
   const imageData = s3Object.Body;
-  const convertedImageData = await sharp(imageData).toFormat('jpeg').jpeg({ quality: 80, mozjpeg: true }).toBuffer();
+  const convertedImageData = await sharp(imageData)
+    .rotate()
+    .toFormat('jpeg')
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toBuffer();
   const resizedImageData = await sharp(imageData)
+    .rotate()
     .resize(300, 300)
     .toFormat('jpeg')
     .jpeg({ quality: 80, mozjpeg: true })
