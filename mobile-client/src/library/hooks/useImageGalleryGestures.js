@@ -42,7 +42,7 @@ const MAX_SCALE = 8;
 const STOP_BUFFER = 3; // Allows an excess buffer when checking that motion has stopped
 const SWIPE_SCALE_MODIFIER = 0.5;
 
-const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }) => {
+const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imageMargin = 0 }) => {
   /**
    * Fade animation for screen, it is always rendered with pointerEvents
    * set to none for fast opening
@@ -669,6 +669,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
    */
   const onSingleTap = useAnimatedGestureHandler({
     onActive: () => {
+      if (captionMode) return;
+
       cancelAnimation(headerFooterVisible);
       headerFooterVisible.value = headerFooterVisible.value > 0 ? withTiming(0) : withTiming(1);
     },

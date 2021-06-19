@@ -19,7 +19,7 @@ const NUM_COLUMNS = 3;
 const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 const loadingData = new Array(30).fill(null).map((_, _id) => ({ _id }));
 
-const MemoriesGrid = ({ setSelectedAlbum, galleryVisible }) => {
+const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisible, savedCaptions, onUpload }) => {
   const modalVisibility = useSharedValue(0);
   const [pressedImage, setPressedImage] = useState(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -85,7 +85,12 @@ const MemoriesGrid = ({ setSelectedAlbum, galleryVisible }) => {
       <MemoryUploader
         active={showUploadModal}
         onDismiss={() => setShowUploadModal(false)}
-        onUploadStart={upload => setUploads([upload, ...uploads])}
+        onUploadStart={upload => {
+          setUploads([upload, ...uploads]);
+          onUpload();
+        }}
+        sendImagesForCaptioning={sendImagesForCaptioning}
+        savedCaptions={savedCaptions}
       />
     </>
   );

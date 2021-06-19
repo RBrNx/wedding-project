@@ -27,7 +27,7 @@ const { BASE_API_URL } = Constants.manifest.extra;
 const NUM_COLUMNS = 3;
 const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 
-const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
+const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaptioning, savedCaptions }) => {
   const [_hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([]);
@@ -50,16 +50,15 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     setHasPermission(status === 'granted');
   };
 
-  const uploadImages = async () => {
+  const uploadImages = async assetsToUpload => {
     try {
       setUploading(true);
-      const caption = 'Trip camping with the boys 🏕😎';
-      const body = selectedAssets.map((asset, index) => {
-        const [_filePath, extension] = asset.uri.split('.');
+      const body = assetsToUpload.map((asset, index) => {
+        const extension = asset.uri.split('.').pop();
         return {
           contentType: extensionToMimeType(extension),
           sortIndex: index.toString(),
-          caption: encodeURIComponent(caption),
+          caption: encodeURIComponent(asset.caption),
         };
       });
       const initiateUploadResponse = await awsSigV4Fetch(`${BASE_API_URL}initiateUpload`, {
@@ -147,6 +146,13 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
     getAssets();
   }, [selectedFolder]);
 
+  useEffect(() => {
+    if (savedCaptions) {
+      const captionedAssets = selectedAssets.map((asset, index) => ({ ...asset, caption: savedCaptions[index] }));
+      uploadImages(captionedAssets);
+    }
+  }, [savedCaptions]);
+
   const onSheetDismiss = () => {
     setUploading(false);
     setSelectedFolder(null);
@@ -214,11 +220,13 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart }) => {
         animatedIndex={sheetPosition}
         outerChildren={
           <StandardActionButton
-            label='Edit RSVP'
+            label='Upload Images'
             icon={uploading ? <ActivityIndicator color='#fff' /> : <StyledIcon name='clouduploado' size={22} />}
             containerStyle={{ zIndex: 99 }}
             style={uploadButtonAnimatedStyle}
-            onPress={uploadImages}
+            onPress={() => {
+              sendImagesForCaptioning(selectedAssets);
+            }}
           />
         }
       >

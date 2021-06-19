@@ -7,14 +7,37 @@ import ImageGallery from './components/ImageGallery';
 
 const MemoriesScreen = () => {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
-  const images = selectedAlbum || [];
+  const [imagesForUpload, setImagesForUpload] = useState(null);
+  const [savedCaptions, setSavedCaptions] = useState(null);
+  const images = selectedAlbum || imagesForUpload || [];
   const galleryVisible = !!images.length;
 
   return (
     <Container>
-      <MemoriesGrid setSelectedAlbum={setSelectedAlbum} galleryVisible={galleryVisible} />
+      <MemoriesGrid
+        setSelectedAlbum={setSelectedAlbum}
+        sendImagesForCaptioning={setImagesForUpload}
+        galleryVisible={galleryVisible}
+        savedCaptions={savedCaptions}
+        onUpload={() => {
+          setSavedCaptions(null);
+          setImagesForUpload(null);
+        }}
+      />
       <Portal>
-        <ImageGallery visible={galleryVisible} images={images} onDismiss={() => setSelectedAlbum(null)} />
+        <ImageGallery
+          visible={galleryVisible}
+          images={images}
+          captionMode={!!imagesForUpload?.length}
+          onCaptionSubmit={captions => {
+            setSavedCaptions(captions);
+            setImagesForUpload(null);
+          }}
+          onDismiss={() => {
+            setSelectedAlbum(null);
+            setImagesForUpload(null);
+          }}
+        />
       </Portal>
     </Container>
   );
