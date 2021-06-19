@@ -1,18 +1,22 @@
-import React from 'react';
-import { Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Dimensions, Platform } from 'react-native';
 import { PanGestureHandler, PinchGestureHandler, TapGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import useImageGalleryGestures from 'library/hooks/useImageGalleryGestures';
 import styled from 'styled-components';
-import { Layout } from 'library/styles';
+import { Colours, Layout } from 'library/styles';
+import StandardTextInput from 'library/components/StandardTextInput';
+import StandardActionButton from 'library/components/StandardActionButton';
+import { AntDesign } from '@expo/vector-icons';
 import GalleryImage from './GalleryImage';
 import ImageGalleryHeader from './ImageGalleryHeader';
 import ImageGalleryFooter from './ImageGalleryFooter';
 
 const isAndroid = Platform.OS === 'android';
 const imageMargin = 16;
+const { width } = Dimensions.get('window');
 
-const ImageGallery = ({ visible, images, onDismiss }) => {
+const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss }) => {
   const {
     panRef,
     pinchRef,
@@ -30,8 +34,10 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
     offsetScale,
     selectedIndex,
     headerFooterVisible,
-  } = useImageGalleryGestures({ visible, images, onDismiss, imageMargin });
-  const captions = images.map(image => image.caption);
+  } = useImageGalleryGestures({ visible, images, onDismiss, captionMode, imageMargin });
+  const [captions, setCaptions] = useState({});
+  const captionsToRender = images.map(image => image.caption);
+  const currentCaption = captions[selectedIndex] || '';
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
@@ -73,7 +79,7 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
                       <GalleryWizard style={wizardStyle}>
                         {images.map((image, i) => (
                           <StyledGalleryImage
-                            key={`${image._id}`}
+                            key={`${image._id || image.id}`}
                             index={i}
                             image={image}
                             scale={scale}
@@ -93,7 +99,30 @@ const ImageGallery = ({ visible, images, onDismiss }) => {
           </TapGestureHandler>
         </GestureHandlerView>
       </TapGestureHandler>
-      <ImageGalleryFooter headerFooterVisible={headerFooterVisible} index={selectedIndex} captions={captions} />
+      {!captionMode && (
+        <ImageGalleryFooter
+          headerFooterVisible={headerFooterVisible}
+          index={selectedIndex}
+          captions={captionsToRender}
+        />
+      )}
+      {captionMode && (
+        <CaptionInputContainer>
+          <StandardTextInput
+            value={currentCaption}
+            onChangeText={value => setCaptions({ ...captions, [selectedIndex]: value })}
+            placeholder='Add a caption...'
+            rounded
+          />
+          <StandardActionButton
+            label='Upload Images'
+            icon={<StyledIcon name='clouduploado' size={22} />}
+            containerStyle={{ zIndex: 99 }}
+            position={{ bottom: 0, right: 16 }}
+            onPress={() => onCaptionSubmit(captions)}
+          />
+        </CaptionInputContainer>
+      )}
     </Container>
   );
 };
@@ -117,6 +146,18 @@ const GalleryWizard = styled(Animated.View)`
 
 const StyledGalleryImage = styled(GalleryImage)`
   margin-right: ${imageMargin}px;
+`;
+
+const CaptionInputContainer = styled(Animated.View)`
+  position: absolute;
+  bottom: ${Platform.OS === 'ios' ? 48 : 32}px;
+  width: 100%;
+  padding-left: 5%;
+  padding-right: ${width * 0.2 + 8}px;
+`;
+
+const StyledIcon = styled(AntDesign)`
+  color: ${Colours.neutral.white};
 `;
 
 export default ImageGallery;
