@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import theme from 'styled-theming';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
 
@@ -23,6 +23,7 @@ const StandardTextInput = ({
   style,
   inputStyle,
   flat,
+  rounded,
   showCharacterCount = false,
   placeholderComponent,
 }) => {
@@ -51,20 +52,34 @@ const StandardTextInput = ({
     opacity: interpolate(focusAnimation.value, [0, 1], [1, 0], Extrapolate.CLAMP),
     transform: [{ translateX: interpolate(focusAnimation.value, [0.75, 1], [0, -10], Extrapolate.CLAMP) }],
   }));
-  const placeholderAnimatedStyles = useAnimatedStyle(() => ({
-    opacity: value ? 0 : focusAnimation.value,
-    transform: [{ translateX: interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolate.CLAMP) }],
-  }));
+  const placeholderAnimatedStyles = useAnimatedStyle(() => {
+    let opacity = value ? 0 : focusAnimation.value;
+    let translateX = interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolate.CLAMP);
+    if (rounded) {
+      opacity = value ? 0 : 1;
+      translateX = 0;
+    }
+
+    return {
+      opacity,
+      transform: [{ translateX }],
+    };
+  });
 
   return (
     <>
-      <ContainerComponent style={style} isFocused={isFocused} onPress={() => textInput.current.focus()}>
+      <ContainerComponent
+        style={style}
+        isFocused={isFocused}
+        onPress={() => textInput.current.focus()}
+        rounded={rounded}
+      >
         <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
         <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
           {label}
         </RegularLabel>
         {!placeholderComponent && (
-          <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline}>
+          <PlaceholderLabel style={placeholderAnimatedStyles} multiline={multiline} rounded={rounded}>
             {placeholder}
           </PlaceholderLabel>
         )}
@@ -102,6 +117,14 @@ const Container = styled.Pressable`
   ${Outlines.boxShadow};
   border-color: ${props => (props.isFocused ? Colours.secondary : 'transparent')};
   ${Outlines.inputBorder}
+  ${props =>
+    props.rounded &&
+    css`
+      height: 56px;
+      border-radius: 28px;
+      padding-top: 10px;
+      padding-left: 20px;
+    `}
 `;
 
 const FlatContainer = styled(Container)`
@@ -138,6 +161,12 @@ const PlaceholderLabel = styled(Animated.Text)`
   color: #aaa;
   ${Typography.body};
   margin-top: ${props => (props.multiline ? 5 : 0)}px;
+  ${props =>
+    props.rounded &&
+    css`
+      top: 14px;
+      left: 20px;
+    `}
 `;
 
 const StyledTextInput = styled.TextInput`
