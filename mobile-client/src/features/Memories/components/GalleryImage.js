@@ -46,7 +46,13 @@ const GalleryImage = React.memo(
       return <EmptyView style={[style, animatedGalleryImageStyle]} />;
     }
 
-    return <StyledImage resizeMode='contain' source={{ uri: image?.url }} style={[style, animatedGalleryImageStyle]} />;
+    return (
+      <StyledImage
+        resizeMode='contain'
+        source={{ uri: image?.url || image?.uri }}
+        style={[style, animatedGalleryImageStyle]}
+      />
+    );
   },
   (prevProps, nextProps) => {
     if (
