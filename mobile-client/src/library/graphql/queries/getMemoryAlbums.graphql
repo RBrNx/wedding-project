@@ -9,6 +9,7 @@ query getMemoryAlbums($filter: MemoryFilterInput!) {
         thumbnail
         sortIndex
         caption
+        dominantColour
         createdAt
         updatedAt
       }

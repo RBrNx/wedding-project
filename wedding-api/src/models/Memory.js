@@ -9,6 +9,7 @@ const MemorySchema = new Schema(
     photoId: { type: String, required: true },
     sortIndex: { type: Number, required: true },
     caption: { type: String },
+    dominantColour: { type: String },
     url: { type: String, required: true },
     thumbnail: { type: String, required: true },
   },

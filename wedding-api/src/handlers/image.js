@@ -1,6 +1,7 @@
 import S3 from 'aws-sdk/clients/s3';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
+import * as Vibrant from 'node-vibrant';
 import { getUserFromRequest } from '../lib/helpers/users';
 import { isValidImageContentType, getSupportedContentTypes, getFileSuffixForContentType } from '../lib/helpers/image';
 import { connectToDatabase } from '../lib/database';
@@ -93,6 +94,8 @@ exports.processUpload = async (event, context) => {
   const [filePath] = s3Record.object.key.split('.');
   const convertedImageKey = `${filePath}.jpg`.replace('uploads/', '');
   const thumbnailKey = `${filePath}_thumbnail.jpg`.replace('uploads/', '');
+  const palette = await Vibrant.from(convertedImageData).getPalette();
+  const [dominantColour] = Object.values(palette).sort((a, b) => b.population - a.population);
 
   // eslint-disable-next-line no-console
   console.log('new file paths: ', { convertedImageKey, thumbnailKey });
@@ -108,6 +111,7 @@ exports.processUpload = async (event, context) => {
     sortIndex: s3Object.Metadata.sortindex,
     caption: s3Object.Metadata.caption,
     contentType: 'image/jpeg',
+    dominantColour: dominantColour.hex,
     // Map the S3 bucket key to a CloudFront URL to be stored in the DB
     url: `https://${CDN_DOMAIN_NAME}/${s3Record.object.key}`,
     thumbnail: `https://${CDN_DOMAIN_NAME}/${thumbnailKey}`,

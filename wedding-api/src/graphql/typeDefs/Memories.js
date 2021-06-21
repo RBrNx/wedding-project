@@ -12,6 +12,7 @@ const schema = gql`
     eventId: ID!
     sortIndex: Int
     caption: String
+    dominantColour: String
     url: URL!
     thumbnail: URL!
     createdAt: DateTime!
