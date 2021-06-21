@@ -10,6 +10,7 @@ const schema = gql`
     albumId: String!
     photoId: String!
     eventId: ID!
+    uploadedBy: User
     sortIndex: Int
     caption: String
     dominantColour: String

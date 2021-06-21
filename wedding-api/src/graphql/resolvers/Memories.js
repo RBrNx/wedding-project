@@ -24,7 +24,7 @@ const getMemoryAlbums = async (parent, args, { currentUser, db }) => {
   try {
     const MemoryModel = db.model('Memory');
 
-    const memories = await MemoryModel.find({ eventId: currentUser.eventId }).lean();
+    const memories = await MemoryModel.find({ eventId: currentUser.eventId }).populate('uploadedBy').lean();
 
     const expires = new Date(new Date().getTime() + 1000 * 10).getTime();
     const albumGroups = memories.reduce((albums, memory) => {

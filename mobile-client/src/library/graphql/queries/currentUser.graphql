@@ -1,5 +1,6 @@
 query GET_CURRENT_USER {
   getCurrentUser {
+    _id
     eventId
     firstName
     lastName

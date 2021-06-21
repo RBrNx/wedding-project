@@ -19,7 +19,7 @@ exports.initiateUpload = async (event, context, callback) => {
 
   const results = await Promise.all(
     images.map(async metadata => {
-      const { contentType, sortIndex, caption } = metadata;
+      const { contentType, sortIndex, caption, uploadedBy } = metadata;
 
       if (!isValidImageContentType(contentType)) {
         const contentTypes = getSupportedContentTypes().join(',');
@@ -47,6 +47,7 @@ exports.initiateUpload = async (event, context, callback) => {
           eventId,
           sortIndex,
           caption,
+          uploadedBy,
         },
       };
 
@@ -108,6 +109,7 @@ exports.processUpload = async (event, context) => {
     albumId: s3Object.Metadata.albumid,
     photoId: s3Object.Metadata.photoid,
     eventId: s3Object.Metadata.eventid,
+    uploadedBy: s3Object.Metadata.uploadedby,
     sortIndex: s3Object.Metadata.sortindex,
     caption: s3Object.Metadata.caption,
     contentType: 'image/jpeg',

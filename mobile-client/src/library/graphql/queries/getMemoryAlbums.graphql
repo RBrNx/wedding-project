@@ -5,6 +5,10 @@ query getMemoryAlbums($filter: MemoryFilterInput!) {
         _id
         photoId
         eventId
+        uploadedBy {
+          firstName
+          lastName
+        }
         url
         thumbnail
         sortIndex
