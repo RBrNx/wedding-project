@@ -39,6 +39,7 @@ const Gradient = styled(LinearGradient).attrs(() => ({
   align-items: center;
   justify-content: space-between;
   padding-top: 35px;
+  padding-bottom: 10px;
   padding-horizontal: 0px;
 `;
 

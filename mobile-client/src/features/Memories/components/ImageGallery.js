@@ -36,7 +36,6 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
     headerFooterVisible,
   } = useImageGalleryGestures({ visible, images, onDismiss, captionMode, imageMargin });
   const [captions, setCaptions] = useState({});
-  const captionsToRender = images.map(image => image.caption);
   const currentCaption = captions[selectedIndex] || '';
 
   return (
@@ -100,11 +99,7 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
         </GestureHandlerView>
       </TapGestureHandler>
       {!captionMode && (
-        <ImageGalleryFooter
-          headerFooterVisible={headerFooterVisible}
-          index={selectedIndex}
-          captions={captionsToRender}
-        />
+        <ImageGalleryFooter headerFooterVisible={headerFooterVisible} index={selectedIndex} images={images} />
       )}
       {captionMode && (
         <CaptionInputContainer>
@@ -113,6 +108,7 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
             onChangeText={value => setCaptions({ ...captions, [selectedIndex]: value })}
             placeholder='Add a caption...'
             rounded
+            maxLength={150}
           />
           <StandardActionButton
             label='Upload Images'
