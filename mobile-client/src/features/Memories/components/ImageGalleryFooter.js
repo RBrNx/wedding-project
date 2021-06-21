@@ -23,8 +23,6 @@ const ImageGalleryFooter = ({ headerFooterVisible, images, index }) => {
   const captionColour = dominantColour ? getComplementaryColor(dominantColour) : '#000';
   const fullName = uploadedBy ? `${uploadedBy.firstName} ${uploadedBy.lastName}` : null;
 
-  console.log(currentImage);
-
   return (
     <Container style={animatedStyle}>
       {caption && <ImageCaption backgroundColour={captionColour}>{caption}</ImageCaption>}
