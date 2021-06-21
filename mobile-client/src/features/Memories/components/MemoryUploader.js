@@ -13,7 +13,7 @@ import { AntDesign } from '@expo/vector-icons';
 import awsSigV4Fetch from 'library/utils/awsSigV4Fetch';
 import { extensionToMimeType } from 'library/utils/mimetypes';
 import Constants from 'expo-constants';
-import { useAlert } from 'context';
+import { useAlert, useAuth } from 'context';
 import { AlertType } from 'library/enums';
 import parseError from 'library/utils/parseError';
 import axios from 'axios';
@@ -35,6 +35,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
   const [lastAssetId, setLastAssetId] = useState(null);
   const [selectedAssets, setSelectedAssets] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const { currentUser } = useAuth();
   const { showAlert } = useAlert();
   const {
     sheetPosition,
@@ -59,6 +60,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
           contentType: extensionToMimeType(extension),
           sortIndex: index.toString(),
           caption: encodeURIComponent(asset.caption),
+          uploadedBy: currentUser._id,
         };
       });
       const initiateUploadResponse = await awsSigV4Fetch(`${BASE_API_URL}initiateUpload`, {

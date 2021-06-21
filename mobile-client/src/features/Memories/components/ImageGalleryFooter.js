@@ -7,27 +7,38 @@ import UserAvatar from 'react-native-user-avatar';
 import { View } from 'react-native';
 import Spacer from 'library/components/Spacer';
 import { getComplementaryColor, getContrastingTextColor } from 'library/utils/colours';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+
+dayjs.extend(advancedFormat);
 
 const ImageGalleryFooter = ({ headerFooterVisible, images, index }) => {
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: headerFooterVisible.value,
   }));
-  const currentImage = images[index];
+  const currentImage = images[index] || {};
+  const { dominantColour, uploadedBy, createdAt } = currentImage;
+
   const caption = currentImage?.caption ? decodeURIComponent(currentImage.caption) : null;
-  const captionColour = currentImage?.dominantColour ? getComplementaryColor(currentImage.dominantColour) : '#000';
+  const captionColour = dominantColour ? getComplementaryColor(dominantColour) : '#000';
+  const fullName = uploadedBy ? `${uploadedBy.firstName} ${uploadedBy.lastName}` : null;
+
+  console.log(currentImage);
 
   return (
     <Container style={animatedStyle}>
       {caption && <ImageCaption backgroundColour={captionColour}>{caption}</ImageCaption>}
       <Spacer size={20} />
-      <Gradient>
-        <UserAvatar size={42} name='ConCon Waston' />
-        <Spacer size={10} />
-        <View>
-          <UploaderText>ConCon Waston</UploaderText>
-          <UploaderText>20th June 2021 10:49am</UploaderText>
-        </View>
-      </Gradient>
+      {uploadedBy && (
+        <Gradient>
+          <UserAvatar size={42} name={fullName} />
+          <Spacer size={10} />
+          <View>
+            <UploaderText>{fullName}</UploaderText>
+            <UploaderText>{dayjs(createdAt).format('Do MMM YYYY h:mma')}</UploaderText>
+          </View>
+        </Gradient>
+      )}
     </Container>
   );
 };
@@ -67,6 +78,7 @@ const ImageCaption = styled.Text`
 const UploaderText = styled.Text`
   color: ${Colours.neutral.white};
   text-shadow: 0px 0.25px 0.5px black;
+  ${Typography.regularFont};
 `;
 
 export default ImageGalleryFooter;
