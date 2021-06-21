@@ -31,7 +31,6 @@ const MemoriesScreen = () => {
           captionMode={!!imagesForUpload?.length}
           onCaptionSubmit={captions => {
             setSavedCaptions(captions);
-            setImagesForUpload(null);
           }}
           onDismiss={() => {
             setSelectedAlbum(null);

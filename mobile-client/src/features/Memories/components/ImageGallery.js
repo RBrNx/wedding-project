@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, Platform } from 'react-native';
 import { PanGestureHandler, PinchGestureHandler, TapGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import useImageGalleryGestures from 'library/hooks/useImageGalleryGestures';
@@ -36,7 +36,12 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
     headerFooterVisible,
   } = useImageGalleryGestures({ visible, images, onDismiss, captionMode, imageMargin });
   const [captions, setCaptions] = useState({});
+  const [uploading, setUploading] = useState(false);
   const currentCaption = captions[selectedIndex] || '';
+
+  useEffect(() => {
+    if (!captionMode && uploading) setUploading(false);
+  }, [captionMode]);
 
   return (
     <Container pointerEvents={visible ? 'auto' : 'none'} style={showGalleryStyle}>
@@ -112,10 +117,13 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
           />
           <StandardActionButton
             label='Upload Images'
-            icon={<StyledIcon name='clouduploado' size={22} />}
+            icon={uploading ? <ActivityIndicator color='#fff' /> : <StyledIcon name='clouduploado' size={22} />}
             containerStyle={{ zIndex: 99 }}
             position={{ bottom: 0, right: 16 }}
-            onPress={() => onCaptionSubmit(captions)}
+            onPress={() => {
+              setUploading(true);
+              onCaptionSubmit(captions);
+            }}
           />
         </CaptionInputContainer>
       )}
