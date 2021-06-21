@@ -74,13 +74,18 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
           uploadRequests.map(async (request, index) => {
             const { photoId, s3PutObjectUrl } = request;
             const { uri } = selectedAssets[index];
-            const { contentType } = body[index];
+            const { contentType, sortIndex, caption } = body[index];
+            const { firstName, lastName } = currentUser;
             const fileBlob = await getBlob(uri);
 
             return {
               _id: photoId,
               url: uri,
               thumbnail: uri,
+              sortIndex,
+              caption,
+              uploadedBy: { firstName, lastName },
+              createdAt: new Date(),
               upload: true,
               promise: axios.put(s3PutObjectUrl, fileBlob, {
                 headers: {
