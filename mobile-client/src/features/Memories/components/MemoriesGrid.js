@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/react-hooks';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import GET_MEMORY_ALBUMS from 'library/graphql/queries/getMemoryAlbums.graphql';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
@@ -11,6 +11,7 @@ import { css } from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import { Dimensions } from 'react-native';
 import { useRefreshControl } from 'library/hooks';
+import { useFocusEffect } from '@react-navigation/native';
 import QuickPreviewModal from './QuickPreviewModal';
 import GridItem from './GridItem';
 import MemoryUploader from './MemoryUploader';
@@ -26,6 +27,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploads, setUploads] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
   const { data, loading, refetch } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
   const { renderRefreshControl } = useRefreshControl({ onRefresh: async () => refetch(), offset: 75 });
   const memories = loading ? loadingData : [...uploads, ...data?.getMemoryAlbums];
@@ -34,6 +36,19 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
     ...memories,
     ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, images: [{ spacer: true }] })),
   ];
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!isFocused) {
+        refetch();
+        setIsFocused(true);
+      }
+
+      return () => {
+        if (isFocused) setIsFocused(false);
+      };
+    }, [isFocused, refetch]),
+  );
 
   const renderMemory = ({ item: album }) => {
     const { images } = album;
