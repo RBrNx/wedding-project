@@ -9,6 +9,7 @@ import useImageGalleryGestures from './useImageGalleryGestures';
 import useLazyQuery from './useLazyQuery';
 import useMemoryUploader from './useMemoryUploader';
 import usePreventGoingBack from './usePreventGoingBack';
+import useRefreshControl from './useRefreshControl';
 import useSubmitRSVP from './useSubmitRSVP';
 import useVector from './useVector';
 
@@ -24,6 +25,7 @@ export {
   useLazyQuery,
   useMemoryUploader,
   usePreventGoingBack,
+  useRefreshControl,
   useSubmitRSVP,
   useVector,
 };

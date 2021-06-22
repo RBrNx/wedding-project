@@ -10,6 +10,7 @@ import { Colours } from 'library/styles';
 import { css } from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import { Dimensions } from 'react-native';
+import { useRefreshControl } from 'library/hooks';
 import QuickPreviewModal from './QuickPreviewModal';
 import GridItem from './GridItem';
 import MemoryUploader from './MemoryUploader';
@@ -25,7 +26,8 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploads, setUploads] = useState([]);
-  const { data, loading } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
+  const { data, loading, refetch } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
+  const { renderRefreshControl } = useRefreshControl({ onRefresh: async () => refetch(), offset: 75 });
   const memories = loading ? loadingData : [...uploads, ...data?.getMemoryAlbums];
   const spareSlots = NUM_COLUMNS - (memories.length % NUM_COLUMNS || NUM_COLUMNS);
   const paddedMemories = [
@@ -70,6 +72,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
         renderItem={renderMemory}
         scrollEnabled={scrollEnabled}
         initialNumToRender={50}
+        refreshControl={renderRefreshControl()}
         keyExtractor={(album, index) => album.images?.[0]?._id || index}
         getItemLayout={(_data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
         ListHeaderComponent={<DashboardHeader title='Memories' style={{ paddingHorizontal: '5%', marginBottom: 10 }} />}
