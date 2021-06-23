@@ -133,7 +133,6 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imag
     numberOfPinchFingers.value = 0;
     isPinch.value = false;
     isSwiping.value = IsSwiping.UNDETERMINED;
-    hasPinched.value = HasPinched.FALSE;
   };
 
   /**
@@ -207,7 +206,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imag
           if (isAndroid && hasPinched.value === HasPinched.TRUE) {
             hasPinched.value = HasPinched.FALSE;
             isSwiping.value = IsSwiping.FALSE;
-            offset.set({ x: translate.x.value + evt.translationX, y: translate.y.value - evt.translationY });
+            offset.set({ x: translate.x.value - evt.translationX, y: translate.y.value - evt.translationY });
           }
           /**
            * isSwiping is used to prevent Y movement if a clear swipe to next
