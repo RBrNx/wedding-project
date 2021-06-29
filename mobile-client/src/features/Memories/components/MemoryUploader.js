@@ -59,7 +59,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
         return {
           contentType: extensionToMimeType(extension),
           sortIndex: index.toString(),
-          caption: encodeURIComponent(asset.caption),
+          ...(asset.caption && { caption: encodeURIComponent(asset.caption) }),
           uploadedBy: currentUser._id,
         };
       });

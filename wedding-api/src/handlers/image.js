@@ -46,7 +46,7 @@ exports.initiateUpload = async (event, context, callback) => {
           photoId,
           eventId,
           sortIndex,
-          caption,
+          ...(caption && { caption }),
           uploadedBy,
         },
       };
