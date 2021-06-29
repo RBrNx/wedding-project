@@ -8,6 +8,7 @@ import { Colours, Layout } from 'library/styles';
 import StandardTextInput from 'library/components/StandardTextInput';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
+import { useAvoidKeyboard } from 'library/hooks';
 import GalleryImage from './GalleryImage';
 import ImageGalleryHeader from './ImageGalleryHeader';
 import ImageGalleryFooter from './ImageGalleryFooter';
@@ -38,6 +39,11 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
   const [captions, setCaptions] = useState({});
   const [uploading, setUploading] = useState(false);
   const currentCaption = captions[selectedIndex] || '';
+
+  const { avoidKeyboardStyle } = useAvoidKeyboard({
+    padding: Platform.select({ ios: 0, android: 50 }),
+    includeKeyboardHeight: Platform.OS !== 'android',
+  });
 
   useEffect(() => {
     if (!captionMode && uploading) setUploading(false);
@@ -107,7 +113,7 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
         <ImageGalleryFooter headerFooterVisible={headerFooterVisible} index={selectedIndex} images={images} />
       )}
       {captionMode && (
-        <CaptionInputContainer>
+        <CaptionInputContainer style={avoidKeyboardStyle}>
           <StandardTextInput
             value={currentCaption}
             onChangeText={value => setCaptions({ ...captions, [selectedIndex]: value })}
