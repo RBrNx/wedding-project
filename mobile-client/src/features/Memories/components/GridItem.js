@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useAlert } from 'context';
 import CachedImage from 'library/components/CachedImage';
+import { AlertType } from 'library/enums';
 import { Layout } from 'library/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ActivityIndicator, Pressable } from 'react-native';
 import styled from 'styled-components/native';
@@ -10,8 +12,18 @@ import ImageLoader from './ImageLoader';
 const GridItem = React.memo(
   ({ image, isAlbum, isUpload, size, uploadPromises, onPressIn, onPressOut, onLongPress, onPress }) => {
     const [isPending, setIsPending] = useState(!!isUpload);
+    const { showAlert } = useAlert();
 
-    if (isUpload) uploadPromises.then(() => setTimeout(() => setIsPending(false), 3000));
+    useEffect(() => {
+      if (isUpload) {
+        uploadPromises.then(() =>
+          setTimeout(() => {
+            setIsPending(false);
+            showAlert({ message: 'Your images have been successfully uploaded!', type: AlertType.SUCCESS });
+          }, 3000),
+        );
+      }
+    }, [isUpload]);
 
     return (
       <Container size={size}>
