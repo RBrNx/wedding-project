@@ -27,7 +27,7 @@ const CachedImage = ({ source: { uri }, loadingComponent, ...otherProps }) => {
     const loadImage = async () => {
       if (uri) {
         try {
-          if (uri.startsWith('file://')) {
+          if (uri.startsWith('file://') || uri.startsWith('assets-library://')) {
             setImgURI(uri);
             return;
           }
