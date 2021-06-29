@@ -16,9 +16,9 @@ import Constants from 'expo-constants';
 import { useAlert, useAuth } from 'context';
 import { AlertType } from 'library/enums';
 import parseError from 'library/utils/parseError';
-import axios from 'axios';
 import { useMemoryUploader } from 'library/hooks';
 import Spacer from 'library/components/Spacer';
+import wretch from 'wretch';
 import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
 import { getBlob } from '../helpers';
 
@@ -55,7 +55,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
     try {
       setUploading(true);
       const body = assetsToUpload.map((asset, index) => {
-        const extension = asset.uri.split('.').pop();
+        const extension = new URL(asset.uri).pathname.split('.').pop();
         return {
           contentType: extensionToMimeType(extension),
           sortIndex: index.toString(),
@@ -68,6 +68,10 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
         body: JSON.stringify(body),
       });
       const uploadRequests = await initiateUploadResponse.json();
+
+      if (!Array.isArray(uploadRequests)) {
+        throw new Error(uploadRequests.message);
+      }
 
       const albumUpload = {
         images: await Promise.all(
@@ -87,12 +91,12 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
               uploadedBy: { firstName, lastName },
               createdAt: new Date(),
               upload: true,
-              promise: axios.put(s3PutObjectUrl, fileBlob, {
+              promise: wretch(s3PutObjectUrl, {
                 headers: {
                   'Content-Type': contentType,
                   'Cache-Control': 'max-age=31557600',
                 },
-              }),
+              }).put(fileBlob),
             };
           }),
         ),

@@ -34,7 +34,6 @@
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
     "aws-amplify": "^3.3.12",
-    "axios": "^0.21.1",
     "color": "^3.1.2",
     "dayjs": "^1.10.5",
     "expo": "^41.0.0",
@@ -72,7 +71,8 @@
     "react-native-web": "~0.13.12",
     "sentry-expo": "^3.1.0",
     "styled-components": "^5.2.3",
-    "styled-theming": "^2.2.0"
+    "styled-theming": "^2.2.0",
+    "wretch": "^1.7.4"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
