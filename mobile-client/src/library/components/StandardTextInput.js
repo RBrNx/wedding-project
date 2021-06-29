@@ -124,6 +124,7 @@ const Container = styled.Pressable`
       border-radius: 28px;
       padding-top: 10px;
       padding-left: 20px;
+      justify-content: center;
     `}
 `;
 
@@ -164,7 +165,7 @@ const PlaceholderLabel = styled(Animated.Text)`
   ${props =>
     props.rounded &&
     css`
-      top: 14px;
+      top: 15px;
       left: 20px;
     `}
 `;

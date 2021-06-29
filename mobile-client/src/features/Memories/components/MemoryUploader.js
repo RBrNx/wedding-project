@@ -276,17 +276,17 @@ const FolderList = styled.FlatList.attrs(() => ({
 
 const Folder = styled(StandardPressable)`
   min-width: 50px;
-  height: 35px;
   border-radius: 50px;
   border: 2px solid ${FolderColour};
   margin-horizontal: 5px;
-  padding: 10px;
   background-color: ${props => (props.isSelected ? FolderColour : 'transparent')};
   ${Layout.flexCenter}
 `;
 
 const FolderName = styled.Text`
   color: ${props => (props.isSelected ? Theme.background(props) : FolderColour)};
+  padding-horizontal: 10px;
+  padding-vertical: 8px;
 `;
 
 const StyledIcon = styled(AntDesign)`

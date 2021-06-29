@@ -2,7 +2,7 @@ import React from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Ionicons } from '@expo/vector-icons';
-import { Colours } from 'library/styles';
+import { Colours, Outlines } from 'library/styles';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const ImageGalleryHeader = ({ headerFooterVisible, index, imageCount, onDismiss }) => {
@@ -38,7 +38,7 @@ const Gradient = styled(LinearGradient).attrs(() => ({
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-top: 35px;
+  padding-top: 12%;
   padding-bottom: 10px;
   padding-horizontal: 0px;
 `;
@@ -54,7 +54,7 @@ const ImageCount = styled.Text`
   flex-direction: row;
   color: ${Colours.neutral.white};
   background-color: ${Colours.neutral.grey4};
-  border-radius: 20px;
+  ${Outlines.borderRadius}
   margin-right: 10px;
 `;
 
