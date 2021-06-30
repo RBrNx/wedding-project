@@ -1,0 +1,22 @@
+query getMemoryAlbums($filter: MemoryFilterInput!) {
+  getMemoryAlbums(filter: $filter) {
+    images {
+      ... on ImageMemory {
+        _id
+        photoId
+        eventId
+        uploadedBy {
+          firstName
+          lastName
+        }
+        url
+        thumbnail
+        sortIndex
+        caption
+        dominantColour
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

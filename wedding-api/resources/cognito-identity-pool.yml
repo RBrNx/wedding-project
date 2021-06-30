@@ -74,7 +74,7 @@ Resources:
                       - Ref: AWS::AccountId
                       - ':'
                       - Ref: ApiGatewayRestApi
-                      - '/${self:provider.stage}/POST/admin'
+                      - '/${self:provider.stage}/POST/*'
 
   # IAM role used for unauthenticated users
   CognitoUnauthRole:

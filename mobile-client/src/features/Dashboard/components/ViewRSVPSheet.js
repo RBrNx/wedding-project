@@ -14,7 +14,7 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
   const scrollY = useSharedValue(0);
   const { navigate } = useNavigation();
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const animatedActionButtonStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(scrollY.value, [0.2, 1], [0, 1], Extrapolate.CLAMP),
       transform: [{ translateY: interpolate(scrollY.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
@@ -31,7 +31,8 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
           label='Edit RSVP'
           icon={<StyledIcon name='edit' size={20} />}
           onPress={() => navigate('SubmitRSVP', { rsvpForm })}
-          style={animatedStyle}
+          style={animatedActionButtonStyle}
+          containerStyle={{ zIndex: 99 }}
         />
       }
     >

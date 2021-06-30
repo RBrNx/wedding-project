@@ -6,6 +6,7 @@ on:
       - develop
     paths:
       - 'wedding-api/**'
+      - '.github/workflows/deploy-api-dev.yml'
 defaults:
   run:
     working-directory: ./wedding-api
@@ -42,7 +43,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - run: yarn
+      - name: Print Working directory and Yarn Version
+        run: pwd && yarn --version && npx envinfo --binaries --system
+      - name: Install and View Tree
+        run: sudo apt-get install tree && tree -a -I 'node_modules|.git' -L 4
+      - name: Install modules
+        run: yarn
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
@@ -55,3 +61,6 @@ jobs:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           EVENT_ID: ${{ secrets.DEV_EVENT_ID }}
+          CDN_DOMAIN_NAME: ${{ secrets.CDN_DOMAIN_NAME }}
+          CLOUDFRONT_SIGNER_PUBLIC_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PUBLIC_KEY }}
+          CLOUDFRONT_SIGNER_PRIVATE_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PRIVATE_KEY }}

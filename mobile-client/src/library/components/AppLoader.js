@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import { useFonts, Muli_400Regular, Muli_700Bold } from '@expo-google-fonts/muli';
 import { useAuth, useSettings } from 'context';
+import cleanImageCache from 'library/utils/cleanImageCache';
 import AnimatedSplashScreen from './AnimatedSplashScreen';
 
 const AppLoader = ({ children }) => {
@@ -19,6 +20,10 @@ const AppLoader = ({ children }) => {
     const asset = await Asset.fromModule(require('assets/splash.png')).downloadAsync();
     setSplashImage(asset);
   };
+
+  useEffect(() => {
+    cleanImageCache();
+  }, []);
 
   if (!isSplashReady) {
     return (

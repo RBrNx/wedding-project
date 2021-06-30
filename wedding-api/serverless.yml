@@ -7,11 +7,14 @@ plugins:
   - serverless-webpack
   - serverless-offline
   - serverless-domain-manager
+  - serverless-iam-roles-per-function
 
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
-    includeModules: true
+    includeModules:
+      nodeModulesRelativeDir: '../'
+    packager: 'yarn'
   serverless-offline:
     host: 0.0.0.0
     port: 4000
@@ -34,6 +37,11 @@ custom:
   cognito:
     userPoolId: !Ref CognitoUserPoolWedding
     appClientId: !Ref CognitoUserPoolClientAPI
+  s3:
+    photosBucket: watson-wedding-${self:provider.stage}-photos
+  cloudfront:
+    domainName: ${env:CDN_DOMAIN_NAME}
+    keyPairId: !Ref SignerPublicKey
 
 useDotenv: true
 disabledDeprecations:
@@ -46,6 +54,8 @@ provider:
   memorySize: 512
   timeout: 30
   lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
   environment:
     MONGODB_URI: ${env:MONGODB_URI}
     COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID, self:custom.cognito.userPoolId}
@@ -53,40 +63,45 @@ provider:
     SPOTIFY_CLIENT_ID: ${env:SPOTIFY_CLIENT_ID}
     SPOTIFY_CLIENT_SECRET: ${env:SPOTIFY_CLIENT_SECRET}
     EVENT_ID: ${env:EVENT_ID}
+    CLOUDFRONT_SIGNER_PRIVATE_KEY: ${env:CLOUDFRONT_SIGNER_PRIVATE_KEY}
 
 functions:
   unauthenticated:
     handler: src/server.unauthenticatedGQLHandler
     environment:
       SLS_DEBUG: true
+      KEY_PAIR_ID: ${env:KEY_PAIR_ID, self:custom.cloudfront.keyPairId}
+      CLOUDFRONT_SIGNER_PRIVATE_KEY: ${env:CLOUDFRONT_SIGNER_PRIVATE_KEY}
     events:
       - http:
           path: api
           method: post
           cors: true
           authorizer: aws_iam
-
       - http:
           path: api
           method: get
           cors: true
           authorizer: aws_iam
+
   authenticated:
     handler: src/server.authenticatedGQLHandler
     environment:
       SLS_DEBUG: true
+      KEY_PAIR_ID: ${env:KEY_PAIR_ID, self:custom.cloudfront.keyPairId}
+      CLOUDFRONT_SIGNER_PRIVATE_KEY: ${env:CLOUDFRONT_SIGNER_PRIVATE_KEY}
     events:
       - http:
           path: admin
           method: post
           cors: true
           authorizer: aws_iam
-
       - http:
           path: admin
           method: get
           cors: true
           authorizer: aws_iam
+
   spotifyCallback:
     handler: src/handlers/spotify.authCallback
     environment:
@@ -100,14 +115,52 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-
       - http:
           path: spotifyCallback
           method: get
           cors: true
           authorizer: aws_iam
 
+  initiateUpload:
+    handler: src/handlers/image.initiateUpload
+    environment:
+      SLS_DEBUG: true
+      S3_PHOTOS_BUCKET: ${self:custom.s3.photosBucket}
+    events:
+      - http:
+          path: initiateUpload
+          method: post
+          authorizer: aws_iam
+          cors: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+        Resource: arn:aws:s3:::${self:custom.s3.photosBucket}/*
+
+  processUpload:
+    handler: src/handlers/image.processUpload
+    memorySize: 1024
+    environment:
+      SLS_DEBUG: true
+      CDN_DOMAIN_NAME: ${env:CDN_DOMAIN_NAME}
+    events:
+      - s3:
+          bucket: ${self:custom.s3.photosBucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+          existing: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+          - s3:HeadObject
+          - s3:PutObject
+        Resource: arn:aws:s3:::${self:custom.s3.photosBucket}/*
+
 resources:
   # Cognito
   - ${file(resources/cognito-user-pool.yml)}
   - ${file(resources/cognito-identity-pool.yml)}
+  - ${file(resources/s3-cloudfront.yml)}

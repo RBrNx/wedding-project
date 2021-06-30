@@ -23,7 +23,8 @@
     "import/newline-after-import": "error",
     "import/prefer-default-export": "warn",
     "prettier/prettier": "error",
-    "jsx-a11y/accessible-emoji": "off"
+    "jsx-a11y/accessible-emoji": "off",
+    "no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }]
   },
   "globals": {
     "window": false,
