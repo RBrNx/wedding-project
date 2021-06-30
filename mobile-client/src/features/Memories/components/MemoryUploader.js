@@ -4,76 +4,140 @@ import { Colours, Layout, Theme } from 'library/styles';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import * as MediaLibrary from 'expo-media-library';
-import { Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import StandardPressable from 'library/components/StandardPressable';
-import Animated, {
-  Easing,
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { Easing, withTiming } from 'react-native-reanimated';
 import theme from 'styled-theming';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
+import awsSigV4Fetch from 'library/utils/awsSigV4Fetch';
+import { extensionToMimeType } from 'library/utils/mimetypes';
+import Constants from 'expo-constants';
+import { useAlert, useAuth } from 'context';
+import { AlertType } from 'library/enums';
+import parseError from 'library/utils/parseError';
+import { useMemoryUploader } from 'library/hooks';
+import Spacer from 'library/components/Spacer';
+import wretch from 'wretch';
+import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
+import { getBlob } from '../helpers';
 
-const NUM_COLUMNS = 3;
-const MIN_TIME = 750;
 const { width } = Dimensions.get('window');
+const { BASE_API_URL } = Constants.manifest.extra;
+const NUM_COLUMNS = 3;
+const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 
-const MemoryUploader = ({ active, onDismiss }) => {
+const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaptioning, savedCaptions }) => {
   const [_hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [lastAssetId, setLastAssetId] = useState(null);
   const [selectedAssets, setSelectedAssets] = useState([]);
-  const sheetPosition = useSharedValue(0);
-  const opacityBounce = useSharedValue(0);
-  const uploadButtonVisible = useSharedValue(0);
-  const uploadButtonVisibility = useDerivedValue(() => {
-    if (uploadButtonVisible.value === 1) return sheetPosition.value;
-    return uploadButtonVisible.value;
-  });
-  const folderSelectorVisible = useSharedValue(1);
-  const folderSelectorVisibilty = useDerivedValue(() => {
-    if (folderSelectorVisible.value === 1) return sheetPosition.value;
-    return folderSelectorVisible.value;
-  });
-
-  const folderSelectorAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: interpolate(folderSelectorVisibilty.value, [0, 1], [50, 0], Extrapolate.CLAMP) }],
-  }));
-
-  const flatlistAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(opacityBounce.value, [0, 0.5, 1], [1, 0, 1], Extrapolate.CLAMP),
-  }));
-
-  const uploadButtonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP),
-    transform: [{ scale: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP) }],
-  }));
+  const [uploading, setUploading] = useState(false);
+  const { currentUser } = useAuth();
+  const { showAlert } = useAlert();
+  const {
+    sheetPosition,
+    opacityBounce,
+    folderSelectorAnimatedStyle,
+    uploadButtonAnimatedStyle,
+    flatlistAnimatedStyle,
+    resetAnimatedValues,
+  } = useMemoryUploader({ selectedAssets });
 
   const requestMediaLibraryPermission = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     setHasPermission(status === 'granted');
   };
 
-  const loadMoreAssets = async () => {
-    if (lastAssetId) {
-      const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
-        first: 50,
-        album: selectedFolder,
-        after: lastAssetId,
+  const uploadImages = async assetsToUpload => {
+    try {
+      setUploading(true);
+      const body = assetsToUpload.map((asset, index) => {
+        const extension = new URL(asset.uri).pathname.split('.').pop();
+        return {
+          contentType: extensionToMimeType(extension),
+          sortIndex: index.toString(),
+          ...(asset.caption && { caption: encodeURIComponent(asset.caption) }),
+          uploadedBy: currentUser._id,
+        };
       });
+      const initiateUploadResponse = await awsSigV4Fetch(`${BASE_API_URL}initiateUpload`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      });
+      const uploadRequests = await initiateUploadResponse.json();
 
-      const newAssets = [...assets.filter(a => a.uri), ...moreAssets];
-      const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
-      setAssets([...newAssets, ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` }))]);
-      setLastAssetId(hasNextPage ? endCursor : null);
+      if (!Array.isArray(uploadRequests)) {
+        throw new Error(uploadRequests.message);
+      }
+
+      const albumUpload = {
+        images: await Promise.all(
+          uploadRequests.map(async (request, index) => {
+            const { photoId, s3PutObjectUrl } = request;
+            const { uri } = selectedAssets[index];
+            const { contentType, sortIndex, caption } = body[index];
+            const { firstName, lastName } = currentUser;
+            const fileBlob = await getBlob(uri);
+
+            return {
+              _id: photoId,
+              url: uri,
+              thumbnail: uri,
+              sortIndex,
+              caption,
+              uploadedBy: { firstName, lastName },
+              createdAt: new Date(),
+              upload: true,
+              promise: wretch(s3PutObjectUrl, {
+                headers: {
+                  'Content-Type': contentType,
+                  'Cache-Control': 'max-age=31557600',
+                },
+              }).put(fileBlob),
+            };
+          }),
+        ),
+      };
+
+      onUploadStart(albumUpload);
+      setTimeout(() => onSheetDismiss(), 100);
+    } catch (err) {
+      setUploading(false);
+      const { message } = parseError(err);
+      console.error(message);
+      showAlert({
+        message,
+        type: AlertType.WARNING,
+      });
     }
+  };
+
+  const getAssets = async ({ onEndReached } = {}) => {
+    if (onEndReached && !lastAssetId) return;
+
+    const { assets: moreAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
+      first: 50,
+      album: selectedFolder,
+      ...(lastAssetId && { after: lastAssetId }),
+      sortBy: MediaLibrary.SortBy.modificationTime,
+    });
+
+    const newAssets = [...(onEndReached ? assets : []), ...moreAssets];
+    const spareSlots = NUM_COLUMNS - (newAssets.length % NUM_COLUMNS);
+    opacityBounce.value = withTiming(0.5, { duration: 1000, easing: Easing.out(Easing.exp) });
+    setAssets([
+      ...newAssets,
+      ...(hasNextPage
+        ? []
+        : new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}`, spacer: true }))),
+    ]);
+    setLastAssetId(hasNextPage ? endCursor : null);
+    opacityBounce.value = withTiming(1, { duration: 750, easing: Easing.out(Easing.exp) }, () => {
+      opacityBounce.value = 0;
+    });
   };
 
   useEffect(() => {
@@ -90,51 +154,51 @@ const MemoryUploader = ({ active, onDismiss }) => {
   }, []);
 
   useEffect(() => {
-    const loadAssets = async () => {
-      const startTime = Date.now();
-      const { assets: localAssets, endCursor, hasNextPage } = await MediaLibrary.getAssetsAsync({
-        first: 50,
-        album: selectedFolder,
-      });
-      const spareSlots = NUM_COLUMNS - (localAssets.length % NUM_COLUMNS);
-      const timeDiff = Date.now() - startTime;
-      if (timeDiff < MIN_TIME) await new Promise(r => setTimeout(r, MIN_TIME - timeDiff));
-      setAssets([
-        ...localAssets,
-        ...new Array(spareSlots).fill({}).map((slot, index) => ({ id: `${index * -1 - 1}` })),
-      ]);
-      setLastAssetId(hasNextPage ? endCursor : null);
-    };
-
-    loadAssets();
+    getAssets();
   }, [selectedFolder]);
 
-  const renderItem = ({ item: asset }) => {
-    const isSelected = selectedAssets.some(a => a.id === asset.id);
+  useEffect(() => {
+    if (savedCaptions) {
+      const captionedAssets = selectedAssets.map((asset, index) => ({ ...asset, caption: savedCaptions[index] }));
+      uploadImages(captionedAssets);
+    }
+  }, [savedCaptions]);
 
+  const onSheetDismiss = () => {
+    setUploading(false);
+    setSelectedFolder(null);
+    setLastAssetId(null);
+    setSelectedAssets([]);
+    resetAnimatedValues();
+    onDismiss();
+  };
+
+  const changeSelectedFolder = folderId => {
+    setLastAssetId(null);
+    setSelectedFolder(folderId);
+  };
+
+  const onThumbnailSelect = (selectedAsset, isSelected) => {
+    if (!isSelected) {
+      setSelectedAssets(previousAssets => [...previousAssets, selectedAsset]);
+    } else {
+      setSelectedAssets(previousAssets => previousAssets.filter(a => a.id !== selectedAsset.id));
+    }
+  };
+
+  const renderThumbnail = ({ item: asset }) => {
+    const selectedAssetIndex = selectedAssets.findIndex(a => a.id === asset.id) + 1;
+    const isSelected = selectedAssetIndex > 0;
+
+    if (asset.spacer) return <StyledSpacer flex />;
     return (
-      <Container>
-        <StyledImage source={{ uri: asset.uri }} />
-        <SelectorIcon
-          isSelected={isSelected}
-          onPress={() => {
-            if (!isSelected) {
-              setSelectedAssets([...selectedAssets, asset]);
-              uploadButtonVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
-              folderSelectorVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
-            } else {
-              const updatedAssets = selectedAssets.filter(a => a.id !== asset.id);
-              setSelectedAssets(updatedAssets);
-              if (!updatedAssets.length) {
-                uploadButtonVisible.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
-                folderSelectorVisible.value = withTiming(1, { duration: 500, easing: Easing.out(Easing.exp) });
-              }
-            }
-          }}
-        >
-          {isSelected && <SelectedIndex>{selectedAssets.findIndex(a => a.id === asset.id) + 1}</SelectedIndex>}
-        </SelectorIcon>
-      </Container>
+      <MemoryUploaderThumbnail
+        asset={asset}
+        size={THUMBNAIL_SIZE}
+        isSelected={isSelected}
+        selectedAssetIndex={selectedAssetIndex}
+        onThumbnailSelect={onThumbnailSelect}
+      />
     );
   };
 
@@ -143,15 +207,7 @@ const MemoryUploader = ({ active, onDismiss }) => {
     const isSelected = selectedFolder === id;
 
     return (
-      <Folder
-        isSelected={isSelected}
-        onPress={() => {
-          setSelectedFolder(id);
-          opacityBounce.value = withTiming(0.5, { duration: 1000, easing: Easing.out(Easing.exp) }, () => {
-            opacityBounce.value = withTiming(1, { duration: 750, easing: Easing.out(Easing.exp) });
-          });
-        }}
-      >
+      <Folder isSelected={isSelected} onPress={() => changeSelectedFolder(id)}>
         <FolderName isSelected={isSelected}>{title}</FolderName>
       </Folder>
     );
@@ -166,31 +222,37 @@ const MemoryUploader = ({ active, onDismiss }) => {
           showsHorizontalScrollIndicator={false}
           renderItem={renderFolder}
           keyExtractor={item => item.id}
-          initialNumToRender={20}
+          initialNumToRender={10}
         />
       </ListContainer>
       <BottomSheetModal
         active={active}
-        onDismiss={onDismiss}
+        onDismiss={onSheetDismiss}
         animatedIndex={sheetPosition}
         outerChildren={
           <StandardActionButton
-            label='Edit RSVP'
-            icon={<StyledIcon name='clouduploado' size={22} />}
+            label='Upload Images'
+            icon={uploading ? <ActivityIndicator color='#fff' /> : <StyledIcon name='clouduploado' size={22} />}
             containerStyle={{ zIndex: 99 }}
             style={uploadButtonAnimatedStyle}
+            onPress={() => {
+              sendImagesForCaptioning(selectedAssets);
+            }}
           />
         }
       >
-        <StyledBottomSheetFlatList
-          data={assets}
-          numColumns={NUM_COLUMNS}
-          renderItem={renderItem}
-          initialNumToRender={20}
-          onEndReached={loadMoreAssets}
-          onEndReachedThreshold={1}
-          style={flatlistAnimatedStyle}
-        />
+        {active && (
+          <StyledBottomSheetFlatList
+            data={assets}
+            numColumns={NUM_COLUMNS}
+            renderItem={renderThumbnail}
+            initialNumToRender={20}
+            onEndReached={() => getAssets({ onEndReached: true })}
+            onEndReachedThreshold={1}
+            getItemLayout={(data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
+            style={flatlistAnimatedStyle}
+          />
+        )}
       </BottomSheetModal>
     </>
   );
@@ -209,10 +271,6 @@ const ListContainer = styled(Animated.View)`
   background-color: ${Theme.background};
 `;
 
-const StyledIcon = styled(AntDesign)`
-  color: ${Colours.neutral.white};
-`;
-
 const FolderList = styled.FlatList.attrs(() => ({
   contentContainerStyle: {
     alignItems: 'center',
@@ -222,17 +280,21 @@ const FolderList = styled.FlatList.attrs(() => ({
 
 const Folder = styled(StandardPressable)`
   min-width: 50px;
-  height: 35px;
   border-radius: 50px;
   border: 2px solid ${FolderColour};
   margin-horizontal: 5px;
-  padding: 10px;
   background-color: ${props => (props.isSelected ? FolderColour : 'transparent')};
   ${Layout.flexCenter}
 `;
 
 const FolderName = styled.Text`
   color: ${props => (props.isSelected ? Theme.background(props) : FolderColour)};
+  padding-horizontal: 10px;
+  padding-vertical: 8px;
+`;
+
+const StyledIcon = styled(AntDesign)`
+  color: ${Colours.neutral.white};
 `;
 
 const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
@@ -247,32 +309,8 @@ const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   flex: 1;
 `;
 
-const Container = styled.View`
-  flex: ${1 / NUM_COLUMNS - 6 / width / 100};
-  margin: 3px;
-  height: ${width / NUM_COLUMNS}px;
-  width: ${width / NUM_COLUMNS}px;
-`;
-
-const SelectorIcon = styled(StandardPressable)`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 25px;
-  height: 25px;
-  border-radius: 15px;
-  border: 1.5px solid ${props => (props.isSelected ? Colours.secondary : 'white')};
-  background-color: ${props => (props.isSelected ? Colours.secondary : 'transparent')};
-  ${Layout.flexCenter}
-`;
-
-const SelectedIndex = styled.Text`
-  color: ${Colours.neutral.white};
-`;
-
-const StyledImage = styled.Image`
-  width: 100%;
-  height: 100%;
+const StyledSpacer = styled(Spacer)`
+  margin: 1px;
 `;
 
 export default MemoryUploader;

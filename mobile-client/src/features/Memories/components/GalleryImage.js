@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, StatusBar } from 'react-native';
+import { Dimensions } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components';
 
@@ -46,7 +46,13 @@ const GalleryImage = React.memo(
       return <EmptyView style={[style, animatedGalleryImageStyle]} />;
     }
 
-    return <StyledImage resizeMode='contain' source={{ uri: image?.url }} style={[style, animatedGalleryImageStyle]} />;
+    return (
+      <StyledImage
+        resizeMode='contain'
+        source={{ uri: image?.url || image?.uri }}
+        style={[style, animatedGalleryImageStyle]}
+      />
+    );
   },
   (prevProps, nextProps) => {
     if (
@@ -71,7 +77,6 @@ const StyledImage = styled(Animated.Image)`
   height: ${screenHeight * IMAGE_SCALE_MODIFIER}px;
   width: ${screenWidth * IMAGE_SCALE_MODIFIER}px;
   margin-right: 32px;
-  margin-top: ${StatusBar?.currentHeight || 0}px;
 `;
 
 export default GalleryImage;

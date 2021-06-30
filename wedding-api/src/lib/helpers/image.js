@@ -2,6 +2,8 @@ const CONTENT_TYPE_SUFFIX_MAPPINGS = {
   'image/jpeg': 'jpg',
   'image/svg+xml': 'svg',
   'image/png': 'png',
+  'image/heic': 'heic',
+  'image/heif': 'heif',
 };
 
 const getSupportedContentTypes = () => {

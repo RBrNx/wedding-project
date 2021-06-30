@@ -4,6 +4,7 @@ import { useAuth } from 'context';
 import NavigationPresets from 'library/utils/NavigationPresets';
 import AdminNavigator from 'navigation/admin/AdminNavigator';
 import GuestNavigator from 'navigation/guest/GuestNavigator';
+import { PortalProvider } from '@gorhom/portal';
 
 const AuthenticatedStack = createStackNavigator();
 
@@ -17,10 +18,12 @@ const AuthenticatedNavigator = () => {
   const role = useMemo(() => user?.attributes?.['custom:role'], []);
 
   return (
-    <AuthenticatedStack.Navigator screenOptions={screenOptions}>
-      {role === 'ADMIN' && <AuthenticatedStack.Screen name='Admin' component={AdminNavigator} />}
-      {role === 'GUEST' && <AuthenticatedStack.Screen name='Guest' component={GuestNavigator} />}
-    </AuthenticatedStack.Navigator>
+    <PortalProvider>
+      <AuthenticatedStack.Navigator screenOptions={screenOptions}>
+        {role === 'ADMIN' && <AuthenticatedStack.Screen name='Admin' component={AdminNavigator} />}
+        {role === 'GUEST' && <AuthenticatedStack.Screen name='Guest' component={GuestNavigator} />}
+      </AuthenticatedStack.Navigator>
+    </PortalProvider>
   );
 };
 

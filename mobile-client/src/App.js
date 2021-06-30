@@ -12,6 +12,9 @@ import AppLoader from 'library/components/AppLoader';
 import AppNavigator from 'navigation/AppNavigator';
 import awsConfig from 'library/utils/awsExports';
 import { registerRootComponent } from 'expo';
+import allSettled from 'promise.allsettled';
+
+allSettled.shim();
 
 Amplify.configure({
   Auth: {

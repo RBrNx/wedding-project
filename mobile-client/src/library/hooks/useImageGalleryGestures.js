@@ -42,7 +42,7 @@ const MAX_SCALE = 8;
 const STOP_BUFFER = 3; // Allows an excess buffer when checking that motion has stopped
 const SWIPE_SCALE_MODIFIER = 0.5;
 
-const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }) => {
+const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imageMargin = 0 }) => {
   /**
    * Fade animation for screen, it is always rendered with pointerEvents
    * set to none for fast opening
@@ -133,7 +133,6 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
     numberOfPinchFingers.value = 0;
     isPinch.value = false;
     isSwiping.value = IsSwiping.UNDETERMINED;
-    hasPinched.value = HasPinched.FALSE;
   };
 
   /**
@@ -207,7 +206,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
           if (isAndroid && hasPinched.value === HasPinched.TRUE) {
             hasPinched.value = HasPinched.FALSE;
             isSwiping.value = IsSwiping.FALSE;
-            offset.set({ x: translate.x.value + evt.translationX, y: translate.y.value - evt.translationY });
+            offset.set({ x: translate.x.value - evt.translationX, y: translate.y.value - evt.translationY });
           }
           /**
            * isSwiping is used to prevent Y movement if a clear swipe to next
@@ -669,6 +668,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, imageMargin = 0 }
    */
   const onSingleTap = useAnimatedGestureHandler({
     onActive: () => {
+      if (captionMode) return;
+
       cancelAnimation(headerFooterVisible);
       headerFooterVisible.value = headerFooterVisible.value > 0 ? withTiming(0) : withTiming(1);
     },

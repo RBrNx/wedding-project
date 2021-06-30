@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { css } from 'styled-components/native';
 
 const boxShadow = css`
@@ -7,6 +8,10 @@ const boxShadow = css`
 
 const borderRadius = css`
   border-radius: 10px;
+  ${Platform.OS === 'ios' &&
+    css`
+      overflow: hidden;
+    `};
 `;
 
 const inputBorder = css`

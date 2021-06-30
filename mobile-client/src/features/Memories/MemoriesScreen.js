@@ -1,24 +1,43 @@
 import { Layout } from 'library/styles';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/native';
+import { Portal } from '@gorhom/portal';
 import MemoriesGrid from './components/MemoriesGrid';
 import ImageGallery from './components/ImageGallery';
 
-const MemoriesScreen = ({ navigation }) => {
+const MemoriesScreen = () => {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
-  const images = selectedAlbum || [];
-  const visible = !!images.length;
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      tabBarVisible: !visible,
-    });
-  }, [visible]);
+  const [imagesForUpload, setImagesForUpload] = useState(null);
+  const [savedCaptions, setSavedCaptions] = useState(null);
+  const images = selectedAlbum || imagesForUpload || [];
+  const galleryVisible = !!images.length;
 
   return (
     <Container>
-      <MemoriesGrid setSelectedAlbum={setSelectedAlbum} />
-      <ImageGallery visible={visible} images={images} onDismiss={() => setSelectedAlbum(null)} />
+      <MemoriesGrid
+        setSelectedAlbum={setSelectedAlbum}
+        sendImagesForCaptioning={setImagesForUpload}
+        galleryVisible={galleryVisible}
+        savedCaptions={savedCaptions}
+        onUpload={() => {
+          setSavedCaptions(null);
+          setImagesForUpload(null);
+        }}
+      />
+      <Portal>
+        <ImageGallery
+          visible={galleryVisible}
+          images={images}
+          captionMode={!!imagesForUpload?.length}
+          onCaptionSubmit={captions => {
+            setSavedCaptions(captions);
+          }}
+          onDismiss={() => {
+            setSelectedAlbum(null);
+            setImagesForUpload(null);
+          }}
+        />
+      </Portal>
     </Container>
   );
 };
