@@ -1,3 +1,10 @@
+## [0.8.2](https://github.com/RBrNx/wedding-project/compare/v0.8.1...v0.8.2) (2021-07-01)
+
+
+### Bug Fixes
+
+* increase heap size for expo-publish-staging ([7d2eaa8](https://github.com/RBrNx/wedding-project/commit/7d2eaa81327ddf457700a0e27598e8b35aabee2b))
+
 ## [0.8.1](https://github.com/RBrNx/wedding-project/compare/v0.8.0...v0.8.1) (2021-07-01)
 
 
