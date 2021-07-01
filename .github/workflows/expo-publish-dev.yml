@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - 'mobile-client/**'
+      - '.github/workflows/expo-publish-dev.yml'
 defaults:
   run:
     working-directory: ./mobile-client
