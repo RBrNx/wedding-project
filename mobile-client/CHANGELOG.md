@@ -1,3 +1,11 @@
+## [0.8.1](https://github.com/RBrNx/wedding-project/compare/v0.8.0...v0.8.1) (2021-07-01)
+
+
+### Bug Fixes
+
+* allow deploy-api-staging and expo-publish-staging workflows to run when they have been modified ([b2ad7d8](https://github.com/RBrNx/wedding-project/commit/b2ad7d8a81d7e9a3709bafe4e1645b04df3b3028))
+* switch awsExports to staging values ([8df46aa](https://github.com/RBrNx/wedding-project/commit/8df46aa6aefbcf8d2fda667dee85832c8538b3b1))
+
 # [0.8.0](https://github.com/RBrNx/wedding-project/compare/v0.7.3...v0.8.0) (2021-06-30)
 
 
