@@ -145,7 +145,7 @@ functions:
     memorySize: 1024
     environment:
       SLS_DEBUG: true
-      CDN_DOMAIN_NAME: ${env:CDN_DOMAIN_NAME}
+      CDN_DOMAIN_NAME: ${self:custom.cloudfront.domainName}
     events:
       - s3:
           bucket: ${self:custom.s3.photosBucket}

@@ -58,6 +58,5 @@ jobs:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           EVENT_ID: ${{ secrets.DEV_EVENT_ID }}
-          CDN_DOMAIN_NAME: ${{ secrets.CDN_DOMAIN_NAME }}
           CLOUDFRONT_SIGNER_PUBLIC_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PUBLIC_KEY }}
           CLOUDFRONT_SIGNER_PRIVATE_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PRIVATE_KEY }}
