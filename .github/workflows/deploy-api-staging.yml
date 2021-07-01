@@ -6,6 +6,7 @@ on:
       - staging
     paths:
       - 'wedding-api/**'
+      - '.github/workflows/deploy-api-staging.yml'
 defaults:
   run:
     working-directory: ./wedding-api
