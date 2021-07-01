@@ -47,13 +47,10 @@ jobs:
         run: pwd && yarn --version && npx envinfo --binaries --system
       - name: Install and View Tree
         run: sudo apt-get install tree && tree -a -I 'node_modules|.git' -L 4
-      - name: Install modules
+      - name: Install modules and serverless
         run: yarn
       - name: serverless deploy
-        uses: serverless/github-action@master
-        with:
-          args: -c "cd wedding-api && serverless deploy --stage=dev --verbose"
-          entrypoint: /bin/sh
+        run: npx serverless deploy --stage=dev --verbose
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
