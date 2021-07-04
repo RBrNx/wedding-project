@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/react-hooks';
-import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import GET_MEMORY_ALBUMS from 'library/graphql/queries/getMemoryAlbums.graphql';
@@ -15,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import QuickPreviewModal from './QuickPreviewModal';
 import GridItem from './GridItem';
 import MemoryUploader from './MemoryUploader';
+import MemoriesGridHeader from './MemoriesGridHeader';
 
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
@@ -90,7 +90,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
         refreshControl={renderRefreshControl()}
         keyExtractor={(album, index) => album.images?.[0]?._id || index}
         getItemLayout={(_data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
-        ListHeaderComponent={<DashboardHeader title='Memories' style={{ paddingHorizontal: '5%', marginBottom: 10 }} />}
+        ListHeaderComponent={<MemoriesGridHeader />}
       />
       <QuickPreviewModal modalVisibility={modalVisibility} image={pressedImage} />
       <StyledActionButton
