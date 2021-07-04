@@ -1,3 +1,20 @@
+# [0.9.0](https://github.com/RBrNx/wedding-project/compare/v0.8.2...v0.9.0) (2021-07-04)
+
+
+### Bug Fixes
+
+* allow expo-publish-dev to be run when the workflow changes ([759bec8](https://github.com/RBrNx/wedding-project/commit/759bec8cfc791a60d3927670ee32d4da4fdd0f54))
+* attempt to increase heap size when publishing expo builds ([bc395b9](https://github.com/RBrNx/wedding-project/commit/bc395b97687314a9918d49629b8bfbb7132fd268))
+* attempt to run serverless deploy without serverless/github-action ([ad028b0](https://github.com/RBrNx/wedding-project/commit/ad028b05057bace321862077d97cd551589d9190))
+* CDN_DOMAIN_NAME is now passed directly inside serverless.yml instead of being an environment variable ([97e7c2b](https://github.com/RBrNx/wedding-project/commit/97e7c2b48051f1a3a2624187d6282ebb43d22237))
+* domains to be used in serverless are now built from separate parts ([bfda735](https://github.com/RBrNx/wedding-project/commit/bfda7351547066071ffbd0fa4f56b365b16b0b9b))
+
+
+### Features
+
+* deploy-api-staging workflow now mirrors deploy-api-dev ([035c0d3](https://github.com/RBrNx/wedding-project/commit/035c0d3b27074e12a7df3554d3899fb163142d8d))
+* expo-publish-staging now mirrors expo-publish-dev ([643e16a](https://github.com/RBrNx/wedding-project/commit/643e16ab2d3c522ccda9056f5ea158925601d29f))
+
 ## [0.8.2](https://github.com/RBrNx/wedding-project/compare/v0.8.1...v0.8.2) (2021-07-01)
 
 
