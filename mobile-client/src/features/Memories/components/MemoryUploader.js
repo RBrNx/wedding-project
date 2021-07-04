@@ -1,6 +1,6 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import BottomSheetModal from 'library/components/BottomSheetModal';
-import { Colours, Layout, Theme } from 'library/styles';
+import { Colours, Layout, Theme, Typography } from 'library/styles';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import * as MediaLibrary from 'expo-media-library';
@@ -251,6 +251,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
             onEndReachedThreshold={1}
             getItemLayout={(data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
             style={flatlistAnimatedStyle}
+            ListHeaderComponent={<ModalHeader>Share a memory</ModalHeader>}
           />
         )}
       </BottomSheetModal>
@@ -311,6 +312,14 @@ const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
 
 const StyledSpacer = styled(Spacer)`
   margin: 1px;
+`;
+
+const ModalHeader = styled.Text`
+  ${Typography.h3};
+  color: ${Theme.headerTextColour};
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
 `;
 
 export default MemoryUploader;
