@@ -5,7 +5,7 @@ on:
       - staging
     paths:
       - 'mobile-client/**'
-      - '.github/workflows/expo-publish-dev.yml'
+      - '.github/workflows/expo-publish-staging.yml
 defaults:
   run:
     working-directory: ./mobile-client
