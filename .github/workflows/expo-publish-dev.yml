@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - 'mobile-client/**'
+      - '.github/workflows/expo-publish-dev.yml'
 defaults:
   run:
     working-directory: ./mobile-client
@@ -48,5 +49,5 @@ jobs:
       - run: yarn install
       - run: expo publish --release-channel dev
         env:
-          NODE_OPTIONS: --max_old_space_size=4096
+          NODE_OPTIONS: --max_old_space_size=8192
           EXPO_USE_DEV_SERVER: true

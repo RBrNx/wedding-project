@@ -19,12 +19,14 @@ custom:
     host: 0.0.0.0
     port: 4000
     noPrependStageInUrl: true
-  domains:
-    prod: api.thewatsonwedding.com
-    staging: staging-api.thewatsonwedding.com
-    dev: dev-api.thewatsonwedding.com
+  rootDomain: thewatsonwedding.com
+  subdomainPrefixes:
+    prod: ''
+    staging: staging-
+    dev: dev-
+  subdomain: ${self:custom.subdomainPrefixes.${self:provider.stage}}
   customDomain:
-    domainName: ${self:custom.domains.${self:provider.stage}}
+    domainName: ${self:custom.subdomain}api.${self:custom.rootDomain}
     basePath: ''
     endpointType: 'regional'
     stage: '${self:provider.stage}'
@@ -40,7 +42,7 @@ custom:
   s3:
     photosBucket: watson-wedding-${self:provider.stage}-photos
   cloudfront:
-    domainName: ${env:CDN_DOMAIN_NAME}
+    domainName: ${self:custom.subdomain}images.${self:custom.rootDomain}
     keyPairId: !Ref SignerPublicKey
 
 useDotenv: true
@@ -143,7 +145,7 @@ functions:
     memorySize: 1024
     environment:
       SLS_DEBUG: true
-      CDN_DOMAIN_NAME: ${env:CDN_DOMAIN_NAME}
+      CDN_DOMAIN_NAME: ${self:custom.cloudfront.domainName}
     events:
       - s3:
           bucket: ${self:custom.s3.photosBucket}
