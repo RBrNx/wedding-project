@@ -49,7 +49,7 @@ const GridItem = React.memo(
 );
 
 const Container = styled.View`
-  flex: 1;
+  flex: ${1 / 3};
   margin: 1px;
   height: ${props => props.size}px;
   width: ${props => props.size}px;

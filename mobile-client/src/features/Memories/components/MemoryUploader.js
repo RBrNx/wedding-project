@@ -17,7 +17,6 @@ import { useAlert, useAuth } from 'context';
 import { AlertType } from 'library/enums';
 import parseError from 'library/utils/parseError';
 import { useMemoryUploader } from 'library/hooks';
-import Spacer from 'library/components/Spacer';
 import wretch from 'wretch';
 import StandardButton from 'library/components/StandardButton';
 import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
@@ -203,7 +202,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
     const selectedAssetIndex = selectedAssets.findIndex(a => a.id === asset.id) + 1;
     const isSelected = selectedAssetIndex > 0;
 
-    if (asset.spacer) return <StyledSpacer flex />;
+    if (asset.spacer) return <StyledSpacer size={THUMBNAIL_SIZE} />;
     return (
       <MemoryUploaderThumbnail
         asset={asset}
@@ -350,8 +349,11 @@ const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   flex: 1;
 `;
 
-const StyledSpacer = styled(Spacer)`
-  margin: 1px;
+const StyledSpacer = styled.View`
+  flex: ${1 / 3};
+  margin: 3px;
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
 `;
 
 const ModalHeader = styled.Text`

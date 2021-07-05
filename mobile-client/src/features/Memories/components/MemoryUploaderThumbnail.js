@@ -1,11 +1,8 @@
 import StandardPressable from 'library/components/StandardPressable';
 import { Colours, Layout } from 'library/styles';
 import React, { useEffect } from 'react';
-import { Dimensions } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-
-const { width } = Dimensions.get('window');
 
 const MemoryUploaderThumbnail = React.memo(
   ({ asset, isSelected, size, selectedAssetIndex, onThumbnailSelect }) => {
@@ -42,7 +39,7 @@ const MemoryUploaderThumbnail = React.memo(
 );
 
 const Container = styled.View`
-  flex: ${1 / 3 - 6 / width / 100};
+  flex: ${1 / 3};
   margin: 3px;
   height: ${props => props.size}px;
   width: ${props => props.size}px;
