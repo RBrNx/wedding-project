@@ -8,7 +8,7 @@ import { Colours, Layout } from 'library/styles';
 import StandardTextInput from 'library/components/StandardTextInput';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
-import { useAvoidKeyboard } from 'library/hooks';
+import { useAvoidKeyboard, useBackButton } from 'library/hooks';
 import GalleryImage from './GalleryImage';
 import ImageGalleryHeader from './ImageGalleryHeader';
 import ImageGalleryFooter from './ImageGalleryFooter';
@@ -43,6 +43,15 @@ const ImageGallery = ({ visible, images, captionMode, onCaptionSubmit, onDismiss
   const { avoidKeyboardStyle } = useAvoidKeyboard({
     padding: Platform.select({ ios: 0, android: 50 }),
     includeKeyboardHeight: Platform.OS !== 'android',
+  });
+
+  useBackButton(() => {
+    if (visible) {
+      onDismiss();
+      return true;
+    }
+
+    return false;
   });
 
   useEffect(() => {

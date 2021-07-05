@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, Dimensions, Keyboard } from 'react-native';
 import styled from 'styled-components/native';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import StandardActionButton from 'library/components/StandardActionButton';
@@ -7,13 +7,13 @@ import { useLazyQuery, useAvoidKeyboard, useAnimatedStepTransition, useSubmitRSV
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType } from 'library/enums';
-import BottomSheetScrollView from 'library/components/BottomSheetScrollView';
 import StepTransition from 'library/components/StepTransition';
 import BackButton from 'library/components/BackButton';
 import BackButtonImage from 'library/components/BackButtonImage';
 import { Colours } from 'library/styles';
 import { SubmitRSVP } from 'library/utils/constants';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import RSVPOverview from './components/RSVPOverview';
 import RSVPOverviewTitle from './components/RSVPOverviewTitle';
 import RSVPAnswerInput from './components/RSVPAnswerInput';
@@ -139,6 +139,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
 
     if (!nextQuestion) {
       setShowOverview(true);
+      Keyboard.dismiss();
       setFormSteps([...formSteps, { componentType: 'overview' }]);
     }
     setQuestionHistory([...questionHistory, currQuestion]);
@@ -225,22 +226,22 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
     );
   };
 
+  const snapPoints = useMemo(() => ['55%', '90%'], []);
+
   return (
     <>
       <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
-      <BottomSheetScrollView
-        collapsedPosition={SHEET_COLLAPSED_POS}
-        unlockFullScroll={!isLoading}
-        keyboardShouldPersistTaps='handled'
-      >
-        {isLoading && <StyledLoadingIndictor size={100} />}
-        {!isLoading && (
-          <ContentContainer>
-            <StyledBackButton onPress={onPrev} />
-            <StepTransition steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
-          </ContentContainer>
-        )}
-      </BottomSheetScrollView>
+      <BottomSheet index={0} snapPoints={snapPoints}>
+        <BottomSheetScrollView>
+          {isLoading && <StyledLoadingIndicator size={50} />}
+          {!isLoading && (
+            <ContentContainer>
+              <StyledBackButton onPress={onPrev} />
+              <StepTransition steps={formSteps} renderStep={renderAnswerInput} animIndex={animIndex} />
+            </ContentContainer>
+          )}
+        </BottomSheetScrollView>
+      </BottomSheet>
       <StandardActionButton
         style={avoidKeyboardStyle}
         label='Submit RSVP'
@@ -256,11 +257,12 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
 };
 
 const ContentContainer = styled.View`
-  flex: 1;
+  min-height: ${height * 0.9}px;
 `;
 
-const StyledLoadingIndictor = styled(LoadingIndicator)`
-  flex: 1;
+const StyledLoadingIndicator = styled(LoadingIndicator)`
+  width: 100%;
+  height: ${height * 0.5}px;
 `;
 
 const StyledBackButton = styled(BackButton).attrs({

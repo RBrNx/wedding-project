@@ -6,6 +6,7 @@ import Spacer from 'library/components/Spacer';
 import { useAvoidKeyboard } from 'library/hooks';
 import { Colours, Outlines, Typography } from 'library/styles';
 import { fade } from 'library/utils/colours';
+import { Platform } from 'react-native';
 
 const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
   const [buttonWidth, setButtonWidth] = useState(0);
@@ -48,7 +49,7 @@ const ButtonContainer = styled(Animated.View)`
   width: 90%;
   ${Outlines.borderRadius}
   position: absolute;
-  bottom: 15px;
+  bottom: ${Platform.OS === 'ios' ? 7.5 : 5}%;
   padding: 8px;
   background-color: ${fade(Colours.neutral.white, 0.2)};
 `;
