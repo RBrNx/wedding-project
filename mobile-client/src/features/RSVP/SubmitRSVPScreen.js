@@ -10,7 +10,7 @@ import { AlertType } from 'library/enums';
 import StepTransition from 'library/components/StepTransition';
 import BackButton from 'library/components/BackButton';
 import BackButtonImage from 'library/components/BackButtonImage';
-import { Colours } from 'library/styles';
+import { Colours, Theme } from 'library/styles';
 import { SubmitRSVP } from 'library/utils/constants';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -231,7 +231,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
   return (
     <>
       <StepTransition steps={formSteps} renderStep={renderQuestion} animIndex={animIndex} />
-      <BottomSheet index={0} snapPoints={snapPoints}>
+      <BottomSheet index={0} snapPoints={snapPoints} backgroundComponent={BottomSheetBackground}>
         <BottomSheetScrollView>
           {isLoading && <StyledLoadingIndicator size={50} />}
           {!isLoading && (
@@ -255,6 +255,12 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
     </>
   );
 };
+
+const BottomSheetBackground = styled.View`
+  background-color: ${Theme.background};
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+`;
 
 const ContentContainer = styled.View`
   min-height: ${height * 0.9}px;
