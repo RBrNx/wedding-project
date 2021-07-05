@@ -7,7 +7,6 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colours } from 'library/styles';
 import { css } from 'styled-components/native';
-import Spacer from 'library/components/Spacer';
 import { Dimensions } from 'react-native';
 import { useRefreshControl } from 'library/hooks';
 import { useFocusEffect } from '@react-navigation/native';
@@ -56,7 +55,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
 
     const uploadPromises = Promise.allSettled(images?.map(i => i.promise) || []);
 
-    if (image.spacer) return <StyledSpacer flex />;
+    if (image.spacer) return <StyledSpacer size={THUMBNAIL_SIZE} />;
     return (
       <GridItem
         image={image}
@@ -132,8 +131,11 @@ const StyledActionButton = styled(StandardActionButton)`
     `}
 `;
 
-const StyledSpacer = styled(Spacer)`
+const StyledSpacer = styled.View`
+  flex: ${1 / 3};
   margin: 1px;
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
 `;
 
 export default MemoriesGrid;
