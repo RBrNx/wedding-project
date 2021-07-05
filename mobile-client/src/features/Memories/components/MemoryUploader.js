@@ -1,10 +1,10 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import BottomSheetModal from 'library/components/BottomSheetModal';
-import { Colours, Layout, Theme, Typography } from 'library/styles';
+import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import * as MediaLibrary from 'expo-media-library';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, Linking } from 'react-native';
 import StandardPressable from 'library/components/StandardPressable';
 import Animated, { Easing, withTiming } from 'react-native-reanimated';
 import theme from 'styled-theming';
@@ -19,8 +19,10 @@ import parseError from 'library/utils/parseError';
 import { useMemoryUploader } from 'library/hooks';
 import Spacer from 'library/components/Spacer';
 import wretch from 'wretch';
+import StandardButton from 'library/components/StandardButton';
 import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
 import { getBlob } from '../helpers';
+import ImageAnimation from './ImageAnimation';
 
 const { width } = Dimensions.get('window');
 const { BASE_API_URL } = Constants.manifest.extra;
@@ -46,9 +48,13 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
     resetAnimatedValues,
   } = useMemoryUploader({ selectedAssets });
 
-  const requestMediaLibraryPermission = async () => {
+  const requestMediaLibraryPermission = async manuallyTriggered => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     setHasPermission(status === 'granted');
+
+    if (status === 'denied' && manuallyTriggered) Linking.openSettings();
+
+    return status === 'granted';
   };
 
   const uploadImages = async assetsToUpload => {
@@ -141,8 +147,11 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
   };
 
   useEffect(() => {
+    requestMediaLibraryPermission();
+  }, []);
+
+  useEffect(() => {
     const initialise = async () => {
-      await requestMediaLibraryPermission();
       const albums = await MediaLibrary.getAlbumsAsync();
       setFolders([
         { id: null, title: 'All Photos' },
@@ -150,8 +159,10 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
       ]);
     };
 
-    initialise();
-  }, []);
+    if (hasPermission) {
+      initialise();
+    }
+  }, [hasPermission]);
 
   useEffect(() => {
     if (hasPermission) {
@@ -256,6 +267,13 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
             ListHeaderComponent={<ModalHeader>Share a memory</ModalHeader>}
           />
         )}
+        {!hasPermission && (
+          <PermissionCard pointerEvents='box-none'>
+            <PermissionText>To upload a memory, we require your permission to access your local images</PermissionText>
+            <ImageAnimation size={150} />
+            <StandardButton text='Grant Permission' raised onPress={() => requestMediaLibraryPermission(true)} />
+          </PermissionCard>
+        )}
       </BottomSheetModal>
     </>
   );
@@ -298,6 +316,25 @@ const FolderName = styled.Text`
 
 const StyledIcon = styled(AntDesign)`
   color: ${Colours.neutral.white};
+`;
+
+const PermissionCard = styled(Animated.View)`
+  position: absolute;
+  width: 90%;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+  padding: 15px;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  height: 300px;
+  left: 5%;
+  top: 7.5%;
+`;
+
+const PermissionText = styled.Text`
+  text-align: center;
+  color: ${Theme.detailTextColour};
 `;
 
 const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
