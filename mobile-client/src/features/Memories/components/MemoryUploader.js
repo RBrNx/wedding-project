@@ -290,6 +290,7 @@ const ListContainer = styled(Animated.View)`
   bottom: 0;
   z-index: 1;
   background-color: ${Theme.background};
+  width: 100%;
 `;
 
 const FolderList = styled.FlatList.attrs(() => ({
