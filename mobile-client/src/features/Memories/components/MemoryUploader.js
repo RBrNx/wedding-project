@@ -28,7 +28,7 @@ const NUM_COLUMNS = 3;
 const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 
 const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaptioning, savedCaptions }) => {
-  const [_hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -154,8 +154,10 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
   }, []);
 
   useEffect(() => {
-    getAssets();
-  }, [selectedFolder]);
+    if (hasPermission) {
+      getAssets();
+    }
+  }, [selectedFolder, hasPermission]);
 
   useEffect(() => {
     if (savedCaptions) {
