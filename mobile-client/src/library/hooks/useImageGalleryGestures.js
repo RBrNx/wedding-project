@@ -52,8 +52,8 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imag
     'worklet';
 
     showScreen.value = withTiming(show ? 1 : 0, {
-      duration: 250,
-      easing: Easing.out(Easing.ease),
+      duration: show ? 150 : 250,
+      easing: Easing.inOut(Easing.quad),
     });
   };
 
@@ -772,7 +772,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imag
    */
   const showGalleryStyle = useAnimatedStyle(
     () => ({
-      opacity: interpolate(showScreen.value, [0, 0.01, 1], [0, 1, 1]),
+      opacity: interpolate(showScreen.value, [0, 1], [0, 1]),
       transform: [
         {
           translateY: interpolate(showScreen.value, [0, 1], [screenHeight, 0]),
