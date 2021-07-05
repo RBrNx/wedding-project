@@ -4,8 +4,8 @@ import StandardPressable from 'library/components/StandardPressable';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import { darken, lighten } from 'library/utils/colours';
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import Animated, {
+import { Dimensions, StyleSheet } from 'react-native';
+import {
   Easing,
   Extrapolate,
   interpolate,
@@ -16,6 +16,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+
+const { height } = Dimensions.get('window');
+const MAX_HEIGHT = height * 0.65;
 
 const TrackDetail = ({ detail, icon }) => {
   return (
@@ -31,17 +35,17 @@ const SpotifyResults = ({ tracks = [], setSelectedSong, selectedSong }) => {
   const cardExpansion = useSharedValue(0);
 
   useEffect(() => {
-    if (tracks.length) cardExpansion.value = withDelay(500, withTiming(1, { duration: 500 }));
+    if (tracks.length) cardExpansion.value = withDelay(MAX_HEIGHT, withTiming(1, { duration: 500 }));
     else cardExpansion.value = withTiming(0, { duration: 500, easing: Easing.out(Easing.exp) });
   }, [tracks.length]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    height: interpolate(cardExpansion.value, [0, 1], [0, 500], Extrapolate.CLAMP),
+    height: interpolate(cardExpansion.value, [0, 1], [0, MAX_HEIGHT], Extrapolate.CLAMP),
   }));
 
   return (
     <Card>
-      <Animated.ScrollView style={animatedStyle} nestedScrollEnabled keyboardShouldPersistTaps='handled'>
+      <BottomSheetScrollView style={animatedStyle} nestedScrollEnabled keyboardShouldPersistTaps='handled'>
         {tracks.map((track, index) => {
           const { id, name, album, albumArt, artists } = track;
           const artistList = artists.join(', ');
@@ -62,11 +66,11 @@ const SpotifyResults = ({ tracks = [], setSelectedSong, selectedSong }) => {
                 </InfoContainer>
                 <StyledCircleIcon isSelected={isSelected} size={20} />
               </TrackContainer>
-              {!isLast && <Separator />}
+              {(!isLast || index < 5) && <Separator />}
             </React.Fragment>
           );
         })}
-      </Animated.ScrollView>
+      </BottomSheetScrollView>
     </Card>
   );
 };
