@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import StandardButton from 'library/components/StandardButton';
-import { Colours, Typography } from 'library/styles';
+import { Colours, Layout, Typography } from 'library/styles';
 import LandingIllustration from './components/LandingIllustration';
 
 const LandingScreen = ({ navigation }) => {
@@ -35,7 +35,7 @@ const Container = styled.View`
   flex: 1;
   align-items: center;
   padding-horizontal: 5%;
-  padding-bottom: 25px;
+  ${Layout.safeArea};
 `;
 
 const StyledLandingIllustration = styled(LandingIllustration)`

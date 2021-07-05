@@ -4,6 +4,8 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import StandardRadioInput from 'library/components/StandardRadioInput';
 import StandardTextInput from 'library/components/StandardTextInput';
+import { useBottomSheet } from '@gorhom/bottom-sheet';
+import { useAvoidKeyboard } from 'library/hooks';
 import SpotifySearchInput from './SpotifySearchInput';
 
 const { width } = Dimensions.get('window');
@@ -20,6 +22,8 @@ const RSVPAnswerInput = ({
   animIndex,
   style,
 }) => {
+  const { expand, snapTo } = useBottomSheet();
+  useAvoidKeyboard({ handleShow: () => expand(), handleHide: () => snapTo(0) });
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: (index - animIndex.value) * width }],
   }));

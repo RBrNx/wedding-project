@@ -45,6 +45,8 @@ const Container = styled(Animated.View)`
   flex: 1;
   padding-horizontal: 5%;
   padding-top: 15px;
+  padding-bottom: 80px;
+  width: 100%;
 `;
 
 const Card = styled.View`

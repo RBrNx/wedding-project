@@ -48,6 +48,7 @@ exports.initiateUpload = async (event, context, callback) => {
           sortIndex,
           ...(caption && { caption }),
           uploadedBy,
+          createdAt: new Date().toISOString(),
         },
       };
 
@@ -117,6 +118,7 @@ exports.processUpload = async (event, context) => {
     // Map the S3 bucket key to a CloudFront URL to be stored in the DB
     url: `https://${CDN_DOMAIN_NAME}/${s3Record.object.key}`,
     thumbnail: `https://${CDN_DOMAIN_NAME}/${thumbnailKey}`,
+    createdAt: s3Object.Metadata.createdat,
   };
 
   const db = await connectToDatabase();
