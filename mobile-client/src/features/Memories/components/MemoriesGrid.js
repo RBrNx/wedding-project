@@ -100,16 +100,18 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
         showUploadModal={showUploadModal}
         galleryVisible={galleryVisible}
       />
-      <MemoryUploader
-        active={showUploadModal}
-        onDismiss={() => setShowUploadModal(false)}
-        onUploadStart={upload => {
-          setUploads([upload, ...uploads]);
-          onUpload();
-        }}
-        sendImagesForCaptioning={sendImagesForCaptioning}
-        savedCaptions={savedCaptions}
-      />
+      {isFocused && (
+        <MemoryUploader
+          active={showUploadModal}
+          onDismiss={() => setShowUploadModal(false)}
+          onUploadStart={upload => {
+            setUploads([upload, ...uploads]);
+            onUpload();
+          }}
+          sendImagesForCaptioning={sendImagesForCaptioning}
+          savedCaptions={savedCaptions}
+        />
+      )}
     </>
   );
 };
