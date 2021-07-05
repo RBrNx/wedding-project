@@ -14,6 +14,10 @@ const LottieAnimation = React.forwardRef(
         speed={speed}
         onAnimationFinish={onAnimationFinish}
         resizeMode={resizeMode}
+        style={{
+          height: size,
+          width: size,
+        }}
       />
     </Container>
   ),

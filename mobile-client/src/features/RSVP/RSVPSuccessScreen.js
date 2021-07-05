@@ -42,6 +42,7 @@ const RSVPSuccessScreen = ({ route, navigation }) => {
 const Container = styled(Animated.View)`
   flex: 1;
   padding: 5%;
+  ${Layout.safeArea}
   ${Layout.flexCenter}
 `;
 

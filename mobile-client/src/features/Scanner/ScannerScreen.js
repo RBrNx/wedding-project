@@ -92,12 +92,17 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const handleBarCodeScanned = async ({ data }) => {
-    Vibration.vibrate();
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<invitationId>[A-Za-z0-9_-]{12})/g);
     const { invitationId: scannedInvitationId } = invitationRegex.exec(data)?.groups || {};
 
+    if (!scannedInvitationId) {
+      setScanned(false);
+      return;
+    }
+
+    Vibration.vibrate();
     await attemptSignIn(scannedInvitationId);
   };
 

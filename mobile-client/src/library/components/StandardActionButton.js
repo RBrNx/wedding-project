@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import Animated from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Colours, Layout, Outlines, Typography } from 'library/styles';
@@ -18,7 +18,7 @@ const StandardActionButton = ({
   onPress,
   onFullSizePress,
   expandToFullSize,
-  position = { right: 16, bottom: 16 },
+  position = { right: 16, bottom: Platform.OS === 'ios' ? 32 : 16 },
   style,
   iconStyle,
   messageStyle,

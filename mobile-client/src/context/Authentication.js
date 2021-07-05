@@ -59,6 +59,7 @@ const useProviderAuth = () => {
   const signOut = async () => {
     setIsSigningOut(true);
     await Auth.signOut();
+    await client.clearStore();
     setUser(null);
     setIsSigningOut(false);
   };

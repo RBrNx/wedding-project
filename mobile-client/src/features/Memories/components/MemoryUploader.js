@@ -1,10 +1,10 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import BottomSheetModal from 'library/components/BottomSheetModal';
-import { Colours, Layout, Theme } from 'library/styles';
+import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import * as MediaLibrary from 'expo-media-library';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, Linking } from 'react-native';
 import StandardPressable from 'library/components/StandardPressable';
 import Animated, { Easing, withTiming } from 'react-native-reanimated';
 import theme from 'styled-theming';
@@ -17,10 +17,11 @@ import { useAlert, useAuth } from 'context';
 import { AlertType } from 'library/enums';
 import parseError from 'library/utils/parseError';
 import { useMemoryUploader } from 'library/hooks';
-import Spacer from 'library/components/Spacer';
 import wretch from 'wretch';
+import StandardButton from 'library/components/StandardButton';
 import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
 import { getBlob } from '../helpers';
+import ImageAnimation from './ImageAnimation';
 
 const { width } = Dimensions.get('window');
 const { BASE_API_URL } = Constants.manifest.extra;
@@ -28,7 +29,7 @@ const NUM_COLUMNS = 3;
 const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 
 const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaptioning, savedCaptions }) => {
-  const [_hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
   const [assets, setAssets] = useState([]);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -46,9 +47,13 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
     resetAnimatedValues,
   } = useMemoryUploader({ selectedAssets });
 
-  const requestMediaLibraryPermission = async () => {
+  const requestMediaLibraryPermission = async manuallyTriggered => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     setHasPermission(status === 'granted');
+
+    if (status === 'denied' && manuallyTriggered) Linking.openSettings();
+
+    return status === 'granted';
   };
 
   const uploadImages = async assetsToUpload => {
@@ -141,8 +146,11 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
   };
 
   useEffect(() => {
+    requestMediaLibraryPermission();
+  }, []);
+
+  useEffect(() => {
     const initialise = async () => {
-      await requestMediaLibraryPermission();
       const albums = await MediaLibrary.getAlbumsAsync();
       setFolders([
         { id: null, title: 'All Photos' },
@@ -150,12 +158,16 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
       ]);
     };
 
-    initialise();
-  }, []);
+    if (hasPermission) {
+      initialise();
+    }
+  }, [hasPermission]);
 
   useEffect(() => {
-    getAssets();
-  }, [selectedFolder]);
+    if (hasPermission) {
+      getAssets();
+    }
+  }, [selectedFolder, hasPermission]);
 
   useEffect(() => {
     if (savedCaptions) {
@@ -190,7 +202,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
     const selectedAssetIndex = selectedAssets.findIndex(a => a.id === asset.id) + 1;
     const isSelected = selectedAssetIndex > 0;
 
-    if (asset.spacer) return <StyledSpacer flex />;
+    if (asset.spacer) return <StyledSpacer size={THUMBNAIL_SIZE} />;
     return (
       <MemoryUploaderThumbnail
         asset={asset}
@@ -251,7 +263,15 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
             onEndReachedThreshold={1}
             getItemLayout={(data, index) => ({ length: THUMBNAIL_SIZE, offset: THUMBNAIL_SIZE * index, index })}
             style={flatlistAnimatedStyle}
+            ListHeaderComponent={<ModalHeader>Share a memory</ModalHeader>}
           />
+        )}
+        {!hasPermission && (
+          <PermissionCard pointerEvents='box-none'>
+            <PermissionText>To upload a memory, we require your permission to access your local images</PermissionText>
+            <ImageAnimation size={150} />
+            <StandardButton text='Grant Permission' raised onPress={() => requestMediaLibraryPermission(true)} />
+          </PermissionCard>
         )}
       </BottomSheetModal>
     </>
@@ -269,6 +289,7 @@ const ListContainer = styled(Animated.View)`
   bottom: 0;
   z-index: 1;
   background-color: ${Theme.background};
+  width: 100%;
 `;
 
 const FolderList = styled.FlatList.attrs(() => ({
@@ -297,6 +318,25 @@ const StyledIcon = styled(AntDesign)`
   color: ${Colours.neutral.white};
 `;
 
+const PermissionCard = styled(Animated.View)`
+  position: absolute;
+  width: 90%;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+  padding: 15px;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  height: 300px;
+  left: 5%;
+  top: 7.5%;
+`;
+
+const PermissionText = styled.Text`
+  text-align: center;
+  color: ${Theme.detailTextColour};
+`;
+
 const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   contentContainerStyle: {
     paddingHorizontal: 3,
@@ -309,8 +349,19 @@ const StyledBottomSheetFlatList = styled(BottomSheetFlatList).attrs(() => ({
   flex: 1;
 `;
 
-const StyledSpacer = styled(Spacer)`
-  margin: 1px;
+const StyledSpacer = styled.View`
+  flex: ${1 / 3};
+  margin: 3px;
+  height: ${props => props.size}px;
+  width: ${props => props.size}px;
+`;
+
+const ModalHeader = styled.Text`
+  ${Typography.h3};
+  color: ${Theme.headerTextColour};
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
 `;
 
 export default MemoryUploader;
