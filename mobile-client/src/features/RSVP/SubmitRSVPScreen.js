@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, Keyboard } from 'react-native';
 import styled from 'styled-components/native';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import StandardActionButton from 'library/components/StandardActionButton';
@@ -139,6 +139,7 @@ const SubmitRSVPScreen = ({ route, navigation }) => {
 
     if (!nextQuestion) {
       setShowOverview(true);
+      Keyboard.dismiss();
       setFormSteps([...formSteps, { componentType: 'overview' }]);
     }
     setQuestionHistory([...questionHistory, currQuestion]);
