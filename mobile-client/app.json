@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "0.10.0",
+    "version": "0.10.1",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
     },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 0,
+      "versionCode": 1,
       "permissions": [],
       "softwareKeyboardLayoutMode": "pan"
     },
@@ -53,7 +53,7 @@
       ]
     },
     "ios": {
-      "buildNumber": "0.10.0"
+      "buildNumber": "0.10.1"
     }
   }
 }

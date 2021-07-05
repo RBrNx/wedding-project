@@ -1,3 +1,12 @@
+## [0.10.1](https://github.com/RBrNx/wedding-project/compare/v0.10.0...v0.10.1) (2021-07-05)
+
+
+### Bug Fixes
+
+* added custom BottomSheet background ([c45097b](https://github.com/RBrNx/wedding-project/commit/c45097b99e26f74552762e57b1700e56d06c756e))
+* decrease size of LoadingIndicator in ScannerScreen ([eb4ffc2](https://github.com/RBrNx/wedding-project/commit/eb4ffc2805ebf819a5f436be8555b5049f1d7a43))
+* use better semantic-release-expo versions that actually create a new android versionCode ([f3c59dc](https://github.com/RBrNx/wedding-project/commit/f3c59dcc100393a929179d332d9d6fcff63ab28f))
+
 # [0.10.0](https://github.com/RBrNx/wedding-project/compare/v0.9.0...v0.10.0) (2021-07-05)
 
 
