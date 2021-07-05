@@ -9,7 +9,14 @@ module.exports = {
   ],
   generateNotes: ['@semantic-release/release-notes-generator'],
   prepare: [
-    'semantic-release-expo',
+    {
+      path: 'semantic-release-expo',
+      versions: {
+        version: '${next.raw}',
+        android: '${increment}',
+        ios: '${next.raw}',
+      },
+    },
     '@semantic-release/changelog',
     '@semantic-release/npm',
     {
