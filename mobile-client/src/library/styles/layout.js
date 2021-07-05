@@ -1,5 +1,6 @@
 import { css } from 'styled-components/native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { Platform } from 'react-native';
 
 const flexCenter = css`
   justify-content: center;
@@ -22,6 +23,10 @@ const round = size => {
   `;
 };
 
+const safeArea = css`
+  padding-bottom: ${Platform.OS === 'ios' ? 7.5 : 5}%;
+`;
+
 const statusBarHeight = getStatusBarHeight();
 
-export { flexCenter, absoluteFill, round, statusBarHeight };
+export { flexCenter, absoluteFill, round, statusBarHeight, safeArea };
