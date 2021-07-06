@@ -249,7 +249,7 @@ const useImageGalleryGestures = ({ visible, images, onDismiss, captionMode, imag
            * away effect
            */
           const translateY = Math.abs(translate.y.value);
-          if (currentImageHeight * offsetScale.value < screenHeight && translateY > 0) {
+          if (currentImageHeight * offsetScale.value <= screenHeight && translateY > 0) {
             scale.value = offsetScale.value * (1 - SWIPE_SCALE_MODIFIER * (translateY / screenHeight));
             headerFooterVisible.value = 1 - translateY / quarterScreenHeight;
           } else if (
