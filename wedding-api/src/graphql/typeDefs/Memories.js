@@ -21,6 +21,7 @@ const schema = gql`
   }
 
   type Album {
+    _id: String!
     images: [Memory]
   }
 
