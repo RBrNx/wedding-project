@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
+import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
 import { AppearanceProvider } from 'react-native-appearance';
 import * as SplashScreen from 'expo-splash-screen';
