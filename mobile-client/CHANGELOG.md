@@ -1,3 +1,16 @@
+# [0.11.0](https://github.com/RBrNx/wedding-project/compare/v0.10.1...v0.11.0) (2021-07-06)
+
+
+### Bug Fixes
+
+* added better success handling around uploading a memory so that images and alerts are not duplicated ([077b5e7](https://github.com/RBrNx/wedding-project/commit/077b5e767c7abc9b7bc8a86235ae4ee609d205f9))
+
+
+### Features
+
+* generate temporary albumId for uploaded memories ([99bc294](https://github.com/RBrNx/wedding-project/commit/99bc2942b0e3ee513a121ad029afa70866f32cac))
+* return albumId alongside album ([6f12dff](https://github.com/RBrNx/wedding-project/commit/6f12dffe4c3734ef96e282650bb1d0a41808e30d))
+
 ## [0.10.1](https://github.com/RBrNx/wedding-project/compare/v0.10.0...v0.10.1) (2021-07-05)
 
 
