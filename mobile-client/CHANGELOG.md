@@ -1,3 +1,15 @@
+# [0.12.0](https://github.com/RBrNx/wedding-project/compare/v0.11.0...v0.12.0) (2021-07-06)
+
+
+### Bug Fixes
+
+* tall images can now be swiped away correctly ([5b89796](https://github.com/RBrNx/wedding-project/commit/5b8979614674731b13128fd42e78395f1bd03e73))
+
+
+### Features
+
+* updated ReText to handle derived values internally ([68c5a10](https://github.com/RBrNx/wedding-project/commit/68c5a102abb85c145a737ccad1008a66c3f5e66d))
+
 # [0.11.0](https://github.com/RBrNx/wedding-project/compare/v0.10.1...v0.11.0) (2021-07-06)
 
 
