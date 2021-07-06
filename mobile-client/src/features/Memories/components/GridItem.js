@@ -10,15 +10,27 @@ import styled from 'styled-components/native';
 import ImageLoader from './ImageLoader';
 
 const GridItem = React.memo(
-  ({ image, isAlbum, isUpload, size, uploadPromises, onPressIn, onPressOut, onLongPress, onPress }) => {
+  ({
+    image,
+    isAlbum,
+    isUpload,
+    size,
+    uploadPromises,
+    onUploadComplete,
+    onPressIn,
+    onPressOut,
+    onLongPress,
+    onPress,
+  }) => {
     const [isPending, setIsPending] = useState(!!isUpload);
     const { showAlert } = useAlert();
 
     useEffect(() => {
-      if (isUpload) {
+      if (isUpload && uploadPromises) {
         uploadPromises.then(() =>
           setTimeout(() => {
             setIsPending(false);
+            onUploadComplete();
             showAlert({ message: 'Your images have been successfully uploaded!', type: AlertType.SUCCESS });
           }, 3000),
         );
