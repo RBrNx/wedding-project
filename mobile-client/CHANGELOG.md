@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/RBrNx/wedding-project/compare/v0.12.0...v0.13.0) (2021-07-07)
+
+
+### Features
+
+* add correct permissions for ios and android to app.json ([af31d62](https://github.com/RBrNx/wedding-project/commit/af31d62964feb5bc9e5b992734ee850d1e9a33b1))
+
 # [0.12.0](https://github.com/RBrNx/wedding-project/compare/v0.11.0...v0.12.0) (2021-07-06)
 
 
