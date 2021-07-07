@@ -1,3 +1,64 @@
+# [0.12.0](https://github.com/RBrNx/wedding-project/compare/v0.11.0...v0.12.0) (2021-07-06)
+
+
+### Bug Fixes
+
+* tall images can now be swiped away correctly ([5b89796](https://github.com/RBrNx/wedding-project/commit/5b8979614674731b13128fd42e78395f1bd03e73))
+
+
+### Features
+
+* updated ReText to handle derived values internally ([68c5a10](https://github.com/RBrNx/wedding-project/commit/68c5a102abb85c145a737ccad1008a66c3f5e66d))
+
+# [0.11.0](https://github.com/RBrNx/wedding-project/compare/v0.10.1...v0.11.0) (2021-07-06)
+
+
+### Bug Fixes
+
+* added better success handling around uploading a memory so that images and alerts are not duplicated ([077b5e7](https://github.com/RBrNx/wedding-project/commit/077b5e767c7abc9b7bc8a86235ae4ee609d205f9))
+
+
+### Features
+
+* generate temporary albumId for uploaded memories ([99bc294](https://github.com/RBrNx/wedding-project/commit/99bc2942b0e3ee513a121ad029afa70866f32cac))
+* return albumId alongside album ([6f12dff](https://github.com/RBrNx/wedding-project/commit/6f12dffe4c3734ef96e282650bb1d0a41808e30d))
+
+## [0.10.1](https://github.com/RBrNx/wedding-project/compare/v0.10.0...v0.10.1) (2021-07-05)
+
+
+### Bug Fixes
+
+* added custom BottomSheet background ([c45097b](https://github.com/RBrNx/wedding-project/commit/c45097b99e26f74552762e57b1700e56d06c756e))
+* decrease size of LoadingIndicator in ScannerScreen ([eb4ffc2](https://github.com/RBrNx/wedding-project/commit/eb4ffc2805ebf819a5f436be8555b5049f1d7a43))
+* use better semantic-release-expo versions that actually create a new android versionCode ([f3c59dc](https://github.com/RBrNx/wedding-project/commit/f3c59dcc100393a929179d332d9d6fcff63ab28f))
+
+# [0.10.0](https://github.com/RBrNx/wedding-project/compare/v0.9.0...v0.10.0) (2021-07-05)
+
+
+### Bug Fixes
+
+* add some extra bottom padding around certain buttons on iOS ([7ad4ca0](https://github.com/RBrNx/wedding-project/commit/7ad4ca0725450c5a2d7ec569eb74f33f8ae81fe0))
+* clear Apollo store when user logs out ([f1838a9](https://github.com/RBrNx/wedding-project/commit/f1838a9a95a514eec35e254c8d4bdb59840c352c))
+* close keyboard when moving to RSVPOverview ([dea01d5](https://github.com/RBrNx/wedding-project/commit/dea01d5254bcacde15df1b940bc47fa63915ee50))
+* Folder ListContainer is now 100% width ([ee91f1b](https://github.com/RBrNx/wedding-project/commit/ee91f1b76579ab59b937c2eed19c92b94ccdacda))
+* GridItems and Spacers are now exactly 1/3 of screen width ([c58dbe4](https://github.com/RBrNx/wedding-project/commit/c58dbe4da567981b2eccf8c19431bae6e37bb92f))
+* jpeg file extension is now supported in addition to jpg ([2777f1c](https://github.com/RBrNx/wedding-project/commit/2777f1cef5879d778f04f488cd8ca9d5e4cbb0b6))
+* only attempt BarCode sign in if an invitationId is found ([ba267e0](https://github.com/RBrNx/wedding-project/commit/ba267e03b4457a206965269bb57fe0258dd54d57))
+* only attempt to retrieve local assets if permission has been granted ([8cc027a](https://github.com/RBrNx/wedding-project/commit/8cc027a197c01bd61093d68f0bf8d32d4e4d54ca))
+* only mount MemoryUploader when the tab is focused ([f4caa9a](https://github.com/RBrNx/wedding-project/commit/f4caa9abcb7a63bf7590e69446ba79b0983c5cee))
+* position StandardActionButton slightly higher on iOS to account for home bar ([040515e](https://github.com/RBrNx/wedding-project/commit/040515eb0c912b6561eed9b811efabf89dc5aa3c))
+
+
+### Features
+
+* add header to MemoryUploader sheet ([eb1d505](https://github.com/RBrNx/wedding-project/commit/eb1d50592a9ae04fbc64cb91a9a4119246e8952f))
+* created MemoriesGridHeader and use it as ListHeaderComponent in MemoriesGrid ([15becad](https://github.com/RBrNx/wedding-project/commit/15becad07fd22a5a2d9cd1d5021cac5ffef1f93a))
+* expand and shrink RSVP BottomSheet when the keyboard appears/hides ([141be6b](https://github.com/RBrNx/wedding-project/commit/141be6b4f004af645f485db65ffc0270432748e9))
+* ImageGallery now closes when back button is pressed ([e504a7d](https://github.com/RBrNx/wedding-project/commit/e504a7d8b1a989c694efedf3d9e29bc99a400718))
+* improve handling of permissions surrounding MemoryUploader ([767415e](https://github.com/RBrNx/wedding-project/commit/767415ea648f2e31bf514be6aae6bc0b6e9f305e))
+* pass size prop down to LottieView ([cdb6ec6](https://github.com/RBrNx/wedding-project/commit/cdb6ec67685a20a076e8b154141ff37cddde9689))
+* store createdAt in metadata so that it is no longer depdendant on which lambda finishes first ([2d79afc](https://github.com/RBrNx/wedding-project/commit/2d79afc402db9c8167d47b368dbc2bdd11895c23))
+
 # [0.9.0](https://github.com/RBrNx/wedding-project/compare/v0.8.2...v0.9.0) (2021-07-04)
 
 
