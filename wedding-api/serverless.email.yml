@@ -1,0 +1,54 @@
+#org: rbrnx
+app: wedding-project
+service: wedding-email
+
+# Use the serverless-webpack plugin to transpile ES6
+plugins:
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      nodeModulesRelativeDir: '../'
+    packager: 'yarn'
+  ses:
+    emailBucket: watson-wedding-emails
+
+useDotenv: true
+disabledDeprecations:
+  - CLI_OPTIONS_SCHEMA
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+  memorySize: 512
+  timeout: 30
+  lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
+
+functions:
+  handleEmail:
+    handler: src/handlers/email.handler
+    memorySize: 512
+    environment:
+      SLS_DEBUG: true
+      FROM_EMAIL: ${env:FROM_EMAIL}
+      FORWARD_EMAIL: ${env:FORWARD_EMAIL}
+      EMAIL_S3_BUCKET: ${self:custom.ses.emailBucket}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:SendRawEmail
+        Resource: '*'
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+          - s3:PutObject
+        Resource: arn:aws:s3:::${self:custom.ses.emailBucket}/*
+
+resources:
+  - ${file(resources/ses-forwarding.yml)}
