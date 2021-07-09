@@ -1,3 +1,10 @@
+## [0.13.1](https://github.com/RBrNx/wedding-project/compare/v0.13.0...v0.13.1) (2021-07-09)
+
+
+### Bug Fixes
+
+* add WRITE_EXTERNAL_STORAGE permission for android ([116be2a](https://github.com/RBrNx/wedding-project/commit/116be2a1838f7e5e42945f0543c0188daef5ec49))
+
 # [0.13.0](https://github.com/RBrNx/wedding-project/compare/v0.12.0...v0.13.0) (2021-07-07)
 
 
