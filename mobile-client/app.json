@@ -28,10 +28,7 @@
     "android": {
       "package": "com.rbrnx.watsonwedding",
       "versionCode": 4,
-      "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE"
-      ],
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
       "softwareKeyboardLayoutMode": "pan"
     },
     "androidStatusBar": {
@@ -40,9 +37,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "extra": {
       "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
