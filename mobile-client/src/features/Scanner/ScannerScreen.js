@@ -206,7 +206,7 @@ const ScannerScreen = ({ navigation }) => {
       )}
       <CameraViewfinder scannerModeIndex={scannerModeIndex} />
       <LoadingCard style={animatedLoadingStyles} pointerEvents='none'>
-        <LoadingIndicator size={100} />
+        <LoadingIndicator size={50} />
       </LoadingCard>
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
       <ScannerInputCard

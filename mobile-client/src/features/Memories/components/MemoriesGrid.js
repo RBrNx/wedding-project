@@ -38,10 +38,14 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
 
   useFocusEffect(
     useCallback(() => {
-      if (!isFocused) {
-        refetch();
-        setIsFocused(true);
-      }
+      const refetchMemoriesOnFocus = async () => {
+        if (!isFocused) {
+          setIsFocused(true);
+          await refetch();
+          setUploads([]);
+        }
+      };
+      refetchMemoriesOnFocus();
 
       return () => {
         if (isFocused) setIsFocused(false);
@@ -53,7 +57,8 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
     const { images } = album;
     const [image] = images || [{ _id: album._id }];
 
-    const uploadPromises = Promise.allSettled(images?.map(i => i.promise) || []);
+    const promises = images?.filter(i => i.promise) || [];
+    const uploadPromises = promises.length ? Promise.allSettled(promises) : null;
 
     if (image.spacer) return <StyledSpacer size={THUMBNAIL_SIZE} />;
     return (
@@ -62,6 +67,15 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
         isAlbum={images?.length > 1}
         isUpload={!!image.upload}
         uploadPromises={uploadPromises}
+        onUploadComplete={() =>
+          setUploads(prevUploads =>
+            prevUploads.map(u => {
+              if (u._id !== album._id) return u;
+
+              return { ...u, images: u.images.map(i => ({ ...i, upload: false })) };
+            }),
+          )
+        }
         size={THUMBNAIL_SIZE}
         onLongPress={() => {
           setPressedImage(image);

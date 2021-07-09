@@ -19,6 +19,7 @@ import parseError from 'library/utils/parseError';
 import { useMemoryUploader } from 'library/hooks';
 import wretch from 'wretch';
 import StandardButton from 'library/components/StandardButton';
+import { nanoid } from 'nanoid';
 import MemoryUploaderThumbnail from './MemoryUploaderThumbnail';
 import { getBlob } from '../helpers';
 import ImageAnimation from './ImageAnimation';
@@ -79,6 +80,7 @@ const MemoryUploader = ({ active, onDismiss, onUploadStart, sendImagesForCaption
       }
 
       const albumUpload = {
+        _id: `upload-${nanoid()}`,
         images: await Promise.all(
           uploadRequests.map(async (request, index) => {
             const { photoId, s3PutObjectUrl } = request;

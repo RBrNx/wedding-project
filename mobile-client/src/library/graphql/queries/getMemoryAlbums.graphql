@@ -1,5 +1,6 @@
 query getMemoryAlbums($filter: MemoryFilterInput!) {
   getMemoryAlbums(filter: $filter) {
+    _id
     images {
       ... on ImageMemory {
         _id

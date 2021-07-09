@@ -1,10 +1,13 @@
 {
   "expo": {
-    "name": "The Watson Wedding (Develop)",
-    "slug": "watson-wedding-dev",
+    "name": "The Watson Wedding (Staging)",
+    "slug": "watson-wedding-staging",
     "privacy": "unlisted",
-    "platforms": ["ios", "android"],
-    "version": "0.8.2",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "0.13.1",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,10 +17,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#14233c"
     },
+    "ios": {
+      "buildNumber": "0.13.1",
+      "bundleIdentifier": "com.rbrnx.watsonwedding",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to scan QR Codes on event invites",
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to allow users to upload photos from their camera roll"
+      }
+    },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 0,
-      "permissions": [],
+      "versionCode": 5,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "softwareKeyboardLayoutMode": "pan"
     },
     "androidStatusBar": {
@@ -26,12 +41,14 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "extra": {
-      "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
+      "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "dev",
+      "ENV": "staging",
       "noop": ""
     },
     "hooks": {
@@ -46,9 +63,6 @@
           }
         }
       ]
-    },
-    "ios": {
-      "buildNumber": "0.7.3"
     }
   }
 }
