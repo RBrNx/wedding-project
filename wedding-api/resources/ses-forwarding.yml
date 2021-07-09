@@ -1,0 +1,30 @@
+# Created with help from https://dev.to/daltonfury42/aws-ses-gmail-free-business-email-id-4phj
+
+Resources:
+  SesForwarderBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.ses.emailBucket}
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 3
+            Status: Enabled
+
+  SesForwarderBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: SesForwarderBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: GiveSESPermissionToWriteEmail
+            Effect: Allow
+            Principal:
+              Service: ses.amazonaws.com
+            Action: s3:PutObject
+            Resource: arn:aws:s3:::${self:custom.ses.emailBucket}/*
+            Condition:
+              StringEquals:
+                aws:Referer:
+                  Ref: AWS::AccountId
