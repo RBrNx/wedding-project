@@ -1,3 +1,10 @@
+## [0.13.2](https://github.com/RBrNx/wedding-project/compare/v0.13.1...v0.13.2) (2021-07-13)
+
+
+### Bug Fixes
+
+* improve TabBar style on iOS devices with a home button ([da5a37e](https://github.com/RBrNx/wedding-project/commit/da5a37ef7ffd455c884a9512bd8b441409ffe17d))
+
 ## [0.13.1](https://github.com/RBrNx/wedding-project/compare/v0.13.0...v0.13.1) (2021-07-09)
 
 
