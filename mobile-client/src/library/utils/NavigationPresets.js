@@ -22,9 +22,7 @@ const NavigationPresets = {
     showLabel: false,
     style: {
       borderTopWidth: 0,
-      height: Platform.OS === 'android' ? 65 : 80,
-      paddingBottom: Platform.OS === 'android' ? 10 : 30,
-      paddingTop: 10,
+      ...(Platform.OS === 'android' && { height: 60 }),
     },
   },
 };
