@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Dimensions, Platform, Linking, Vibration, StatusBar } from 'react-native';
+import { Dimensions, Platform, Linking, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
@@ -14,6 +14,7 @@ import LoadingIndicator from 'library/components/LoadingIndicator';
 import { AlertType } from 'library/enums';
 import { Colours, Layout, Outlines } from 'library/styles';
 import parseError from 'library/utils/parseError';
+import * as Haptics from 'expo-haptics';
 import ScannerInputCard from './components/ScannerInputCard';
 import ScannerModeHeading from './components/ScannerModeHeading';
 import CameraViewfinder from './components/CameraViewfinder';
@@ -102,7 +103,7 @@ const ScannerScreen = ({ navigation }) => {
       return;
     }
 
-    Vibration.vibrate();
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     await attemptSignIn(scannedInvitationId);
   };
 
