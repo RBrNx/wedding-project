@@ -3,14 +3,12 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
-import { useAvoidKeyboard } from 'library/hooks';
 import { Colours, Outlines, Typography } from 'library/styles';
 import { fade } from 'library/utils/colours';
 import { Platform } from 'react-native';
 
 const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
   const [buttonWidth, setButtonWidth] = useState(0);
-  const { avoidKeyboardStyle } = useAvoidKeyboard();
 
   const animatedBackgroundStyle = useAnimatedStyle(() => {
     const initialPadding = 8;
@@ -23,7 +21,7 @@ const ScannerButtonCard = ({ scannerModeIndex, onButtonPress }) => {
   });
 
   return (
-    <ButtonContainer style={avoidKeyboardStyle}>
+    <ButtonContainer>
       <ButtonBackground style={[animatedBackgroundStyle, { width: buttonWidth }]} />
       <Button
         onPress={() => onButtonPress(0)}
