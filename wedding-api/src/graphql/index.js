@@ -25,7 +25,6 @@ const typeDefs = [
   UserTypeDefs,
   InvitationTypeDefs,
   QuestionTypeDefs,
-  EventTypeDefs,
   RSVPResponseTypeDefs,
   MusicTypeDefs,
   MemoriesTypeDefs,
@@ -35,13 +34,12 @@ const resolvers = [
   UserResolvers,
   InvitationResolvers,
   QuestionResolvers,
-  EventResolvers,
   RSVPResponseResolvers,
   MusicResolvers,
   MemoriesResolvers,
 ];
 
-const unauthenticatedTypeDefs = [BaseTypeDefs, TempLoginTypeDefs];
-const unauthenticatedResolvers = [BaseResolvers, TempLoginResolvers];
+const unauthenticatedTypeDefs = [BaseTypeDefs, EventTypeDefs, TempLoginTypeDefs];
+const unauthenticatedResolvers = [BaseResolvers, EventResolvers, TempLoginResolvers];
 
 export { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers };
