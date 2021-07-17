@@ -6,11 +6,11 @@ import {
   generateTemporaryCredentials,
 } from '../../lib/helpers/users';
 
-const getAllGuests = async (parent, args, { db }) => {
+const getAllGuests = async (parent, args, { currentUser, db }) => {
   try {
     const UserModel = db.model('User');
 
-    const guests = await UserModel.find({ role: UserRole.GUEST }).exec();
+    const guests = await UserModel.find({ role: UserRole.GUEST, eventId: currentUser.eventId }).exec();
 
     return guests;
   } catch (error) {
