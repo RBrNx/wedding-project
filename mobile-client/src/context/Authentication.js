@@ -56,6 +56,12 @@ const useProviderAuth = () => {
     throw new Error(message);
   };
 
+  const confirmSignUp = async (username, code) => {
+    const res = await Auth.confirmSignUp(username, code);
+
+    return res === 'SUCCESS';
+  };
+
   const signOut = async () => {
     setIsSigningOut(true);
     await Auth.signOut();
@@ -91,6 +97,7 @@ const useProviderAuth = () => {
     currentUser,
     signIn,
     signInWithInvitationId,
+    confirmSignUp,
     signOut,
     isAuthenticated,
     isSigningOut,
