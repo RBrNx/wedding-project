@@ -4,6 +4,7 @@ import SignInScreen from 'features/SignIn/SignInScreen';
 import ScannerScreen from 'features/Scanner/ScannerScreen';
 import LandingScreen from 'features/Landing/LandingScreen';
 import NavigationPresets from 'library/utils/NavigationPresets';
+import SignUpScreen from 'features/SignUp/SignUpScreen';
 
 const UnauthenticatedStack = createStackNavigator();
 
@@ -17,6 +18,7 @@ const UnauthenticatedNavigator = () => {
     <UnauthenticatedStack.Navigator screenOptions={screenOptions}>
       <UnauthenticatedStack.Screen name='Landing' component={LandingScreen} />
       <UnauthenticatedStack.Screen name='SignIn' component={SignInScreen} options={NavigationPresets.OnlyBackButton} />
+      <UnauthenticatedStack.Screen name='SignUp' component={SignUpScreen} options={NavigationPresets.OnlyBackButton} />
       <UnauthenticatedStack.Screen
         name='Scanner'
         component={ScannerScreen}
