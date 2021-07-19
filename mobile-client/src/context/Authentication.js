@@ -4,6 +4,7 @@ import client from 'library/utils/apolloClient';
 import FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION from 'library/graphql/mutations/fetchTempLoginCredentials.graphql';
 import GET_CURRENT_USER_QUERY from 'library/graphql/queries/currentUser.graphql';
 import { useQuery } from '@apollo/react-hooks';
+import parseError from 'library/utils/parseError';
 
 const AuthContext = createContext();
 
@@ -17,9 +18,14 @@ const useProviderAuth = () => {
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
   const [attemptedSignIn, setAttemptedSignIn] = useState(false);
-  const { data: queryData } = useQuery(GET_CURRENT_USER_QUERY, { skip: !attemptedSignIn });
+  const { data: queryData, error } = useQuery(GET_CURRENT_USER_QUERY, { skip: !attemptedSignIn });
   const currentUser = queryData?.getCurrentUser;
   const isAuthenticated = !!user && !!currentUser;
+
+  if (error) {
+    const { message } = parseError(error);
+    console.error(message);
+  }
 
   const signIn = async (emailAddress, password) => {
     if (!emailAddress || !password) return null;
