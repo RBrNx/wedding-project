@@ -3,6 +3,7 @@ import useAnimatedAlert from './useAnimatedAlert';
 import useAnimatedStepTransition from './useAnimatedStepTransition';
 import useAvoidKeyboard from './useAvoidKeyboard';
 import useBackButton from './useBackButton';
+import useBottomSheetActionButton from './useBottomSheetActionButton';
 import useCustomScrollbar from './useCustomScrollbar';
 import useDebounceValue from './useDebounceValue';
 import useImageGalleryGestures from './useImageGalleryGestures';
@@ -19,6 +20,7 @@ export {
   useAnimatedStepTransition,
   useAvoidKeyboard,
   useBackButton,
+  useBottomSheetActionButton,
   useCustomScrollbar,
   useDebounceValue,
   useImageGalleryGestures,
