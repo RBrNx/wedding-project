@@ -8,6 +8,8 @@ import ErrorMessage from 'library/components/ErrorMessage';
 import EmptyMessage from 'library/components/EmptyMessage';
 import { Layout } from 'library/styles';
 import ALL_INVITATIONS_QUERY from 'library/graphql/queries/getAllInvitations.graphql';
+import parseError from 'library/utils/parseError';
+import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
 import InvitationsIllustration from './components/InvitationsIllustration';
 import InvitationCard from './components/InvitationCard';
 
@@ -34,30 +36,47 @@ const InvitationRow = ({ invitation, index }) => {
 const InvitationsScreen = () => {
   const { loading, error, data, refetch } = useQuery(ALL_INVITATIONS_QUERY);
 
+  if (error) {
+    const { message } = parseError(error);
+    console.log({ message });
+  }
+
   return (
-    <HeaderFlatlist
-      title='Invitations'
-      onRefresh={async () => {
-        await refetch();
-      }}
-      renderItem={({ item, index }) => <InvitationRow invitation={item} index={index} />}
-      data={data?.getAllInvitationGroups}
-      renderImage={() => <InvitationsIllustration size='100%' />}
-      ListEmptyComponent={() => (
-        <ListEmptyContainer>
-          {loading && <LoadingIndicator size={100} />}
-          {error && (
-            <ErrorMessage
-              size={125}
-              message='We encountered an error when loading your Invitations, please try again.'
-            />
-          )}
-          {!error && !loading && <EmptyMessage size={125} />}
-        </ListEmptyContainer>
-      )}
-    />
+    <Container>
+      <StyledDashboardHeader title='Invitations' />
+      <HeaderFlatlist
+        title='Invitations'
+        onRefresh={async () => {
+          await refetch();
+        }}
+        renderItem={({ item, index }) => <InvitationRow invitation={item} index={index} />}
+        data={data?.getAllInvitationGroups}
+        renderImage={() => <InvitationsIllustration size='100%' />}
+        ListEmptyComponent={() => (
+          <ListEmptyContainer>
+            {loading && <LoadingIndicator size={50} />}
+            {error && (
+              <ErrorMessage
+                size={125}
+                message='We encountered an error when loading your Invitations, please try again.'
+              />
+            )}
+            {!error && !loading && <EmptyMessage size={125} />}
+          </ListEmptyContainer>
+        )}
+      />
+    </Container>
   );
 };
+
+const Container = styled.View`
+  padding-top: ${Layout.statusBarHeight}px;
+  flex: 1;
+`;
+
+const StyledDashboardHeader = styled(DashboardHeader)`
+  padding-horizontal: 5%;
+`;
 
 const CardContainer = styled(Animated.View)`
   padding-horizontal: 5%;

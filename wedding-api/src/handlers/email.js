@@ -157,6 +157,7 @@ exports.fetchMessage = data => {
         ContentType: 'text/plain',
         StorageClass: 'STANDARD',
       },
+      // eslint-disable-next-line consistent-return
       err => {
         if (err) {
           data.log({
@@ -341,6 +342,7 @@ exports.handler = (event, context, callback, overrides) => {
     s3: overrides && overrides.s3 ? overrides.s3 : new AWS.S3({ signatureVersion: 'v4' }),
   };
   Promise.series(steps, data)
+    // eslint-disable-next-line no-shadow
     .then(data => {
       data.log({
         level: 'info',
