@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Colours, Layout, Outlines, Typography } from 'library/styles';
 import { darken } from 'library/utils/colours';
 import { useAnimatedActionButton } from 'library/hooks';
+import { css } from 'styled-components/native';
 import StandardPressable from './StandardPressable';
 import withAnimated from './withAnimated';
 
@@ -25,6 +26,7 @@ const StandardActionButton = ({
   containerStyle,
   maxExpansionWidth = width,
   animationDuration = 300,
+  removeElevation,
 }) => {
   const { animatedExpansionStyle, animatedIconStyle, animatedMessageStyle, isExpanded } = useAnimatedActionButton({
     size,
@@ -40,6 +42,7 @@ const StandardActionButton = ({
         size={size}
         position={position}
         onPress={isExpanded ? onFullSizePress : onPress}
+        removeElevation={removeElevation}
       >
         <ExpandedLabel style={[animatedMessageStyle, messageStyle]}>{label}</ExpandedLabel>
         <Animated.View style={[animatedIconStyle, iconStyle]}>{icon}</Animated.View>
@@ -66,6 +69,11 @@ const StyledPressable = styled(AnimatedPressable).attrs(() => ({
   height: ${props => props.size}px;
   border-radius: ${props => props.size / 2}px;
   ${props => props.position};
+  ${props =>
+    props.removeElevation &&
+    css`
+      elevation: 0;
+    `}
 `;
 
 const ExpandedLabel = styled(Animated.Text)`
