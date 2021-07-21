@@ -74,7 +74,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
     };
   } catch (error) {
     if (session) await session.abortTransaction();
-    await deleteCognitoUser({ userId });
+    if (userId) await deleteCognitoUser({ userId });
 
     return {
       success: false,
@@ -143,7 +143,7 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
     };
   } catch (error) {
     if (session) await session.abortTransaction();
-    await deleteCognitoUser({ userId });
+    if (userId) await deleteCognitoUser({ userId });
 
     return {
       success: false,
