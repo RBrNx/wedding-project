@@ -5,6 +5,7 @@ query getAllGuests($input: GetAllGuestsInput) {
     lastName
     attendanceStatus
     email
+    invitationId
     rsvpForm {
       question {
         _id
