@@ -21,6 +21,7 @@ const schema = gql`
     role: UserRole!
     attendanceStatus: AttendanceStatus!
     rsvpForm: [RSVPFormTuple!]
+    invitationId: String!
   }
 
   type UserMutationResponse implements MutationResponse {
