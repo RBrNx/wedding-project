@@ -6,11 +6,46 @@ import {
   generateTemporaryCredentials,
 } from '../../lib/helpers/users';
 
-const getAllGuests = async (parent, args, { currentUser, db }) => {
+const getAllGuests = async (parent, { input }, { currentUser, db }) => {
   try {
+    const { searchTerm } = input || {};
     const UserModel = db.model('User');
 
-    const guests = await UserModel.find({ role: UserRole.GUEST, eventId: currentUser.eventId }).exec();
+    const guests = await UserModel.aggregate([
+      {
+        $match: {
+          role: UserRole.GUEST,
+          eventId: currentUser.eventId,
+          ...(searchTerm && {
+            $or: [
+              { firstName: new RegExp(`${searchTerm}`, 'i') },
+              { lastName: new RegExp(`${searchTerm}`, 'i') },
+              { email: new RegExp(`${searchTerm}`, 'i') },
+            ],
+          }),
+        },
+      },
+      {
+        $lookup: {
+          from: 'templogindetails',
+          localField: '_id',
+          foreignField: 'userId',
+          as: 'logindetails',
+        },
+      },
+      {
+        $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ['$logindetails', 0] }, '$$ROOT'] } },
+      },
+      {
+        $project: {
+          details: 0,
+          username: 0,
+          password: 0,
+          userId: 0,
+          disabled: 0,
+        },
+      },
+    ]);
 
     return guests;
   } catch (error) {
@@ -74,7 +109,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
     };
   } catch (error) {
     if (session) await session.abortTransaction();
-    await deleteCognitoUser({ userId });
+    if (userId) await deleteCognitoUser({ userId });
 
     return {
       success: false,
@@ -143,7 +178,7 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
     };
   } catch (error) {
     if (session) await session.abortTransaction();
-    await deleteCognitoUser({ userId });
+    if (userId) await deleteCognitoUser({ userId });
 
     return {
       success: false,

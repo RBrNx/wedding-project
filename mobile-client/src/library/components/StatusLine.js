@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-const StatusLine = ({ colour = '#fff', isFirst = true, isLast = true }) => {
-  return <Line colour={colour} isFirst={isFirst} isLast={isLast} />;
+const StatusLine = ({ colour = '#fff', isFirst = true, isLast = true, style }) => {
+  return <Line colour={colour} isFirst={isFirst} isLast={isLast} style={style} />;
 };
 
 const Line = styled.View`

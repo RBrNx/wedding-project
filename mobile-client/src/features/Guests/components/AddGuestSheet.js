@@ -118,7 +118,7 @@ const ModalSubtitle = styled.Text`
 
 const QuestionText = styled.Text`
   ${Typography.h4};
-  color: ${Colours.neutral.white};
+  color: ${Theme.headerTextColour};
   ${Typography.regularFont}
   margin-left: 5px;
   margin-bottom: 5px;
