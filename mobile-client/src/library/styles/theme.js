@@ -37,4 +37,9 @@ const icon = theme('theme', {
   dark: neutral.grey2,
 });
 
-export { card, cardPressed, background, headerTextColour, bodyTextColour, detailTextColour, icon };
+const inputTextColour = theme('theme', {
+  light: neutral.offBlack,
+  dark: neutral.offWhite,
+});
+
+export { card, cardPressed, background, headerTextColour, bodyTextColour, detailTextColour, icon, inputTextColour };
