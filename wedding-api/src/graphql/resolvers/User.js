@@ -6,11 +6,22 @@ import {
   generateTemporaryCredentials,
 } from '../../lib/helpers/users';
 
-const getAllGuests = async (parent, args, { currentUser, db }) => {
+const getAllGuests = async (parent, { input }, { currentUser, db }) => {
   try {
+    const { searchTerm } = input || {};
     const UserModel = db.model('User');
 
-    const guests = await UserModel.find({ role: UserRole.GUEST, eventId: currentUser.eventId }).exec();
+    const guests = await UserModel.find({
+      role: UserRole.GUEST,
+      eventId: currentUser.eventId,
+      ...(searchTerm && {
+        $or: [
+          { firstName: new RegExp(`${searchTerm}`, 'i') },
+          { lastName: new RegExp(`${searchTerm}`, 'i') },
+          { email: new RegExp(`${searchTerm}`, 'i') },
+        ],
+      }),
+    }).exec();
 
     return guests;
   } catch (error) {

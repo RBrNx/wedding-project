@@ -42,8 +42,12 @@ const schema = gql`
     eventId: String
   }
 
+  input GetAllGuestsInput {
+    searchTerm: String
+  }
+
   extend type Query {
-    getAllGuests: [User]
+    getAllGuests(input: GetAllGuestsInput): [User]
     getCurrentUser: User
   }
 

@@ -13,4 +13,6 @@ const UserSchema = new Schema({
   role: { type: String, required: true, enum: mapEnumValues(UserRole) },
 });
 
+UserSchema.index({ firstName: 'text', lastName: 'text', email: 'text' });
+
 export default UserSchema;
