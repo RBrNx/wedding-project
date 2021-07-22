@@ -7,6 +7,13 @@ const GuestResponse = Object.freeze({
   NOT_ATTENDING: { text: 'Not Attending', color: '#966fd6' },
 });
 
+const QuestionType = Object.freeze({
+  ATTENDANCE: { text: 'Attendance', color: '#AFF8DB', value: 'ATTENDANCE' },
+  MULTIPLE_CHOICE: { text: 'Multiple Choice', color: '#FFABAB', value: 'MULTIPLE_CHOICE' },
+  TEXT: { text: 'Text', color: '#B28DFF', value: 'TEXT' },
+  SONG_REQUEST: { text: 'Song Request', color: '#ACE7FF', value: 'SONG_REQUEST' },
+});
+
 const InvitationType = Object.freeze({
   DAYTIME: { text: 'Daytime', icon: SunIcon },
   EVENING: { text: 'Evening', icon: MoonIcon },
@@ -23,4 +30,4 @@ const AlertType = Object.freeze({
   WARNING: 'WARNING',
 });
 
-export { GuestResponse, InvitationType, Theme, AlertType };
+export { GuestResponse, QuestionType, InvitationType, Theme, AlertType };
