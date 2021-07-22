@@ -9,10 +9,18 @@ import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
 import Color from 'color';
 
-const QuestionCard = ({ question, index, followUp }) => {
-  const { type, title, followUpQuestions } = question;
+const QuestionCard = ({ question, index, followUp, requiredAnswer }) => {
+  const { type, title, followUpQuestions, choices } = question;
   const { text: questionType, color: questionTypeColour } = QuestionType[type];
   const navigation = useNavigation();
+
+  const getRequiredAnswer = (value, qType) => {
+    if (choices) return choices.find(choice => choice.value === value)?.label;
+    if (qType === QuestionType.TEXT.value) return value;
+    if (qType === QuestionType.SONG_REQUEST.value) return value;
+
+    return null;
+  };
 
   return (
     <>
@@ -29,13 +37,20 @@ const QuestionCard = ({ question, index, followUp }) => {
           </QuestionTitle>
           <Spacer size={10} />
           <QuestionTypeLabel colour={questionTypeColour}>{questionType}</QuestionTypeLabel>
+          {!!requiredAnswer && (
+            <QuestionTypeLabel colour='#FFF5BA'>Requires answer: {requiredAnswer}</QuestionTypeLabel>
+          )}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />
       </CardContainer>
       <FollowUpContainer>
         <ConnectionLine />
-        {followUpQuestions?.map(({ question: followUpQuestion }) => {
-          return <QuestionCard key={followUpQuestion._id} question={followUpQuestion} followUp />;
+        {followUpQuestions?.map(({ question: followUpQuestion, matchesValue: requiredValue }) => {
+          const answer = getRequiredAnswer(requiredValue);
+
+          return (
+            <QuestionCard key={followUpQuestion._id} question={followUpQuestion} followUp requiredAnswer={answer} />
+          );
         })}
       </FollowUpContainer>
     </>
@@ -70,14 +85,14 @@ const TextContainer = styled.View`
 
 const QuestionTitle = styled.Text`
   margin-vertical: 5px;
-  ${Typography.body};
+  ${Typography.h4};
   ${Typography.boldFont};
   color: ${Theme.headerTextColour};
 `;
 
 const QuestionNumber = styled.Text`
   margin-vertical: 5px;
-  ${Typography.body};
+  ${Typography.h4};
   ${Typography.boldFont};
   color: ${Colours.secondary};
 `;
