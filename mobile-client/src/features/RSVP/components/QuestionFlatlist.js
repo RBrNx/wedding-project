@@ -9,8 +9,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
+import { Dimensions } from 'react-native';
 import QuestionCard from './QuestionCard';
 import EditQuestionSheet from './EditQuestionSheet';
+
+const { height } = Dimensions.get('window');
 
 const QuestionRow = ({ question, index, onPress }) => {
   const translateY = useSharedValue(index < 10 ? 500 : 0);
@@ -91,7 +94,7 @@ const CardContainer = styled(Animated.View)`
 `;
 
 const ListEmptyContainer = styled.View`
-  flex: 1;
+  height: ${height * 0.4}px;
   padding-horizontal: 5%;
   ${Layout.flexCenter};
 `;
