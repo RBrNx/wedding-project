@@ -86,6 +86,7 @@ const schema = gql`
   extend type Mutation {
     createQuestion(question: CreateQuestionInput!): QuestionMutationResponse
     updateQuestion(id: ID!, question: UpdateQuestionInput!): QuestionMutationResponse
+    deleteQuestion(id: ID!): QuestionMutationResponse
   }
 `;
 

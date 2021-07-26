@@ -55,6 +55,22 @@ const updateQuestion = async (parent, args, { db }) => {
   }
 };
 
+const deleteQuestion = async (parent, { id }, { db }) => {
+  try {
+    const QuestionModel = db.model('Question');
+
+    const questionDoc = await QuestionModel.findByIdAndDelete(id);
+
+    return {
+      success: true,
+      message: 'Question deleted successfully',
+      payload: questionDoc,
+    };
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   Query: {
     getRSVPQuestions,
@@ -62,5 +78,6 @@ export default {
   Mutation: {
     createQuestion,
     updateQuestion,
+    deleteQuestion,
   },
 };
