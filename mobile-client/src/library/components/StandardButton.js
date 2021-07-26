@@ -4,9 +4,9 @@ import { darken } from 'library/utils/colours';
 import { Colours, Outlines, Typography } from 'library/styles';
 import StandardPressable from './StandardPressable';
 
-const StandardButton = ({ onPress, raised, outline, text, loading, icon, style, textStyle }) => {
+const StandardButton = ({ onPress, raised, outline, text, loading, icon, style, pressedStyle, textStyle }) => {
   return (
-    <StyledPressable raised={raised} outline={outline} onPress={onPress} style={style}>
+    <StyledPressable raised={raised} outline={outline} onPress={onPress} style={style} pressedStyle={pressedStyle}>
       {!loading && (
         <>
           <InvisibleIcon>{icon && icon()}</InvisibleIcon>
@@ -19,9 +19,10 @@ const StandardButton = ({ onPress, raised, outline, text, loading, icon, style, 
   );
 };
 
-const StyledPressable = styled(StandardPressable).attrs(() => ({
+const StyledPressable = styled(StandardPressable).attrs(props => ({
   pressedStyle: {
     backgroundColor: darken(Colours.secondary, 0.2),
+    ...props.pressedStyle,
   },
 }))`
   width: 100%;
