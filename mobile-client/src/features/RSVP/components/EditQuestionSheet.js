@@ -13,30 +13,37 @@ import { useAlert } from 'context';
 import { AlertType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import { nanoid } from 'nanoid';
+import DELETE_QUESTION from 'library/graphql/mutations/deleteQuestion.graphql';
+import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
+import StandardButton from 'library/components/StandardButton';
+import { darken } from 'library/utils/colours';
 import QuestionTypeLabel from './QuestionTypeLabel';
 import { toOrdinalSuffix } from '../helpers';
 
 const EditQuestionSheet = ({ active, onDismiss, question }) => {
   const [questionType, setQuestionType] = useState(null);
   const [questionTitle, setQuestionTitle] = useState(null);
+  const [questionOrder, setQuestionOrder] = useState(null);
   const [attendingLabel, setAttendingLabel] = useState(null);
   const [decliningLabel, setDecliningLabel] = useState(null);
   const [questionChoices, setQuestionChoices] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [createGuest] = useMutation(CREATE_GUEST, {
-  //   refetchQueries: [{ query: ALL_GUESTS_QUERY }],
-  //   awaitRefetchQueries: true,
-  // });
+  const [deleteQuestion, { loading: deleteInProgress }] = useMutation(DELETE_QUESTION, {
+    refetchQueries: [{ query: GET_RSVP_QUESTIONS }],
+    awaitRefetchQueries: true,
+  });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const questionChoiceKeys = Object.keys(questionChoices);
 
   useEffect(() => {
-    if (question) {
+    if (question && active) {
       setQuestionType(question.type);
       setQuestionTitle(question.title);
+      setQuestionOrder(question.order.toString());
       setAttendingLabel(question.choices.find(choice => choice.value === 'ATTENDING')?.label);
       setDecliningLabel(question.choices.find(choice => choice.value === 'NOT_ATTENDING')?.label);
+
       if (question.choices.length) {
         const qChoices = {};
 
@@ -48,7 +55,7 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
         setQuestionChoices(qChoices);
       }
     }
-  }, [question?._id]);
+  }, [question, active]);
 
   const onSheetDismiss = () => {
     resetState();
@@ -58,6 +65,7 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
   const resetState = () => {
     setQuestionType(null);
     setQuestionTitle(null);
+    setQuestionOrder(null);
     setAttendingLabel(null);
     setDecliningLabel(null);
     setQuestionChoices({});
@@ -73,6 +81,11 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
   const removeQuestionChoice = choiceId => {
     const filteredChoices = Object.fromEntries(Object.entries(questionChoices).filter(([id]) => id !== choiceId));
     setQuestionChoices(filteredChoices);
+  };
+
+  const deleteRSVPQuestion = async () => {
+    await deleteQuestion({ variables: { id: question._id } });
+    onSheetDismiss();
   };
 
   // const addNewGuest = async () => {
@@ -113,46 +126,62 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
         <Spacer size={15} />
         <ModalTitle>Edit RSVP Question 🎩</ModalTitle>
         <Spacer size={45} />
-        <QuestionText>Question Type</QuestionText>
-        <QuestionTypeContainer>
-          {Object.keys(QuestionType).map(type => {
-            const isSelected = type === questionType;
-            return (
-              <StyledQuestionType key={type} type={type} selected={isSelected} onPress={() => setQuestionType(type)} />
-            );
-          })}
-        </QuestionTypeContainer>
 
-        <Spacer size={30} />
-        <QuestionText>What is the title of your question?</QuestionText>
-        <StandardTextInput
-          label='Question Title'
-          value={questionTitle}
-          onChangeText={value => setQuestionTitle(value)}
-          themeColourOverride='#fff'
-        />
-        {questionType === QuestionType.ATTENDANCE.value && (
-          <>
-            <Spacer size={30} />
-            <QuestionText>What is your Attending label?</QuestionText>
-            <StandardTextInput
-              label='Attending answer'
-              value={attendingLabel}
-              onChangeText={value => setAttendingLabel(value)}
-              themeColourOverride='#fff'
-            />
-            <Spacer size={30} />
-            <QuestionText>What is your Declining label?</QuestionText>
-            <StandardTextInput
-              label='Declining answer'
-              value={decliningLabel}
-              onChangeText={value => setDecliningLabel(value)}
-              themeColourOverride='#fff'
-            />
-          </>
-        )}
+        <Card>
+          <QuestionText>Question Type</QuestionText>
+          <QuestionTypeContainer>
+            {Object.keys(QuestionType).map(type => {
+              const isSelected = type === questionType;
+              return (
+                <StyledQuestionType
+                  key={type}
+                  type={type}
+                  selected={isSelected}
+                  onPress={() => setQuestionType(type)}
+                />
+              );
+            })}
+          </QuestionTypeContainer>
+
+          <Spacer size={30} />
+          <QuestionText>What is the title of your question?</QuestionText>
+          <StandardTextInput
+            label='Question Title'
+            value={questionTitle}
+            onChangeText={value => setQuestionTitle(value)}
+            themeColourOverride='#fff'
+          />
+          <Spacer size={30} />
+          <QuestionText>What is the order of this question?</QuestionText>
+          <StandardTextInput
+            label='Question Order'
+            value={questionOrder}
+            onChangeText={value => setQuestionOrder(value)}
+            themeColourOverride='#fff'
+          />
+        </Card>
+        <Spacer size={15} />
         {[QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value].includes(questionType) && (
-          <>
+          <Card>
+            {questionType === QuestionType.ATTENDANCE.value && (
+              <>
+                <QuestionText>What is your Attending label?</QuestionText>
+                <StandardTextInput
+                  label='Attending answer'
+                  value={attendingLabel}
+                  onChangeText={value => setAttendingLabel(value)}
+                  themeColourOverride='#fff'
+                />
+                <Spacer size={30} />
+                <QuestionText>What is your Declining label?</QuestionText>
+                <StandardTextInput
+                  label='Declining answer'
+                  value={decliningLabel}
+                  onChangeText={value => setDecliningLabel(value)}
+                  themeColourOverride='#fff'
+                />
+              </>
+            )}
             {Object.entries(questionChoices)
               .sort(([, a], [, b]) => a.order - b.order)
               .map(([choiceId], index) => {
@@ -190,8 +219,10 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
               </AddChoiceButton>
             )}
             <Spacer size={15} />
-          </>
+          </Card>
         )}
+        <Spacer size={15} />
+        <DeleteQuestionButton text='Delete Question' outline onPress={deleteRSVPQuestion} loading={deleteInProgress} />
       </StyledBottomSheetScrollView>
     </BottomSheetModal>
   );
@@ -200,6 +231,7 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
 const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(() => ({
   contentContainerStyle: {
     paddingHorizontal: '5%',
+    paddingBottom: 20,
   },
 }))``;
 
@@ -211,6 +243,15 @@ const ModalTitle = styled.Text`
   ${Typography.h1};
   font-size: 28px;
   color: ${Theme.headerTextColour};
+`;
+
+const Card = styled.View`
+  width: 100%;
+  padding: 5%;
+  margin-bottom: 10px;
+  background-color: ${Theme.card};
+  ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
 `;
 
 const StyledQuestionType = styled(QuestionTypeLabel)`
@@ -274,6 +315,14 @@ const ButtonText = styled.Text`
   ${Typography.body};
   ${Typography.boldFont};
   color: ${Colours.secondary};
+`;
+
+const DeleteQuestionButton = styled(StandardButton).attrs({
+  pressedStyle: {
+    backgroundColor: darken('red', 0.2),
+  },
+})`
+  border-color: red;
 `;
 
 export default EditQuestionSheet;
