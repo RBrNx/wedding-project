@@ -13,10 +13,13 @@ import { useAlert } from 'context';
 import { AlertType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import { nanoid } from 'nanoid';
+import UPDATE_QUESTION from 'library/graphql/mutations/updateQuestion.graphql';
 import DELETE_QUESTION from 'library/graphql/mutations/deleteQuestion.graphql';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
 import StandardButton from 'library/components/StandardButton';
 import { darken } from 'library/utils/colours';
+import { ActivityIndicator } from 'react-native';
+import StandardActionButton from 'library/components/StandardActionButton';
 import QuestionTypeLabel from './QuestionTypeLabel';
 import { toOrdinalSuffix } from '../helpers';
 
@@ -28,6 +31,10 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
   const [decliningLabel, setDecliningLabel] = useState(null);
   const [questionChoices, setQuestionChoices] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [updateQuestion] = useMutation(UPDATE_QUESTION, {
+    refetchQueries: [{ query: GET_RSVP_QUESTIONS }],
+    awaitRefetchQueries: true,
+  });
   const [deleteQuestion, { loading: deleteInProgress }] = useMutation(DELETE_QUESTION, {
     refetchQueries: [{ query: GET_RSVP_QUESTIONS }],
     awaitRefetchQueries: true,
@@ -69,6 +76,7 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
     setAttendingLabel(null);
     setDecliningLabel(null);
     setQuestionChoices({});
+    setIsSubmitting(false);
   };
 
   const addQuestionChoice = () => {
@@ -86,6 +94,44 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
   const deleteRSVPQuestion = async () => {
     await deleteQuestion({ variables: { id: question._id } });
     onSheetDismiss();
+  };
+
+  const updateRSVPQuestion = async () => {
+    try {
+      setIsSubmitting(true);
+      const choices = [
+        ...(questionType === QuestionType.ATTENDANCE.value && [
+          { value: 'ATTENDING', label: attendingLabel },
+          { value: 'NOT_ATTENDING', label: decliningLabel },
+        ]),
+        ...Object.values(questionChoices)
+          .sort(([, a], [, b]) => a.order - b.order)
+          .map((choice, index) => ({ label: choice.value, value: `${index}` })),
+      ];
+      const { data } = await updateQuestion({
+        variables: {
+          id: question._id,
+          question: {
+            type: questionType,
+            title: questionTitle,
+            order: parseInt(questionOrder),
+            choices,
+            isFollowUp: question.isFollowUp,
+          },
+        },
+      });
+
+      const { success } = data?.updateQuestion;
+
+      if (success) {
+        onSheetDismiss();
+      } else setIsSubmitting(false);
+    } catch (error) {
+      setIsSubmitting(false);
+      const { message } = parseError(error);
+      console.log(message);
+      showAlert({ message, type: AlertType.WARNING });
+    }
   };
 
   // const addNewGuest = async () => {
@@ -112,15 +158,15 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
       active={active}
       onDismiss={onSheetDismiss}
       animatedIndex={sheetPosition}
-      // outerChildren={
-      //   <StandardActionButton
-      //     label='Save Question'
-      //     icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledIcon name='save' size={22} />}
-      //     containerStyle={{ zIndex: 99 }}
-      //     style={buttonAnimatedStyle}
-      //     // onPress={addNewGuest}
-      //   />
-      // }
+      outerChildren={
+        <StandardActionButton
+          label='Save Question'
+          icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledIcon name='save' size={22} />}
+          containerStyle={{ zIndex: 99 }}
+          style={buttonAnimatedStyle}
+          onPress={updateRSVPQuestion}
+        />
+      }
     >
       <StyledBottomSheetScrollView>
         <Spacer size={15} />
