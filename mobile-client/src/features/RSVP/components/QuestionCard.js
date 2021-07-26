@@ -4,15 +4,12 @@ import styled from 'styled-components';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import { QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
-import { useNavigation } from '@react-navigation/native';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
-import Color from 'color';
+import QuestionTypeLabel from './QuestionTypeLabel';
 
-const QuestionCard = ({ question, index, followUp, requiredAnswer }) => {
+const QuestionCard = ({ question, index, followUp, requiredAnswer, onPress }) => {
   const { type, title, followUpQuestions, choices } = question;
-  const { text: questionType, color: questionTypeColour } = QuestionType[type];
-  const navigation = useNavigation();
 
   const getRequiredAnswer = (value, qType) => {
     if (choices) return choices.find(choice => choice.value === value)?.label;
@@ -24,7 +21,7 @@ const QuestionCard = ({ question, index, followUp, requiredAnswer }) => {
 
   return (
     <>
-      <CardContainer raised followUp={followUp} onPress={() => {}}>
+      <CardContainer raised followUp={followUp} onPress={() => onPress(question)}>
         <TextContainer>
           <QuestionTitle>
             {index !== undefined && (
@@ -36,10 +33,8 @@ const QuestionCard = ({ question, index, followUp, requiredAnswer }) => {
             {title}
           </QuestionTitle>
           <Spacer size={10} />
-          <QuestionTypeLabel colour={questionTypeColour}>{questionType}</QuestionTypeLabel>
-          {!!requiredAnswer && (
-            <QuestionTypeLabel colour='#FFF5BA'>Requires answer: {requiredAnswer}</QuestionTypeLabel>
-          )}
+          <QuestionTypeLabel type={type} title={title} />
+          {!!requiredAnswer && <RequiredAnswer>Requires answer: {requiredAnswer}</RequiredAnswer>}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />
       </CardContainer>
@@ -49,7 +44,13 @@ const QuestionCard = ({ question, index, followUp, requiredAnswer }) => {
           const answer = getRequiredAnswer(requiredValue);
 
           return (
-            <QuestionCard key={followUpQuestion._id} question={followUpQuestion} followUp requiredAnswer={answer} />
+            <QuestionCard
+              key={followUpQuestion._id}
+              question={followUpQuestion}
+              followUp
+              requiredAnswer={answer}
+              onPress={() => onPress(followUpQuestion)}
+            />
           );
         })}
       </FollowUpContainer>
@@ -97,12 +98,12 @@ const QuestionNumber = styled.Text`
   color: ${Colours.secondary};
 `;
 
-const QuestionTypeLabel = styled.Text`
+const RequiredAnswer = styled.Text`
   margin-vertical: 5px;
   ${Typography.small};
   ${Typography.boldFont};
   color: ${Theme.card};
-  background-color: ${props => Color(props.colour).fade(0.25)};
+  background-color: #fff5ba;
   text-align: center;
   padding-vertical: 2.5px;
   padding-horizontal: 10px;

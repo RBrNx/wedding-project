@@ -1,19 +1,18 @@
 import { useQuery } from '@apollo/react-hooks';
-import { Feather } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import EmptyMessage from 'library/components/EmptyMessage';
 import ErrorMessage from 'library/components/ErrorMessage';
 import LoadingIndicator from 'library/components/LoadingIndicator';
-import StandardActionButton from 'library/components/StandardActionButton';
 import { useAvoidKeyboard } from 'library/hooks';
-import { Colours, Layout, Theme } from 'library/styles';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { Layout, Theme } from 'library/styles';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
 import QuestionCard from './QuestionCard';
+import EditQuestionSheet from './EditQuestionSheet';
 
-const QuestionRow = ({ question, index }) => {
+const QuestionRow = ({ question, index, onPress }) => {
   const translateY = useSharedValue(index < 10 ? 500 : 0);
 
   useEffect(() => {
@@ -24,20 +23,29 @@ const QuestionRow = ({ question, index }) => {
 
   return (
     <CardContainer style={animatedRowStyle}>
-      <QuestionCard question={question} index={index} />
+      <QuestionCard question={question} index={index} onPress={onPress} />
     </CardContainer>
   );
 };
 
-const QuestionFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition }) => {
+const QuestionFlatlist = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
+  const [questionToEdit, setQuestionToEdit] = useState(null);
+  const [showEditQuestionSheet, setShowEditQuestionSheet] = useState(false);
   const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
   useAvoidKeyboard({
     handleShow: () => bottomSheetRef.current?.expand(),
     handleHide: () => bottomSheetRef.current?.snapTo(0),
   });
 
-  const renderFlatlist = ({ item, index }) => <QuestionRow question={item} index={index} />;
+  const onQuestionPress = question => {
+    setQuestionToEdit(question);
+    setShowEditQuestionSheet(true);
+  };
+
+  const renderFlatlist = ({ item, index }) => (
+    <QuestionRow question={item} index={index} onPress={question => onQuestionPress(question)} />
+  );
 
   const snapPoints = useMemo(() => ['45%', '82.5%'], []);
 
@@ -69,11 +77,10 @@ const QuestionFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosit
           }
         />
       </BottomSheet>
-      <StandardActionButton
-        label='Add Guest'
-        icon={<StyledIcon name='user-plus' size={20} />}
-        onPress={() => setShowAddGuestSheet(true)}
-        removeElevation={showAddGuestSheet}
+      <EditQuestionSheet
+        active={showEditQuestionSheet}
+        onDismiss={() => setShowEditQuestionSheet(false)}
+        question={questionToEdit}
       />
     </>
   );
@@ -87,10 +94,6 @@ const ListEmptyContainer = styled.View`
   flex: 1;
   padding-horizontal: 5%;
   ${Layout.flexCenter};
-`;
-
-const StyledIcon = styled(Feather)`
-  color: ${Colours.neutral.white};
 `;
 
 const BottomSheetBackground = styled.View`

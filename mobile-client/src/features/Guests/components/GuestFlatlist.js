@@ -41,6 +41,9 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
     onCompleted: () => {
       if (isLoading) setIsLoading(false);
     },
+    onError: () => {
+      if (isLoading) setIsLoading(false);
+    },
   });
   useAvoidKeyboard({
     handleShow: () => bottomSheetRef.current?.expand(),
@@ -74,7 +77,7 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
                   message='We encountered an error when loading your Guests, please try again.'
                 />
               )}
-              {!error && !loading && <EmptyMessage size={125} />}
+              {!error && !isLoading && <EmptyMessage size={125} />}
             </ListEmptyContainer>
           }
           ListHeaderComponent={
