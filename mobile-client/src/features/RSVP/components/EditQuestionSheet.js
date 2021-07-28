@@ -5,7 +5,7 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import BottomSheetModal from 'library/components/BottomSheetModal';
 import StandardTextInput from 'library/components/StandardTextInput';
-import { useBottomSheetActionButton } from 'library/hooks';
+import { useBottomSheetActionButton, useQuestionMutation } from 'library/hooks';
 import { Feather } from '@expo/vector-icons';
 import { useMutation } from '@apollo/react-hooks';
 import parseError from 'library/utils/parseError';
@@ -13,43 +13,44 @@ import { useAlert } from 'context';
 import { AlertType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import { nanoid } from 'nanoid';
+import CREATE_QUESTION from 'library/graphql/mutations/createQuestion.graphql';
 import UPDATE_QUESTION from 'library/graphql/mutations/updateQuestion.graphql';
 import DELETE_QUESTION from 'library/graphql/mutations/deleteQuestion.graphql';
-import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
 import StandardButton from 'library/components/StandardButton';
 import { darken } from 'library/utils/colours';
 import { ActivityIndicator } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
+import StandardSelectInput from 'library/components/StandardSelectInput';
 import QuestionTypeLabel from './QuestionTypeLabel';
 import { toOrdinalSuffix } from '../helpers';
 
-const EditQuestionSheet = ({ active, onDismiss, question }) => {
+const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQuestion, parentQuestion }) => {
   const [questionType, setQuestionType] = useState(null);
   const [questionTitle, setQuestionTitle] = useState(null);
   const [questionOrder, setQuestionOrder] = useState(null);
   const [attendingLabel, setAttendingLabel] = useState(null);
   const [decliningLabel, setDecliningLabel] = useState(null);
   const [questionChoices, setQuestionChoices] = useState({});
+  const [answerRequired, setAnswerRequired] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [updateQuestion] = useMutation(UPDATE_QUESTION, {
-    refetchQueries: [{ query: GET_RSVP_QUESTIONS }],
-    awaitRefetchQueries: true,
-  });
-  const [deleteQuestion, { loading: deleteInProgress }] = useMutation(DELETE_QUESTION, {
-    refetchQueries: [{ query: GET_RSVP_QUESTIONS }],
-    awaitRefetchQueries: true,
-  });
+  const [createQuestion] = useQuestionMutation(CREATE_QUESTION);
+  const [updateQuestion] = useQuestionMutation(UPDATE_QUESTION);
+  const [deleteQuestion, { loading: deleteInProgress }] = useMutation(DELETE_QUESTION);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const questionChoiceKeys = Object.keys(questionChoices);
 
   useEffect(() => {
-    if (question && active) {
+    if (active && editMode) {
       setQuestionType(question.type);
       setQuestionTitle(question.title);
       setQuestionOrder(question.order.toString());
       setAttendingLabel(question.choices.find(choice => choice.value === 'ATTENDING')?.label);
       setDecliningLabel(question.choices.find(choice => choice.value === 'NOT_ATTENDING')?.label);
+
+      if (isFollowUpQuestion) {
+        setAnswerRequired(question.requiredAnswer);
+      }
 
       if (question.choices.length) {
         const qChoices = {};
@@ -62,7 +63,7 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
         setQuestionChoices(qChoices);
       }
     }
-  }, [question, active]);
+  }, [active, editMode]);
 
   const onSheetDismiss = () => {
     resetState();
@@ -75,6 +76,7 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
     setQuestionOrder(null);
     setAttendingLabel(null);
     setDecliningLabel(null);
+    setAnswerRequired(null);
     setQuestionChoices({});
     setIsSubmitting(false);
   };
@@ -91,24 +93,23 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
     setQuestionChoices(filteredChoices);
   };
 
-  const deleteRSVPQuestion = async () => {
-    await deleteQuestion({ variables: { id: question._id } });
-    onSheetDismiss();
-  };
+  const createRSVPQuestion = async () => {};
 
   const updateRSVPQuestion = async () => {
     try {
       setIsSubmitting(true);
       const choices = [
-        ...(questionType === QuestionType.ATTENDANCE.value && [
-          { value: 'ATTENDING', label: attendingLabel },
-          { value: 'NOT_ATTENDING', label: decliningLabel },
-        ]),
+        ...(questionType === QuestionType.ATTENDANCE.value
+          ? [
+              { value: 'ATTENDING', label: attendingLabel },
+              { value: 'NOT_ATTENDING', label: decliningLabel },
+            ]
+          : []),
         ...Object.values(questionChoices)
           .sort(([, a], [, b]) => a.order - b.order)
           .map((choice, index) => ({ label: choice.value, value: `${index}` })),
       ];
-      const { data } = await updateQuestion({
+      await updateQuestion({
         variables: {
           id: question._id,
           question: {
@@ -121,37 +122,35 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
         },
       });
 
-      const { success } = data?.updateQuestion;
+      if (isFollowUpQuestion) {
+        await updateQuestion({
+          variables: {
+            id: parentQuestion._id,
+            question: {
+              followUpQuestions: [
+                {
+                  question: question._id,
+                  matchesValue: answerRequired.value,
+                },
+              ],
+            },
+          },
+        });
+      }
 
-      if (success) {
-        onSheetDismiss();
-      } else setIsSubmitting(false);
+      onSheetDismiss();
     } catch (error) {
       setIsSubmitting(false);
       const { message } = parseError(error);
-      console.log(message);
+      console.log(message, error);
       showAlert({ message, type: AlertType.WARNING });
     }
   };
 
-  // const addNewGuest = async () => {
-  //   try {
-  //     setIsSubmitting(true);
-  //     const { data } = await createGuest({ variables: { guest: { firstName, lastName } } });
-
-  //     const { success } = data?.createGuest;
-
-  //     if (success) {
-  //       onDismiss();
-  //       resetState();
-  //     } else setIsSubmitting(false);
-  //   } catch (error) {
-  //     setIsSubmitting(false);
-  //     const { message } = parseError(error);
-  //     console.log(message);
-  //     showAlert({ message, type: AlertType.WARNING });
-  //   }
-  // };
+  const deleteRSVPQuestion = async () => {
+    await deleteQuestion({ variables: { id: question._id } });
+    onSheetDismiss();
+  };
 
   return (
     <BottomSheetModal
@@ -170,13 +169,15 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
     >
       <StyledBottomSheetScrollView>
         <Spacer size={15} />
-        <ModalTitle>Edit RSVP Question 🎩</ModalTitle>
+        <ModalTitle>{editMode ? 'Edit' : 'Add'} RSVP Question 🎩</ModalTitle>
         <Spacer size={45} />
 
         <Card>
           <QuestionText>Question Type</QuestionText>
           <QuestionTypeContainer>
             {Object.keys(QuestionType).map(type => {
+              if (type === 'SONG_REQUEST') return null;
+
               const isSelected = type === questionType;
               return (
                 <StyledQuestionType
@@ -205,6 +206,18 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
             onChangeText={value => setQuestionOrder(value)}
             themeColourOverride='#fff'
           />
+          {isFollowUpQuestion && (
+            <>
+              <Spacer size={30} />
+              <QuestionText>What answer to the parent question do you require?</QuestionText>
+              <StandardSelectInput
+                label='Answer Required'
+                value={answerRequired}
+                options={parentQuestion.choices}
+                onChange={value => setAnswerRequired(value)}
+              />
+            </>
+          )}
         </Card>
         <Spacer size={15} />
         {[QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value].includes(questionType) && (
@@ -268,7 +281,14 @@ const EditQuestionSheet = ({ active, onDismiss, question }) => {
           </Card>
         )}
         <Spacer size={15} />
-        <DeleteQuestionButton text='Delete Question' outline onPress={deleteRSVPQuestion} loading={deleteInProgress} />
+        {editMode && (
+          <DeleteQuestionButton
+            text='Delete Question'
+            outline
+            onPress={deleteRSVPQuestion}
+            loading={deleteInProgress}
+          />
+        )}
       </StyledBottomSheetScrollView>
     </BottomSheetModal>
   );

@@ -4,18 +4,20 @@ import EmptyMessage from 'library/components/EmptyMessage';
 import ErrorMessage from 'library/components/ErrorMessage';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import { useAvoidKeyboard } from 'library/hooks';
-import { Layout, Theme } from 'library/styles';
+import { Colours, Layout, Theme } from 'library/styles';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
 import { Dimensions } from 'react-native';
+import StandardActionButton from 'library/components/StandardActionButton';
+import { Feather } from '@expo/vector-icons';
 import QuestionCard from './QuestionCard';
 import EditQuestionSheet from './EditQuestionSheet';
 
 const { height } = Dimensions.get('window');
 
-const QuestionRow = ({ question, index, onPress }) => {
+const QuestionRow = ({ question, index, onPress, onAddFollowUp }) => {
   const translateY = useSharedValue(index < 10 ? 500 : 0);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ const QuestionRow = ({ question, index, onPress }) => {
 
   return (
     <CardContainer style={animatedRowStyle}>
-      <QuestionCard question={question} index={index} onPress={onPress} />
+      <QuestionCard question={question} index={index} onPress={onPress} onAddFollowUp={onAddFollowUp} />
     </CardContainer>
   );
 };
@@ -34,20 +36,46 @@ const QuestionRow = ({ question, index, onPress }) => {
 const QuestionFlatlist = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
   const [questionToEdit, setQuestionToEdit] = useState(null);
-  const [showEditQuestionSheet, setShowEditQuestionSheet] = useState(false);
+  const [questionToFollow, setQuestionToFollow] = useState(null);
+  const [parentQuestion, setParentQuestion] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [showAddEditQuestionSheet, setShowAddEditQuestionSheet] = useState(false);
   const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
-  useAvoidKeyboard({
-    handleShow: () => bottomSheetRef.current?.expand(),
-    handleHide: () => bottomSheetRef.current?.snapTo(0),
-  });
+  // useAvoidKeyboard({
+  //   handleShow: () => bottomSheetRef.current?.expand(),
+  //   handleHide: () => bottomSheetRef.current?.snapTo(0),
+  // });
 
-  const onQuestionPress = question => {
-    setQuestionToEdit(question);
-    setShowEditQuestionSheet(true);
+  const onQuestionPress = (question, parentQ) => {
+    if (question.isFollowUp) {
+      setQuestionToFollow(question);
+      setParentQuestion(parentQ);
+    } else {
+      setQuestionToEdit(question);
+    }
+
+    setEditMode(true);
+    setShowAddEditQuestionSheet(true);
+  };
+
+  const onAddFollowUp = question => {
+    setQuestionToFollow(question);
+    setShowAddEditQuestionSheet(true);
+  };
+
+  const resetState = () => {
+    setQuestionToEdit(null);
+    setQuestionToFollow(null);
+    setEditMode(false);
+  };
+
+  const onSheetDismiss = () => {
+    resetState();
+    setShowAddEditQuestionSheet(false);
   };
 
   const renderFlatlist = ({ item, index }) => (
-    <QuestionRow question={item} index={index} onPress={question => onQuestionPress(question)} />
+    <QuestionRow question={item} index={index} onPress={onQuestionPress} onAddFollowUp={onAddFollowUp} />
   );
 
   const snapPoints = useMemo(() => ['45%', '82.5%'], []);
@@ -81,9 +109,18 @@ const QuestionFlatlist = ({ scrollPosition }) => {
         />
       </BottomSheet>
       <EditQuestionSheet
-        active={showEditQuestionSheet}
-        onDismiss={() => setShowEditQuestionSheet(false)}
-        question={questionToEdit}
+        active={showAddEditQuestionSheet}
+        onDismiss={onSheetDismiss}
+        question={questionToEdit || questionToFollow}
+        parentQuestion={parentQuestion}
+        isFollowUpQuestion={!!questionToFollow}
+        editMode={editMode}
+      />
+      <StandardActionButton
+        label='Add Question'
+        icon={<StyledIcon name='plus' size={20} />}
+        onPress={() => setShowAddEditQuestionSheet(true)}
+        removeElevation={showAddEditQuestionSheet}
       />
     </>
   );
@@ -103,6 +140,10 @@ const BottomSheetBackground = styled.View`
   background-color: ${Theme.background};
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
+`;
+
+const StyledIcon = styled(Feather)`
+  color: ${Colours.neutral.white};
 `;
 
 export default QuestionFlatlist;

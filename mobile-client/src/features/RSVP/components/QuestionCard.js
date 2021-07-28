@@ -1,27 +1,25 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components';
-import { Colours, Outlines, Theme, Typography } from 'library/styles';
+import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import { QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
 import QuestionTypeLabel from './QuestionTypeLabel';
+import { getRequiredAnswer } from '../helpers';
 
-const QuestionCard = ({ question, index, followUp, requiredAnswer, onPress }) => {
-  const { type, title, followUpQuestions, choices } = question;
-
-  const getRequiredAnswer = (value, qType) => {
-    if (choices) return choices.find(choice => choice.value === value)?.label;
-    if (qType === QuestionType.TEXT.value) return value;
-    if (qType === QuestionType.SONG_REQUEST.value) return value;
-
-    return null;
-  };
+const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
+  const { type, title, followUpQuestions } = question;
+  const followUpTypes = [QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value];
 
   return (
     <>
-      <CardContainer raised followUp={followUp} onPress={() => onPress(question)}>
+      <CardContainer
+        raised
+        followUp={followUp}
+        onPress={() => onPress({ ...question, requiredAnswer }, parentQuestion)}
+      >
         <TextContainer>
           <QuestionTitle>
             {index !== undefined && (
@@ -34,25 +32,34 @@ const QuestionCard = ({ question, index, followUp, requiredAnswer, onPress }) =>
           </QuestionTitle>
           <Spacer size={10} />
           <QuestionTypeLabel type={type} title={title} />
-          {!!requiredAnswer && <RequiredAnswer>Requires answer: {requiredAnswer}</RequiredAnswer>}
+          {!!requiredAnswer && <RequiredAnswer>Requires answer: {requiredAnswer.label}</RequiredAnswer>}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />
       </CardContainer>
       <FollowUpContainer>
         <ConnectionLine />
-        {followUpQuestions?.map(({ question: followUpQuestion, matchesValue: requiredValue }) => {
-          const answer = getRequiredAnswer(requiredValue);
+        {followUpQuestions
+          ?.sort(({ question: a }, { question: b }) => a.order - b.order)
+          .map(({ question: followUpQuestion, matchesValue: requiredValue }) => {
+            const answer = getRequiredAnswer(question, requiredValue);
 
-          return (
-            <QuestionCard
-              key={followUpQuestion._id}
-              question={followUpQuestion}
-              followUp
-              requiredAnswer={answer}
-              onPress={() => onPress(followUpQuestion)}
-            />
-          );
-        })}
+            return (
+              <QuestionCard
+                key={followUpQuestion._id}
+                question={followUpQuestion}
+                parentQuestion={question}
+                followUp
+                requiredAnswer={answer}
+                onPress={onPress}
+              />
+            );
+          })}
+        {!followUp && followUpTypes.includes(type) && (
+          <Card onPress={() => onAddFollowUp(question)}>
+            <AddFollowUpIcon name='plus' size={18} />
+            <ButtonText>Add Follow Up Question</ButtonText>
+          </Card>
+        )}
       </FollowUpContainer>
     </>
   );
@@ -126,6 +133,33 @@ const ConnectionLine = styled.View`
   top: -10px;
   left: 15%;
   background-color: ${Theme.detailTextColour};
+`;
+
+const Card = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: Theme.cardPressed(props),
+  },
+}))`
+  flex-direction: row;
+  width: 95%;
+  margin-left: 5%;
+  padding: 5%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  background-color: ${Theme.card};
+  ${Layout.flexCenter};
+  ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
+`;
+
+const AddFollowUpIcon = styled(Feather)`
+  color: ${Colours.secondary};
+`;
+
+const ButtonText = styled.Text`
+  ${Typography.body};
+  ${Typography.boldFont};
+  color: ${Colours.secondary};
 `;
 
 export default QuestionCard;

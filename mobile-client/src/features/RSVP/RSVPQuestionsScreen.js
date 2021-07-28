@@ -11,7 +11,6 @@ const { height } = Dimensions.get('window');
 
 const RSVPQuestionsScreen = () => {
   const scrollY = useSharedValue(0);
-  // const [showAddGuestSheet, setShowAddGuestSheet] = useState(false);
 
   const animatedImageStyle = useAnimatedStyle(() => {
     const opacity = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0], Extrapolate.CLAMP);
@@ -30,7 +29,6 @@ const RSVPQuestionsScreen = () => {
         <FormIllustration size='100%' />
       </IllustrationContainer>
       <QuestionFlatlist scrollPosition={scrollY} />
-      {/* <AddGuestSheet active={showAddGuestSheet} onDismiss={() => setShowAddGuestSheet(false)} /> */}
     </Container>
   );
 };

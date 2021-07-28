@@ -1,0 +1,16 @@
+mutation($question: CreateQuestionInput!) {
+  createQuestion(question: $question) {
+    success
+    message
+    payload {
+      type
+      title
+      label
+      responseType
+      choices {
+        label
+        value
+      }
+    }
+  }
+}

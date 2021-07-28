@@ -93,4 +93,10 @@ const toOrdinalSuffix = num => {
     : int + ordinals[3];
 };
 
-export { filterQuestions, calculateQuestions, prepareRSVPForSubmission, getAnswer, toOrdinalSuffix };
+const getRequiredAnswer = (parentQuestion, matchesValue) => {
+  const matchingChoice = parentQuestion.choices.find(choice => choice.value === matchesValue);
+
+  return matchingChoice;
+};
+
+export { filterQuestions, calculateQuestions, prepareRSVPForSubmission, getAnswer, toOrdinalSuffix, getRequiredAnswer };
