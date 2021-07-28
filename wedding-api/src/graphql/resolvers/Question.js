@@ -1,3 +1,7 @@
+import { Types } from 'mongoose';
+
+const { ObjectId } = Types;
+
 const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
   try {
     const QuestionModel = db.model('Question');
@@ -39,11 +43,28 @@ const createQuestion = async (parent, args, { currentUser, db }) => {
 
 const updateQuestion = async (parent, args, { db }) => {
   const { id, question } = args;
+  const { followUpQuestions } = question;
 
   try {
     const QuestionModel = db.model('Question');
 
-    const questionDoc = await QuestionModel.findByIdAndUpdate(id, { ...question }, { new: true });
+    const query = {
+      _id: id,
+      ...(followUpQuestions?.length && {
+        'followUpQuestions.question': ObjectId(followUpQuestions[0].question),
+      }),
+    };
+
+    const questionDoc = await QuestionModel.findOneAndUpdate(
+      query,
+      {
+        $set: {
+          ...question,
+          ...(followUpQuestions?.length && { 'followUpQuestions.$': followUpQuestions[0] }),
+        },
+      },
+      { new: true },
+    );
 
     return {
       success: true,

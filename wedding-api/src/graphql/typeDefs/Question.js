@@ -75,8 +75,8 @@ const schema = gql`
     specificGuests: [ID]
     responseType: ResponseType
     followUpQuestions: [FollowUpInput!]
-    order: Int!
-    isFollowUp: Boolean!
+    order: Int
+    isFollowUp: Boolean
   }
 
   extend type Query {
