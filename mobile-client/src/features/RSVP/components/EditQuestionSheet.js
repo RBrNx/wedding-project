@@ -207,6 +207,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
       active={active}
       onDismiss={onSheetDismiss}
       animatedIndex={sheetPosition}
+      avoidKeyboard={false}
       outerChildren={
         <StandardActionButton
           label='Save Question'
