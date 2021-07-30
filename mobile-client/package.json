@@ -1,6 +1,6 @@
 {
   "name": "mobile-client",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "main": "./node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
