@@ -7,7 +7,6 @@ import BottomSheetModal from 'library/components/BottomSheetModal';
 import StandardTextInput from 'library/components/StandardTextInput';
 import { useBottomSheetActionButton, useQuestionMutation } from 'library/hooks';
 import { Feather } from '@expo/vector-icons';
-import { useMutation } from '@apollo/react-hooks';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType, QuestionType } from 'library/enums';
@@ -35,7 +34,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createQuestion] = useQuestionMutation(CREATE_QUESTION);
   const [updateQuestion] = useQuestionMutation(UPDATE_QUESTION);
-  const [deleteQuestion, { loading: deleteInProgress }] = useMutation(DELETE_QUESTION);
+  const [deleteQuestion, { loading: deleteInProgress }] = useQuestionMutation(DELETE_QUESTION);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const questionChoiceKeys = Object.keys(questionChoices);
@@ -93,7 +92,58 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
     setQuestionChoices(filteredChoices);
   };
 
-  const createRSVPQuestion = async () => {};
+  const createRSVPQuestion = async () => {
+    try {
+      setIsSubmitting(true);
+      const choices = [
+        ...(questionType === QuestionType.ATTENDANCE.value
+          ? [
+              { value: 'ATTENDING', label: attendingLabel },
+              { value: 'NOT_ATTENDING', label: decliningLabel },
+            ]
+          : []),
+        ...Object.values(questionChoices)
+          .sort((a, b) => a.order - b.order)
+          .map((choice, index) => ({ label: choice.value, value: `${index}` })),
+      ];
+      const { data } = await createQuestion({
+        variables: {
+          question: {
+            type: questionType,
+            title: questionTitle,
+            order: parseInt(questionOrder),
+            choices,
+            isFollowUp: isFollowUpQuestion,
+            responseType: 'INDIVIDUAL',
+          },
+        },
+      });
+      const { success, payload } = data?.createQuestion;
+
+      if (success && isFollowUpQuestion) {
+        await updateQuestion({
+          variables: {
+            id: parentQuestion._id,
+            question: {
+              followUpQuestions: [
+                {
+                  question: payload._id,
+                  matchesValue: answerRequired.value,
+                },
+              ],
+            },
+          },
+        });
+      }
+
+      onSheetDismiss();
+    } catch (error) {
+      setIsSubmitting(false);
+      const { message } = parseError(error);
+      console.log(message, error);
+      showAlert({ message, type: AlertType.WARNING });
+    }
+  };
 
   const updateRSVPQuestion = async () => {
     try {
@@ -106,7 +156,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             ]
           : []),
         ...Object.values(questionChoices)
-          .sort(([, a], [, b]) => a.order - b.order)
+          .sort((a, b) => a.order - b.order)
           .map((choice, index) => ({ label: choice.value, value: `${index}` })),
       ];
       await updateQuestion({
@@ -163,7 +213,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
           icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledIcon name='save' size={22} />}
           containerStyle={{ zIndex: 99 }}
           style={buttonAnimatedStyle}
-          onPress={updateRSVPQuestion}
+          onPress={editMode ? updateRSVPQuestion : createRSVPQuestion}
         />
       }
     >

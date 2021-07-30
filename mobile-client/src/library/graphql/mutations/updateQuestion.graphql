@@ -3,6 +3,7 @@ mutation($id: ID!, $question: UpdateQuestionInput!) {
     success
     message
     payload {
+      _id
       type
       title
       label

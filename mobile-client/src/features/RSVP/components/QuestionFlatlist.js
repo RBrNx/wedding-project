@@ -60,6 +60,7 @@ const QuestionFlatlist = ({ scrollPosition }) => {
 
   const onAddFollowUp = question => {
     setQuestionToFollow(question);
+    setParentQuestion(question);
     setShowAddEditQuestionSheet(true);
   };
 
