@@ -3,7 +3,6 @@ import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import EmptyMessage from 'library/components/EmptyMessage';
 import ErrorMessage from 'library/components/ErrorMessage';
 import LoadingIndicator from 'library/components/LoadingIndicator';
-import { useAvoidKeyboard } from 'library/hooks';
 import { Colours, Layout, Theme } from 'library/styles';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
