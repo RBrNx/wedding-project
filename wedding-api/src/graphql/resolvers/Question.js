@@ -43,25 +43,21 @@ const createQuestion = async (parent, args, { currentUser, db }) => {
 
 const updateQuestion = async (parent, args, { db }) => {
   const { id, question } = args;
-  const { followUpQuestions } = question;
+  const { followUpQuestions, ...restOfQuestion } = question;
 
   try {
     const QuestionModel = db.model('Question');
 
-    const query = {
-      _id: id,
-      ...(followUpQuestions?.length && {
-        'followUpQuestions.question': ObjectId(followUpQuestions[0].question),
-      }),
-    };
+    const existingQuestionDoc = await QuestionModel.findById(id);
 
     const questionDoc = await QuestionModel.findOneAndUpdate(
-      query,
+      { _id: id },
       {
-        $set: {
-          ...question,
-          ...(followUpQuestions?.length && { 'followUpQuestions.$': followUpQuestions[0] }),
-        },
+        ...restOfQuestion,
+        followUpQuestions: [
+          ...existingQuestionDoc.followUpQuestions.filter(({ question: q }) => q !== followUpQuestions?.[0]?.question),
+          ...(followUpQuestions?.length && followUpQuestions),
+        ],
       },
       { new: true },
     );
@@ -81,6 +77,8 @@ const deleteQuestion = async (parent, { id }, { db }) => {
     const QuestionModel = db.model('Question');
 
     const questionDoc = await QuestionModel.findByIdAndDelete(id);
+
+    await QuestionModel.updateMany({}, { $pull: { followUpQuestions: { question: id } } });
 
     return {
       success: true,
