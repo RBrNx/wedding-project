@@ -12,7 +12,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import ALL_GUESTS_QUERY from 'library/graphql/queries/getAllGuests.graphql';
+import { Dimensions } from 'react-native';
 import GuestCard from './GuestCard';
+
+const { height } = Dimensions.get('window');
 
 const GuestRow = ({ guest, index }) => {
   const translateY = useSharedValue(index < 10 ? 500 : 0);
@@ -66,7 +69,7 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
       >
         <BottomSheetFlatList
           renderItem={renderFlatlist}
-          data={data?.getAllGuests}
+          data={[]}
           keyExtractor={item => item._id}
           ListEmptyComponent={
             <ListEmptyContainer>
@@ -102,7 +105,7 @@ const CardContainer = styled(Animated.View)`
 `;
 
 const ListEmptyContainer = styled.View`
-  flex: 1;
+  height: ${height * 0.25}px;
   padding-horizontal: 5%;
   ${Layout.flexCenter};
 `;
