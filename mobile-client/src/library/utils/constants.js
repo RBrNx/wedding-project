@@ -1,8 +1,8 @@
 import { Dimensions } from 'react-native';
 
 // Controls scroll distance for BottomSheet components
-const HEADER_MAX_HEIGHT = 350;
-const HEADER_MIN_HEIGHT = 78.33333587646484; // Navigation Header height reported by React Navigation
+const HEADER_MAX_HEIGHT = 300;
+const HEADER_MIN_HEIGHT = 0; // Navigation Header height reported by React Navigation
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const BottomSheet = {

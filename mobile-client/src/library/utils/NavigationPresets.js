@@ -1,4 +1,5 @@
-import { Platform } from 'react-native';
+import React from 'react';
+import { Platform, View } from 'react-native';
 import { Colours } from 'library/styles';
 
 const NavigationPresets = {
@@ -16,6 +17,13 @@ const NavigationPresets = {
   },
   TransparentHeader: {
     headerTransparent: true,
+  },
+  EmptyHeader: {
+    headerShown: true,
+    headerTitle: '',
+    headerLeft: () => <View />,
+    headerRight: () => <View />,
+    headerStyle: { backgroundColor: Colours.primary, elevation: 0, shadowOpacity: 0 },
   },
   DefaultTabBar: {
     activeTintColor: Colours.secondary,

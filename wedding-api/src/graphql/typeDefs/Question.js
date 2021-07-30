@@ -75,8 +75,8 @@ const schema = gql`
     specificGuests: [ID]
     responseType: ResponseType
     followUpQuestions: [FollowUpInput!]
-    order: Int!
-    isFollowUp: Boolean!
+    order: Int
+    isFollowUp: Boolean
   }
 
   extend type Query {
@@ -86,6 +86,7 @@ const schema = gql`
   extend type Mutation {
     createQuestion(question: CreateQuestionInput!): QuestionMutationResponse
     updateQuestion(id: ID!, question: UpdateQuestionInput!): QuestionMutationResponse
+    deleteQuestion(id: ID!): QuestionMutationResponse
   }
 `;
 

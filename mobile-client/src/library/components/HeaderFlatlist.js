@@ -1,22 +1,13 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components/native';
-import { Colours, Layout, Typography } from 'library/styles';
+import { Layout } from 'library/styles';
 import { BottomSheet } from 'library/utils/constants';
 import BottomSheetFlatList from 'library/components/BottomSheetFlatList';
 
-const { HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
+const { HEADER_MAX_HEIGHT, HEADER_SCROLL_DISTANCE } = BottomSheet;
 
-const HeaderFlatlist = ({
-  title,
-  renderImage,
-  onRefresh,
-  renderItem,
-  data,
-  ListEmptyComponent,
-  ListFooterComponent,
-}) => {
+const HeaderFlatlist = ({ renderImage, onRefresh, renderItem, data, ListEmptyComponent, ListFooterComponent }) => {
   const scrollY = useSharedValue(0);
 
   const scrollHandler = event => {
@@ -24,15 +15,6 @@ const HeaderFlatlist = ({
 
     scrollY.value = event.contentOffset.y;
   };
-
-  const animatedNavBarStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      scrollY.value,
-      [0, HEADER_SCROLL_DISTANCE * 0.75, HEADER_SCROLL_DISTANCE],
-      [0, 0.5, 1],
-      Extrapolate.CLAMP,
-    ),
-  }));
 
   const animatedImageStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -53,7 +35,6 @@ const HeaderFlatlist = ({
     <Container>
       <HeaderContainer pointerEvents='none'>
         <HeaderImage style={animatedImageStyle}>{renderImage && renderImage()}</HeaderImage>
-        <HeaderText>{title}</HeaderText>
       </HeaderContainer>
       <BottomSheetFlatList
         data={data}
@@ -63,9 +44,6 @@ const HeaderFlatlist = ({
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={ListFooterComponent}
       />
-      <NavigationBar style={animatedNavBarStyle}>
-        <NavigationBarTitle>{title}</NavigationBarTitle>
-      </NavigationBar>
     </Container>
   );
 };
@@ -80,7 +58,7 @@ const HeaderContainer = styled.View`
   left: 0px;
   right: 0px;
   height: ${HEADER_MAX_HEIGHT}px;
-  padding: 40px;
+  padding-horizontal: 40px;
   ${Layout.flexCenter};
   overflow: hidden;
 `;
@@ -89,30 +67,6 @@ const HeaderImage = styled(Animated.View)`
   width: 100%;
   resize-mode: contain;
   ${Layout.flexCenter};
-`;
-
-const HeaderText = styled.Text`
-  position: absolute;
-  ${Typography.h1};
-  color: ${Colours.neutral.white};
-  bottom: 15px;
-  text-shadow: 0px 1px 2px;
-`;
-
-const NavigationBar = styled(Animated.View)`
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  ${Layout.flexCenter};
-  height: ${HEADER_MIN_HEIGHT}px;
-  padding-top: ${StatusBar.currentHeight || HEADER_MIN_HEIGHT / 2 - 12}px;
-  background-color: ${Colours.primary};
-`;
-
-const NavigationBarTitle = styled.Text`
-  font-size: 24px;
-  color: ${Colours.neutral.white};
 `;
 
 export default HeaderFlatlist;

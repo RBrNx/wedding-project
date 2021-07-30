@@ -15,7 +15,7 @@ const absoluteFill = css`
   right: 0px;
 `;
 
-const round = size => {
+const round = (size = 5) => {
   return css`
     height: ${size}px;
     width: ${size}px;

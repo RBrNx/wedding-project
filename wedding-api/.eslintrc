@@ -15,5 +15,5 @@
     "no-plusplus": "off",
     "no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }]
   },
-  "parser": "babel-eslint"
+  "parser": "@babel/eslint-parser"
 }

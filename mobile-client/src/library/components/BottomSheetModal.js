@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { BottomSheetModal as Modal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import styled from 'styled-components/native';
 import { Outlines, Theme } from 'library/styles';
-import { useBackButton } from 'library/hooks';
+import { useAvoidKeyboard, useBackButton } from 'library/hooks';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 const BottomSheetBackdrop = ({ animatedIndex, style }) => {
@@ -13,13 +13,20 @@ const BottomSheetBackdrop = ({ animatedIndex, style }) => {
   return <StyledBackdrop style={[containerAnimatedStyle, style]} />;
 };
 
-const BottomSheetModal = ({ active, onDismiss, children, outerChildren, animatedIndex }) => {
+const BottomSheetModal = ({ active, onDismiss, children, outerChildren, animatedIndex, avoidKeyboard = true }) => {
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ['60%', '87.5%'], []);
+  useAvoidKeyboard({
+    handleShow: () => {
+      if (avoidKeyboard) bottomSheetModalRef.current?.expand();
+    },
+    handleHide: () => {
+      if (avoidKeyboard) bottomSheetModalRef.current?.snapTo(0);
+    },
+  });
 
   useBackButton(() => {
     if (active) {
-      // eslint-disable-next-line no-unused-expressions
       bottomSheetModalRef.current?.dismiss();
       return true;
     }
@@ -27,12 +34,10 @@ const BottomSheetModal = ({ active, onDismiss, children, outerChildren, animated
     return false;
   });
 
-  /* eslint-disable no-unused-expressions */
   useEffect(() => {
     if (active) bottomSheetModalRef.current?.present();
     else bottomSheetModalRef.current?.dismiss();
   }, [active]);
-  /* eslint-enable no-unused-expressions */
 
   return (
     <BottomSheetModalProvider>
