@@ -1,7 +1,3 @@
-import { Types } from 'mongoose';
-
-const { ObjectId } = Types;
-
 const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
   try {
     const QuestionModel = db.model('Question');
