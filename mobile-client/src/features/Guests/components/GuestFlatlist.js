@@ -69,7 +69,7 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
       >
         <BottomSheetFlatList
           renderItem={renderFlatlist}
-          data={[]}
+          data={data?.getAllGuests}
           keyExtractor={item => item._id}
           ListEmptyComponent={
             <ListEmptyContainer>
