@@ -1,0 +1,17 @@
+mutation($id: ID!, $question: UpdateQuestionInput!) {
+  updateQuestion(id: $id, question: $question) {
+    success
+    message
+    payload {
+      _id
+      type
+      title
+      label
+      responseType
+      choices {
+        label
+        value
+      }
+    }
+  }
+}

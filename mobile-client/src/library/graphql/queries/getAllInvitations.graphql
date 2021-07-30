@@ -13,7 +13,10 @@ query ALL_INVITATIONS_QUERY {
           title
           label
         }
-        answer
+        answer {
+          label
+          value
+        }
       }
     }
   }

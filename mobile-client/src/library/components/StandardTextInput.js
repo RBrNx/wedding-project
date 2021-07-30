@@ -172,10 +172,7 @@ const PlaceholderLabel = styled(Animated.Text)`
 
 const StyledTextInput = styled.TextInput`
   ${Typography.body};
-  color: ${theme('theme', {
-    light: Colours.neutral.offBlack,
-    dark: Colours.neutral.offWhite,
-  })};
+  color: ${Theme.inputTextColour};
   min-height: ${props => (props.multiline ? 150 : 0)}px;
   margin-top: ${props => (props.multiline ? 5 : 0)}px;
 `;

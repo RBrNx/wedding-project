@@ -1,0 +1,16 @@
+mutation createEvent($input: CreateEventInput!) {
+  createEvent(input: $input) {
+    success
+    message
+    payload {
+      event {
+        _id
+        name
+        date
+      }
+      admin {
+        _id
+      }
+    }
+  }
+}

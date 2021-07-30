@@ -1,6 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import StandardButton from 'library/components/StandardButton';
@@ -13,10 +12,10 @@ const LandingScreen = ({ navigation }) => {
       <StyledLandingIllustration size='100%' />
       <Spacer size={50} />
       <HeadingContainer>
-        <HeadingText>Welcome to the Watson Wedding.</HeadingText>
+        <HeadingText>Welcome to the Future of Weddings.</HeadingText>
         <Spacer size={15} />
         <SubHeadingText>
-          Get started by scanning the QR Code on your invitation, or sign in to your existing account.
+          To get started you&apos;ll need your invitation which features your personalised QR code.
         </SubHeadingText>
       </HeadingContainer>
       <StandardButton
@@ -25,8 +24,8 @@ const LandingScreen = ({ navigation }) => {
         icon={() => <StyledMaterialCommunityIcon name='qrcode-scan' size={22} color='white' />}
         onPress={() => navigation.navigate('Scanner')}
       />
-      <Separator />
-      <StandardButton text='I already have an account' raised onPress={() => navigation.navigate('SignIn')} />
+      <Spacer size={10} />
+      <StandardButton text='Manage my wedding' outline onPress={() => navigation.navigate('SignIn')} />
     </Container>
   );
 };
@@ -45,7 +44,6 @@ const StyledLandingIllustration = styled(LandingIllustration)`
 
 const HeadingContainer = styled.View`
   flex: 1;
-  padding-horizontal: 5%;
 `;
 
 const HeadingText = styled.Text`
@@ -58,13 +56,6 @@ const SubHeadingText = styled.Text`
   ${Typography.h4}
   text-align: center;
   color: ${Colours.neutral.grey2};
-`;
-
-const Separator = styled.View`
-  height: ${StyleSheet.hairlineWidth}px;
-  background-color: ${Colours.neutral.white};
-  margin-vertical: 10px;
-  width: 90%;
 `;
 
 const StyledMaterialCommunityIcon = styled(MaterialCommunityIcons)`

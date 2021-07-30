@@ -1,9 +1,27 @@
-query ALL_GUESTS_QUERY {
-  getAllGuests {
+query getAllGuests($input: GetAllGuestsInput) {
+  getAllGuests(input: $input) {
     _id
     firstName
     lastName
     attendanceStatus
     email
+    invitationId
+    rsvpForm {
+      question {
+        _id
+        type
+        title
+        label
+        choices {
+          _id
+          label
+          value
+        }
+      }
+      answer {
+        label
+        value
+      }
+    }
   }
 }

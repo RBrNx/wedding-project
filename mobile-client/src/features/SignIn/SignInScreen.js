@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import StandardButton from 'library/components/StandardButton';
@@ -10,12 +10,18 @@ import { Colours, Typography } from 'library/styles';
 import { AlertType } from 'library/enums';
 import { useAuth, useAlert } from 'context';
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState(null);
   const [password, setPassword] = useState(null);
   const [signingIn, setSigningIn] = useState(false);
   const { signIn } = useAuth();
   const { showAlert } = useAlert();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <SignUpButton text='Sign Up' outline onPress={() => navigation.navigate('SignUp')} />,
+    });
+  }, [navigation]);
 
   const attemptLogin = async () => {
     try {
@@ -66,9 +72,20 @@ const StyledDismissKeyboard = styled(DismissKeyboard)`
   padding-bottom: ${Platform.OS === 'ios' ? 15 : 0}px;
 `;
 
+const SignUpButton = styled(StandardButton).attrs({
+  textStyle: {
+    paddingVertical: 0,
+  },
+})`
+  width: 90px;
+  height: 35px;
+  margin-right: 15px;
+`;
+
 const HeadingContainer = styled.View`
   justify-content: center;
   width: 100%;
+  margin-top: 15px;
 `;
 
 const HeadingText = styled.Text`

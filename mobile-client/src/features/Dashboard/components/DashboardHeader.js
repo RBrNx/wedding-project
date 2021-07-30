@@ -23,7 +23,7 @@ const Container = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  padding-top: 10px;
+  padding-vertical: 10px;
 `;
 
 const ScreenTitle = styled.Text`

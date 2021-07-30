@@ -17,10 +17,11 @@ const schema = gql`
     eventId: ID!
     firstName: String!
     lastName: String!
-    email: String
+    email: EmailAddress
     role: UserRole!
     attendanceStatus: AttendanceStatus!
     rsvpForm: [RSVPFormTuple!]
+    invitationId: String!
   }
 
   type UserMutationResponse implements MutationResponse {
@@ -42,8 +43,12 @@ const schema = gql`
     eventId: String
   }
 
+  input GetAllGuestsInput {
+    searchTerm: String
+  }
+
   extend type Query {
-    getAllGuests: [User]
+    getAllGuests(input: GetAllGuestsInput): [User]
     getCurrentUser: User
   }
 

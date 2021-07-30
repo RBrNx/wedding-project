@@ -25,7 +25,7 @@ Resources:
           RequireSymbols: false
           TemporaryPasswordValidityDays: 7
       VerificationMessageTemplate:
-        DefaultEmailOption: CONFIRM_WITH_LINK
+        DefaultEmailOption: CONFIRM_WITH_CODE
 
   CognitoUserPoolClientMobile:
     Type: AWS::Cognito::UserPoolClient
