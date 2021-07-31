@@ -1,3 +1,10 @@
+## [0.14.1](https://github.com/RBrNx/wedding-project/compare/v0.14.0...v0.14.1) (2021-07-31)
+
+
+### Bug Fixes
+
+* set awsExports to staging environment ([3937dde](https://github.com/RBrNx/wedding-project/commit/3937dde9767e85d59c4e0a21725eb6016f2eb345))
+
 # [0.14.0](https://github.com/RBrNx/wedding-project/compare/v0.13.2...v0.14.0) (2021-07-30)
 
 
