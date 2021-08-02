@@ -48,13 +48,31 @@ const updateQuestion = async (parent, args, { db }) => {
 
     const existingQuestionDoc = await QuestionModel.findById(id);
 
+    console.log(
+      JSON.stringify({
+        followUpQuestions,
+        restOfQuestion,
+        change: {
+          ...restOfQuestion,
+          followUpQuestions: [
+            ...existingQuestionDoc.followUpQuestions.filter(
+              ({ question: q }) => q.toString() !== followUpQuestions?.[0]?.question,
+            ),
+            ...((followUpQuestions?.length && followUpQuestions) || []),
+          ],
+        },
+      }),
+    );
+
     const questionDoc = await QuestionModel.findOneAndUpdate(
       { _id: id },
       {
         ...restOfQuestion,
         followUpQuestions: [
-          ...existingQuestionDoc.followUpQuestions.filter(({ question: q }) => q !== followUpQuestions?.[0]?.question),
-          ...(followUpQuestions?.length && followUpQuestions),
+          ...existingQuestionDoc.followUpQuestions.filter(
+            ({ question: q }) => q.toString() !== followUpQuestions?.[0]?.question,
+          ),
+          ...((followUpQuestions?.length && followUpQuestions) || []),
         ],
       },
       { new: true },
