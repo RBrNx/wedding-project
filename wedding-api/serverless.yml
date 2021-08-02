@@ -103,6 +103,12 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - cognito-idp:AdminCreateUser
+          - cognito-idp:AdminDeleteUser
+        Resource: !GetAtt CognitoUserPoolWedding.Arn
 
   spotifyCallback:
     handler: src/handlers/spotify.authCallback
