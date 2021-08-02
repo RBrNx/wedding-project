@@ -15,13 +15,14 @@ import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType } from 'library/enums';
 import ALL_GUESTS_QUERY from 'library/graphql/queries/getAllGuests.graphql';
+import { getOperationName } from 'apollo-link';
 
 const AddGuestSheet = ({ active, onDismiss }) => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createGuest] = useMutation(CREATE_GUEST, {
-    refetchQueries: [{ query: ALL_GUESTS_QUERY }],
+    refetchQueries: [getOperationName(ALL_GUESTS_QUERY)],
     awaitRefetchQueries: true,
   });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
