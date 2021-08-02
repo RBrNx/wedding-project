@@ -30,4 +30,10 @@ const AlertType = Object.freeze({
   WARNING: 'WARNING',
 });
 
-export { GuestResponse, QuestionType, InvitationType, Theme, AlertType };
+const QuestionGuestType = Object.freeze({
+  DAYTIME: 'Daytime Only',
+  EVENING: 'Evening Only',
+  BOTH: 'All Guests',
+});
+
+export { GuestResponse, QuestionType, InvitationType, Theme, AlertType, QuestionGuestType };

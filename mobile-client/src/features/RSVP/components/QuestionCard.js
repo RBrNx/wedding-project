@@ -2,7 +2,7 @@ import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components';
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
-import { QuestionType } from 'library/enums';
+import { QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
@@ -10,7 +10,7 @@ import QuestionTypeLabel from './QuestionTypeLabel';
 import { getRequiredAnswer } from '../helpers';
 
 const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
-  const { type, title, followUpQuestions } = question;
+  const { type, title, followUpQuestions, guestType } = question;
   const followUpTypes = [QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value];
 
   return (
@@ -32,7 +32,8 @@ const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswe
           </QuestionTitle>
           <Spacer size={10} />
           <QuestionTypeLabel type={type} title={title} />
-          {!!requiredAnswer && <RequiredAnswer>Requires answer: {requiredAnswer.label}</RequiredAnswer>}
+          {guestType !== 'BOTH' && <GuestType>{QuestionGuestType[guestType]}</GuestType>}
+          {!!requiredAnswer && <RequiredAnswer>{requiredAnswer.label}</RequiredAnswer>}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />
       </CardContainer>
@@ -103,6 +104,19 @@ const QuestionNumber = styled.Text`
   ${Typography.h4};
   ${Typography.boldFont};
   color: ${Colours.secondary};
+`;
+
+const GuestType = styled.Text`
+  margin-vertical: 5px;
+  ${Typography.small};
+  ${Typography.boldFont};
+  color: ${Colours.neutral.grey5};
+  background-color: #85e3ff;
+  text-align: center;
+  padding-vertical: 2.5px;
+  padding-horizontal: 10px;
+  align-self: flex-start;
+  ${Outlines.borderRadius};
 `;
 
 const RequiredAnswer = styled.Text`
