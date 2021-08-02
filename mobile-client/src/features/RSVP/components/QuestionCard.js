@@ -8,6 +8,7 @@ import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
 import QuestionTypeLabel from './QuestionTypeLabel';
 import { getRequiredAnswer } from '../helpers';
+import GuestTypeLabel from './GuestTypeLabel';
 
 const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
   const { type, title, followUpQuestions, guestType } = question;
@@ -32,7 +33,9 @@ const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswe
           </QuestionTitle>
           <Spacer size={10} />
           <QuestionTypeLabel type={type} title={title} />
-          {guestType !== 'BOTH' && <GuestType>{QuestionGuestType[guestType]}</GuestType>}
+          {guestType !== 'BOTH' && (
+            <GuestTypeLabel type={guestType}>{QuestionGuestType[guestType].text}</GuestTypeLabel>
+          )}
           {!!requiredAnswer && <RequiredAnswer>{requiredAnswer.label}</RequiredAnswer>}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />
@@ -104,19 +107,6 @@ const QuestionNumber = styled.Text`
   ${Typography.h4};
   ${Typography.boldFont};
   color: ${Colours.secondary};
-`;
-
-const GuestType = styled.Text`
-  margin-vertical: 5px;
-  ${Typography.small};
-  ${Typography.boldFont};
-  color: ${Colours.neutral.grey5};
-  background-color: #85e3ff;
-  text-align: center;
-  padding-vertical: 2.5px;
-  padding-horizontal: 10px;
-  align-self: flex-start;
-  ${Outlines.borderRadius};
 `;
 
 const RequiredAnswer = styled.Text`
