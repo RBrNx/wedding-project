@@ -16,6 +16,7 @@ const getMemories = async (parent, args, { currentUser, db }) => {
       return { ...memory, url: signedUrl };
     });
   } catch (error) {
+    console.error('getMemories', error);
     return error;
   }
 };
@@ -45,6 +46,7 @@ const getMemoryAlbums = async (parent, args, { currentUser, db }) => {
 
     return albums;
   } catch (error) {
+    console.error('getMemoryAlbums', error);
     return error;
   }
 };
