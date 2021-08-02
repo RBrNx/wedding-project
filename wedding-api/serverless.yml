@@ -108,6 +108,7 @@ functions:
         Action:
           - cognito-idp:AdminCreateUser
           - cognito-idp:AdminDeleteUser
+          - cognito-idp:AdminSetUserPassword
         Resource: !GetAtt CognitoUserPoolWedding.Arn
 
   spotifyCallback:
