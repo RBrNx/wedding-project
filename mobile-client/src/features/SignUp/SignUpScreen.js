@@ -39,7 +39,6 @@ const SignUpScreen = ({ navigation }) => {
         },
       });
       const { success, payload } = data.createEvent;
-      console.log({ data });
 
       if (success) {
         // _id is the username until Email has been confirmed
