@@ -5,6 +5,7 @@ const searchTracks = async (parent, { input }, { dataSources }) => {
 
     return tracks;
   } catch (error) {
+    console.error('searchTracks', error);
     return error;
   }
 };

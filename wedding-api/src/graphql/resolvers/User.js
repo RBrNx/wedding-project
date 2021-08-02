@@ -49,6 +49,7 @@ const getAllGuests = async (parent, { input }, { currentUser, db }) => {
 
     return guests;
   } catch (error) {
+    console.error('getAllGuests', error);
     return error;
   }
 };
@@ -108,6 +109,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
       payload: userDoc,
     };
   } catch (error) {
+    console.error('createGuest', error);
     if (session) await session.abortTransaction();
     if (userId) await deleteCognitoUser({ userId });
 
@@ -177,6 +179,7 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
       payload: userDoc,
     };
   } catch (error) {
+    console.error('createAdmin', error);
     if (session) await session.abortTransaction();
     if (userId) await deleteCognitoUser({ userId });
 

@@ -46,6 +46,7 @@ const submitRSVPForm = async (parent, args, { currentUser, db, dataSources }) =>
       message: 'RSVP submitted successfully',
     };
   } catch (error) {
+    console.error('submitRSVPForm', error);
     return {
       success: false,
       message: error.message,

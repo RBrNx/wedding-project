@@ -14,6 +14,7 @@ const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
 
     return questions;
   } catch (error) {
+    console.error('getRSVPQuestions', error);
     return error;
   }
 };
@@ -33,6 +34,7 @@ const createQuestion = async (parent, args, { currentUser, db }) => {
       payload: questionDoc,
     };
   } catch (error) {
+    console.error('createQuestion', error);
     return error;
   }
 };
@@ -64,6 +66,7 @@ const updateQuestion = async (parent, args, { db }) => {
       payload: questionDoc,
     };
   } catch (error) {
+    console.error('updateQuestion', error);
     return error;
   }
 };
@@ -82,6 +85,7 @@ const deleteQuestion = async (parent, { id }, { db }) => {
       payload: questionDoc,
     };
   } catch (error) {
+    console.error('deleteQuestion', error);
     return error;
   }
 };

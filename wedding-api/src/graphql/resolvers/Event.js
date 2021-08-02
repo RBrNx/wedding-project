@@ -55,8 +55,9 @@ const createEvent = async (parent, { input }, { db }) => {
       },
     };
   } catch (error) {
+    console.error('createEvent', error);
     if (session) await session.abortTransaction();
-    await deleteCognitoUser({ userId });
+    if (userId) await deleteCognitoUser({ userId });
 
     return {
       success: false,

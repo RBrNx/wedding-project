@@ -24,6 +24,7 @@ const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
       payload: loginDetails,
     };
   } catch (error) {
+    console.error('fetchTempLoginCredentials', error);
     return {
       success: false,
       message: error.message,
