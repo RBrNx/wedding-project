@@ -57,6 +57,7 @@ const schema = gql`
   extend type Mutation {
     createGuest(guest: CreateUserInput!): UserMutationResponse
     createAdmin(input: CreateAdminInput!): UserMutationResponse
+    deleteGuest(id: ID!): UserMutationResponse
   }
 `;
 
