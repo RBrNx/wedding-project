@@ -31,9 +31,9 @@ const AlertType = Object.freeze({
 });
 
 const QuestionGuestType = Object.freeze({
-  DAYTIME: 'Daytime Only',
-  EVENING: 'Evening Only',
-  BOTH: 'All Guests',
+  DAYTIME: { text: 'Daytime Only', color: '#BFFCC6', value: 'DAYTIME' },
+  EVENING: { text: 'Evening Only', color: '#F6A6FF', value: 'EVENING' },
+  BOTH: { text: 'All Guests', color: '#85E3FF', value: 'BOTH' },
 });
 
 export { GuestResponse, QuestionType, InvitationType, Theme, AlertType, QuestionGuestType };

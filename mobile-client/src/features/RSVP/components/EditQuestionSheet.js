@@ -9,7 +9,7 @@ import { useBottomSheetActionButton, useQuestionMutation } from 'library/hooks';
 import { Feather } from '@expo/vector-icons';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
-import { AlertType, QuestionType } from 'library/enums';
+import { AlertType, QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import { nanoid } from 'nanoid';
 import CREATE_QUESTION from 'library/graphql/mutations/createQuestion.graphql';
@@ -22,10 +22,12 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import StandardSelectInput from 'library/components/StandardSelectInput';
 import QuestionTypeLabel from './QuestionTypeLabel';
 import { toOrdinalSuffix } from '../helpers';
+import GuestTypeLabel from './GuestTypeLabel';
 
 const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQuestion, parentQuestion }) => {
   const [questionType, setQuestionType] = useState(null);
   const [questionTitle, setQuestionTitle] = useState(null);
+  const [questionGuestType, setQuestionGuestType] = useState(null);
   const [questionOrder, setQuestionOrder] = useState(null);
   const [attendingLabel, setAttendingLabel] = useState(null);
   const [decliningLabel, setDecliningLabel] = useState(null);
@@ -43,6 +45,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
     if (active && editMode) {
       setQuestionType(question.type);
       setQuestionTitle(question.title);
+      setQuestionGuestType(question.guestType);
       setQuestionOrder(question.order.toString());
       setAttendingLabel(question.choices.find(choice => choice.value === 'ATTENDING')?.label);
       setDecliningLabel(question.choices.find(choice => choice.value === 'NOT_ATTENDING')?.label);
@@ -168,6 +171,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             order: parseInt(questionOrder),
             choices,
             isFollowUp: question.isFollowUp,
+            guestType: questionGuestType,
           },
         },
       });
@@ -231,16 +235,24 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
 
               const isSelected = type === questionType;
               return (
-                <StyledQuestionType
+                <QuestionTypeLabel key={type} type={type} selected={isSelected} onPress={() => setQuestionType(type)} />
+              );
+            })}
+          </QuestionTypeContainer>
+          <QuestionText>Guest Type</QuestionText>
+          <QuestionTypeContainer>
+            {Object.keys(QuestionGuestType).map(type => {
+              const isSelected = type === questionGuestType;
+              return (
+                <GuestTypeLabel
                   key={type}
                   type={type}
                   selected={isSelected}
-                  onPress={() => setQuestionType(type)}
+                  onPress={() => setQuestionGuestType(type)}
                 />
               );
             })}
           </QuestionTypeContainer>
-
           <Spacer size={30} />
           <QuestionText>What is the title of your question?</QuestionText>
           <StandardTextInput
@@ -371,10 +383,6 @@ const Card = styled.View`
   ${Outlines.boxShadow};
 `;
 
-const StyledQuestionType = styled(QuestionTypeLabel)`
-  border: 2px solid ${props => (props.selected ? Theme.detailTextColour : 'transparent')};
-`;
-
 const QuestionText = styled.Text`
   ${Typography.h4};
   color: ${Theme.headerTextColour};
@@ -386,7 +394,7 @@ const QuestionText = styled.Text`
 const QuestionTypeContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
 const ChoiceContainer = styled.View`
