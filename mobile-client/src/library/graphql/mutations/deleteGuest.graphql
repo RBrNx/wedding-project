@@ -1,0 +1,11 @@
+mutation($id: ID!) {
+  deleteGuest(id: $id) {
+    success
+    message
+    payload {
+      firstName
+      lastName
+      role
+    }
+  }
+}
