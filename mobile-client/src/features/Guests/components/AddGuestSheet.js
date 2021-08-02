@@ -10,21 +10,16 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import { ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import CREATE_GUEST from 'library/graphql/mutations/createGuest.graphql';
-import { useMutation } from '@apollo/react-hooks';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType } from 'library/enums';
-import ALL_GUESTS_QUERY from 'library/graphql/queries/getAllGuests.graphql';
-import { getOperationName } from 'apollo-link';
+import useGuestMutation from 'library/hooks/useGuestMutation';
 
 const AddGuestSheet = ({ active, onDismiss }) => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createGuest] = useMutation(CREATE_GUEST, {
-    refetchQueries: [getOperationName(ALL_GUESTS_QUERY)],
-    awaitRefetchQueries: true,
-  });
+  const [createGuest] = useGuestMutation(CREATE_GUEST);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
 
