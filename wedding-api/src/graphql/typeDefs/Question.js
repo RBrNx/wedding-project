@@ -13,6 +13,12 @@ const schema = gql`
     HOUSEHOLD
   }
 
+  enum QuestionGuestType {
+    DAYTIME
+    EVENING
+    BOTH
+  }
+
   type Choice {
     _id: ID
     label: String
@@ -34,6 +40,7 @@ const schema = gql`
     choices: [Choice]
     specificGuests: [User]
     responseType: ResponseType!
+    guestType: QuestionGuestType!
     followUpQuestions: [FollowUp]
     order: Int!
     isFollowUp: Boolean!
@@ -62,6 +69,7 @@ const schema = gql`
     choices: [ChoiceInput]
     specificGuests: [ID]
     responseType: ResponseType!
+    guestType: QuestionGuestType!
     followUpQuestions: [FollowUpInput!]
     order: Int!
     isFollowUp: Boolean!
@@ -74,6 +82,7 @@ const schema = gql`
     choices: [ChoiceInput]
     specificGuests: [ID]
     responseType: ResponseType
+    guestType: QuestionGuestType
     followUpQuestions: [FollowUpInput!]
     order: Int
     isFollowUp: Boolean

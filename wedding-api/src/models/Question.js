@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import { mapEnumValues } from '../lib/helpers';
-import { QuestionType, QuestionResponseType } from '../lib/enums';
+import { QuestionType, QuestionResponseType, QuestionGuestType } from '../lib/enums';
 
 const { ObjectId } = Schema.Types;
 
@@ -34,6 +34,7 @@ const QuestionSchema = new Schema({
   specificGroups: [{ type: ObjectId, ref: 'Group' }],
   specificGuests: [{ type: ObjectId, ref: 'Guest' }],
   responseType: { type: String, enum: mapEnumValues(QuestionResponseType), required: true },
+  guestType: { type: String, enum: mapEnumValues(QuestionGuestType), required: true },
   followUpQuestions: [{ type: FollowUpSchema }],
   order: { type: Number, required: true },
   isFollowUp: { type: Boolean, required: true },
