@@ -109,7 +109,7 @@ const RequiredAnswer = styled.Text`
   margin-vertical: 5px;
   ${Typography.small};
   ${Typography.boldFont};
-  color: ${Theme.card};
+  color: ${Colours.neutral.grey5};
   background-color: #fff5ba;
   text-align: center;
   padding-vertical: 2.5px;
@@ -132,7 +132,7 @@ const ConnectionLine = styled.View`
   position: absolute;
   top: -10px;
   left: 15%;
-  background-color: ${Theme.detailTextColour};
+  background-color: ${Theme.icon};
 `;
 
 const Card = styled(StandardPressable).attrs(props => ({
