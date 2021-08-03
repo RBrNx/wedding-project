@@ -1,6 +1,6 @@
 import Color from 'color';
 import StandardPressable from 'library/components/StandardPressable';
-import { Outlines, Theme, Typography } from 'library/styles';
+import { Colours, Outlines, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -28,7 +28,7 @@ const StyledPressable = styled(StandardPressable).attrs({
 const Label = styled.Text`
   ${Typography.small};
   ${Typography.boldFont};
-  color: ${Theme.card};
+  color: ${Colours.neutral.grey5};
   ${Outlines.borderRadius};
 `;
 

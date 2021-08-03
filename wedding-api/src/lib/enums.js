@@ -26,4 +26,10 @@ const UserRole = Object.freeze({
   ADMIN: 'ADMIN',
 });
 
-export { QuestionType, QuestionResponseType, AttendanceStatus, InvitationType, UserRole };
+const QuestionGuestType = Object.freeze({
+  DAYTIME: 'DAYTIME',
+  EVENING: 'EVENING',
+  BOTH: 'BOTH',
+});
+
+export { QuestionType, QuestionResponseType, AttendanceStatus, InvitationType, UserRole, QuestionGuestType };

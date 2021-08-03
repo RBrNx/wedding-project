@@ -34,7 +34,8 @@
         "WRITE_EXTERNAL_STORAGE",
         "VIBRATE"
       ],
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "googleServicesFile": "./google-services.json"
     },
     "androidStatusBar": {
       "barStyle": "light-content"

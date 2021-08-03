@@ -12,7 +12,7 @@ import { useAnimatedStepTransition } from 'library/hooks';
 import DismissKeyboard from 'library/components/DismissKeyboard';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import { AlertType } from 'library/enums';
-import { Colours, Layout, Outlines } from 'library/styles';
+import { Colours, Layout, Outlines, Typography } from 'library/styles';
 import parseError from 'library/utils/parseError';
 import * as Haptics from 'expo-haptics';
 import ScannerInputCard from './components/ScannerInputCard';
@@ -256,6 +256,7 @@ const PermissionCard = styled(Animated.View)`
 `;
 
 const PermissionText = styled.Text`
+  ${Typography.body};
   text-align: center;
 `;
 

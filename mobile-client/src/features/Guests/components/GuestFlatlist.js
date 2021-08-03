@@ -105,7 +105,7 @@ const CardContainer = styled(Animated.View)`
 `;
 
 const ListEmptyContainer = styled.View`
-  height: ${height * 0.25}px;
+  height: ${height * 0.3}px;
   padding-horizontal: 5%;
   ${Layout.flexCenter};
 `;
