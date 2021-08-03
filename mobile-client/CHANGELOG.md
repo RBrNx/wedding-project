@@ -1,3 +1,35 @@
+# [0.15.0](https://github.com/RBrNx/wedding-project/compare/v0.14.2...v0.15.0) (2021-08-03)
+
+
+### Bug Fixes
+
+* add DashboardHeader component to SettingsScreen ([18ba82f](https://github.com/RBrNx/wedding-project/commit/18ba82faef478d6574604009b0d9e5409e0aff94))
+* DeleteQuestionButton's text now pays attention to the theme ([c5fe1a1](https://github.com/RBrNx/wedding-project/commit/c5fe1a1290f8ef99aa162153872c0bbb2df44f14))
+* error message text is no longer cut off in GuestFlatlist ([7c3c1e2](https://github.com/RBrNx/wedding-project/commit/7c3c1e2b028222b6cbc579f91d95965b045fb32e))
+* followUpQuestions are no longer duplicated ([7846d31](https://github.com/RBrNx/wedding-project/commit/7846d31099adf9ade3b93ab9229a839d1e37d722))
+* improve colours of QuestionFlatlist components ([66e0192](https://github.com/RBrNx/wedding-project/commit/66e0192e2cb5b831cc3cfb129028949f7e62768d))
+* theme can now be changed as expected ([d159b57](https://github.com/RBrNx/wedding-project/commit/d159b57c579d358467851d9398365030898a3bf2))
+
+
+### Features
+
+* add ability to choose what invitation type a guest will receive ([82c88a6](https://github.com/RBrNx/wedding-project/commit/82c88a69f71f25e78538b9d5f6b78fea24b8818b))
+* add ability to delete a guest from ViewGuestScreen ([09f4649](https://github.com/RBrNx/wedding-project/commit/09f4649507fd898061fd4495e1eced5c393b187a))
+* add google-services.json to enable push notifications for android ([4a84626](https://github.com/RBrNx/wedding-project/commit/4a846268bbdfce8fa4757ee80f8157c06ca008c2))
+* add QuestionGuestType to Question model and typedefs ([898d16e](https://github.com/RBrNx/wedding-project/commit/898d16eb3830dc38191eefafd54c6a7832661f62))
+* create deleteGuest mutation ([02d56c5](https://github.com/RBrNx/wedding-project/commit/02d56c571ecc05a327fbf5fed1d800e5cef3faee))
+* create NotificationAnimation component ([46f1227](https://github.com/RBrNx/wedding-project/commit/46f12271646aa73f1ac32edf2092419320f33eee))
+* create registerPushToken mutation ([af22f83](https://github.com/RBrNx/wedding-project/commit/af22f8367374e70545fc33c17a5c018c0ff4bee7))
+* create useGuestMutation hook ([fd260ad](https://github.com/RBrNx/wedding-project/commit/fd260ad101a26305da19b5bca855fe0e80c64f26))
+* created GuestTypeLabel component and use it in QuestionCard ([f3d5750](https://github.com/RBrNx/wedding-project/commit/f3d5750e96b958f7904ffeaab0694d6f9afa15ae))
+* display guestType on QuestionCard component ([3e5d773](https://github.com/RBrNx/wedding-project/commit/3e5d77311926f2a70f34c80f458a62b1f8005af5))
+* push notifications permission is now requested on user login ([c68711f](https://github.com/RBrNx/wedding-project/commit/c68711f5277393e98308e708d2aa135c3d9b1054))
+* QuestionGuestType can now be selected in EditQuestionSheet and submitted to the API ([b71bc46](https://github.com/RBrNx/wedding-project/commit/b71bc4610cbd5332f6e94fb2ce5871b3e71ad03a))
+* replace GuestTypeLabel and QuestionTypeLabel with EnumLabel component ([475f924](https://github.com/RBrNx/wedding-project/commit/475f924c6677aa7b1076e72fd6bf6bf30e61ed4c))
+* RSVPQuestions are now filtered to remove questions that don't match the users invitation type ([c2a4232](https://github.com/RBrNx/wedding-project/commit/c2a4232b4bd2f8112adb8a371ff32db6b4deb7ec))
+* spread restOfGuest into update call ([4ab8dc1](https://github.com/RBrNx/wedding-project/commit/4ab8dc105923b254e71df61281d7c6292f5f8635))
+* update Settings screen to allow push notifications to be toggled on or off ([6091389](https://github.com/RBrNx/wedding-project/commit/6091389b366191c53d46db867b704e1db3053c6f))
+
 ## [0.14.2](https://github.com/RBrNx/wedding-project/compare/v0.14.1...v0.14.2) (2021-08-02)
 
 
