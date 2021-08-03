@@ -23,6 +23,7 @@ const schema = gql`
     rsvpForm: [RSVPFormTuple!]
     invitationId: String!
     invitationType: InvitationType!
+    pushNotificationToken: String
   }
 
   type UserMutationResponse implements MutationResponse {
@@ -58,6 +59,7 @@ const schema = gql`
     createGuest(guest: CreateUserInput!): UserMutationResponse
     createAdmin(input: CreateAdminInput!): UserMutationResponse
     deleteGuest(id: ID!): UserMutationResponse
+    registerPushToken(token: String!): UserMutationResponse
   }
 `;
 

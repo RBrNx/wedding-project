@@ -187,6 +187,22 @@ const deleteGuest = async (parent, { id }, { db }) => {
   }
 };
 
+const registerPushToken = async (parent, { token }, { currentUser, db }) => {
+  try {
+    const UserModel = db.model('User');
+
+    await UserModel.updateOne({ _id: currentUser._id }, { pushNotificationToken: token });
+
+    return {
+      success: true,
+      message: 'Push token registered successfully',
+    };
+  } catch (error) {
+    console.error('registerPushToken', error);
+    return error;
+  }
+};
+
 const attendanceStatus = async (parent, args, { db }) => {
   const { _id: userId, eventId } = parent;
 
@@ -224,6 +240,7 @@ export default {
     createGuest,
     createAdmin,
     deleteGuest,
+    registerPushToken,
   },
   User: {
     attendanceStatus,
