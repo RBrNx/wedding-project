@@ -2,15 +2,15 @@ import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components';
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
-import { QuestionType } from 'library/enums';
+import { QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
-import QuestionTypeLabel from './QuestionTypeLabel';
 import { getRequiredAnswer } from '../helpers';
+import EnumLabel from './EnumLabel';
 
 const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
-  const { type, title, followUpQuestions } = question;
+  const { type, title, followUpQuestions, guestType } = question;
   const followUpTypes = [QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value];
 
   return (
@@ -31,8 +31,9 @@ const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswe
             {title}
           </QuestionTitle>
           <Spacer size={10} />
-          <QuestionTypeLabel type={type} title={title} />
-          {!!requiredAnswer && <RequiredAnswer>Requires answer: {requiredAnswer.label}</RequiredAnswer>}
+          <EnumLabel type={type} enumObject={QuestionType} />
+          {guestType !== 'BOTH' && <EnumLabel type={guestType} enumObject={QuestionGuestType} />}
+          {!!requiredAnswer && <RequiredAnswer>{requiredAnswer.label}</RequiredAnswer>}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />
       </CardContainer>
@@ -109,7 +110,7 @@ const RequiredAnswer = styled.Text`
   margin-vertical: 5px;
   ${Typography.small};
   ${Typography.boldFont};
-  color: ${Theme.card};
+  color: ${Colours.neutral.grey5};
   background-color: #fff5ba;
   text-align: center;
   padding-vertical: 2.5px;
@@ -132,7 +133,7 @@ const ConnectionLine = styled.View`
   position: absolute;
   top: -10px;
   left: 15%;
-  background-color: ${Theme.detailTextColour};
+  background-color: ${Theme.icon};
 `;
 
 const Card = styled(StandardPressable).attrs(props => ({
