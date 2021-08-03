@@ -38,8 +38,6 @@ const AdminHomeNavigator = () => {
         component={SettingsScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Feather name='settings' color={color} size={size} />,
-          headerShown: true,
-          title: 'Settings',
         }}
       />
     </Tab.Navigator>
