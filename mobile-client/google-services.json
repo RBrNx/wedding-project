@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "15701156867",
+    "project_id": "watson-wedding-app",
+    "storage_bucket": "watson-wedding-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:15701156867:android:2e012e37dbeb70dc7a9a36",
+        "android_client_info": {
+          "package_name": "com.rbrnx.watsonwedding"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "15701156867-lapqmi4d7c28mqa195tke7vn7v9sknc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdkQcb7d10H5ok0v2SyK3P8u8ni1k6QsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "15701156867-lapqmi4d7c28mqa195tke7vn7v9sknc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
