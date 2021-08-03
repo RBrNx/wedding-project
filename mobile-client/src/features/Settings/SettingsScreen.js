@@ -82,7 +82,7 @@ const SettingsScreen = () => {
 
   const renderModalOptionRow = (option, isSelected) => {
     return (
-      <ModalOption key={option.value} onPress={() => changeSettingValue(selectedSetting._id, option.value)}>
+      <ModalOption key={option.value} onPress={() => changeSettingValue(selectedSetting, option.value)}>
         <OptionName>{option.label}</OptionName>
         <StyledCircleIcon name={isSelected ? 'dot-circle' : 'circle'} size={20} />
       </ModalOption>
