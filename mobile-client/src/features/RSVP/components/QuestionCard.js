@@ -6,9 +6,8 @@ import { QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
-import QuestionTypeLabel from './QuestionTypeLabel';
 import { getRequiredAnswer } from '../helpers';
-import GuestTypeLabel from './GuestTypeLabel';
+import EnumLabel from './EnumLabel';
 
 const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
   const { type, title, followUpQuestions, guestType } = question;
@@ -32,10 +31,8 @@ const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswe
             {title}
           </QuestionTitle>
           <Spacer size={10} />
-          <QuestionTypeLabel type={type} title={title} />
-          {guestType !== 'BOTH' && (
-            <GuestTypeLabel type={guestType}>{QuestionGuestType[guestType].text}</GuestTypeLabel>
-          )}
+          <EnumLabel type={type} enumObject={QuestionType} />
+          {guestType !== 'BOTH' && <EnumLabel type={guestType} enumObject={QuestionGuestType} />}
           {!!requiredAnswer && <RequiredAnswer>{requiredAnswer.label}</RequiredAnswer>}
         </TextContainer>
         <StyledIcon name='chevron-right' size={30} />

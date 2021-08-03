@@ -20,9 +20,8 @@ import { darken } from 'library/utils/colours';
 import { ActivityIndicator } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
 import StandardSelectInput from 'library/components/StandardSelectInput';
-import QuestionTypeLabel from './QuestionTypeLabel';
 import { toOrdinalSuffix } from '../helpers';
-import GuestTypeLabel from './GuestTypeLabel';
+import EnumLabel from './EnumLabel';
 
 const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQuestion, parentQuestion }) => {
   const [questionType, setQuestionType] = useState(null);
@@ -235,7 +234,13 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
 
               const isSelected = type === questionType;
               return (
-                <QuestionTypeLabel key={type} type={type} selected={isSelected} onPress={() => setQuestionType(type)} />
+                <EnumLabel
+                  key={type}
+                  type={type}
+                  selected={isSelected}
+                  onPress={() => setQuestionType(type)}
+                  enumObject={QuestionType}
+                />
               );
             })}
           </QuestionTypeContainer>
@@ -244,11 +249,12 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             {Object.keys(QuestionGuestType).map(type => {
               const isSelected = type === questionGuestType;
               return (
-                <GuestTypeLabel
+                <EnumLabel
                   key={type}
                   type={type}
                   selected={isSelected}
                   onPress={() => setQuestionGuestType(type)}
+                  enumObject={QuestionGuestType}
                 />
               );
             })}
