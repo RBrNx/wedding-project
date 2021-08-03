@@ -59,7 +59,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
   let userId;
 
   try {
-    const { firstName, lastName } = guest;
+    const { firstName, lastName, ...restOfGuest } = guest;
 
     session = await db.startSession();
     session.startTransaction();
@@ -74,6 +74,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
           firstName,
           lastName,
           role: UserRole.GUEST,
+          ...restOfGuest,
         },
       ],
       { session },
