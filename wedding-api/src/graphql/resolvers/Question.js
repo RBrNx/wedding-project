@@ -1,8 +1,14 @@
+import { QuestionGuestType } from '../../lib/enums';
+
 const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
   try {
     const QuestionModel = db.model('Question');
+    const validInvitationTypes = [QuestionGuestType.BOTH, currentUser.invitationType];
 
-    const questions = await QuestionModel.find({ eventId: currentUser.eventId, isFollowUp: false })
+    const questions = await QuestionModel.find({
+      eventId: currentUser.eventId,
+      isFollowUp: false,
+    })
       .populate({
         path: 'followUpQuestions',
         populate: {
@@ -12,7 +18,22 @@ const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
       })
       .exec();
 
-    return questions;
+    const filteredQuestions = questions.reduce((acc, currQuestion) => {
+      if (currQuestion.followUpQuestions?.length) {
+        // eslint-disable-next-line no-param-reassign
+        currQuestion.followUpQuestions = currQuestion.followUpQuestions.filter(({ question }) =>
+          validInvitationTypes.includes(question.guestType),
+        );
+      }
+
+      if (validInvitationTypes.includes(currQuestion.guestType)) {
+        acc.push(currQuestion);
+      }
+
+      return acc;
+    }, []);
+
+    return filteredQuestions;
   } catch (error) {
     console.error('getRSVPQuestions', error);
     return error;
@@ -53,8 +74,10 @@ const updateQuestion = async (parent, args, { db }) => {
       {
         ...restOfQuestion,
         followUpQuestions: [
-          ...existingQuestionDoc.followUpQuestions.filter(({ question: q }) => q !== followUpQuestions?.[0]?.question),
-          ...(followUpQuestions?.length && followUpQuestions),
+          ...existingQuestionDoc.followUpQuestions.filter(
+            ({ question: q }) => q.toString() !== followUpQuestions?.[0]?.question,
+          ),
+          ...((followUpQuestions?.length && followUpQuestions) || []),
         ],
       },
       { new: true },

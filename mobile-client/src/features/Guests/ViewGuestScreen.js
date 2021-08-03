@@ -10,16 +10,25 @@ import StatusLine from 'library/components/StatusLine';
 import DashedLine from 'react-native-dashed-line';
 import theme from 'styled-theming';
 import Constants from 'expo-constants';
+import StandardButton from 'library/components/StandardButton';
+import { darken } from 'library/utils/colours';
+import useGuestMutation from 'library/hooks/useGuestMutation';
+import DELETE_GUEST from 'library/graphql/mutations/deleteGuest.graphql';
 
 const { height } = Dimensions.get('window');
 const { BASE_API_URL } = Constants.manifest.extra;
 
-const ViewGuestScreen = ({ route }) => {
+const ViewGuestScreen = ({ route, navigation }) => {
+  const [deleteGuest, { loading: deleteInProgress }] = useGuestMutation(DELETE_GUEST);
   const { guest } = route?.params;
   const { firstName, lastName, attendanceStatus, rsvpForm, invitationId } = guest;
   const { text: guestStatus, color: statusColour } = GuestResponse[attendanceStatus];
   const fullName = `${firstName} ${lastName}`;
 
+  const deleteCurrentGuest = async () => {
+    await deleteGuest({ variables: { id: guest._id } });
+    navigation.pop();
+  };
   return (
     <Container>
       <Header>
@@ -68,11 +77,16 @@ const ViewGuestScreen = ({ route }) => {
           })}
         </Card>
       )}
+      <DeleteGuestButton text='Delete Guest' outline onPress={deleteCurrentGuest} loading={deleteInProgress} />
     </Container>
   );
 };
 
-const Container = styled.ScrollView`
+const Container = styled.ScrollView.attrs(() => ({
+  contentContainerStyle: {
+    paddingBottom: '7.5%',
+  },
+}))`
   flex: 1;
   padding-horizontal: 5%;
 `;
@@ -166,6 +180,14 @@ const StyledLine = styled(DashedLine).attrs(props => ({
 }))`
   margin-vertical: 25px;
   overflow: hidden;
+`;
+
+const DeleteGuestButton = styled(StandardButton).attrs({
+  pressedStyle: {
+    backgroundColor: darken('red', 0.2),
+  },
+})`
+  border-color: red;
 `;
 
 export default ViewGuestScreen;

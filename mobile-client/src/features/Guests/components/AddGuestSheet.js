@@ -10,21 +10,18 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import { ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import CREATE_GUEST from 'library/graphql/mutations/createGuest.graphql';
-import { useMutation } from '@apollo/react-hooks';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
-import { AlertType } from 'library/enums';
-import ALL_GUESTS_QUERY from 'library/graphql/queries/getAllGuests.graphql';
-import { getOperationName } from 'apollo-link';
+import { AlertType, InvitationType } from 'library/enums';
+import useGuestMutation from 'library/hooks/useGuestMutation';
+import EnumLabel from 'features/RSVP/components/EnumLabel';
 
 const AddGuestSheet = ({ active, onDismiss }) => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
+  const [invitationType, setInvitationType] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createGuest] = useMutation(CREATE_GUEST, {
-    refetchQueries: [getOperationName(ALL_GUESTS_QUERY)],
-    awaitRefetchQueries: true,
-  });
+  const [createGuest] = useGuestMutation(CREATE_GUEST);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
 
@@ -37,7 +34,7 @@ const AddGuestSheet = ({ active, onDismiss }) => {
   const addNewGuest = async () => {
     try {
       setIsSubmitting(true);
-      const { data } = await createGuest({ variables: { guest: { firstName, lastName } } });
+      const { data } = await createGuest({ variables: { guest: { firstName, lastName, invitationType } } });
 
       const { success } = data?.createGuest;
 
@@ -89,6 +86,22 @@ const AddGuestSheet = ({ active, onDismiss }) => {
           onChangeText={value => setLastName(value)}
           themeColourOverride='#fff'
         />
+        <Spacer size={30} />
+        <QuestionText>What type of invitation do they get?</QuestionText>
+        <InvitationTypeContainer>
+          {Object.keys(InvitationType).map(type => {
+            const isSelected = type === invitationType;
+            return (
+              <EnumLabel
+                key={type}
+                type={type}
+                selected={isSelected}
+                onPress={() => setInvitationType(type)}
+                enumObject={InvitationType}
+              />
+            );
+          })}
+        </InvitationTypeContainer>
       </StyledBottomSheetScrollView>
     </BottomSheetModal>
   );
@@ -123,6 +136,12 @@ const QuestionText = styled.Text`
   ${Typography.regularFont}
   margin-left: 5px;
   margin-bottom: 5px;
+`;
+
+const InvitationTypeContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 `;
 
 export default AddGuestSheet;

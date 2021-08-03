@@ -1,5 +1,5 @@
 import { Schema, Types } from 'mongoose';
-import { UserRole } from '../lib/enums';
+import { InvitationType, UserRole } from '../lib/enums';
 import { mapEnumValues } from '../lib/helpers';
 
 const { ObjectId } = Types;
@@ -11,6 +11,7 @@ const UserSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: false, unique: true, sparse: true },
   role: { type: String, required: true, enum: mapEnumValues(UserRole) },
+  invitationType: { type: String, required: true, enum: mapEnumValues(InvitationType) },
   pushNotificationToken: { type: String, required: false },
 });
 

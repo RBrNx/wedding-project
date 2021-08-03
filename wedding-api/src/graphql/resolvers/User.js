@@ -59,7 +59,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
   let userId;
 
   try {
-    const { firstName, lastName } = guest;
+    const { firstName, lastName, ...restOfGuest } = guest;
 
     session = await db.startSession();
     session.startTransaction();
@@ -74,6 +74,7 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
           firstName,
           lastName,
           role: UserRole.GUEST,
+          ...restOfGuest,
         },
       ],
       { session },
@@ -119,26 +120,6 @@ const createGuest = async (parent, { guest }, { currentUser, db }) => {
     };
   }
 };
-
-// const updateGuest = async (parent, args) => {
-//   try {
-//     const { input } = args;
-//     const { guestId, attending, mainCourse, email } = input;
-//     const db = await connectToDatabase();
-//     const GuestModel = db.model('Guest');
-
-//     const guest = await GuestModel.findOneAndUpdate(
-//       { _id: guestId },
-//       { attending, mainCourse, email },
-//       { new: true },
-//     ).exec();
-
-//     if (guest) return { success: true };
-//     return { success: false };
-//   } catch (error) {
-//     return error;
-//   }
-// };
 
 const createAdmin = async (parent, { input }, { currentUser, db }) => {
   let session;
@@ -187,6 +168,23 @@ const createAdmin = async (parent, { input }, { currentUser, db }) => {
       success: false,
       message: error.message,
     };
+  }
+};
+
+const deleteGuest = async (parent, { id }, { db }) => {
+  try {
+    const UserModel = db.model('User');
+
+    const userDoc = await UserModel.findByIdAndDelete(id);
+
+    return {
+      success: true,
+      message: 'Guest deleted successfully',
+      payload: userDoc,
+    };
+  } catch (error) {
+    console.error('deleteGuest', error);
+    return error;
   }
 };
 
@@ -242,6 +240,7 @@ export default {
   Mutation: {
     createGuest,
     createAdmin,
+    deleteGuest,
     registerPushToken,
   },
   User: {
