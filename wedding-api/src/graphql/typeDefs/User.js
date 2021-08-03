@@ -22,6 +22,7 @@ const schema = gql`
     attendanceStatus: AttendanceStatus!
     rsvpForm: [RSVPFormTuple!]
     invitationId: String!
+    pushNotificationToken: String
   }
 
   type UserMutationResponse implements MutationResponse {
@@ -55,6 +56,7 @@ const schema = gql`
   extend type Mutation {
     createGuest(guest: CreateUserInput!): UserMutationResponse
     createAdmin(input: CreateAdminInput!): UserMutationResponse
+    registerPushToken(token: String!): UserMutationResponse
   }
 `;
 
