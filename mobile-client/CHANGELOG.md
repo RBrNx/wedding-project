@@ -1,3 +1,12 @@
+## [0.14.2](https://github.com/RBrNx/wedding-project/compare/v0.14.1...v0.14.2) (2021-08-02)
+
+
+### Bug Fixes
+
+* add cognito-idp permissions to authenticated lambda ([4f3dfd3](https://github.com/RBrNx/wedding-project/commit/4f3dfd3bbfb469bc2636b21e43ea69cdc0a3c418))
+* add permission for cognito-idp:AdminSetUserPassword to authenticated lambda ([69969bb](https://github.com/RBrNx/wedding-project/commit/69969bb144fd46cdbe7948a4b1efbbef8a6e7967))
+* ALL_GUESTS_QUERY will now be refetched correctly using variables from the cache ([10b514e](https://github.com/RBrNx/wedding-project/commit/10b514ee065a7c8202d2e9fa879a35561943bfa6))
+
 ## [0.14.1](https://github.com/RBrNx/wedding-project/compare/v0.14.0...v0.14.1) (2021-07-31)
 
 
