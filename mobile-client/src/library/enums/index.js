@@ -15,8 +15,8 @@ const QuestionType = Object.freeze({
 });
 
 const InvitationType = Object.freeze({
-  DAYTIME: { text: 'Daytime', icon: SunIcon },
-  EVENING: { text: 'Evening', icon: MoonIcon },
+  DAYTIME: { text: 'Daytime', color: '#BFFCC6', icon: SunIcon },
+  EVENING: { text: 'Evening', color: '#F6A6FF', icon: MoonIcon },
 });
 
 const Theme = Object.freeze({

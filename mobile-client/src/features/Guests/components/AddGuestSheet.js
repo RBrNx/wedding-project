@@ -12,12 +12,14 @@ import { Feather } from '@expo/vector-icons';
 import CREATE_GUEST from 'library/graphql/mutations/createGuest.graphql';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
-import { AlertType } from 'library/enums';
+import { AlertType, InvitationType } from 'library/enums';
 import useGuestMutation from 'library/hooks/useGuestMutation';
+import EnumLabel from 'features/RSVP/components/EnumLabel';
 
 const AddGuestSheet = ({ active, onDismiss }) => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
+  const [invitationType, setInvitationType] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createGuest] = useGuestMutation(CREATE_GUEST);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
@@ -32,7 +34,7 @@ const AddGuestSheet = ({ active, onDismiss }) => {
   const addNewGuest = async () => {
     try {
       setIsSubmitting(true);
-      const { data } = await createGuest({ variables: { guest: { firstName, lastName } } });
+      const { data } = await createGuest({ variables: { guest: { firstName, lastName, invitationType } } });
 
       const { success } = data?.createGuest;
 
@@ -84,6 +86,22 @@ const AddGuestSheet = ({ active, onDismiss }) => {
           onChangeText={value => setLastName(value)}
           themeColourOverride='#fff'
         />
+        <Spacer size={30} />
+        <QuestionText>What type of invitation do they get?</QuestionText>
+        <InvitationTypeContainer>
+          {Object.keys(InvitationType).map(type => {
+            const isSelected = type === invitationType;
+            return (
+              <EnumLabel
+                key={type}
+                type={type}
+                selected={isSelected}
+                onPress={() => setInvitationType(type)}
+                enumObject={InvitationType}
+              />
+            );
+          })}
+        </InvitationTypeContainer>
       </StyledBottomSheetScrollView>
     </BottomSheetModal>
   );
@@ -118,6 +136,12 @@ const QuestionText = styled.Text`
   ${Typography.regularFont}
   margin-left: 5px;
   margin-bottom: 5px;
+`;
+
+const InvitationTypeContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 `;
 
 export default AddGuestSheet;
