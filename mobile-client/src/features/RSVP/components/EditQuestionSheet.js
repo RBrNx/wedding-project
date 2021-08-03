@@ -448,11 +448,14 @@ const ButtonText = styled.Text`
   color: ${Colours.secondary};
 `;
 
-const DeleteQuestionButton = styled(StandardButton).attrs({
+const DeleteQuestionButton = styled(StandardButton).attrs(props => ({
   pressedStyle: {
     backgroundColor: darken('red', 0.2),
   },
-})`
+  textStyle: {
+    color: Theme.headerTextColour(props),
+  },
+}))`
   border-color: red;
 `;
 
