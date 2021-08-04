@@ -12,11 +12,26 @@ const schema = gql`
     type: InvitationType!
     invitationCode: String!
   }
+
+  type InvitationGroupMutationResponse implements MutationResponse {
+    success: Boolean
+    message: String
+    payload: InvitationGroup
+  }
+
+  input CreateInvitationGroupInput {
+    type: InvitationType!
+    guests: [CreateUserInput!]
   }
 
   extend type Query {
     getInvitationGroup(id: ID!): InvitationGroup
     getAllInvitationGroups: [InvitationGroup]
+  }
+
+  extend type Mutation {
+    createInvitationGroup(invitationGroup: CreateInvitationGroupInput!): InvitationGroupMutationResponse
+    deleteInvitationGroup(id: ID!): InvitationGroupMutationResponse
   }
 `;
 
