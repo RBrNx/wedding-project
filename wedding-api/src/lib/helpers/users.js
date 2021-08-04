@@ -110,10 +110,71 @@ const getUserFromRequest = async requestContext => {
   return user;
 };
 
+const createGuestUser = async (guest, invitationId, db, currentUser, session) => {
+  const { firstName, lastName, ...restOfGuest } = guest;
+
+  const UserModel = db.model('User');
+  const TempLoginDetailsModel = db.model('TempLoginDetails');
+  const InvitationGroupModel = db.model('InvitationGroup');
+
+  const [userDoc] = await UserModel.create(
+    [
+      {
+        eventId: currentUser.eventId,
+        firstName,
+        lastName,
+        role: UserRole.GUEST,
+        ...restOfGuest,
+      },
+    ],
+    { session },
+  );
+
+  const { username, password } = await generateTemporaryCredentials({ firstName, lastName });
+
+  await TempLoginDetailsModel.create(
+    [
+      {
+        user: userDoc._id,
+        username,
+        password,
+        invitationGroup: invitationId,
+      },
+    ],
+    { session },
+  );
+
+  const cognitoUser = await createCognitoUser({
+    userId: userDoc._id.toString(),
+    username,
+    password,
+  });
+  const cognitoUserId = cognitoUser.Attributes.find(({ Name }) => Name === 'sub')?.Value;
+
+  await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
+
+  await InvitationGroupModel.updateOne({ _id: invitationId }, { $push: { guests: userDoc._id } }, { session });
+
+  return userDoc;
+};
+
+const deleteGuestUser = async (guest, db) => {
+  const UserModel = db.model('User');
+  const TempLoginDetailsModel = db.model('TempLoginDetails');
+
+  const userId = guest._id.toString();
+
+  await UserModel.findByIdAndDelete(userId);
+  await TempLoginDetailsModel.findOneAndDelete({ user: userId });
+  await deleteCognitoUser({ userId });
+};
+
 export {
   generateTemporaryCredentials,
   createCognitoUser,
   createCognitoAdminUser,
   deleteCognitoUser,
   getUserFromRequest,
+  createGuestUser,
+  deleteGuestUser,
 };

@@ -54,60 +54,23 @@ const getAllGuests = async (parent, { input }, { currentUser, db }) => {
   }
 };
 
-const createGuest = async (parent, { guest }, { currentUser, db }) => {
+const createGuest = async (parent, { invitationId, guest }, { currentUser, db }) => {
   let session;
   let userId;
 
   try {
-    const { firstName, lastName, ...restOfGuest } = guest;
-
     session = await db.startSession();
     session.startTransaction();
 
-    const UserModel = db.model('User');
-    const TempLoginDetailsModel = db.model('TempLoginDetails');
-
-    const [userDoc] = await UserModel.create(
-      [
-        {
-          eventId: currentUser.eventId,
-          firstName,
-          lastName,
-          role: UserRole.GUEST,
-          ...restOfGuest,
-        },
-      ],
-      { session },
-    );
-    userId = userDoc._id.toString();
-    const { username, password } = await generateTemporaryCredentials({ firstName, lastName });
-
-    await TempLoginDetailsModel.create(
-      [
-        {
-          userId: userDoc._id,
-          username,
-          password,
-        },
-      ],
-      { session },
-    );
-
-    const cognitoUser = await createCognitoUser({
-      userId,
-      username,
-      password,
-    });
-    const cognitoUserId = cognitoUser.Attributes.find(({ Name }) => Name === 'sub')?.Value;
-
-    await UserModel.findOneAndUpdate({ _id: userDoc._id }, { cognitoUserId }, { session });
+    const user = createGuestUser(guest, invitationId, db, currentUser, session);
+    userId = user._id.toString();
 
     await session.commitTransaction();
 
     return {
       success: true,
       message: 'Guest created successfully',
-      payload: userDoc,
+      payload: user,
     };
   } catch (error) {
     console.error('createGuest', error);
