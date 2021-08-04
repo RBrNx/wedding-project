@@ -7,9 +7,11 @@ const schema = gql`
   }
 
   type InvitationGroup {
-    _id: ID
+    _id: ID!
     guests: [User]
-    type: InvitationType
+    type: InvitationType!
+    invitationCode: String!
+  }
   }
 
   extend type Query {
