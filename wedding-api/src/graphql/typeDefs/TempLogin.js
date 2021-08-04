@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-lambda';
 
 const schema = gql`
   type TempLoginCredentials {
+    user: User!
     username: String!
     password: String!
   }

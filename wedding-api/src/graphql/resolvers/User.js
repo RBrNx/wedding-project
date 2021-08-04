@@ -1,10 +1,5 @@
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
-import {
-  createCognitoAdminUser,
-  createCognitoUser,
-  deleteCognitoUser,
-  generateTemporaryCredentials,
-} from '../../lib/helpers/users';
+import { createCognitoAdminUser, createGuestUser, deleteCognitoUser } from '../../lib/helpers/users';
 
 const getAllGuests = async (parent, { input }, { currentUser, db }) => {
   try {
@@ -29,7 +24,7 @@ const getAllGuests = async (parent, { input }, { currentUser, db }) => {
         $lookup: {
           from: 'templogindetails',
           localField: '_id',
-          foreignField: 'userId',
+          foreignField: 'user',
           as: 'logindetails',
         },
       },
@@ -41,7 +36,7 @@ const getAllGuests = async (parent, { input }, { currentUser, db }) => {
           details: 0,
           username: 0,
           password: 0,
-          userId: 0,
+          user: 0,
           disabled: 0,
         },
       },
