@@ -7,7 +7,13 @@ import { UserRole } from '../enums';
 const { COGNITO_USER_POOL_ID, COGNITO_APP_CLIENT_ID } = process.env;
 
 const generatePassword = (length = 15) => {
-  return nanoid(length);
+  let password;
+
+  while (!(/\d/.test(password) && /[a-zA-Z]/.test(password))) {
+    password = nanoid(length);
+  }
+
+  return password;
 };
 
 const generateTemporaryCredentials = async ({ firstName, lastName }) => {
