@@ -12,6 +12,7 @@ import { Dimensions } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { Feather } from '@expo/vector-icons';
 import InvitationCard from './InvitationCard';
+import CreateInvitationSheet from './CreateInvitationSheet';
 
 const { height } = Dimensions.get('window');
 
@@ -37,7 +38,7 @@ const InvitationFlatlist = ({ scrollPosition }) => {
   // const [questionToFollow, setQuestionToFollow] = useState(null);
   // const [parentQuestion, setParentQuestion] = useState(null);
   // const [editMode, setEditMode] = useState(false);
-  const [showAddEditQuestionSheet, setShowAddEditQuestionSheet] = useState(false);
+  const [showCreateInvitationSheet, setShowCreateInvitationSheet] = useState(false);
   const { loading, error, data } = useQuery(GET_ALL_INVITATIONS);
 
   const onQuestionPress = (question, parentQ) => {
@@ -49,13 +50,13 @@ const InvitationFlatlist = ({ scrollPosition }) => {
     }
 
     // setEditMode(true);
-    setShowAddEditQuestionSheet(true);
+    setShowCreateInvitationSheet(true);
   };
 
   const onAddFollowUp = question => {
     // setQuestionToFollow(question);
     // setParentQuestion(question);
-    setShowAddEditQuestionSheet(true);
+    setShowCreateInvitationSheet(true);
   };
 
   const resetState = () => {
@@ -66,7 +67,7 @@ const InvitationFlatlist = ({ scrollPosition }) => {
 
   const onSheetDismiss = () => {
     resetState();
-    setShowAddEditQuestionSheet(false);
+    setShowCreateInvitationSheet(false);
   };
 
   const renderFlatlist = ({ item, index }) => (
@@ -103,19 +104,12 @@ const InvitationFlatlist = ({ scrollPosition }) => {
           }
         />
       </BottomSheet>
-      {/* <EditQuestionSheet
-        active={showAddEditQuestionSheet}
-        onDismiss={onSheetDismiss}
-        question={questionToEdit || questionToFollow}
-        parentQuestion={parentQuestion}
-        isFollowUpQuestion={!!questionToFollow}
-        editMode={editMode}
-      /> */}
+      <CreateInvitationSheet active={showCreateInvitationSheet} onDismiss={onSheetDismiss} />
       <StandardActionButton
         label='Create Invitation'
         icon={<StyledIcon name='plus' size={20} />}
-        onPress={() => setShowAddEditQuestionSheet(true)}
-        removeElevation={showAddEditQuestionSheet}
+        onPress={() => setShowCreateInvitationSheet(true)}
+        removeElevation={showCreateInvitationSheet}
       />
     </>
   );
