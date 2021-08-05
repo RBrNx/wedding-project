@@ -37,7 +37,9 @@ const createInvitationGroup = async (parent, { invitationGroup }, { currentUser,
     session = await db.startSession();
     session.startTransaction();
 
-    const [invitationGroupDoc] = await InvitationGroupModel.create([{ type }], { session });
+    const [invitationGroupDoc] = await InvitationGroupModel.create([{ eventId: currentUser.eventId, type }], {
+      session,
+    });
 
     guestUsers = await Promise.all(
       guests.map(guest => createGuestUser(guest, invitationGroupDoc._id, db, currentUser, session)),
