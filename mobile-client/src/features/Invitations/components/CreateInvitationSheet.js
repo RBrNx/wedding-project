@@ -30,6 +30,7 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
 
   const resetState = () => {
     setGuests([{ firstName: null, lastName: null }]);
+    setInvitationType(null);
     setIsSubmitting(false);
   };
 
