@@ -1,21 +1,26 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { InvitationType } from 'library/enums';
-import { Outlines, Theme, Typography } from 'library/styles';
+import { Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import GuestCard from 'features/Guests/components/GuestCard';
+import StandardPressable from 'library/components/StandardPressable';
+import { Feather } from '@expo/vector-icons';
 import { listNames } from '../helpers';
 
-const InvitationCard = ({ invitation }) => {
+const InvitationCard = ({ invitation, onDeletePress }) => {
   const { guests, type, invitationCode } = invitation;
   const { icon: InvitationTypeIcon } = InvitationType[type];
 
   return (
     <>
-      <CardContainer raised onPress={() => {}}>
+      <CardContainer>
         <CardHeader>
           <InvitationTypeIcon size={40} />
           <InvitationCode>{listNames(guests.map(guest => guest.firstName))}</InvitationCode>
+          <DeleteButton size={40} onPress={onDeletePress}>
+            <TrashIcon name='trash-2' size={25} />
+          </DeleteButton>
         </CardHeader>
       </CardContainer>
       <FollowUpContainer>
@@ -56,6 +61,7 @@ const ConnectionLine = styled.View`
 const CardHeader = styled.View`
   flex-direction: row;
   align-items: center;
+  flex: 1;
 `;
 
 const InvitationCode = styled.Text`
@@ -64,11 +70,25 @@ const InvitationCode = styled.Text`
   margin-vertical: 5px;
   padding-left: 5px;
   color: ${Theme.headerTextColour};
+  flex: 1;
 `;
 
 const StyledGuestCard = styled(GuestCard)`
   width: 95%;
   margin-left: 5%;
+`;
+
+const DeleteButton = styled(StandardPressable).attrs(props => ({
+  pressedStyle: {
+    backgroundColor: Theme.cardPressed(props),
+  },
+}))`
+  ${Layout.flexCenter};
+  ${props => Layout.round(props.size)}
+`;
+
+const TrashIcon = styled(Feather)`
+  color: ${Theme.icon};
 `;
 
 export default InvitationCard;

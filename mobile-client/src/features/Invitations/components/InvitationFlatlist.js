@@ -11,12 +11,18 @@ import GET_ALL_INVITATIONS from 'library/graphql/queries/getAllInvitations.graph
 import { Dimensions } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { Feather } from '@expo/vector-icons';
-import InvitationCard from './InvitationCard';
+import DELETE_INVITATION from 'library/graphql/mutations/deleteInvitationGroup.graphql';
+import useInvitationMutation from 'library/hooks/useInvitationMutation';
+import parseError from 'library/utils/parseError';
+import { AlertType } from 'library/enums';
+import { useAlert } from 'context';
+import DeletePrompt from './DeletePrompt';
 import CreateInvitationSheet from './CreateInvitationSheet';
+import InvitationCard from './InvitationCard';
 
 const { height } = Dimensions.get('window');
 
-const InvitationRow = ({ invitation, index, onPress }) => {
+const InvitationRow = ({ invitation, index, onDeletePress }) => {
   const translateY = useSharedValue(index < 10 ? 500 : 0);
 
   useEffect(() => {
@@ -27,51 +33,54 @@ const InvitationRow = ({ invitation, index, onPress }) => {
 
   return (
     <CardContainer style={animatedRowStyle}>
-      <InvitationCard invitation={invitation} index={index} onPress={onPress} />
+      <InvitationCard invitation={invitation} index={index} onDeletePress={onDeletePress} />
     </CardContainer>
   );
 };
 
 const InvitationFlatlist = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
-  // const [questionToEdit, setQuestionToEdit] = useState(null);
-  // const [questionToFollow, setQuestionToFollow] = useState(null);
-  // const [parentQuestion, setParentQuestion] = useState(null);
-  // const [editMode, setEditMode] = useState(false);
+  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+  const [inviteToDelete, setInviteToDelete] = useState(null);
   const [showCreateInvitationSheet, setShowCreateInvitationSheet] = useState(false);
+  const [deleteInvitation, { loading: deletionInProgress }] = useInvitationMutation(DELETE_INVITATION);
   const { loading, error, data } = useQuery(GET_ALL_INVITATIONS);
-
-  const onQuestionPress = (question, parentQ) => {
-    if (question.isFollowUp) {
-      // setQuestionToFollow(question);
-      // setParentQuestion(parentQ);
-    } else {
-      // setQuestionToEdit(question);
-    }
-
-    // setEditMode(true);
-    setShowCreateInvitationSheet(true);
-  };
-
-  const onAddFollowUp = question => {
-    // setQuestionToFollow(question);
-    // setParentQuestion(question);
-    setShowCreateInvitationSheet(true);
-  };
-
-  const resetState = () => {
-    // setQuestionToEdit(null);
-    // setQuestionToFollow(null);
-    // setEditMode(false);
-  };
+  const { showAlert } = useAlert();
 
   const onSheetDismiss = () => {
-    resetState();
     setShowCreateInvitationSheet(false);
   };
 
+  const onPromptDismiss = () => {
+    setShowDeletePrompt(false);
+    setInviteToDelete(null);
+  };
+
+  const deleteInvitationGroup = async () => {
+    try {
+      const { data: deletionData } = await deleteInvitation({
+        variables: { id: inviteToDelete._id },
+      });
+
+      const { success } = deletionData?.deleteInvitationGroup;
+
+      if (success) onPromptDismiss();
+    } catch (deletionError) {
+      const { message } = parseError(deletionError);
+      console.log(message);
+      showAlert({ message, type: AlertType.WARNING });
+    }
+  };
+
   const renderFlatlist = ({ item, index }) => (
-    <InvitationRow invitation={item} index={index} onPress={onQuestionPress} />
+    <InvitationRow
+      invitation={item}
+      index={index}
+      onDeletePress={() => {
+        setShowDeletePrompt(true);
+        setInviteToDelete(item);
+      }}
+    />
   );
 
   const snapPoints = useMemo(() => ['45%', '82.5%'], []);
@@ -105,6 +114,13 @@ const InvitationFlatlist = ({ scrollPosition }) => {
         />
       </BottomSheet>
       <CreateInvitationSheet active={showCreateInvitationSheet} onDismiss={onSheetDismiss} />
+      <DeletePrompt
+        visible={showDeletePrompt}
+        onDismiss={onPromptDismiss}
+        invitation={inviteToDelete}
+        onDelete={deleteInvitationGroup}
+        loading={deletionInProgress}
+      />
       <StandardActionButton
         label='Create Invitation'
         icon={<StyledIcon name='plus' size={20} />}
