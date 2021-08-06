@@ -1,3 +1,10 @@
+## [0.17.1](https://github.com/RBrNx/wedding-project/compare/v0.17.0...v0.17.1) (2021-08-06)
+
+
+### Bug Fixes
+
+* stop app crashing when signing out ([135fd20](https://github.com/RBrNx/wedding-project/commit/135fd20c7ecfc80b93ad6f882cbac26aa8b69d34))
+
 # [0.17.0](https://github.com/RBrNx/wedding-project/compare/v0.16.0...v0.17.0) (2021-08-06)
 
 
