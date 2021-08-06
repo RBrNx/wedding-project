@@ -223,7 +223,7 @@ const DeleteButton = styled(StandardPressable).attrs(props => ({
 `;
 
 const TrashIcon = styled(Feather)`
-  color: ${Theme.detailTextColour};
+  color: ${Theme.icon};
 `;
 
 const AddGuestButton = styled(StandardPressable).attrs(props => ({
