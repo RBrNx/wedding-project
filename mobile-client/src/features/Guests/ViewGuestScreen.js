@@ -1,6 +1,5 @@
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React from 'react';
-import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import UserAvatar from 'react-native-user-avatar';
 import Spacer from 'library/components/Spacer';
@@ -15,7 +14,6 @@ import { darken } from 'library/utils/colours';
 import useGuestMutation from 'library/hooks/useGuestMutation';
 import DELETE_GUEST from 'library/graphql/mutations/deleteGuest.graphql';
 
-const { height } = Dimensions.get('window');
 const { BASE_API_URL } = Constants.manifest.extra;
 
 const ViewGuestScreen = ({ route, navigation }) => {
