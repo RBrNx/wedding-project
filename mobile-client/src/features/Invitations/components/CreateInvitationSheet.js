@@ -5,7 +5,7 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import BottomSheetModal from 'library/components/BottomSheetModal';
 import StandardTextInput from 'library/components/StandardTextInput';
-import { useBottomSheetActionButton } from 'library/hooks';
+import { useAvoidKeyboard, useBottomSheetActionButton } from 'library/hooks';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -26,6 +26,7 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
   const [createInvitation] = useInvitationMutation(CREATE_INVITATION);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
+  const { keyboardHeight } = useAvoidKeyboard();
 
   const resetState = () => {
     setGuests([{ firstName: null, lastName: null }]);
@@ -82,7 +83,7 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
         />
       }
     >
-      <StyledBottomSheetScrollView>
+      <StyledBottomSheetScrollView keyboardHeight={keyboardHeight}>
         <Spacer size={15} />
         <ModalTitle>Create an Invitation 💌</ModalTitle>
         <Spacer size={10} />
@@ -160,9 +161,10 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
   );
 };
 
-const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(() => ({
+const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(props => ({
   contentContainerStyle: {
     paddingHorizontal: '5%',
+    paddingBottom: props.keyboardHeight,
   },
 }))``;
 

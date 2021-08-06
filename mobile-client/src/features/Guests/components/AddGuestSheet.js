@@ -5,7 +5,7 @@ import { Colours, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import BottomSheetModal from 'library/components/BottomSheetModal';
 import StandardTextInput from 'library/components/StandardTextInput';
-import { useBottomSheetActionButton } from 'library/hooks';
+import { useAvoidKeyboard, useBottomSheetActionButton } from 'library/hooks';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -24,6 +24,7 @@ const AddGuestSheet = ({ active, onDismiss }) => {
   const [createGuest] = useGuestMutation(CREATE_GUEST);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
+  const { keyboardHeight } = useAvoidKeyboard();
 
   const resetState = () => {
     setFirstName(null);
@@ -65,7 +66,7 @@ const AddGuestSheet = ({ active, onDismiss }) => {
         />
       }
     >
-      <StyledBottomSheetScrollView>
+      <StyledBottomSheetScrollView keyboardHeight={keyboardHeight}>
         <Spacer size={15} />
         <ModalTitle>Add a Guest 🤵🏻🙎🏽‍♀️</ModalTitle>
         <Spacer size={10} />
@@ -107,9 +108,10 @@ const AddGuestSheet = ({ active, onDismiss }) => {
   );
 };
 
-const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(() => ({
+const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(props => ({
   contentContainerStyle: {
     paddingHorizontal: '5%',
+    paddingBottom: props.keyboardHeight,
   },
 }))``;
 

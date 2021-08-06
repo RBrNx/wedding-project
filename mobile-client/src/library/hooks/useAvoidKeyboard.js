@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Keyboard, Platform } from 'react-native';
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
@@ -11,15 +11,19 @@ const useAvoidKeyboard = ({
   handleHide,
 } = {}) => {
   const avoidKeyboardHeight = useSharedValue(0);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const defaultShowHandler = event => {
     const { height } = event.endCoordinates;
+
+    setKeyboardHeight(height);
     avoidKeyboardHeight.value = withTiming(includeKeyboardHeight ? height + padding : padding, {
       duration: showDuration,
       easing: Easing.out(Easing.exp),
     });
   };
   const defaultHideHandler = () => {
+    setKeyboardHeight(0);
     avoidKeyboardHeight.value = withTiming(0, { duration: hideDuration, easing: Easing.out(Easing.exp) });
   };
 
@@ -51,6 +55,7 @@ const useAvoidKeyboard = ({
   return {
     avoidKeyboardStyle,
     avoidKeyboardHeight,
+    keyboardHeight,
   };
 };
 

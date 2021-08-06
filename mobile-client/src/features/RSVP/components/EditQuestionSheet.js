@@ -5,7 +5,7 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import BottomSheetModal from 'library/components/BottomSheetModal';
 import StandardTextInput from 'library/components/StandardTextInput';
-import { useBottomSheetActionButton, useQuestionMutation } from 'library/hooks';
+import { useAvoidKeyboard, useBottomSheetActionButton, useQuestionMutation } from 'library/hooks';
 import { Feather } from '@expo/vector-icons';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
@@ -38,6 +38,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
   const [deleteQuestion, { loading: deleteInProgress }] = useQuestionMutation(DELETE_QUESTION);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
+  const { keyboardHeight } = useAvoidKeyboard();
   const questionChoiceKeys = Object.keys(questionChoices);
 
   useEffect(() => {
@@ -210,7 +211,6 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
       active={active}
       onDismiss={onSheetDismiss}
       animatedIndex={sheetPosition}
-      avoidKeyboard={false}
       outerChildren={
         <StandardActionButton
           label='Save Question'
@@ -221,7 +221,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
         />
       }
     >
-      <StyledBottomSheetScrollView>
+      <StyledBottomSheetScrollView keyboardHeight={keyboardHeight}>
         <Spacer size={15} />
         <ModalTitle>{editMode ? 'Edit' : 'Add'} RSVP Question 🎩</ModalTitle>
         <Spacer size={45} />
@@ -358,15 +358,16 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             loading={deleteInProgress}
           />
         )}
+        <Spacer size={15} />
       </StyledBottomSheetScrollView>
     </BottomSheetModal>
   );
 };
 
-const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(() => ({
+const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(props => ({
   contentContainerStyle: {
     paddingHorizontal: '5%',
-    paddingBottom: 20,
+    paddingBottom: props.keyboardHeight,
   },
 }))``;
 
