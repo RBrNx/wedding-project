@@ -1,70 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Animated, Easing } from 'react-native';
-import { useQuery } from '@apollo/react-hooks';
+import React from 'react';
+import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
-import HeaderFlatlist from 'library/components/HeaderFlatlist';
-import LoadingIndicator from 'library/components/LoadingIndicator';
-import ErrorMessage from 'library/components/ErrorMessage';
-import EmptyMessage from 'library/components/EmptyMessage';
 import { Layout } from 'library/styles';
-import ALL_INVITATIONS_QUERY from 'library/graphql/queries/getAllInvitations.graphql';
-import parseError from 'library/utils/parseError';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
+import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import InvitationsIllustration from './components/InvitationsIllustration';
-import InvitationCard from './components/InvitationCard';
+import InvitationFlatlist from './components/InvitationFlatlist';
 
-const InvitationRow = ({ invitation, index }) => {
-  const [translateY] = useState(new Animated.Value(index < 10 ? 500 : 0));
-  const { guests, type } = invitation;
-
-  useEffect(() => {
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 350 + index * 100,
-      useNativeDriver: true,
-      easing: Easing.out(Easing.ease),
-    }).start();
-  }, [index, translateY]);
-
-  return (
-    <CardContainer style={{ transform: [{ translateY }] }}>
-      <InvitationCard guests={guests} type={type} index={index} />
-    </CardContainer>
-  );
-};
+const { height } = Dimensions.get('window');
 
 const InvitationsScreen = () => {
-  const { loading, error, data, refetch } = useQuery(ALL_INVITATIONS_QUERY);
+  const scrollY = useSharedValue(0);
 
-  if (error) {
-    const { message } = parseError(error);
-    console.log({ message });
-  }
+  const animatedImageStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0], Extrapolate.CLAMP);
+    const scale = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0.2], Extrapolate.CLAMP);
+
+    return {
+      opacity,
+      transform: [{ scale }],
+    };
+  });
 
   return (
     <Container>
       <StyledDashboardHeader title='Invitations' />
-      <HeaderFlatlist
-        title='Invitations'
-        onRefresh={async () => {
-          await refetch();
-        }}
-        renderItem={({ item, index }) => <InvitationRow invitation={item} index={index} />}
-        data={data?.getAllInvitationGroups}
-        renderImage={() => <InvitationsIllustration size='100%' />}
-        ListEmptyComponent={() => (
-          <ListEmptyContainer>
-            {loading && <LoadingIndicator size={50} />}
-            {error && (
-              <ErrorMessage
-                size={125}
-                message='We encountered an error when loading your Invitations, please try again.'
-              />
-            )}
-            {!error && !loading && <EmptyMessage size={125} />}
-          </ListEmptyContainer>
-        )}
-      />
+      <IllustrationContainer style={animatedImageStyle}>
+        <InvitationsIllustration size='100%' />
+      </IllustrationContainer>
+      <InvitationFlatlist scrollPosition={scrollY} />
     </Container>
   );
 };
@@ -78,14 +42,9 @@ const StyledDashboardHeader = styled(DashboardHeader)`
   padding-horizontal: 5%;
 `;
 
-const CardContainer = styled(Animated.View)`
+const IllustrationContainer = styled(Animated.View)`
   padding-horizontal: 5%;
-`;
-
-const ListEmptyContainer = styled.View`
-  flex: 1;
-  padding-horizontal: 5%;
-  ${Layout.flexCenter};
+  height: 40%;
 `;
 
 export default InvitationsScreen;
