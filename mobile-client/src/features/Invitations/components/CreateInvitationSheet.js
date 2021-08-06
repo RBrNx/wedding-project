@@ -16,18 +16,14 @@ import EnumLabel from 'features/RSVP/components/EnumLabel';
 import { toOrdinalSuffix } from 'features/RSVP/helpers';
 import StandardPressable from 'library/components/StandardPressable';
 import { nanoid } from 'nanoid';
-import { useMutation } from '@apollo/react-hooks';
 import CREATE_INVITATION from 'library/graphql/mutations/createInvitationGroup.graphql';
-import GET_ALL_INVITATIONS from 'library/graphql/queries/getAllInvitations.graphql';
+import useInvitationMutation from 'library/hooks/useInvitationMutation';
 
 const CreateInvitationSheet = ({ active, onDismiss }) => {
   const [invitationType, setInvitationType] = useState(null);
   const [guests, setGuests] = useState({ [nanoid()]: { firstName: null, lastName: null } });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createInvitation] = useMutation(CREATE_INVITATION, {
-    refetchQueries: [{ query: GET_ALL_INVITATIONS }],
-    awaitRefetchQueries: true,
-  });
+  const [createInvitation] = useInvitationMutation(CREATE_INVITATION);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
 
