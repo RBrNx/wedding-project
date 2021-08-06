@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { Dimensions, Platform, Linking, StatusBar } from 'react-native';
+import { Dimensions, Platform, Linking, StatusBar, Keyboard } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
@@ -37,7 +37,7 @@ const ScannerScreen = ({ navigation }) => {
   const [showGuestSignInSheet, setShowGuestSignInSheet] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const { fetchGuestCredentials } = useAuth();
+  const { fetchGuestCredentials, signIn } = useAuth();
   const { showAlert } = useAlert();
   const { animIndex: scannerModeIndex, moveToStep } = useAnimatedStepTransition({
     duration: 200,
@@ -78,13 +78,19 @@ const ScannerScreen = ({ navigation }) => {
   const startSignIn = async scannedInvitationCode => {
     try {
       setIsLoading(true);
+      Keyboard.dismiss();
 
       const credentials = await fetchGuestCredentials(scannedInvitationCode || invitationCode);
 
-      if (credentials?.length) {
+      if (credentials?.length === 1) {
+        const [userCredentials] = credentials;
+        const { username, password } = userCredentials;
+        await signIn(username, password);
+      } else {
         setGuestCredentials(credentials);
         setShowGuestSignInSheet(true);
       }
+
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);

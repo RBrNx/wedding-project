@@ -68,8 +68,8 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
   }, [active, editMode]);
 
   const onSheetDismiss = () => {
-    resetState();
     onDismiss();
+    resetState();
   };
 
   const resetState = () => {

@@ -1,5 +1,5 @@
-const filterQuestions = (questions, { filter, sort = (a, b) => b.order - a.order, map }) => {
-  const filteredQuestions = questions.filter(filter).sort(sort);
+const filterQuestions = (questions, { filter, sort = (a, b) => a.order - b.order, map }) => {
+  const filteredQuestions = questions.sort(sort).filter(filter);
 
   if (map) return filteredQuestions.map(map);
 
@@ -17,6 +17,7 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, answers 
   // Check to see if our next question is a follow up to our current question
   if (followUpQuestions?.length) {
     [nextQuestion] = filterQuestions(followUpQuestions, {
+      sort: (a, b) => a.question.order - b.question.order,
       filter: ({ matchesValue }) => matchesValue === currAnswer,
       map: ({ question }) => question,
     });
@@ -28,6 +29,7 @@ const calculateQuestions = ({ questions, questionHistory, currQuestion, answers 
     const parentAnswer = answers[parentQuestion._id];
 
     [nextQuestion] = filterQuestions(parentQuestion.followUpQuestions, {
+      sort: (a, b) => a.question.order - b.question.order,
       filter: ({ question, matchesValue }) => matchesValue === parentAnswer && question.order > currQuestion.order,
       map: ({ question }) => question,
     });
