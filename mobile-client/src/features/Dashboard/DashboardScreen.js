@@ -27,7 +27,7 @@ const DashboardScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const { userSettings, updateSetting } = useSettings();
   const { showAlert } = useAlert();
-  const { firstName, lastName } = currentUser;
+  const { firstName, lastName } = currentUser || {};
   const fullName = `${firstName} ${lastName}`;
   const hasSubmittedRSVP = !!currentUser?.rsvpForm;
 
