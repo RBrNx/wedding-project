@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "0.15.0",
+    "version": "0.16.0",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +18,7 @@
       "backgroundColor": "#14233c"
     },
     "ios": {
-      "buildNumber": "0.15.0",
+      "buildNumber": "0.16.0",
       "bundleIdentifier": "com.rbrnx.watsonwedding",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR Codes on event invites",
@@ -27,7 +27,7 @@
     },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 10,
+      "versionCode": 11,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",

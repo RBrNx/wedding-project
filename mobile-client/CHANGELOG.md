@@ -1,3 +1,29 @@
+# [0.16.0](https://github.com/RBrNx/wedding-project/compare/v0.15.0...v0.16.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* generatePassword will now make sure that at least 1 number and 1 letter are generated ([6f4bdd4](https://github.com/RBrNx/wedding-project/commit/6f4bdd41aac0d74c50743771d70fe791049e23f2))
+* MemoriesGrid should no longer crash when data.getMemoryAlbums is undefined ([4706c07](https://github.com/RBrNx/wedding-project/commit/4706c0789d42babd4985fbf93acbf3a159a54670))
+
+
+### Features
+
+* add ability to delete an Invitation ([095056f](https://github.com/RBrNx/wedding-project/commit/095056f1f3f5c0a6024f2430bea122a745e29f57))
+* add createInvitationGroup and deleteInvitationGroup resolvers and fetchTempLoginCredentials now returns multiple guests attached to a single InvitationGroup ([ed645ac](https://github.com/RBrNx/wedding-project/commit/ed645ac5693fa97baffbbd75fe727e48f9681b18))
+* add eventId to InvitationGroup model ([74836ba](https://github.com/RBrNx/wedding-project/commit/74836ba2ca2bb10534f9dedb6876def66e2f38fe))
+* add keyboardHeight state to useAvoidKeyboard and add extra padding to BottomSheetModal scrollviews when keyboard is visible ([20cead9](https://github.com/RBrNx/wedding-project/commit/20cead9c95ad3084178ab287d54c461e65c2eb0c))
+* create GuestSignInSheet to allow user to select which account they are logging in as ([ac2902b](https://github.com/RBrNx/wedding-project/commit/ac2902bcc5882e181d7f889c27db7f9508d812df))
+* create InvitationFlatlist component to render Invitations and their corresponding guests ([4364db7](https://github.com/RBrNx/wedding-project/commit/4364db71007482d1348f92b01637b73bbb030cd3))
+* create useInvitationMutation hook ([86bd63d](https://github.com/RBrNx/wedding-project/commit/86bd63d1bb796e15c286896b9f4d2ee68f5a9055))
+* created createGuestUser helper function ([e065b1c](https://github.com/RBrNx/wedding-project/commit/e065b1ced032094b4d7e4f9208b73bb139fd1d82))
+* created CreateInvitationSheet to allow invitations to be created along with their associated guests ([5d6c44a](https://github.com/RBrNx/wedding-project/commit/5d6c44a4f5f507d18cf2295b8aaa4e4455595dda))
+* overhaul InvitationCard to be more akin to QuestionCard and utilises GuestCard ([4bd1e75](https://github.com/RBrNx/wedding-project/commit/4bd1e752a0aa2c5b27004599378adb43679e2525))
+* overhaul InvitationsScreen to match RSVPQuestionsScreen ([c9b0fce](https://github.com/RBrNx/wedding-project/commit/c9b0fcecc3f46f7b5c6b05d82936db9025871948))
+* remove invitationId from User model and add invitationCode to InvitationGroup model ([80e8813](https://github.com/RBrNx/wedding-project/commit/80e8813d9d014d73f9fdbd45b0e302c88be7db13))
+* replace Guests screen with Invitations screen ([7005eab](https://github.com/RBrNx/wedding-project/commit/7005eab6b2ccb806b6437da77f9a971899a51633))
+* replace signInWithInvitationId helper with fetchGuestCredentials ([88a0098](https://github.com/RBrNx/wedding-project/commit/88a0098c9550f22089120805b3b2472349a9722d))
+
 # [0.15.0](https://github.com/RBrNx/wedding-project/compare/v0.14.2...v0.15.0) (2021-08-03)
 
 
