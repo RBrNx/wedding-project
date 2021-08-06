@@ -1,9 +1,12 @@
-import { QuestionGuestType } from '../../lib/enums';
+import mongoose from 'mongoose';
+import { QuestionGuestType, UserRole } from '../../lib/enums';
+
+const { ObjectId } = mongoose.Types;
 
 const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
   try {
     const QuestionModel = db.model('Question');
-    const validInvitationTypes = [QuestionGuestType.BOTH, currentUser.invitationType];
+    const InvitationGroupModel = db.model('InvitationGroup');
 
     const questions = await QuestionModel.find({
       eventId: currentUser.eventId,
@@ -17,6 +20,13 @@ const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
         },
       })
       .exec();
+
+    if (currentUser.role === UserRole.ADMIN) {
+      return questions;
+    }
+
+    const invite = await InvitationGroupModel.findOne({ guests: ObjectId(currentUser._id) });
+    const validInvitationTypes = [QuestionGuestType.BOTH, invite.type];
 
     const filteredQuestions = questions.reduce((acc, currQuestion) => {
       if (currQuestion.followUpQuestions?.length) {
