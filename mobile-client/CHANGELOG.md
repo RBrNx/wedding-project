@@ -1,3 +1,20 @@
+# [0.17.0](https://github.com/RBrNx/wedding-project/compare/v0.16.0...v0.17.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* currentUser should no longer contain stale data when signing out and in ([cd070ea](https://github.com/RBrNx/wedding-project/commit/cd070eafee4bfb28e045cd28c7a9f4590b3bc8f9))
+* dismiss question sheet before resetting state ([bcbfdb5](https://github.com/RBrNx/wedding-project/commit/bcbfdb572c2bd8cca71715857bfa123b78821b26))
+* getRSVPQuestion no longer filters questions if the user is an admin. InvitationType is now also fetched from the invitation rather than the user ([34d9f73](https://github.com/RBrNx/wedding-project/commit/34d9f73c97b335a49b0e20d4114722751442f106))
+* reset invitationType on dismiss ([93be956](https://github.com/RBrNx/wedding-project/commit/93be956223a354f379b68a6ea8a895a54da06ef9))
+* rsvp questions are now sorted in the correct order before working out which question should come next ([2528ef6](https://github.com/RBrNx/wedding-project/commit/2528ef68b88a9d2be347824d3b218f18d9dde8ca))
+* unique code is now selectable and guests name is centered correctly ([c056497](https://github.com/RBrNx/wedding-project/commit/c056497b75a438e494915a61a64c51bfb2329cda))
+
+
+### Features
+
+* if only one set of credentials is returned from fetchGuestCredentials, automatically log them in ([9643bcc](https://github.com/RBrNx/wedding-project/commit/9643bcc1e26b920124f5363eeba72def317343b7))
+
 # [0.16.0](https://github.com/RBrNx/wedding-project/compare/v0.15.0...v0.16.0) (2021-08-06)
 
 
