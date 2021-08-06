@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-lambda';
 
 const schema = gql`
   type TempLoginCredentials {
+    user: User!
     username: String!
     password: String!
   }
@@ -9,11 +10,11 @@ const schema = gql`
   type TempLoginResponse implements MutationResponse {
     success: Boolean!
     message: String
-    payload: TempLoginCredentials
+    payload: [TempLoginCredentials]
   }
 
   input FetchCredentialsInput {
-    invitationId: String!
+    invitationCode: String!
   }
 
   extend type Mutation {

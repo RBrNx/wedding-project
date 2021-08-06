@@ -20,8 +20,8 @@ const { BASE_API_URL } = Constants.manifest.extra;
 
 const ViewGuestScreen = ({ route, navigation }) => {
   const [deleteGuest, { loading: deleteInProgress }] = useGuestMutation(DELETE_GUEST);
-  const { guest } = route?.params;
-  const { firstName, lastName, attendanceStatus, rsvpForm, invitationId } = guest;
+  const { guest, invitationCode } = route?.params;
+  const { firstName, lastName, attendanceStatus, rsvpForm } = guest;
   const { text: guestStatus, color: statusColour } = GuestResponse[attendanceStatus];
   const fullName = `${firstName} ${lastName}`;
 
@@ -46,7 +46,7 @@ const ViewGuestScreen = ({ route, navigation }) => {
         <InfoText>Personalised QR Code</InfoText>
         <Spacer size={10} />
         <QRCode
-          value={`${BASE_API_URL}${invitationId}`}
+          value={`${BASE_API_URL}${invitationCode}`}
           level='M'
           size={192}
           bgColor={Colours.neutral.offWhite}
@@ -54,7 +54,7 @@ const ViewGuestScreen = ({ route, navigation }) => {
         />
         <Spacer size={45} />
         <InfoText>Unique Code</InfoText>
-        <UniqueCode>{invitationId}</UniqueCode>
+        <UniqueCode>{invitationCode}</UniqueCode>
       </InviteCard>
       <Spacer size={25} />
       {rsvpForm && (

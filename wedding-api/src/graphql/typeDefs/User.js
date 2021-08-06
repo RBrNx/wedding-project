@@ -21,8 +21,6 @@ const schema = gql`
     role: UserRole!
     attendanceStatus: AttendanceStatus!
     rsvpForm: [RSVPFormTuple!]
-    invitationId: String!
-    invitationType: InvitationType!
     pushNotificationToken: String
   }
 
@@ -35,7 +33,6 @@ const schema = gql`
   input CreateUserInput {
     firstName: String!
     lastName: String!
-    invitationType: InvitationType!
   }
 
   input CreateAdminInput {

@@ -39,14 +39,14 @@ const useProviderAuth = () => {
     return cognitoUser;
   };
 
-  const signInWithInvitationId = async invitationId => {
-    if (!invitationId || invitationId.length !== 12) throw new Error('Invitation ID must be 12 characters long.');
+  const fetchGuestCredentials = async invitationCode => {
+    if (!invitationCode || invitationCode.length !== 12) throw new Error('Invitation ID must be 12 characters long.');
 
     const { data } = await client.mutate({
       mutation: FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION,
       variables: {
         input: {
-          invitationId,
+          invitationCode,
         },
       },
     });
@@ -54,9 +54,7 @@ const useProviderAuth = () => {
     const { success, payload, message } = data.fetchTempLoginCredentials;
 
     if (success) {
-      const { username, password } = payload;
-      const signedIn = await signIn(username, password);
-      return signedIn;
+      return payload;
     }
 
     throw new Error(message);
@@ -102,7 +100,7 @@ const useProviderAuth = () => {
     user,
     currentUser,
     signIn,
-    signInWithInvitationId,
+    fetchGuestCredentials,
     confirmSignUp,
     signOut,
     isAuthenticated,

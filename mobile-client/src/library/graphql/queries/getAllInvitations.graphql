@@ -2,6 +2,7 @@ query ALL_INVITATIONS_QUERY {
   getAllInvitationGroups {
     _id
     type
+    invitationCode
     guests {
       _id
       firstName

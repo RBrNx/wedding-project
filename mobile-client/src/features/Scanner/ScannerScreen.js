@@ -20,6 +20,7 @@ import ScannerModeHeading from './components/ScannerModeHeading';
 import CameraViewfinder from './components/CameraViewfinder';
 import QRScannerAnimation from './components/QRScannerAnimation';
 import ScannerButtonCard from './components/ScannerButtonCard';
+import GuestSignInSheet from './components/GuestSignInSheet';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -31,10 +32,12 @@ const ScannerScreen = ({ navigation }) => {
   const [ratio, setRatio] = useState('4:3');
   const [isRatioSet, setIsRatioSet] = useState(false);
   const [flashEnabled, setFlashEnabled] = useState(false);
-  const [invitationId, setInvitationId] = useState(null);
+  const [invitationCode, setInvitationCode] = useState(null);
+  const [guestCredentials, setGuestCredentials] = useState(null);
+  const [showGuestSignInSheet, setShowGuestSignInSheet] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const { signInWithInvitationId } = useAuth();
+  const { fetchGuestCredentials } = useAuth();
   const { showAlert } = useAlert();
   const { animIndex: scannerModeIndex, moveToStep } = useAnimatedStepTransition({
     duration: 200,
@@ -72,13 +75,17 @@ const ScannerScreen = ({ navigation }) => {
     opacity: interpolate(scannerModeIndex.value, [0, 1], [1, 0], Extrapolate.CLAMP),
   }));
 
-  const attemptSignIn = async scannedInvitationId => {
+  const startSignIn = async scannedInvitationCode => {
     try {
       setIsLoading(true);
 
-      const signedIn = await signInWithInvitationId(scannedInvitationId || invitationId);
+      const credentials = await fetchGuestCredentials(scannedInvitationCode || invitationCode);
 
-      if (!signedIn) setIsLoading(false);
+      if (credentials?.length) {
+        setGuestCredentials(credentials);
+        setShowGuestSignInSheet(true);
+      }
+      setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
       setScanned(false);
@@ -104,7 +111,7 @@ const ScannerScreen = ({ navigation }) => {
     }
 
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    await attemptSignIn(scannedInvitationId);
+    await startSignIn(scannedInvitationId);
   };
 
   const askForCameraPermission = async manuallyTriggered => {
@@ -212,12 +219,17 @@ const ScannerScreen = ({ navigation }) => {
       <StepTransition steps={scannerModeHeadings} renderStep={renderHeading} animIndex={scannerModeIndex} />
       <ScannerInputCard
         scannerModeIndex={scannerModeIndex}
-        invitationId={invitationId}
-        setInvitationId={setInvitationId}
-        onSubmit={() => attemptSignIn()}
+        invitationId={invitationCode}
+        setInvitationId={setInvitationCode}
+        onSubmit={() => startSignIn()}
         isLoading={isLoading}
       />
       <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
+      <GuestSignInSheet
+        active={showGuestSignInSheet}
+        onDismiss={() => setShowGuestSignInSheet(false)}
+        guestCredentials={guestCredentials}
+      />
     </StyledDismissKeyboard>
   );
 };

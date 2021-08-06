@@ -1,12 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import GuestsScreen from 'features/Guests/GuestsScreen';
 import SettingsScreen from 'features/Settings/SettingsScreen';
 import NavigationPresets from 'library/utils/NavigationPresets';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import ViewGuestScreen from 'features/Guests/ViewGuestScreen';
 import RSVPQuestionsScreen from 'features/RSVP/RSVPQuestionsScreen';
+import InvitationsScreen from 'features/Invitations/InvitationsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -20,8 +20,8 @@ const AdminHomeNavigator = () => {
   return (
     <Tab.Navigator tabBarOptions={NavigationPresets.DefaultTabBar}>
       <Tab.Screen
-        name='Guests'
-        component={GuestsScreen}
+        name='Invitations'
+        component={InvitationsScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Feather name='users' color={color} size={size} />,
         }}

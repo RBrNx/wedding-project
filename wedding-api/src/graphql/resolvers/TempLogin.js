@@ -1,18 +1,20 @@
 const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
   try {
-    const { invitationId } = input;
+    const { invitationCode } = input;
 
+    const InvitationGroupModel = db.model('InvitationGroup');
     const TempLoginDetailsModel = db.model('TempLoginDetails');
 
-    const loginDetails = await TempLoginDetailsModel.findOne({ invitationId });
+    const invitationGroup = await InvitationGroupModel.findOne({ invitationCode });
+    const loginDetails = await TempLoginDetailsModel.find({ invitationGroup: invitationGroup._id }).populate('user');
 
-    if (!loginDetails)
+    if (!loginDetails?.length)
       return {
         success: false,
         message: 'Cannot find login details',
       };
 
-    if (loginDetails.disabled)
+    if (loginDetails.some(details => details.disabled))
       return {
         success: false,
         message: 'This login is no longer valid',
