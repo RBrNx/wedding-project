@@ -7,13 +7,13 @@ import StandardPressable from 'library/components/StandardPressable';
 import StatusLine from 'library/components/StatusLine';
 import { useNavigation } from '@react-navigation/native';
 
-const GuestCard = ({ guest }) => {
+const GuestCard = ({ guest, invitationCode, style }) => {
   const { firstName, lastName, attendanceStatus } = guest;
   const { text: guestStatus, color: statusColour } = GuestResponse[attendanceStatus];
   const navigation = useNavigation();
 
   return (
-    <CardContainer raised onPress={() => navigation.navigate('ViewGuest', { guest })}>
+    <CardContainer raised onPress={() => navigation.navigate('ViewGuest', { guest, invitationCode })} style={style}>
       <StatusLine colour={statusColour} />
       <TextContainer>
         <GuestName>

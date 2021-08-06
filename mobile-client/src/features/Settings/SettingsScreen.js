@@ -182,7 +182,7 @@ const StyledCircleIcon = styled(FontAwesome5)`
 `;
 
 const StyledActivityIndicator = styled(ActivityIndicator).attrs(props => ({
-  color: Theme.detailTextColour(props),
+  color: Theme.icon(props),
 }))``;
 
 export default SettingsScreen;

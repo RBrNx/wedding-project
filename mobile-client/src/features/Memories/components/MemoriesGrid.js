@@ -29,7 +29,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
   const [isFocused, setIsFocused] = useState(false);
   const { data, loading, refetch } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
   const { renderRefreshControl } = useRefreshControl({ onRefresh: async () => refetch(), offset: 75 });
-  const memories = loading ? loadingData : [...uploads, ...data?.getMemoryAlbums];
+  const memories = loading ? loadingData : [...uploads, ...(data?.getMemoryAlbums || [])];
   const spareSlots = NUM_COLUMNS - (memories.length % NUM_COLUMNS || NUM_COLUMNS);
   const paddedMemories = [
     ...memories,
