@@ -54,7 +54,7 @@ const ViewGuestScreen = ({ route, navigation }) => {
         />
         <Spacer size={45} />
         <InfoText>Unique Code</InfoText>
-        <UniqueCode>{invitationCode}</UniqueCode>
+        <UniqueCode selectable>{invitationCode}</UniqueCode>
       </InviteCard>
       <Spacer size={25} />
       {rsvpForm && (
@@ -92,13 +92,13 @@ const Container = styled.ScrollView.attrs(() => ({
 `;
 
 const Header = styled.View`
-  height: ${height * 0.25}px;
   ${Layout.flexCenter};
 `;
 
 const Name = styled.Text`
   ${Typography.h1};
   color: ${Colours.neutral.white};
+  text-align: center;
 `;
 
 const StatusContainer = styled.View`
