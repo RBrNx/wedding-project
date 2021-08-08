@@ -29,7 +29,7 @@ const useProviderAuth = () => {
   const signIn = async (emailAddress, password) => {
     if (!emailAddress || !password) return null;
 
-    const lowercaseEmail = emailAddress.toLowerCase();
+    const lowercaseEmail = emailAddress.toLowerCase().trim();
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
 
     await refetch();
