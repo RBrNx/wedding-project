@@ -33,6 +33,7 @@ const schema = gql`
   input CreateUserInput {
     firstName: String!
     lastName: String!
+    hasPlusOne: Boolean
   }
 
   input CreateAdminInput {
