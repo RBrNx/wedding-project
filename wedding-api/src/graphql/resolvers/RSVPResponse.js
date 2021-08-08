@@ -20,10 +20,12 @@ const submitRSVPForm = async (parent, args, { currentUser, db, dataSources }) =>
     }
 
     const songRequestQuestion = await QuestionModel.findOne({ type: QuestionType.SONG_REQUEST, eventId });
-    const songRequestAnswer = rsvpForm.find(({ question }) => question === songRequestQuestion._id.toString())?.answer;
-    const { spotifyConfig } = await EventModel.findById(eventId);
 
     if (songRequestQuestion) {
+      const songRequestAnswer = rsvpForm.find(
+        ({ question }) => question === songRequestQuestion?._id?.toString(),
+      )?.answer;
+      const { spotifyConfig } = await EventModel.findById(eventId);
       const existingTrackUri = existingRSVP?.rsvpForm.find(({ question }) => question.type === 'SONG_REQUEST')?.answer;
 
       if (existingRSVP && existingTrackUri) {
