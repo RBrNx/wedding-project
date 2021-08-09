@@ -4,7 +4,7 @@ const getInvitationGroup = async (parent, { id }, { db }) => {
   try {
     const InvitationGroupModel = db.model('InvitationGroup');
 
-    const invitationGroup = await InvitationGroupModel.findBbyId(id).populate('guests').exec();
+    const invitationGroup = await InvitationGroupModel.findById(id).populate('guests').exec();
 
     return invitationGroup;
   } catch (error) {
