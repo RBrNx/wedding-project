@@ -1,3 +1,10 @@
+## [0.17.2](https://github.com/RBrNx/wedding-project/compare/v0.17.1...v0.17.2) (2021-08-07)
+
+
+### Bug Fixes
+
+* send guestType when creating a new question ([b67ea5b](https://github.com/RBrNx/wedding-project/commit/b67ea5b2558532b86cdf158f3a2ed4428df106a4))
+
 ## [0.17.1](https://github.com/RBrNx/wedding-project/compare/v0.17.0...v0.17.1) (2021-08-06)
 
 
