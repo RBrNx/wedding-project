@@ -1,3 +1,21 @@
+# [0.18.0](https://github.com/RBrNx/wedding-project/compare/v0.17.2...v0.18.0) (2021-08-09)
+
+
+### Bug Fixes
+
+* move songRequestAnswer and spotifyConfig declarations into an if statement to avoid undefined errors ([8175eec](https://github.com/RBrNx/wedding-project/commit/8175eec1ff50fb2eb47d3f92e674697ddf793033))
+* trim email address before sign in ([28d4e93](https://github.com/RBrNx/wedding-project/commit/28d4e932b0fc93de0901df62bd3001dcb01c644c))
+
+
+### Features
+
+* add ability to add a plus one to a guest ([1d52774](https://github.com/RBrNx/wedding-project/commit/1d52774142b140914303ab60e1f5848223fced71))
+* add hasPlusOne boolean to CreateUserInput ([204e198](https://github.com/RBrNx/wedding-project/commit/204e198f114a2562bdb359dc66780cd05b25e00b))
+* add hasPlusOne support to createInvitationGroup ([0b95ad7](https://github.com/RBrNx/wedding-project/commit/0b95ad7ec3048848e50cc00fe16c47ed9709403d))
+* added getEventInfo resolver and split event typedefs & resolvers into auth/unauth ([6f0c417](https://github.com/RBrNx/wedding-project/commit/6f0c41772077c4ca3870158b56bf2ca5c8709acd))
+* replaced getCurrentUser query with bootstrapQuery which will also fetch event info ([3543be4](https://github.com/RBrNx/wedding-project/commit/3543be47e456ff28359a428cb71425a6e7d1f193))
+* show event date in RSVPCard ([5b02917](https://github.com/RBrNx/wedding-project/commit/5b02917b168794b08d4ee7f9e498f8b54c867497))
+
 ## [0.17.2](https://github.com/RBrNx/wedding-project/compare/v0.17.1...v0.17.2) (2021-08-07)
 
 
