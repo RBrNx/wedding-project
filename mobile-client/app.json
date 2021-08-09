@@ -3,8 +3,11 @@
     "name": "The Watson Wedding (Staging)",
     "slug": "watson-wedding-staging",
     "privacy": "unlisted",
-    "platforms": ["ios", "android"],
-    "version": "0.17.1",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "version": "0.17.2",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +18,7 @@
       "backgroundColor": "#14233c"
     },
     "ios": {
-      "buildNumber": "0.17.1",
+      "buildNumber": "0.17.2",
       "bundleIdentifier": "com.rbrnx.watsonwedding",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR Codes on event invites",
@@ -24,8 +27,13 @@
     },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 13,
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "VIBRATE"],
+      "versionCode": 14,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ],
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json"
     },
