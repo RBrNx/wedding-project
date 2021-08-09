@@ -1,6 +1,18 @@
 import { UserRole } from '../../lib/enums';
 import { createCognitoAdminUser, deleteCognitoUser } from '../../lib/helpers/users';
 
+const getEventInfo = async (parent, args, { currentUser, db }) => {
+  try {
+    const EventModel = db.model('Event');
+
+    const event = await EventModel.findById(currentUser.eventId);
+
+    return event;
+  } catch (error) {
+    return error;
+  }
+};
+
 const createEvent = async (parent, { input }, { db }) => {
   let session;
   let userId;
@@ -67,7 +79,14 @@ const createEvent = async (parent, { input }, { db }) => {
 };
 
 export default {
-  Mutation: {
-    createEvent,
+  unauthenticated: {
+    Mutation: {
+      createEvent,
+    },
+  },
+  authenticated: {
+    Query: {
+      getEventInfo,
+    },
   },
 };

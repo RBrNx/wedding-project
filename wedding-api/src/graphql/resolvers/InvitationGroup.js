@@ -4,7 +4,7 @@ const getInvitationGroup = async (parent, { id }, { db }) => {
   try {
     const InvitationGroupModel = db.model('InvitationGroup');
 
-    const invitationGroup = await InvitationGroupModel.findBbyId(id).populate('guests').exec();
+    const invitationGroup = await InvitationGroupModel.findById(id).populate('guests').exec();
 
     return invitationGroup;
   } catch (error) {
@@ -41,8 +41,17 @@ const createInvitationGroup = async (parent, { invitationGroup }, { currentUser,
       session,
     });
 
+    const guestsToInvite = guests.reduce((acc, currentGuest) => {
+      const { firstName, lastName } = currentGuest;
+      acc.push(currentGuest);
+
+      if (currentGuest.hasPlusOne) acc.push({ firstName, lastName: `${lastName}s Guest` });
+
+      return acc;
+    }, []);
+
     guestUsers = await Promise.all(
-      guests.map(guest => createGuestUser(guest, invitationGroupDoc._id, db, currentUser, session)),
+      guestsToInvite.map(async guest => createGuestUser(guest, invitationGroupDoc._id, db, currentUser, session)),
     );
 
     const completeInvitationGroup = await InvitationGroupModel.findById(

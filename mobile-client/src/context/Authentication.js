@@ -2,7 +2,7 @@ import { Auth } from 'aws-amplify';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import client from 'library/utils/apolloClient';
 import FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION from 'library/graphql/mutations/fetchTempLoginCredentials.graphql';
-import GET_CURRENT_USER_QUERY from 'library/graphql/queries/currentUser.graphql';
+import BOOTSTRAP_QUERY from 'library/graphql/queries/bootstrapQuery.graphql';
 import { useQuery } from '@apollo/react-hooks';
 import parseError from 'library/utils/parseError';
 
@@ -17,8 +17,9 @@ const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
-  const { data: queryData, error, refetch } = useQuery(GET_CURRENT_USER_QUERY, { skip: !user });
+  const { data: queryData, error, refetch } = useQuery(BOOTSTRAP_QUERY, { skip: !user });
   const currentUser = queryData?.getCurrentUser;
+  const eventInfo = queryData?.getEventInfo;
   const isAuthenticated = !!user && !!currentUser;
 
   if (error) {
@@ -29,7 +30,7 @@ const useProviderAuth = () => {
   const signIn = async (emailAddress, password) => {
     if (!emailAddress || !password) return null;
 
-    const lowercaseEmail = emailAddress.toLowerCase();
+    const lowercaseEmail = emailAddress.toLowerCase().trim();
     const cognitoUser = await Auth.signIn(lowercaseEmail, password);
 
     await refetch();
@@ -97,6 +98,7 @@ const useProviderAuth = () => {
   return {
     user,
     currentUser,
+    eventInfo,
     signIn,
     fetchGuestCredentials,
     confirmSignUp,

@@ -7,7 +7,7 @@ import BottomSheetModal from 'library/components/BottomSheetModal';
 import StandardTextInput from 'library/components/StandardTextInput';
 import { useAvoidKeyboard, useBottomSheetActionButton } from 'library/hooks';
 import StandardActionButton from 'library/components/StandardActionButton';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Switch } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
@@ -110,7 +110,7 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
         <Spacer size={15} />
         {Object.entries(guests).map(([guestId, guest], index) => {
           const label = `${toOrdinalSuffix(index + 1)} Guest`;
-          const { firstName, lastName } = guest;
+          const { firstName, lastName, hasPlusOne } = guest;
 
           return (
             <Card key={guestId}>
@@ -146,6 +146,19 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
                 }
                 themeColourOverride='#fff'
               />
+              <Spacer size={30} />
+              <QuestionText>Are they allowed a Plus One?</QuestionText>
+              <SwitchContainer>
+                <Switch
+                  onValueChange={value =>
+                    setGuests({
+                      ...guests,
+                      [guestId]: { ...guests[guestId], hasPlusOne: value },
+                    })
+                  }
+                  value={hasPlusOne}
+                />
+              </SwitchContainer>
             </Card>
           );
         })}
@@ -248,6 +261,11 @@ const ButtonText = styled.Text`
   ${Typography.body};
   ${Typography.boldFont};
   color: ${Colours.secondary};
+`;
+
+const SwitchContainer = styled.View`
+  width: 100%;
+  align-items: flex-start;
 `;
 
 export default CreateInvitationSheet;
