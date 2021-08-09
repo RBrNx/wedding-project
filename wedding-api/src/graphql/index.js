@@ -22,6 +22,7 @@ import MemoriesTypeDefs from './typeDefs/Memories';
 
 const typeDefs = [
   BaseTypeDefs,
+  EventTypeDefs.AuthenticatedSchema,
   UserTypeDefs,
   InvitationTypeDefs,
   QuestionTypeDefs,
@@ -31,6 +32,7 @@ const typeDefs = [
 ];
 const resolvers = [
   BaseResolvers,
+  EventResolvers.authenticated,
   UserResolvers,
   InvitationResolvers,
   QuestionResolvers,
@@ -39,7 +41,7 @@ const resolvers = [
   MemoriesResolvers,
 ];
 
-const unauthenticatedTypeDefs = [BaseTypeDefs, EventTypeDefs, TempLoginTypeDefs];
-const unauthenticatedResolvers = [BaseResolvers, EventResolvers, TempLoginResolvers];
+const unauthenticatedTypeDefs = [BaseTypeDefs, EventTypeDefs.UnauthenticatedSchema, TempLoginTypeDefs];
+const unauthenticatedResolvers = [BaseResolvers, EventResolvers.unauthenticated, TempLoginResolvers];
 
 export { typeDefs, resolvers, unauthenticatedTypeDefs, unauthenticatedResolvers };

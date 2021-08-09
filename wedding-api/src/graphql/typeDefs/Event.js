@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-lambda';
 
-const schema = gql`
+const UnauthenticatedSchema = gql`
   type Event {
     _id: ID!
     name: String!
@@ -45,4 +45,16 @@ const schema = gql`
   }
 `;
 
-export default schema;
+const AuthenticatedSchema = gql`
+  type Event {
+    _id: ID!
+    name: String!
+    date: Date!
+  }
+
+  extend type Query {
+    getEventInfo: Event
+  }
+`;
+
+export default { UnauthenticatedSchema, AuthenticatedSchema };

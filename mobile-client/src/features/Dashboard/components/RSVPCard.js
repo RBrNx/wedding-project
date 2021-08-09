@@ -5,12 +5,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { darken } from 'library/utils/colours';
+import dayjs from 'dayjs';
 import RSVPIllustration from './RSVPIllustration';
 
-const RSVPCard = ({ hasSubmittedRSVP, onPress }) => {
+const RSVPCard = ({ hasSubmittedRSVP, eventDate, onPress }) => {
   const title = hasSubmittedRSVP ? `Great, you've RSVP'd!` : 'First things first,';
   const subtitle = hasSubmittedRSVP
-    ? `you can still view or edit your response`
+    ? `you can still view or edit your response until `
     : `please RSVP to the happy couple by `;
 
   return (
@@ -20,7 +21,7 @@ const RSVPCard = ({ hasSubmittedRSVP, onPress }) => {
         <Spacer size={5} />
         <CardSubTitle>
           {subtitle}
-          {!hasSubmittedRSVP && <DateText>1st September 2021</DateText>}
+          {eventDate && <DateText>{dayjs(eventDate).format('Do MMMM YYYY')}</DateText>}
         </CardSubTitle>
         <StyledRSVPIllustration size={250} />
         <Spacer flex />

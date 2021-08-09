@@ -1,3 +1,94 @@
+## [0.17.1](https://github.com/RBrNx/wedding-project/compare/v0.17.0...v0.17.1) (2021-08-06)
+
+
+### Bug Fixes
+
+* stop app crashing when signing out ([135fd20](https://github.com/RBrNx/wedding-project/commit/135fd20c7ecfc80b93ad6f882cbac26aa8b69d34))
+
+# [0.17.0](https://github.com/RBrNx/wedding-project/compare/v0.16.0...v0.17.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* currentUser should no longer contain stale data when signing out and in ([cd070ea](https://github.com/RBrNx/wedding-project/commit/cd070eafee4bfb28e045cd28c7a9f4590b3bc8f9))
+* dismiss question sheet before resetting state ([bcbfdb5](https://github.com/RBrNx/wedding-project/commit/bcbfdb572c2bd8cca71715857bfa123b78821b26))
+* getRSVPQuestion no longer filters questions if the user is an admin. InvitationType is now also fetched from the invitation rather than the user ([34d9f73](https://github.com/RBrNx/wedding-project/commit/34d9f73c97b335a49b0e20d4114722751442f106))
+* reset invitationType on dismiss ([93be956](https://github.com/RBrNx/wedding-project/commit/93be956223a354f379b68a6ea8a895a54da06ef9))
+* rsvp questions are now sorted in the correct order before working out which question should come next ([2528ef6](https://github.com/RBrNx/wedding-project/commit/2528ef68b88a9d2be347824d3b218f18d9dde8ca))
+* unique code is now selectable and guests name is centered correctly ([c056497](https://github.com/RBrNx/wedding-project/commit/c056497b75a438e494915a61a64c51bfb2329cda))
+
+
+### Features
+
+* if only one set of credentials is returned from fetchGuestCredentials, automatically log them in ([9643bcc](https://github.com/RBrNx/wedding-project/commit/9643bcc1e26b920124f5363eeba72def317343b7))
+
+# [0.16.0](https://github.com/RBrNx/wedding-project/compare/v0.15.0...v0.16.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* generatePassword will now make sure that at least 1 number and 1 letter are generated ([6f4bdd4](https://github.com/RBrNx/wedding-project/commit/6f4bdd41aac0d74c50743771d70fe791049e23f2))
+* MemoriesGrid should no longer crash when data.getMemoryAlbums is undefined ([4706c07](https://github.com/RBrNx/wedding-project/commit/4706c0789d42babd4985fbf93acbf3a159a54670))
+
+
+### Features
+
+* add ability to delete an Invitation ([095056f](https://github.com/RBrNx/wedding-project/commit/095056f1f3f5c0a6024f2430bea122a745e29f57))
+* add createInvitationGroup and deleteInvitationGroup resolvers and fetchTempLoginCredentials now returns multiple guests attached to a single InvitationGroup ([ed645ac](https://github.com/RBrNx/wedding-project/commit/ed645ac5693fa97baffbbd75fe727e48f9681b18))
+* add eventId to InvitationGroup model ([74836ba](https://github.com/RBrNx/wedding-project/commit/74836ba2ca2bb10534f9dedb6876def66e2f38fe))
+* add keyboardHeight state to useAvoidKeyboard and add extra padding to BottomSheetModal scrollviews when keyboard is visible ([20cead9](https://github.com/RBrNx/wedding-project/commit/20cead9c95ad3084178ab287d54c461e65c2eb0c))
+* create GuestSignInSheet to allow user to select which account they are logging in as ([ac2902b](https://github.com/RBrNx/wedding-project/commit/ac2902bcc5882e181d7f889c27db7f9508d812df))
+* create InvitationFlatlist component to render Invitations and their corresponding guests ([4364db7](https://github.com/RBrNx/wedding-project/commit/4364db71007482d1348f92b01637b73bbb030cd3))
+* create useInvitationMutation hook ([86bd63d](https://github.com/RBrNx/wedding-project/commit/86bd63d1bb796e15c286896b9f4d2ee68f5a9055))
+* created createGuestUser helper function ([e065b1c](https://github.com/RBrNx/wedding-project/commit/e065b1ced032094b4d7e4f9208b73bb139fd1d82))
+* created CreateInvitationSheet to allow invitations to be created along with their associated guests ([5d6c44a](https://github.com/RBrNx/wedding-project/commit/5d6c44a4f5f507d18cf2295b8aaa4e4455595dda))
+* overhaul InvitationCard to be more akin to QuestionCard and utilises GuestCard ([4bd1e75](https://github.com/RBrNx/wedding-project/commit/4bd1e752a0aa2c5b27004599378adb43679e2525))
+* overhaul InvitationsScreen to match RSVPQuestionsScreen ([c9b0fce](https://github.com/RBrNx/wedding-project/commit/c9b0fcecc3f46f7b5c6b05d82936db9025871948))
+* remove invitationId from User model and add invitationCode to InvitationGroup model ([80e8813](https://github.com/RBrNx/wedding-project/commit/80e8813d9d014d73f9fdbd45b0e302c88be7db13))
+* replace Guests screen with Invitations screen ([7005eab](https://github.com/RBrNx/wedding-project/commit/7005eab6b2ccb806b6437da77f9a971899a51633))
+* replace signInWithInvitationId helper with fetchGuestCredentials ([88a0098](https://github.com/RBrNx/wedding-project/commit/88a0098c9550f22089120805b3b2472349a9722d))
+
+# [0.15.0](https://github.com/RBrNx/wedding-project/compare/v0.14.2...v0.15.0) (2021-08-03)
+
+
+### Bug Fixes
+
+* add DashboardHeader component to SettingsScreen ([18ba82f](https://github.com/RBrNx/wedding-project/commit/18ba82faef478d6574604009b0d9e5409e0aff94))
+* DeleteQuestionButton's text now pays attention to the theme ([c5fe1a1](https://github.com/RBrNx/wedding-project/commit/c5fe1a1290f8ef99aa162153872c0bbb2df44f14))
+* error message text is no longer cut off in GuestFlatlist ([7c3c1e2](https://github.com/RBrNx/wedding-project/commit/7c3c1e2b028222b6cbc579f91d95965b045fb32e))
+* followUpQuestions are no longer duplicated ([7846d31](https://github.com/RBrNx/wedding-project/commit/7846d31099adf9ade3b93ab9229a839d1e37d722))
+* improve colours of QuestionFlatlist components ([66e0192](https://github.com/RBrNx/wedding-project/commit/66e0192e2cb5b831cc3cfb129028949f7e62768d))
+* theme can now be changed as expected ([d159b57](https://github.com/RBrNx/wedding-project/commit/d159b57c579d358467851d9398365030898a3bf2))
+
+
+### Features
+
+* add ability to choose what invitation type a guest will receive ([82c88a6](https://github.com/RBrNx/wedding-project/commit/82c88a69f71f25e78538b9d5f6b78fea24b8818b))
+* add ability to delete a guest from ViewGuestScreen ([09f4649](https://github.com/RBrNx/wedding-project/commit/09f4649507fd898061fd4495e1eced5c393b187a))
+* add google-services.json to enable push notifications for android ([4a84626](https://github.com/RBrNx/wedding-project/commit/4a846268bbdfce8fa4757ee80f8157c06ca008c2))
+* add QuestionGuestType to Question model and typedefs ([898d16e](https://github.com/RBrNx/wedding-project/commit/898d16eb3830dc38191eefafd54c6a7832661f62))
+* create deleteGuest mutation ([02d56c5](https://github.com/RBrNx/wedding-project/commit/02d56c571ecc05a327fbf5fed1d800e5cef3faee))
+* create NotificationAnimation component ([46f1227](https://github.com/RBrNx/wedding-project/commit/46f12271646aa73f1ac32edf2092419320f33eee))
+* create registerPushToken mutation ([af22f83](https://github.com/RBrNx/wedding-project/commit/af22f8367374e70545fc33c17a5c018c0ff4bee7))
+* create useGuestMutation hook ([fd260ad](https://github.com/RBrNx/wedding-project/commit/fd260ad101a26305da19b5bca855fe0e80c64f26))
+* created GuestTypeLabel component and use it in QuestionCard ([f3d5750](https://github.com/RBrNx/wedding-project/commit/f3d5750e96b958f7904ffeaab0694d6f9afa15ae))
+* display guestType on QuestionCard component ([3e5d773](https://github.com/RBrNx/wedding-project/commit/3e5d77311926f2a70f34c80f458a62b1f8005af5))
+* push notifications permission is now requested on user login ([c68711f](https://github.com/RBrNx/wedding-project/commit/c68711f5277393e98308e708d2aa135c3d9b1054))
+* QuestionGuestType can now be selected in EditQuestionSheet and submitted to the API ([b71bc46](https://github.com/RBrNx/wedding-project/commit/b71bc4610cbd5332f6e94fb2ce5871b3e71ad03a))
+* replace GuestTypeLabel and QuestionTypeLabel with EnumLabel component ([475f924](https://github.com/RBrNx/wedding-project/commit/475f924c6677aa7b1076e72fd6bf6bf30e61ed4c))
+* RSVPQuestions are now filtered to remove questions that don't match the users invitation type ([c2a4232](https://github.com/RBrNx/wedding-project/commit/c2a4232b4bd2f8112adb8a371ff32db6b4deb7ec))
+* spread restOfGuest into update call ([4ab8dc1](https://github.com/RBrNx/wedding-project/commit/4ab8dc105923b254e71df61281d7c6292f5f8635))
+* update Settings screen to allow push notifications to be toggled on or off ([6091389](https://github.com/RBrNx/wedding-project/commit/6091389b366191c53d46db867b704e1db3053c6f))
+
+## [0.14.2](https://github.com/RBrNx/wedding-project/compare/v0.14.1...v0.14.2) (2021-08-02)
+
+
+### Bug Fixes
+
+* add cognito-idp permissions to authenticated lambda ([4f3dfd3](https://github.com/RBrNx/wedding-project/commit/4f3dfd3bbfb469bc2636b21e43ea69cdc0a3c418))
+* add permission for cognito-idp:AdminSetUserPassword to authenticated lambda ([69969bb](https://github.com/RBrNx/wedding-project/commit/69969bb144fd46cdbe7948a4b1efbbef8a6e7967))
+* ALL_GUESTS_QUERY will now be refetched correctly using variables from the cache ([10b514e](https://github.com/RBrNx/wedding-project/commit/10b514ee065a7c8202d2e9fa879a35561943bfa6))
+
 ## [0.14.1](https://github.com/RBrNx/wedding-project/compare/v0.14.0...v0.14.1) (2021-07-31)
 
 

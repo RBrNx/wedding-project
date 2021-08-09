@@ -118,6 +118,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             choices,
             isFollowUp: isFollowUpQuestion,
             responseType: 'INDIVIDUAL',
+            guestType: questionGuestType,
           },
         },
       });
@@ -162,6 +163,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
           .sort((a, b) => a.order - b.order)
           .map((choice, index) => ({ label: choice.value, value: `${index}` })),
       ];
+
       await updateQuestion({
         variables: {
           id: question._id,

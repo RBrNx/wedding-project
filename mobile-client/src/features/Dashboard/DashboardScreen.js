@@ -23,11 +23,11 @@ import NotificationAnimation from './components/NotificationAnimation';
 const DashboardScreen = ({ navigation }) => {
   const [showRSVPSheet, setShowRSVPSheet] = useState(false);
   const [showPermissionCard, setShowPermissionCard] = useState(false);
-  const [registerPushToken, { loading }] = useMutation(REGISTER_PUSH_TOKEN);
-  const { currentUser } = useAuth();
+  const [registerPushToken, { loading: registeringPushToken }] = useMutation(REGISTER_PUSH_TOKEN);
+  const { currentUser, eventInfo } = useAuth();
   const { userSettings, updateSetting } = useSettings();
   const { showAlert } = useAlert();
-  const { firstName, lastName } = currentUser;
+  const { firstName, lastName } = currentUser || {};
   const fullName = `${firstName} ${lastName}`;
   const hasSubmittedRSVP = !!currentUser?.rsvpForm;
 
@@ -105,6 +105,7 @@ const DashboardScreen = ({ navigation }) => {
         <Spacer size={40} />
         <RSVPCard
           hasSubmittedRSVP={hasSubmittedRSVP}
+          eventDate={eventInfo?.date}
           onPress={() => {
             if (hasSubmittedRSVP) setShowRSVPSheet(true);
             else navigation.navigate('SubmitRSVP');
@@ -131,7 +132,12 @@ const DashboardScreen = ({ navigation }) => {
             </PermissionText>
             <NotificationAnimation size={100} />
             <Spacer size={15} />
-            <StandardButton text='Grant Permission' raised onPress={registerPushNotifications} loading={loading} />
+            <StandardButton
+              text='Grant Permission'
+              raised
+              onPress={registerPushNotifications}
+              loading={registeringPushToken}
+            />
             <Spacer size={15} />
             <DimissButton text='No thanks' outline onPress={dismissNotificationRequest} />
           </PermissionCard>
