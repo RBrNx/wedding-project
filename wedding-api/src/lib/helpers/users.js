@@ -102,6 +102,8 @@ const getUserFromRequest = async requestContext => {
   const { cognitoAuthenticationProvider } = requestContext.identity;
   const [, , cognitoUserId] = cognitoAuthenticationProvider.match(authProviderRegex);
 
+  console.log('Getting user from request', { cognitoUserId, identity: requestContext.identity });
+
   const db = await connectToDatabase();
   const UserModel = db.model('User');
 

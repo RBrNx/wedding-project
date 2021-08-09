@@ -7,7 +7,7 @@ import { useAuth } from 'context';
 
 const DashboardHeader = ({ title, style }) => {
   const { currentUser } = useAuth();
-  const { firstName, lastName } = currentUser;
+  const { firstName, lastName } = currentUser || {};
   const fullName = `${firstName} ${lastName}`;
 
   return (
