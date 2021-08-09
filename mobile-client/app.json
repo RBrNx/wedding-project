@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "The Watson Wedding (Staging)",
-    "slug": "watson-wedding-staging",
+    "name": "Watson Weddings",
+    "slug": "watson-wedding",
     "privacy": "unlisted",
     "platforms": [
       "ios",
@@ -45,11 +45,10 @@
     },
     "assetBundlePatterns": ["**/*"],
     "extra": {
-      "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
+      "BASE_API_URL": "https://api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "staging",
-      "noop": ""
+      "ENV": "production"
     },
     "hooks": {
       "postPublish": [
