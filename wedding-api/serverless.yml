@@ -20,11 +20,11 @@ custom:
     port: 4000
     noPrependStageInUrl: true
   rootDomain: thewatsonwedding.com
-  subdomainPrefixes:
-    prod: ''
+  deploymentPrefixes:
+    production: ''
     staging: staging-
     dev: dev-
-  subdomain: ${self:custom.subdomainPrefixes.${self:provider.stage}}
+  subdomain: ${self:custom.deploymentPrefixes.${self:provider.stage}}
   customDomain:
     domainName: ${self:custom.subdomain}api.${self:custom.rootDomain}
     basePath: ''
@@ -40,7 +40,7 @@ custom:
     userPoolId: !Ref CognitoUserPoolWedding
     appClientId: !Ref CognitoUserPoolClientAPI
   s3:
-    photosBucket: watson-wedding-${self:provider.stage}-photos
+    photosBucket: watson-wedding-${self:custom.subdomain}photos
   cloudfront:
     domainName: ${self:custom.subdomain}images.${self:custom.rootDomain}
     keyPairId: !Ref SignerPublicKey
