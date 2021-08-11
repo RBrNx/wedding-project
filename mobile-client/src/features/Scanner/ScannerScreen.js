@@ -108,7 +108,7 @@ const ScannerScreen = ({ navigation }) => {
   const handleBarCodeScanned = async ({ data }) => {
     setScanned(true);
 
-    const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/)(?<invitationId>[A-Za-z0-9_-]{12})/g);
+    const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/invite\/)(?<invitationId>[A-Za-z0-9_-]{12})/g);
     const { invitationId: scannedInvitationId } = invitationRegex.exec(data)?.groups || {};
 
     if (!scannedInvitationId) {
