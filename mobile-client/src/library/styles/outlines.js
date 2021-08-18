@@ -6,6 +6,13 @@ const boxShadow = css`
   elevation: 4;
 `;
 
+const bottomSheetShadow = css`
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.75);
+  elevation: 10;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+`;
+
 const borderRadius = css`
   border-radius: 10px;
   ${Platform.OS === 'ios' &&
@@ -18,4 +25,4 @@ const inputBorder = css`
   border-width: 1.5px;
 `;
 
-export { boxShadow, borderRadius, inputBorder };
+export { boxShadow, borderRadius, inputBorder, bottomSheetShadow };
