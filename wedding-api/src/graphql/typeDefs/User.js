@@ -54,7 +54,7 @@ const schema = gql`
   }
 
   extend type Mutation {
-    createGuest(guest: CreateUserInput!): UserMutationResponse
+    createGuest(invitationId: ID!, guest: CreateUserInput!): UserMutationResponse
     createAdmin(input: CreateAdminInput!): UserMutationResponse
     deleteGuest(id: ID!): UserMutationResponse
     registerPushToken(token: String!): UserMutationResponse
