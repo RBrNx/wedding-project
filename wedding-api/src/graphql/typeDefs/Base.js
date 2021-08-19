@@ -9,6 +9,8 @@ const schema = gql`
 
   scalar EmailAddress
 
+  scalar PhoneNumber
+
   scalar URL
 
   interface MutationResponse {
