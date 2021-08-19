@@ -21,7 +21,7 @@ custom:
     noPrependStageInUrl: true
   rootDomain: thewatsonwedding.com
   subdomainPrefixes:
-    prod: ''
+    production: ''
     staging: staging-
     dev: dev-
   subdomain: ${self:custom.subdomainPrefixes.${self:provider.stage}}
