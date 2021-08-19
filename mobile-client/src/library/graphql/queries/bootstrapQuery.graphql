@@ -3,6 +3,21 @@ query {
     _id
     name
     date
+    venue {
+      name
+      address {
+        town
+        country
+        postcode
+      }
+      email
+      phone
+      location {
+        latitude
+        longitude
+      }
+      image
+    }
   }
   getCurrentUser {
     eventId

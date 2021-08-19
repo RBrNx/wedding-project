@@ -3,12 +3,14 @@ import React from 'react';
 import styled from 'styled-components/native';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
 import Spacer from 'library/components/Spacer';
+import { useAuth } from 'context';
 import VenueDetails from './components/VenueDetails';
 import WeddingSchedule from './components/WeddingSchedule';
 import WeddingMenu from './components/WeddingMenu';
 
 const DetailsScreen = () => {
-  const venueName = 'Bowfield Hotel & Country Club';
+  const { eventInfo } = useAuth();
+  const { venue } = eventInfo;
 
   return (
     <Container>
@@ -18,7 +20,7 @@ const DetailsScreen = () => {
       <Spacer size={10} />
       <SubtitleText>Find out about the where, when, what time and most importantly of all - the meal!</SubtitleText>
       <Spacer size={20} />
-      <VenueDetails venueName={venueName} />
+      <VenueDetails venue={venue} />
       <Spacer size={20} />
       <WeddingSchedule />
       <Spacer size={20} />
