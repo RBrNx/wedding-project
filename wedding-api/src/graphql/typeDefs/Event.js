@@ -46,10 +46,31 @@ const UnauthenticatedSchema = gql`
 `;
 
 const AuthenticatedSchema = gql`
+  type Address {
+    town: String!
+    country: String!
+    postcode: String!
+  }
+
+  type Location {
+    latitude: Float!
+    longitude: Float!
+  }
+
+  type Venue {
+    name: String!
+    address: Address!
+    email: EmailAddress!
+    phone: PhoneNumber!
+    location: Location!
+    image: URL!
+  }
+
   type Event {
     _id: ID!
     name: String!
     date: Date!
+    venue: Venue
   }
 
   extend type Query {

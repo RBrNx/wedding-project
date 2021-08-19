@@ -1,13 +1,17 @@
 import { UserRole } from '../../lib/enums';
+import signer from '../../lib/helpers/awsSigner';
 import { createCognitoAdminUser, deleteCognitoUser } from '../../lib/helpers/users';
 
 const getEventInfo = async (parent, args, { currentUser, db }) => {
   try {
     const EventModel = db.model('Event');
 
-    const event = await EventModel.findById(currentUser.eventId);
+    const event = await EventModel.findById(currentUser.eventId).lean();
 
-    return event;
+    const expires = new Date(new Date().getTime() + 1000 * 10).getTime();
+    const signedUrl = signer.getSignedUrl({ url: event.venue.image, expires });
+
+    return { ...event, venue: { ...event.venue, image: signedUrl } };
   } catch (error) {
     return error;
   }
