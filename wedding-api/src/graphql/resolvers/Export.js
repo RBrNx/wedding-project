@@ -22,12 +22,16 @@ const exportInvitationsToCSV = async (parent, args, { currentUser, db }) => {
 
     // Generate CSV File
     const csvStream = format({
-      headers: ['invitationCode', ...new Array(maxGuests).fill(null).map((_, index) => `guest${index + 1}`)],
+      headers: [
+        'invitationCode',
+        'invitationType',
+        ...new Array(maxGuests).fill(null).map((_, index) => `guest${index + 1}`),
+      ],
     });
     invitationGroups.map(invitation => {
       const names = invitation.guests.map(guest => (guest.lastName.includes('Guest') ? 'Guest' : guest.firstName));
 
-      csvStream.write([invitation.invitationCode, ...names]);
+      csvStream.write([invitation.invitationCode, invitation.type, ...names]);
 
       return invitation;
     });
