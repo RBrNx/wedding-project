@@ -1,45 +1,52 @@
-import { Layout } from 'library/styles';
+import { Colours, Layout, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
-import MapView, { Marker } from 'react-native-maps';
-import DetailsList from './components/DetailsList';
+import Spacer from 'library/components/Spacer';
+import VenueDetails from './components/VenueDetails';
+import WeddingSchedule from './components/WeddingSchedule';
+import WeddingMenu from './components/WeddingMenu';
 
 const DetailsScreen = () => {
   const venueName = 'Bowfield Hotel & Country Club';
 
   return (
     <Container>
-      <StyledDashboardHeader title='Details' />
-      <VenueLocation
-        provider='google'
-        pitchEnabled={false}
-        initialRegion={{
-          latitude: 55.797401800863895,
-          longitude: -4.5689032414826745,
-          latitudeDelta: 0.025,
-          longitudeDelta: 0.025,
-        }}
-      >
-        <Marker coordinate={{ latitude: 55.797401800863895, longitude: -4.5689032414826745 }} title={venueName} />
-      </VenueLocation>
-      <DetailsList venueName={venueName} />
+      <DashboardHeader title='Details' />
+      <Spacer size={40} />
+      <HeadingText>{`It's all in\nthe details 🗺️`}</HeadingText>
+      <Spacer size={10} />
+      <SubtitleText>Find out about the where, when, what time and most importantly of all - the meal!</SubtitleText>
+      <Spacer size={20} />
+      <VenueDetails venueName={venueName} />
+      <Spacer size={20} />
+      <WeddingSchedule />
+      <Spacer size={20} />
+      <WeddingMenu />
     </Container>
   );
 };
 
-const Container = styled.View`
-  padding-top: ${Layout.statusBarHeight}px;
+const Container = styled.ScrollView.attrs(() => ({
+  contentContainerStyle: {
+    paddingHorizontal: '5%',
+    paddingTop: Layout.statusBarHeight,
+    paddingBottom: 25,
+  },
+}))`
   flex: 1;
 `;
 
-const StyledDashboardHeader = styled(DashboardHeader)`
-  padding-horizontal: 5%;
+const HeadingText = styled.Text`
+  ${Typography.h1}
+  text-align: left;
+  color: ${Colours.neutral.white};
 `;
 
-const VenueLocation = styled(MapView)`
-  height: 85%;
-  width: 100%;
+const SubtitleText = styled.Text`
+  ${Typography.h4};
+  text-align: left;
+  color: ${Colours.neutral.grey2};
 `;
 
 export default DetailsScreen;

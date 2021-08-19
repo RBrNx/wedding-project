@@ -3,13 +3,15 @@ import styled from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import * as Linking from 'expo-linking';
 import VenueJPEG from 'assets/venue.jpeg';
-import { Layout, Outlines, Theme, Typography } from 'library/styles';
+import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import StandardPillPressable from 'library/components/StandardPillPressable';
 import { Feather } from '@expo/vector-icons';
+import theme from 'styled-theming';
+import MapView, { Marker } from 'react-native-maps';
 
 const VenueDetails = ({ venueName }) => {
   return (
-    <>
+    <Card>
       <VenueName>{venueName}</VenueName>
       <VenueLocation>Howwood, Scotland, PA9 1DZ</VenueLocation>
       <Spacer size={15} />
@@ -28,9 +30,35 @@ const VenueDetails = ({ venueName }) => {
       </ContactContainer>
       <Spacer size={15} />
       <VenueImage source={VenueJPEG} />
-    </>
+      <Spacer size={15} />
+      <MapContainer>
+        <VenueMap
+          provider='google'
+          pitchEnabled={false}
+          initialRegion={{
+            latitude: 55.797401800863895,
+            longitude: -4.5689032414826745,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }}
+        >
+          <Marker coordinate={{ latitude: 55.797401800863895, longitude: -4.5689032414826745 }} title={venueName} />
+        </VenueMap>
+      </MapContainer>
+    </Card>
   );
 };
+
+const Card = styled.View`
+  width: 100%;
+  padding: 5%;
+  background-color: ${theme('theme', {
+    light: Colours.neutral.offWhite,
+    dark: Colours.neutral.grey5,
+  })};
+  ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
+`;
 
 const VenueName = styled.Text`
   ${Typography.h2};
@@ -55,10 +83,22 @@ const ContactButton = styled(StandardPillPressable).attrs(props => ({
 `;
 
 const VenueImage = styled.Image`
-  flex: 1;
+  height: 200px;
   width: 100%;
   resize-mode: contain;
   ${Outlines.borderRadius};
+`;
+
+const MapContainer = styled.View`
+  ${Outlines.borderRadius};
+  overflow: hidden;
+`;
+
+const VenueMap = styled(MapView)`
+  height: 200px;
+  width: 100%;
+  ${Outlines.borderRadius};
+  overflow: hidden;
 `;
 
 export default VenueDetails;
