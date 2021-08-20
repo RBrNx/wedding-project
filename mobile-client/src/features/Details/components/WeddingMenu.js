@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import Spacer from 'library/components/Spacer';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import React from 'react';
@@ -5,27 +6,30 @@ import { StyleSheet } from 'react-native';
 import styled from 'styled-components';
 import theme from 'styled-theming';
 
-const WeddingMenu = () => {
+const WeddingMenu = ({ menu }) => {
   return (
     <Card>
       <HeadingText>Wedding Menu</HeadingText>
       <Spacer size={25} />
       <MenuContainer>
-        <DishName>Golden Lentil Soup</DishName>
-        <DishDescription>Served with a bread roll</DishDescription>
-        <Separator />
-        <DishName>Supreme of Chicken Grampian</DishName>
-        <DishDescription>Succulent Chicken, served with a peppercorn sauce</DishDescription>
-        <Spacer size={25} />
-        <DishName>Braised Featherblade of Beef</DishName>
-        <DishDescription>Served with a Yorkshire pudding & red wine & shallot sauce</DishDescription>
-        <Spacer size={25} />
-        <DishDescription>
-          All main courses served with chef&apos;s selection of seasonal vegetables and potatoes
-        </DishDescription>
-        <Separator />
-        <DishName>Belgian Chocolate Brownie</DishName>
-        <DishDescription>Served with ice cream</DishDescription>
+        {menu.map((course, index) => (
+          <React.Fragment key={index}>
+            {course.choices.map((choice, choiceIndex) => (
+              <React.Fragment key={choiceIndex}>
+                <DishName>{choice.name}</DishName>
+                <DishDescription>{choice.description}</DishDescription>
+                {choiceIndex < course.choices.length - 1 && <Spacer size={25} />}
+              </React.Fragment>
+            ))}
+            {course.info && (
+              <>
+                <Spacer size={25} />
+                <DishDescription>{course.info}</DishDescription>
+              </>
+            )}
+            {index < menu.length - 1 && <Separator />}
+          </React.Fragment>
+        ))}
       </MenuContainer>
     </Card>
   );

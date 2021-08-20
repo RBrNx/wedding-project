@@ -22,6 +22,14 @@ query {
       time
       name
     }
+    menu {
+      name
+      choices {
+        name
+        description
+      }
+      info
+    }
   }
   getCurrentUser {
     eventId

@@ -10,7 +10,7 @@ import WeddingMenu from './components/WeddingMenu';
 
 const DetailsScreen = () => {
   const { eventInfo } = useAuth();
-  const { venue, schedule } = eventInfo;
+  const { venue, schedule, menu } = eventInfo;
 
   return (
     <Container>
@@ -24,7 +24,7 @@ const DetailsScreen = () => {
       <Spacer size={20} />
       <WeddingSchedule schedule={schedule} />
       <Spacer size={20} />
-      <WeddingMenu />
+      <WeddingMenu menu={menu} />
     </Container>
   );
 };
