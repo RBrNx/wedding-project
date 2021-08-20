@@ -114,7 +114,7 @@ const DashboardScreen = ({ navigation }) => {
         <Spacer size={20} />
         <MemoriesCard onPress={() => navigation.navigate('Memories')} />
         <Spacer size={20} />
-        <WeddingDetailsCard />
+        <WeddingDetailsCard onPress={() => navigation.navigate('Details')} />
         <Spacer size={20} />
         <RegistryCard onPress={() => navigation.navigate('Registry')} />
       </Container>
