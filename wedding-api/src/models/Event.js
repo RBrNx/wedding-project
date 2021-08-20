@@ -50,12 +50,30 @@ const ScheduleItemSchema = new Schema(
   { _id: false },
 );
 
+const MenuChoiceSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+  },
+  { _id: false },
+);
+
+const MenuCourseSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    choices: { type: [MenuChoiceSchema], required: true },
+    info: { type: String },
+  },
+  { _id: false },
+);
+
 const EventSchema = new Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
   spotifyConfig: { type: SpotifyConfigSchema },
   venue: { type: VenueSchema },
   schedule: { type: [ScheduleItemSchema] },
+  menu: { type: [MenuCourseSchema] },
 });
 
 export default EventSchema;

@@ -71,12 +71,24 @@ const AuthenticatedSchema = gql`
     name: String!
   }
 
+  type MenuChoice {
+    name: String!
+    description: String!
+  }
+
+  type MenuCourse {
+    name: String!
+    choices: [MenuChoice]!
+    info: String
+  }
+
   type Event {
     _id: ID!
     name: String!
     date: Date!
     venue: Venue
     schedule: [ScheduleItem]
+    menu: [MenuCourse]
   }
 
   extend type Query {
