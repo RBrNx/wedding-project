@@ -12,7 +12,7 @@ const WeddingMenu = ({ menu }) => {
       <HeadingText>Wedding Menu</HeadingText>
       <Spacer size={25} />
       <MenuContainer>
-        {menu.map((course, index) => (
+        {menu?.map((course, index) => (
           <React.Fragment key={index}>
             {course.choices.map((choice, choiceIndex) => (
               <React.Fragment key={choiceIndex}>

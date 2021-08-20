@@ -13,7 +13,7 @@ const WeddingSchedule = ({ schedule }) => {
     <Card>
       <HeadingText>Wedding Schedule</HeadingText>
       <Spacer size={25} />
-      {schedule.map(({ time, name }, index) => (
+      {schedule?.map(({ time, name }, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <React.Fragment key={index}>
           <EventText>{`${dayjs(time, 'HH:mm').format('h:mm A')} - ${name}`}</EventText>

@@ -9,9 +9,9 @@ import theme from 'styled-theming';
 import MapView, { Marker } from 'react-native-maps';
 
 const VenueDetails = ({ venue }) => {
-  const { name, address, email, phone, location, image } = venue;
-  const { town, country, postcode } = address;
-  const { latitude, longitude } = location;
+  const { name, address, email, phone, location, image } = venue || {};
+  const { town, country, postcode } = address || {};
+  const { latitude, longitude } = location || {};
 
   return (
     <Card>
@@ -34,20 +34,22 @@ const VenueDetails = ({ venue }) => {
       <Spacer size={15} />
       <VenueImage source={{ uri: image }} />
       <Spacer size={15} />
-      <MapContainer>
-        <VenueMap
-          provider='google'
-          pitchEnabled={false}
-          initialRegion={{
-            latitude,
-            longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          }}
-        >
-          <Marker coordinate={{ latitude, longitude }} title={name} />
-        </VenueMap>
-      </MapContainer>
+      {latitude && longitude && (
+        <MapContainer>
+          <VenueMap
+            provider='google'
+            pitchEnabled={false}
+            initialRegion={{
+              latitude,
+              longitude,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            }}
+          >
+            <Marker coordinate={{ latitude, longitude }} title={name} />
+          </VenueMap>
+        </MapContainer>
+      )}
     </Card>
   );
 };
