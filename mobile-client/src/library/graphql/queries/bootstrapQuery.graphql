@@ -18,6 +18,10 @@ query {
       }
       image
     }
+    schedule {
+      time
+      name
+    }
   }
   getCurrentUser {
     eventId

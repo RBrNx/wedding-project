@@ -1,25 +1,25 @@
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Spacer from 'library/components/Spacer';
 import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
 import theme from 'styled-theming';
 
-const WeddingSchedule = () => {
+dayjs.extend(customParseFormat);
+
+const WeddingSchedule = ({ schedule }) => {
   return (
     <Card>
       <HeadingText>Wedding Schedule</HeadingText>
       <Spacer size={25} />
-      <EventText>2:00 PM - Ceremony</EventText>
-      <Spacer size={5} />
-      <EventText>3:00 PM - Drinks Reception</EventText>
-      <Spacer size={5} />
-      <EventText>4:30 PM - Speeches</EventText>
-      <Spacer size={5} />
-      <EventText>5:00 PM - Wedding Breakfast</EventText>
-      <Spacer size={5} />
-      <EventText>7:30 PM - Evening Guests Arrival</EventText>
-      <Spacer size={5} />
-      <EventText>8:00 PM - First Dance</EventText>
+      {schedule.map(({ time, name }, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <React.Fragment key={index}>
+          <EventText>{`${dayjs(time, 'HH:mm').format('h:mm A')} - ${name}`}</EventText>
+          <Spacer size={5} />
+        </React.Fragment>
+      ))}
     </Card>
   );
 };
