@@ -42,11 +42,20 @@ const VenueSchema = new Schema(
   { _id: false },
 );
 
+const ScheduleItemSchema = new Schema(
+  {
+    time: { type: String, required: true },
+    name: { type: String, required: true },
+  },
+  { _id: false },
+);
+
 const EventSchema = new Schema({
   name: { type: String, required: true },
   date: { type: Date, required: true },
   spotifyConfig: { type: SpotifyConfigSchema },
   venue: { type: VenueSchema },
+  schedule: { type: [ScheduleItemSchema] },
 });
 
 export default EventSchema;

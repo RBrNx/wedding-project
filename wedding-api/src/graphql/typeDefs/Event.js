@@ -66,11 +66,17 @@ const AuthenticatedSchema = gql`
     image: URL!
   }
 
+  type ScheduleItem {
+    time: LocalTime!
+    name: String!
+  }
+
   type Event {
     _id: ID!
     name: String!
     date: Date!
     venue: Venue
+    schedule: [ScheduleItem]
   }
 
   extend type Query {
