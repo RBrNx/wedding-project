@@ -10,7 +10,7 @@ import WeddingMenu from './components/WeddingMenu';
 
 const DetailsScreen = () => {
   const { eventInfo } = useAuth();
-  const { venue, schedule, menu } = eventInfo;
+  const { venue, schedule, menu } = eventInfo || {};
 
   return (
     <Container>

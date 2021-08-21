@@ -1,24 +1,25 @@
-import { useQuery } from '@apollo/react-hooks';
-import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import EmptyMessage from 'library/components/EmptyMessage';
-import ErrorMessage from 'library/components/ErrorMessage';
-import LoadingIndicator from 'library/components/LoadingIndicator';
-import { Colours, Layout, Theme } from 'library/styles';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { Theme } from 'library/styles';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Feather } from '@expo/vector-icons';
 import { useAvoidKeyboard, useSnapPoints } from 'library/hooks';
 import Spacer from 'library/components/Spacer';
+import { useAuth } from 'context';
 import EditVenueCard from './EditVenueCard';
 import EditScheduleCard from './EditScheduleCard';
 import EditMenuCard from './EditMenuCard';
+import EditVenueSheet from './EditVenueSheet';
 
 const EditDetailsView = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
+  const [showEditVenueSheet, setShowEditVenueSheet] = useState(false);
+  const { eventInfo } = useAuth();
   const { keyboardHeight } = useAvoidKeyboard();
-
   const snapPoints = useSnapPoints();
+
+  const onSheetDismiss = () => {
+    setShowEditVenueSheet(false);
+  };
 
   return (
     <>
@@ -31,40 +32,17 @@ const EditDetailsView = ({ scrollPosition }) => {
         enableOverDrag={false}
       >
         <StyledBottomSheetScrollView keyboardHeight={keyboardHeight}>
-          <EditVenueCard />
+          <EditVenueCard venue={eventInfo?.venue} onPress={() => setShowEditVenueSheet(true)} />
           <Spacer size={20} />
           <EditScheduleCard />
           <Spacer size={20} />
           <EditMenuCard />
         </StyledBottomSheetScrollView>
       </BottomSheet>
-      {/* <EditQuestionSheet
-        active={showAddEditQuestionSheet}
-        onDismiss={onSheetDismiss}
-        question={questionToEdit || questionToFollow}
-        parentQuestion={parentQuestion}
-        isFollowUpQuestion={!!questionToFollow}
-        editMode={editMode}
-      />
-      <StandardActionButton
-        label='Add Question'
-        icon={<StyledIcon name='plus' size={20} />}
-        onPress={() => setShowAddEditQuestionSheet(true)}
-        removeElevation={showAddEditQuestionSheet}
-      /> */}
+      <EditVenueSheet active={showEditVenueSheet} onDismiss={onSheetDismiss} venue={eventInfo?.venue} />
     </>
   );
 };
-
-// const CardContainer = styled(Animated.View)`
-//   padding-horizontal: 5%;
-// `;
-
-// const ListEmptyContainer = styled.View`
-//   height: ${height * 0.4}px;
-//   padding-horizontal: 5%;
-//   ${Layout.flexCenter};
-// `;
 
 const BottomSheetBackground = styled.View`
   background-color: ${Theme.background};
@@ -78,9 +56,5 @@ const StyledBottomSheetScrollView = styled(BottomSheetScrollView).attrs(props =>
     paddingBottom: props.keyboardHeight || 20,
   },
 }))``;
-
-const StyledIcon = styled(Feather)`
-  color: ${Colours.neutral.white};
-`;
 
 export default EditDetailsView;
