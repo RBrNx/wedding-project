@@ -9,9 +9,17 @@ const getEventInfo = async (parent, args, { currentUser, db }) => {
     const event = await EventModel.findById(currentUser.eventId).lean();
 
     const expires = new Date(new Date().getTime() + 1000 * 10).getTime();
-    const signedUrl = signer.getSignedUrl({ url: event.venue.image, expires });
+    const signedUrl = event?.venue?.image ? signer.getSignedUrl({ url: event.venue.image, expires }) : null;
 
-    return { ...event, venue: { ...event.venue, image: signedUrl } };
+    return {
+      ...event,
+      ...(event.venue && {
+        venue: {
+          ...event.venue,
+          ...(signedUrl && { image: signedUrl }),
+        },
+      }),
+    };
   } catch (error) {
     return error;
   }
@@ -82,6 +90,46 @@ const createEvent = async (parent, { input }, { db }) => {
   }
 };
 
+const addVenueDetails = async (parent, { input }, { currentUser, db }) => {
+  let session;
+
+  try {
+    session = await db.startSession();
+    session.startTransaction();
+
+    const EventModel = db.model('Event');
+
+    const existingEventDoc = await EventModel.findById(currentUser.eventId).lean();
+
+    const eventDoc = await EventModel.findOneAndUpdate(
+      { _id: currentUser.eventId },
+      {
+        venue: {
+          ...existingEventDoc.venue,
+          ...input,
+        },
+      },
+      { session, new: true },
+    );
+
+    await session.commitTransaction();
+
+    return {
+      success: true,
+      message: 'Venue details added successfully',
+      payload: eventDoc,
+    };
+  } catch (error) {
+    console.error('addVenueDetails', error);
+    if (session) await session.abortTransaction();
+
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export default {
   unauthenticated: {
     Mutation: {
@@ -91,6 +139,9 @@ export default {
   authenticated: {
     Query: {
       getEventInfo,
+    },
+    Mutation: {
+      addVenueDetails,
     },
   },
 };

@@ -63,7 +63,7 @@ const AuthenticatedSchema = gql`
     email: EmailAddress!
     phone: PhoneNumber!
     location: Location!
-    image: URL!
+    image: URL
   }
 
   type ScheduleItem {
@@ -91,8 +91,36 @@ const AuthenticatedSchema = gql`
     menu: [MenuCourse]
   }
 
+  type AddVenueDetailsResponse implements MutationResponse {
+    success: Boolean!
+    message: String
+    payload: Event
+  }
+
+  input AddressInput {
+    town: String!
+    country: String!
+    postcode: String!
+  }
+
+  input LocationInput {
+    latitude: Float!
+    longitude: Float!
+  }
+
+  input AddVenueDetailsInput {
+    name: String
+    address: AddressInput
+    email: EmailAddress
+    phone: PhoneNumber
+    location: LocationInput
+  }
+
   extend type Query {
     getEventInfo: Event
+  }
+  extend type Mutation {
+    addVenueDetails(input: AddVenueDetailsInput!): AddVenueDetailsResponse
   }
 `;
 
