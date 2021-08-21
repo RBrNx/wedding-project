@@ -6,7 +6,7 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import StandardPillPressable from 'library/components/StandardPillPressable';
 import { Feather } from '@expo/vector-icons';
 import theme from 'styled-theming';
-import MapView, { Marker } from 'react-native-maps';
+import GoogleMapsView from './GoogleMapsView';
 
 const VenueDetails = ({ venue }) => {
   const { name, address, email, phone, location, image } = venue || {};
@@ -34,22 +34,7 @@ const VenueDetails = ({ venue }) => {
       <Spacer size={15} />
       <VenueImage source={{ uri: image }} />
       <Spacer size={15} />
-      {latitude && longitude && (
-        <MapContainer>
-          <VenueMap
-            provider='google'
-            pitchEnabled={false}
-            initialRegion={{
-              latitude,
-              longitude,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
-            }}
-          >
-            <Marker coordinate={{ latitude, longitude }} title={name} />
-          </VenueMap>
-        </MapContainer>
-      )}
+      {latitude && longitude && <GoogleMapsView latitude={latitude} longitude={longitude} title={name} />}
     </Card>
   );
 };
@@ -92,18 +77,6 @@ const VenueImage = styled.Image`
   width: 100%;
   resize-mode: contain;
   ${Outlines.borderRadius};
-`;
-
-const MapContainer = styled.View`
-  ${Outlines.borderRadius};
-  overflow: hidden;
-`;
-
-const VenueMap = styled(MapView)`
-  height: 200px;
-  width: 100%;
-  ${Outlines.borderRadius};
-  overflow: hidden;
 `;
 
 export default VenueDetails;
