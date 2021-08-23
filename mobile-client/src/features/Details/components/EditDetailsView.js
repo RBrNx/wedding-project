@@ -10,11 +10,13 @@ import EditScheduleCard from './EditScheduleCard';
 import EditMenuCard from './EditMenuCard';
 import EditVenueSheet from './EditVenueSheet';
 import EditScheduleSheet from './EditScheduleSheet';
+import EditMenuSheet from './EditMenuSheet';
 
 const EditDetailsView = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
   const [showEditVenueSheet, setShowEditVenueSheet] = useState(false);
   const [showEditScheduleSheet, setShowEditScheduleSheet] = useState(false);
+  const [showEditMenuSheet, setShowEditMenuSheet] = useState(false);
   const { eventInfo } = useAuth();
   const { keyboardHeight } = useAvoidKeyboard();
   const snapPoints = useSnapPoints();
@@ -22,6 +24,7 @@ const EditDetailsView = ({ scrollPosition }) => {
   const onSheetDismiss = () => {
     setShowEditVenueSheet(false);
     setShowEditScheduleSheet(false);
+    setShowEditMenuSheet(false);
   };
 
   return (
@@ -44,6 +47,7 @@ const EditDetailsView = ({ scrollPosition }) => {
       </BottomSheet>
       <EditVenueSheet active={showEditVenueSheet} onDismiss={onSheetDismiss} venue={eventInfo?.venue} />
       <EditScheduleSheet active={showEditScheduleSheet} onDismiss={onSheetDismiss} schedule={eventInfo?.schedule} />
+      <EditMenuSheet active={showEditMenuSheet} onDismiss={onSheetDismiss} menu={eventInfo?.menu} />
     </>
   );
 };

@@ -97,8 +97,6 @@ const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
         {Object.entries(scheduleState).map(([scheduleItemId, scheduleItem], index) => {
           const { time, name } = scheduleItem;
 
-          console.log({ time, name });
-
           return (
             <React.Fragment key={scheduleItemId}>
               <Card>
