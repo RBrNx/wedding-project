@@ -39,7 +39,7 @@ const EditDetailsView = ({ scrollPosition }) => {
           <Spacer size={20} />
           <EditScheduleCard schedule={eventInfo?.schedule} onPress={() => setShowEditScheduleSheet(true)} />
           <Spacer size={20} />
-          <EditMenuCard />
+          <EditMenuCard menu={eventInfo?.menu} onPress={() => setShowEditMenuSheet(true)} />
         </StyledBottomSheetScrollView>
       </BottomSheet>
       <EditVenueSheet active={showEditVenueSheet} onDismiss={onSheetDismiss} venue={eventInfo?.venue} />
