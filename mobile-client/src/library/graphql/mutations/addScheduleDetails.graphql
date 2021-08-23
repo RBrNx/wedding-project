@@ -1,0 +1,38 @@
+mutation($input: AddScheduleDetailsInput!) {
+  addScheduleDetails(input: $input) {
+    success
+    message
+    payload {
+      _id
+      name
+      date
+      venue {
+        name
+        address {
+          town
+          country
+          postcode
+        }
+        email
+        phone
+        location {
+          latitude
+          longitude
+        }
+        image
+      }
+      schedule {
+        time
+        name
+      }
+      menu {
+        name
+        choices {
+          name
+          description
+        }
+        info
+      }
+    }
+  }
+}
