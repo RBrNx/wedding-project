@@ -50,6 +50,14 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
   };
 
   const resetState = () => {
+    setName(null);
+    setTown(null);
+    setCountry(null);
+    setPostcode(null);
+    setEmail(null);
+    setPhone(null);
+    setLatitude(null);
+    setLongitude(null);
     setIsSubmitting(false);
   };
 
@@ -57,7 +65,7 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
     try {
       setIsSubmitting(true);
 
-      await addVenueDetails({
+      const { data } = await addVenueDetails({
         variables: {
           input: {
             name,
@@ -75,9 +83,11 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
           },
         },
       });
-      // const { success, payload } = data?.addVenueDetails;
 
-      onSheetDismiss();
+      const { success } = data?.addVenueDetails;
+
+      if (success) onSheetDismiss();
+      else setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
       const { message } = parseError(error);
