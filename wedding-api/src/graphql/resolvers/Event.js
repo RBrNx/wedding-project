@@ -163,6 +163,39 @@ const addScheduleDetails = async (parent, { input }, { currentUser, db }) => {
   }
 };
 
+const addMenuDetails = async (parent, { input }, { currentUser, db }) => {
+  let session;
+
+  try {
+    session = await db.startSession();
+    session.startTransaction();
+
+    const EventModel = db.model('Event');
+
+    const eventDoc = await EventModel.findOneAndUpdate(
+      { _id: currentUser.eventId },
+      { menu: [...input.menu] },
+      { session, new: true },
+    );
+
+    await session.commitTransaction();
+
+    return {
+      success: true,
+      message: 'Menu details added successfully',
+      payload: eventDoc,
+    };
+  } catch (error) {
+    console.error('addMenuDetails', error);
+    if (session) await session.abortTransaction();
+
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export default {
   unauthenticated: {
     Mutation: {
@@ -176,6 +209,7 @@ export default {
     Mutation: {
       addVenueDetails,
       addScheduleDetails,
+      addMenuDetails,
     },
   },
 };

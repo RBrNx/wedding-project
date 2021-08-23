@@ -125,12 +125,28 @@ const AuthenticatedSchema = gql`
     schedule: [ScheduleItemInput!]!
   }
 
+  input CourseChoiceInput {
+    name: String!
+    description: String!
+  }
+
+  input MenuCourseInput {
+    name: String!
+    info: String
+    choices: [CourseChoiceInput!]!
+  }
+
+  input AddMenuDetailsInput {
+    menu: [MenuCourseInput!]!
+  }
+
   extend type Query {
     getEventInfo: Event
   }
   extend type Mutation {
     addVenueDetails(input: AddScheduleDetailsInput!): EventResponse
     addScheduleDetails(input: AddScheduleDetailsInput!): EventResponse
+    addMenuDetails(input: AddMenuDetailsInput!): EventResponse
   }
 `;
 
