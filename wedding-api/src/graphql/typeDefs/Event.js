@@ -91,7 +91,7 @@ const AuthenticatedSchema = gql`
     menu: [MenuCourse]
   }
 
-  type AddVenueDetailsResponse implements MutationResponse {
+  type EventResponse implements MutationResponse {
     success: Boolean!
     message: String
     payload: Event
@@ -116,11 +116,21 @@ const AuthenticatedSchema = gql`
     location: LocationInput
   }
 
+  input ScheduleItemInput {
+    time: LocalTime!
+    name: String!
+  }
+
+  input AddScheduleDetailsInput {
+    schedule: [ScheduleItemInput!]!
+  }
+
   extend type Query {
     getEventInfo: Event
   }
   extend type Mutation {
-    addVenueDetails(input: AddVenueDetailsInput!): AddVenueDetailsResponse
+    addVenueDetails(input: AddScheduleDetailsInput!): EventResponse
+    addScheduleDetails(input: AddScheduleDetailsInput!): EventResponse
   }
 `;
 
