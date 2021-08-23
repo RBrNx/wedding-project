@@ -9,16 +9,19 @@ import EditVenueCard from './EditVenueCard';
 import EditScheduleCard from './EditScheduleCard';
 import EditMenuCard from './EditMenuCard';
 import EditVenueSheet from './EditVenueSheet';
+import EditScheduleSheet from './EditScheduleSheet';
 
 const EditDetailsView = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
   const [showEditVenueSheet, setShowEditVenueSheet] = useState(false);
+  const [showEditScheduleSheet, setShowEditScheduleSheet] = useState(false);
   const { eventInfo } = useAuth();
   const { keyboardHeight } = useAvoidKeyboard();
   const snapPoints = useSnapPoints();
 
   const onSheetDismiss = () => {
     setShowEditVenueSheet(false);
+    setShowEditScheduleSheet(false);
   };
 
   return (
@@ -34,12 +37,13 @@ const EditDetailsView = ({ scrollPosition }) => {
         <StyledBottomSheetScrollView keyboardHeight={keyboardHeight}>
           <EditVenueCard venue={eventInfo?.venue} onPress={() => setShowEditVenueSheet(true)} />
           <Spacer size={20} />
-          <EditScheduleCard />
+          <EditScheduleCard schedule={eventInfo?.schedule} onPress={() => setShowEditScheduleSheet(true)} />
           <Spacer size={20} />
           <EditMenuCard />
         </StyledBottomSheetScrollView>
       </BottomSheet>
       <EditVenueSheet active={showEditVenueSheet} onDismiss={onSheetDismiss} venue={eventInfo?.venue} />
+      <EditScheduleSheet active={showEditScheduleSheet} onDismiss={onSheetDismiss} schedule={eventInfo?.schedule} />
     </>
   );
 };
