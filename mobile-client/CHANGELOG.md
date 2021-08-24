@@ -1,3 +1,49 @@
+# [0.19.0](https://github.com/RBrNx/wedding-project/compare/v0.18.0...v0.19.0) (2021-08-24)
+
+
+### Bug Fixes
+
+* add invitationId to createGuest typedef ([3b622ca](https://github.com/RBrNx/wedding-project/commit/3b622ca175a85e367a51abb8c09a403ed84e3464))
+* avoid app crashing if venue, schedule or menu properties are null ([29856db](https://github.com/RBrNx/wedding-project/commit/29856db9be03a2d6e2327dd75abeb9da42435ca7))
+* avoid errors when venue or image don't exist ([09313c4](https://github.com/RBrNx/wedding-project/commit/09313c4934a88cbeb02188ac882c0e6d7c73c8d5))
+* await createGuestUser ([01ac374](https://github.com/RBrNx/wedding-project/commit/01ac374140716a7cbfe7561b40aae7766a376098))
+* eslint issue in ReText ([ffc7712](https://github.com/RBrNx/wedding-project/commit/ffc7712b0040033b59691aac837b4d277a1f33c6))
+* eslint issues ([7a48f7d](https://github.com/RBrNx/wedding-project/commit/7a48f7d80e294dd824b0dd048e7772c1839f5ded))
+* reset state in EditVenueSheet ([c21c837](https://github.com/RBrNx/wedding-project/commit/c21c8377deca24422e78d22609ac75cb03ffe9e4))
+
+
+### Features
+
+* add ability to add/edit schedule details ([9432a46](https://github.com/RBrNx/wedding-project/commit/9432a46817fcf4b5b2305c9887abc78158f37236))
+* add ability to navigate to Details screen from Dashboard ([6996a1d](https://github.com/RBrNx/wedding-project/commit/6996a1df3c0825ac55d1596ac58b40c7bd674d08))
+* add bottomSheetShadow to outlines.js ([e2db3e0](https://github.com/RBrNx/wedding-project/commit/e2db3e040ffb4f4384fd55ea121ef1ba245185ef))
+* add icon prop to StandardPillPressable ([3899a5f](https://github.com/RBrNx/wedding-project/commit/3899a5fac273f6d70a4b6f4c4981b122631a82f2))
+* add LocalTime scalar and resolver ([08574ca](https://github.com/RBrNx/wedding-project/commit/08574ca53b7866fd775a3b639519befe2471cc9f))
+* add Menu to Event schema and typedefs ([6c7011b](https://github.com/RBrNx/wedding-project/commit/6c7011b92b9b37ef045062534136bd63cde712c1))
+* add PhoneNumber scalar and resolver ([03e39eb](https://github.com/RBrNx/wedding-project/commit/03e39eb4b04162bfa027877456c5dfc1870a0374))
+* add venue details to Event model and typedefs, along with retreiving venue image via a signed url ([4543356](https://github.com/RBrNx/wedding-project/commit/45433568e7edba50cd04287c01786789177102ef))
+* create addMenuDetails mutation resolver ([1b1a650](https://github.com/RBrNx/wedding-project/commit/1b1a65000eb3d6b69f5d6903c943217c85e64829))
+* create addScheduleDetails mutation resolver ([26cdd66](https://github.com/RBrNx/wedding-project/commit/26cdd66cff076418cc93129fab5bb766f5596eb6))
+* create DetailsIllustration component ([f13941e](https://github.com/RBrNx/wedding-project/commit/f13941ee13d829819806dacea4eb3cc96b2ae3c6))
+* create EditMenuCard, EditScheduleCard and EditVenueCard components to enable admins to add the relevant details ([3d224cd](https://github.com/RBrNx/wedding-project/commit/3d224cda8f0dfba3d00e7b1a95b5b6b4e876f88f))
+* create EditMenuSheet to allow admin to add/edit the Wedding Menu ([28680ab](https://github.com/RBrNx/wedding-project/commit/28680ab4aa1e180b7e83e2d2e210b4542489a001))
+* create GoogleMapsView component ([2fd5a39](https://github.com/RBrNx/wedding-project/commit/2fd5a3977c770be12344d8bb37dc2d6ee4840934))
+* create initial version of DetailsList and DetailsScreen ([9fbbdd7](https://github.com/RBrNx/wedding-project/commit/9fbbdd7e8ed7d5a3841012c46679308713c9be27))
+* create useSnapPoints hook ([de93f3d](https://github.com/RBrNx/wedding-project/commit/de93f3d191f12f6a4ee90f0219b311897b9ce007))
+* create WeddingMenu component ([78c111d](https://github.com/RBrNx/wedding-project/commit/78c111d3cfbfd92da4ccf8575eb6367eacd3845d))
+* create WeddingSchedule component ([be382bd](https://github.com/RBrNx/wedding-project/commit/be382bd34f5796e758c78012aa3f23d021652a4c))
+* created EditVenueSheet and addVenueDetails mutation ([d06337f](https://github.com/RBrNx/wedding-project/commit/d06337f2f2f20bf3a47bb79c04bcaac45e06932e))
+* created ScheduleSchema and added it to the Event typedefs ([f9e3ad5](https://github.com/RBrNx/wedding-project/commit/f9e3ad599549ad973eaea01b98e3e4bce6c8a23a))
+* display Menu in EditMenuCard ([9613d15](https://github.com/RBrNx/wedding-project/commit/9613d156b8f4549cf5054364067ac423786d74c4))
+* display schedule in EditScheduleCard ([e7e9a6e](https://github.com/RBrNx/wedding-project/commit/e7e9a6ea3c930cb698afc5b2638745cc6b2d6634))
+* first attempt at EditDetailsView and EditDetailsScreen ([b0d9e44](https://github.com/RBrNx/wedding-project/commit/b0d9e441ada3d5c34ca6424f72b21d0f2e5e47c0))
+* load venue information from api ([3381aef](https://github.com/RBrNx/wedding-project/commit/3381aefb878d3c5ef77622d30ae4c30a5c8b6031))
+* load wedding menu from graphql api ([9312443](https://github.com/RBrNx/wedding-project/commit/93124430d187a9a8d8644317233e4e066a4a1eac))
+* load wedding schedule from graph api ([974e9e2](https://github.com/RBrNx/wedding-project/commit/974e9e29b5427a0e0125e2d2aef4c1c92fecf697))
+* move VenueMap into VenueDetails component and remove DetailsList in favour of having DetailsScreen be a scrollview and it's styling now more closely matches the rest of the app ([6038e54](https://github.com/RBrNx/wedding-project/commit/6038e540e2257b78bd9e9672cbd8a70ebc128fea))
+* replace DetailsIllustration ([fec34da](https://github.com/RBrNx/wedding-project/commit/fec34da685dfe0a20d82df0eb348a3039f2f525e))
+* Venue details can now be added or edited by clicking on the EditVenueCard ([1d00872](https://github.com/RBrNx/wedding-project/commit/1d00872330812b8f75a9af2b1c342759d10197b8))
+
 # [0.18.0](https://github.com/RBrNx/wedding-project/compare/v0.17.2...v0.18.0) (2021-08-09)
 
 
