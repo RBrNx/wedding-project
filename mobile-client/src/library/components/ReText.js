@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { TextInput } from 'react-native';
 import Animated, { useAnimatedProps, useDerivedValue } from 'react-native-reanimated';

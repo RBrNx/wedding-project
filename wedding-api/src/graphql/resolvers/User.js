@@ -57,7 +57,7 @@ const createGuest = async (parent, { invitationId, guest }, { currentUser, db })
     session = await db.startSession();
     session.startTransaction();
 
-    const user = createGuestUser(guest, invitationId, db, currentUser, session);
+    const user = await createGuestUser(guest, invitationId, db, currentUser, session);
     userId = user._id.toString();
 
     await session.commitTransaction();

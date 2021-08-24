@@ -5,9 +5,13 @@ const schema = gql`
 
   scalar Time
 
+  scalar LocalTime
+
   scalar DateTime
 
   scalar EmailAddress
+
+  scalar PhoneNumber
 
   scalar URL
 
