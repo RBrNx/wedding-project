@@ -46,14 +46,107 @@ const UnauthenticatedSchema = gql`
 `;
 
 const AuthenticatedSchema = gql`
+  type Address {
+    town: String!
+    country: String!
+    postcode: String!
+  }
+
+  type Location {
+    latitude: Float!
+    longitude: Float!
+  }
+
+  type Venue {
+    name: String!
+    address: Address!
+    email: EmailAddress!
+    phone: PhoneNumber!
+    location: Location!
+    image: URL
+  }
+
+  type ScheduleItem {
+    time: LocalTime!
+    name: String!
+  }
+
+  type MenuChoice {
+    name: String!
+    description: String!
+  }
+
+  type MenuCourse {
+    name: String!
+    choices: [MenuChoice]!
+    info: String
+  }
+
   type Event {
     _id: ID!
     name: String!
     date: Date!
+    venue: Venue
+    schedule: [ScheduleItem]
+    menu: [MenuCourse]
+  }
+
+  type EventResponse implements MutationResponse {
+    success: Boolean!
+    message: String
+    payload: Event
+  }
+
+  input AddressInput {
+    town: String!
+    country: String!
+    postcode: String!
+  }
+
+  input LocationInput {
+    latitude: Float!
+    longitude: Float!
+  }
+
+  input AddVenueDetailsInput {
+    name: String
+    address: AddressInput
+    email: EmailAddress
+    phone: PhoneNumber
+    location: LocationInput
+  }
+
+  input ScheduleItemInput {
+    time: LocalTime!
+    name: String!
+  }
+
+  input AddScheduleDetailsInput {
+    schedule: [ScheduleItemInput!]!
+  }
+
+  input CourseChoiceInput {
+    name: String!
+    description: String!
+  }
+
+  input MenuCourseInput {
+    name: String!
+    info: String
+    choices: [CourseChoiceInput!]!
+  }
+
+  input AddMenuDetailsInput {
+    menu: [MenuCourseInput!]!
   }
 
   extend type Query {
     getEventInfo: Event
+  }
+  extend type Mutation {
+    addVenueDetails(input: AddScheduleDetailsInput!): EventResponse
+    addScheduleDetails(input: AddScheduleDetailsInput!): EventResponse
+    addMenuDetails(input: AddMenuDetailsInput!): EventResponse
   }
 `;
 

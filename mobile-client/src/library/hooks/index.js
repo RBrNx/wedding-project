@@ -12,6 +12,7 @@ import useMemoryUploader from './useMemoryUploader';
 import usePreventGoingBack from './usePreventGoingBack';
 import useQuestionMutation from './useQuestionMutation';
 import useRefreshControl from './useRefreshControl';
+import useSnapPoints from './useSnapPoints';
 import useSubmitRSVP from './useSubmitRSVP';
 import useVector from './useVector';
 
@@ -30,6 +31,7 @@ export {
   usePreventGoingBack,
   useQuestionMutation,
   useRefreshControl,
+  useSnapPoints,
   useSubmitRSVP,
   useVector,
 };

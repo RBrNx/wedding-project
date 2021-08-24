@@ -9,6 +9,7 @@ import SettingsScreen from 'features/Settings/SettingsScreen';
 import WorkInProgressScreen from 'features/WorkInProgress/WorkInProgressScreen';
 import DashboardScreen from 'features/Dashboard/DashboardScreen';
 import MemoriesScreen from 'features/Memories/MemoriesScreen';
+import DetailsScreen from 'features/Details/DetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,13 @@ const GuestHomeNavigator = () => {
         component={WorkInProgressScreen}
         options={{
           tabBarIcon: ({ color, size }) => <Feather name='gift' color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name='Details'
+        component={DetailsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name='map' color={color} size={size} />,
         }}
       />
       <Tab.Screen
