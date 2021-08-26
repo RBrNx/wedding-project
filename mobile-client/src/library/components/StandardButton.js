@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/native';
 import { darken } from 'library/utils/colours';
-import { Colours, Outlines, Typography } from 'library/styles';
+import { Colours, Outlines, Theme, Typography } from 'library/styles';
 import StandardPressable from './StandardPressable';
 
 const StandardButton = ({ onPress, raised, outline, text, loading, icon, style, pressedStyle, textStyle }) => {
@@ -10,7 +10,9 @@ const StandardButton = ({ onPress, raised, outline, text, loading, icon, style, 
       {!loading && (
         <>
           <InvisibleIcon>{icon && icon()}</InvisibleIcon>
-          <ButtonText style={textStyle}>{text}</ButtonText>
+          <ButtonText style={textStyle} outline={outline}>
+            {text}
+          </ButtonText>
           {icon && icon()}
         </>
       )}
@@ -47,6 +49,11 @@ const ButtonText = styled.Text`
   flex: 1;
   text-align: center;
   padding-vertical: 15px;
+  ${props =>
+    props.outline &&
+    css`
+      color: ${Theme.headerTextColour};
+    `}
 `;
 
 const StyledActivityIndicator = styled.ActivityIndicator`
