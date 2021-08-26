@@ -144,7 +144,7 @@ const AuthenticatedSchema = gql`
     getEventInfo: Event
   }
   extend type Mutation {
-    addVenueDetails(input: AddScheduleDetailsInput!): EventResponse
+    addVenueDetails(input: AddVenueDetailsInput!): EventResponse
     addScheduleDetails(input: AddScheduleDetailsInput!): EventResponse
     addMenuDetails(input: AddMenuDetailsInput!): EventResponse
   }
