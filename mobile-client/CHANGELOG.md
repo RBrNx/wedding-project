@@ -1,3 +1,11 @@
+## [0.19.1](https://github.com/RBrNx/wedding-project/compare/v0.19.0...v0.19.1) (2021-08-26)
+
+
+### Bug Fixes
+
+* change addVenueDetails input type to AddVenueDetailsInput ([56ec994](https://github.com/RBrNx/wedding-project/commit/56ec994a6f2e27d890c0eb7e94b645bc46e8df62))
+* change StandardButton text colour when outline is set to true ([56d53c3](https://github.com/RBrNx/wedding-project/commit/56d53c30f0525d5a6decb66e457e6bd1afaf3e58))
+
 # [0.19.0](https://github.com/RBrNx/wedding-project/compare/v0.18.0...v0.19.0) (2021-08-24)
 
 
