@@ -17,6 +17,7 @@ import { AlertType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
 import FormInput from 'library/components/FormInput';
+import { stripTypenames } from 'library/utils/stripTypenames';
 
 const MenuChoiceForm = ({ courseIndex, control }) => {
   const { fields, append } = useFieldArray({
@@ -71,12 +72,7 @@ const EditMenuSheet = ({ active, onDismiss, menu }) => {
 
   useEffect(() => {
     if (active && menu) {
-      const loadedMenu = menu.map(({ name, info, choices }) => ({
-        name,
-        info,
-        choices: choices.map(({ name: choiceName, description }) => ({ name: choiceName, description })),
-      }));
-      formMethods.setValue('menu', loadedMenu);
+      formMethods.setValue('menu', stripTypenames(menu));
     }
   }, [active]);
 
