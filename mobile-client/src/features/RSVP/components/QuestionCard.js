@@ -6,8 +6,8 @@ import { QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
+import EnumLabel from 'library/components/EnumLabel';
 import { getRequiredAnswer } from '../helpers';
-import EnumLabel from './EnumLabel';
 
 const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
   const { type, title, followUpQuestions, guestType } = question;

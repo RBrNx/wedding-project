@@ -24,7 +24,6 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const { keyboardHeight } = useAvoidKeyboard();
-
   const formMethods = useForm({
     defaultValues: {
       venue: {

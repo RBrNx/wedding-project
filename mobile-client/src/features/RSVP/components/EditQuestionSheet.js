@@ -20,8 +20,8 @@ import { darken } from 'library/utils/colours';
 import { ActivityIndicator } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
 import StandardSelectInput from 'library/components/StandardSelectInput';
+import EnumLabel from 'library/components/EnumLabel';
 import { toOrdinalSuffix } from '../helpers';
-import EnumLabel from './EnumLabel';
 
 const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQuestion, parentQuestion }) => {
   const [questionType, setQuestionType] = useState(null);
