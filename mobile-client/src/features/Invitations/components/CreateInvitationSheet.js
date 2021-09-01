@@ -4,43 +4,49 @@ import styled from 'styled-components';
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import BottomSheetModal from 'library/components/BottomSheetModal';
-import StandardTextInput from 'library/components/StandardTextInput';
 import { useAvoidKeyboard, useBottomSheetActionButton } from 'library/hooks';
 import StandardActionButton from 'library/components/StandardActionButton';
-import { ActivityIndicator, Switch } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType, InvitationType } from 'library/enums';
-import EnumLabel from 'features/RSVP/components/EnumLabel';
 import { toOrdinalSuffix } from 'features/RSVP/helpers';
 import StandardPressable from 'library/components/StandardPressable';
-import { nanoid } from 'nanoid';
 import CREATE_INVITATION from 'library/graphql/mutations/createInvitationGroup.graphql';
 import useInvitationMutation from 'library/hooks/useInvitationMutation';
+import { FormProvider, useFieldArray, useForm, useWatch } from 'react-hook-form';
+import FormInput from 'library/components/FormInput';
 
 const CreateInvitationSheet = ({ active, onDismiss }) => {
-  const [invitationType, setInvitationType] = useState(null);
-  const [guests, setGuests] = useState({ [nanoid()]: { firstName: null, lastName: null } });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createInvitation] = useInvitationMutation(CREATE_INVITATION);
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const { keyboardHeight } = useAvoidKeyboard();
+  const formMethods = useForm({
+    defaultValues: {
+      type: null,
+      guests: [{ firstName: null, lastName: null, hasPlusOne: false }],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control: formMethods.control,
+    name: 'guests',
+  });
+  const guests = useWatch({ control: formMethods.control, name: 'guests' });
 
   const resetState = () => {
-    setGuests([{ firstName: null, lastName: null }]);
-    setInvitationType(null);
+    formMethods.reset();
     setIsSubmitting(false);
   };
 
-  const createNewInvitation = async () => {
+  const createNewInvitation = async form => {
     try {
       setIsSubmitting(true);
-      const guestsArray = [...Object.values(guests).map(guest => ({ ...guest }))];
 
       const { data } = await createInvitation({
-        variables: { invitationGroup: { type: invitationType, guests: guestsArray } },
+        variables: { invitationGroup: { ...form } },
       });
 
       const { success } = data?.createInvitationGroup;
@@ -58,15 +64,11 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
   };
 
   const addGuest = () => {
-    setGuests({
-      ...guests,
-      [nanoid()]: { firstName: null, lastName: null },
-    });
+    append({ firstName: null, lastName: null, hasPlusOne: false });
   };
 
-  const removeGuest = guestId => {
-    const filteredGuests = Object.fromEntries(Object.entries(guests).filter(([id]) => id !== guestId));
-    setGuests(filteredGuests);
+  const removeGuest = guestIndex => {
+    remove(guestIndex);
   };
 
   return (
@@ -80,7 +82,7 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
           icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledIcon name='save' size={22} />}
           containerStyle={{ zIndex: 99 }}
           style={buttonAnimatedStyle}
-          onPress={createNewInvitation}
+          onPress={formMethods.handleSubmit(createNewInvitation)}
         />
       }
     >
@@ -90,80 +92,40 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
         <Spacer size={10} />
         <ModalSubtitle>Add multiple guests from a single household!</ModalSubtitle>
         <Spacer size={45} />
-        <Card>
-          <QuestionText>What type of invitation do they get?</QuestionText>
-          <InvitationTypeContainer>
-            {Object.keys(InvitationType).map(type => {
-              const isSelected = type === invitationType;
-              return (
-                <EnumLabel
-                  key={type}
-                  type={type}
-                  selected={isSelected}
-                  onPress={() => setInvitationType(type)}
-                  enumObject={InvitationType}
-                />
-              );
-            })}
-          </InvitationTypeContainer>
-        </Card>
-        <Spacer size={15} />
-        {Object.entries(guests).map(([guestId, guest], index) => {
-          const label = `${toOrdinalSuffix(index + 1)} Guest`;
-          const { firstName, lastName, hasPlusOne } = guest;
+        <FormProvider {...formMethods}>
+          <Card>
+            <QuestionText>What type of invitation do they get?</QuestionText>
+            <FormInput name='type' type='EnumSelect' enumObject={InvitationType} />
+          </Card>
+          <Spacer size={15} />
+          {fields.map((guest, guestIndex) => {
+            const label = `${toOrdinalSuffix(guestIndex + 1)} Guest`;
 
-          return (
-            <Card key={guestId}>
-              <ChoiceContainer>
-                <ModalSubtitle>{label}</ModalSubtitle>
-                <DeleteButton size={40} onPress={() => removeGuest(guestId)}>
-                  <TrashIcon name='trash-2' size={25} />
-                </DeleteButton>
-              </ChoiceContainer>
-              <Spacer size={15} />
-              <QuestionText>What is their first name?</QuestionText>
-              <StandardTextInput
-                value={firstName}
-                label={`Guest's first name`}
-                onChangeText={value =>
-                  setGuests({
-                    ...guests,
-                    [guestId]: { ...guests[guestId], firstName: value },
-                  })
-                }
-                themeColourOverride='#fff'
-              />
-              <Spacer size={30} />
-              <QuestionText>What is their last name?</QuestionText>
-              <StandardTextInput
-                value={lastName}
-                label={`Guest's last name`}
-                onChangeText={value =>
-                  setGuests({
-                    ...guests,
-                    [guestId]: { ...guests[guestId], lastName: value },
-                  })
-                }
-                themeColourOverride='#fff'
-              />
-              <Spacer size={30} />
-              <QuestionText>Are they allowed a Plus One?</QuestionText>
-              <SwitchContainer>
-                <Switch
-                  onValueChange={value =>
-                    setGuests({
-                      ...guests,
-                      [guestId]: { ...guests[guestId], hasPlusOne: value },
-                    })
-                  }
-                  value={hasPlusOne}
-                />
-              </SwitchContainer>
-            </Card>
-          );
-        })}
+            return (
+              <Card key={guest.id}>
+                <ChoiceContainer>
+                  <ModalSubtitle>{label}</ModalSubtitle>
+                  <DeleteButton size={40} onPress={() => removeGuest(guestIndex)}>
+                    <TrashIcon name='trash-2' size={25} />
+                  </DeleteButton>
+                </ChoiceContainer>
+                <Spacer size={15} />
+                <QuestionText>What is their first name?</QuestionText>
+                <FormInput name={`guests.${guestIndex}.firstName`} label={`Guest's first name`} />
+                <Spacer size={30} />
+                <QuestionText>What is their last name?</QuestionText>
+                <FormInput name={`guests.${guestIndex}.lastName`} label={`Guest's last name`} />
+                <Spacer size={30} />
+                <QuestionText>Are they allowed a Plus One?</QuestionText>
+                <SwitchContainer>
+                  <FormInput name={`guests.${guestIndex}.hasPlusOne`} type='Switch' />
+                </SwitchContainer>
+              </Card>
+            );
+          })}
+        </FormProvider>
         <Spacer size={15} />
-        {Object.keys(guests).length < 4 && (
+        {guests.length < 4 && (
           <AddGuestButton onPress={addGuest}>
             <AddGuestIcon name='plus' size={18} />
             <ButtonText>Add Guest</ButtonText>
@@ -214,12 +176,6 @@ const QuestionText = styled.Text`
   ${Typography.regularFont}
   margin-left: 5px;
   margin-bottom: 5px;
-`;
-
-const InvitationTypeContainer = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
 `;
 
 const ChoiceContainer = styled.View`
