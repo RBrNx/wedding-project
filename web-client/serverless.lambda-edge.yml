@@ -1,0 +1,73 @@
+app: wedding-project
+service: wedding-web-client-lambdas
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  memorySize: 128
+  timeout: 10
+  lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
+
+custom:
+  domainName: thewatsonwedding.com
+
+functions:
+  CloudfrontRedirect:
+    handler: src/handlers/redirect.handler
+    events:
+      - cloudFront:
+          eventType: origin-request
+          origin: https://${self:custom.domainName}
+
+resources:
+  Resources:
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Aliases:
+            - ${self:custom.domainName}
+          DefaultCacheBehavior:
+            AllowedMethods: ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+            CachedMethods: ['GET', 'HEAD', 'OPTIONS']
+            TargetOriginId: WebsiteBucketOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            DefaultTTL: 0
+            MaxTTL: 0
+            MinTTL: 0
+            Compress: true
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: 'all'
+          CustomErrorResponses:
+            - ErrorCode: '403'
+              ErrorCachingMinTTL: 1
+              ResponseCode: '200'
+              ResponsePagePath: '/index.html'
+            - ErrorCode: '404'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '500'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '502'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '503'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '504'
+              ErrorCachingMinTTL: 1
+          DefaultRootObject: 'index.html'
+          Enabled: true
+          PriceClass: 'PriceClass_100'
+          HttpVersion: 'http2'
+          ViewerCertificate:
+            AcmCertificateArn: 'arn:aws:acm:us-east-1:463245273964:certificate/7f989223-f435-46b7-b9bd-729e6dc5b514'
+            SslSupportMethod: sni-only
+          Origins:
+            - Id: 'WebsiteBucketOrigin'
+              DomainName: !GetAtt WebsiteBucket.DomainName
+              S3OriginConfig:
+                OriginAccessIdentity:
+                  { 'Fn::Join': ['', ['origin-access-identity/cloudfront/', { Ref: WebsiteOriginAccessIdentity }]] }

@@ -1,0 +1,125 @@
+app: wedding-project
+service: wedding-web-client
+
+plugins:
+  - serverless-s3-sync
+  - '@silvermine/serverless-plugin-cloudfront-lambda-edge'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${file(./.cache/s3.config.json):region}
+  lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
+
+custom:
+  bucketName: ${file(./.cache/s3.config.json):bucketName}
+  domainName: thewatsonwedding.com
+  s3Sync:
+    - bucketName: ${self:custom.bucketName}
+      localDir: public
+      acl: public-read
+      defaultContentType: text/html
+      params: ${file(./.cache/s3.params.json)}
+
+functions:
+  CloudfrontRedirect:
+    handler: src/handlers/redirect.handler
+    lambdaAtEdge:
+      distribution: 'WebsiteDistribution'
+      eventType: 'origin-request'
+
+resources:
+  Resources:
+    WebsiteBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucketName}
+        AccessControl: Private
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: 404.html
+          RoutingRules: ${file(./.cache/s3.sls.routingRules.json)}
+
+    WebsiteBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref WebsiteBucket
+        PolicyDocument:
+          Statement:
+            - Action:
+                - 's3:GetObject'
+              Effect: Allow
+              Resource: arn:aws:s3:::${self:custom.bucketName}/*
+              Principal:
+                CanonicalUser: !GetAtt WebsiteOriginAccessIdentity.S3CanonicalUserId
+
+    WebsiteOriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: 'CloudFrontOriginAccessIdentity for ${self:service}'
+
+    WebsiteDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Aliases:
+            - ${self:custom.domainName}
+            - www.${self:custom.domainName}
+          DefaultCacheBehavior:
+            AllowedMethods: ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+            CachedMethods: ['GET', 'HEAD', 'OPTIONS']
+            TargetOriginId: WebsiteBucketOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            DefaultTTL: 0
+            MaxTTL: 0
+            MinTTL: 0
+            Compress: true
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: 'all'
+          CustomErrorResponses:
+            - ErrorCode: '403'
+              ErrorCachingMinTTL: 1
+              ResponseCode: '200'
+              ResponsePagePath: '/index.html'
+            - ErrorCode: '404'
+              ErrorCachingMinTTL: 1
+              ResponseCode: '200'
+              ResponsePagePath: '/index.html'
+            - ErrorCode: '500'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '502'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '503'
+              ErrorCachingMinTTL: 1
+            - ErrorCode: '504'
+              ErrorCachingMinTTL: 1
+          DefaultRootObject: 'index.html'
+          Enabled: true
+          PriceClass: 'PriceClass_100'
+          HttpVersion: 'http2'
+          ViewerCertificate:
+            AcmCertificateArn: 'arn:aws:acm:us-east-1:463245273964:certificate/7f989223-f435-46b7-b9bd-729e6dc5b514'
+            SslSupportMethod: sni-only
+          Origins:
+            - Id: 'WebsiteBucketOrigin'
+              DomainName: !GetAtt WebsiteBucket.DomainName
+              S3OriginConfig:
+                OriginAccessIdentity:
+                  { 'Fn::Join': ['', ['origin-access-identity/cloudfront/', { Ref: WebsiteOriginAccessIdentity }]] }
+
+    WebsiteDNSName:
+      Type: AWS::Route53::RecordSetGroup
+      Properties:
+        HostedZoneId: 'Z010371026NKWW2PX1HOP' # Taken from the AWS Console
+        RecordSets:
+          - Name: ${self:custom.domainName}
+            Type: A
+            AliasTarget:
+              HostedZoneId: 'Z2FDTNDATAQYW2' # Default for any CloudFront Distro - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html
+              DNSName: !GetAtt [WebsiteDistribution, DomainName]
+              EvaluateTargetHealth: false

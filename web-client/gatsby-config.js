@@ -18,5 +18,12 @@ module.exports = {
       },
       __key: 'images',
     },
+    {
+      resolve: `gatsby-plugin-s3`,
+      options: {
+        bucketName: 'www.thewatsonwedding.com',
+        region: 'us-east-1', // Required for Lambda@Edge to function
+      },
+    },
   ],
 };
