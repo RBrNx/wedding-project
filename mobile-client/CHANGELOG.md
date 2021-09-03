@@ -1,3 +1,15 @@
+# [0.20.0](https://github.com/RBrNx/wedding-project/compare/v0.19.1...v0.20.0) (2021-09-03)
+
+
+### Bug Fixes
+
+* update invitationRegex to account for /invite/ path ([9680bf0](https://github.com/RBrNx/wedding-project/commit/9680bf04504b5f8f5d794db9d4bd4a48e9cbb843))
+
+
+### Features
+
+* create initial version of copyMemories script ([16c4a15](https://github.com/RBrNx/wedding-project/commit/16c4a15935b58a953dd8c56cd99fee3282cef3a2))
+
 ## [0.19.1](https://github.com/RBrNx/wedding-project/compare/v0.19.0...v0.19.1) (2021-08-26)
 
 
