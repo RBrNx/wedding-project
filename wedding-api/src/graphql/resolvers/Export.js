@@ -7,8 +7,7 @@ const { NODE_ENV } = process.env;
 
 const exportInvitationsToCSV = async (parent, args, { currentUser, db }) => {
   try {
-    if (currentUser.role !== UserRole.ADMIN || NODE_ENV !== 'development')
-      throw new Error('You must be an admin to perform this action');
+    if (currentUser.role !== UserRole.ADMIN) throw new Error('You must be an admin to perform this action');
 
     const InvitationGroupModel = db.model('InvitationGroup');
 
@@ -24,6 +23,7 @@ const exportInvitationsToCSV = async (parent, args, { currentUser, db }) => {
     const csvStream = format({
       headers: [
         'invitationCode',
+        'invitationURL',
         'invitationType',
         ...new Array(maxGuests).fill(null).map((_, index) => `guest${index + 1}`),
       ],
@@ -31,7 +31,12 @@ const exportInvitationsToCSV = async (parent, args, { currentUser, db }) => {
     invitationGroups.map(invitation => {
       const names = invitation.guests.map(guest => (guest.lastName.includes('Guest') ? 'Guest' : guest.firstName));
 
-      csvStream.write([invitation.invitationCode, invitation.type, ...names]);
+      csvStream.write([
+        invitation.invitationCode,
+        `URL:https://thewatsonwedding.com/invite/${invitation.invitationCode}`,
+        invitation.type,
+        ...names,
+      ]);
 
       return invitation;
     });
