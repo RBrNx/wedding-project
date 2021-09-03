@@ -7,6 +7,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import ViewGuestScreen from 'features/Guests/ViewGuestScreen';
 import RSVPQuestionsScreen from 'features/RSVP/RSVPQuestionsScreen';
 import InvitationsScreen from 'features/Invitations/InvitationsScreen';
+import EditDetailsScreen from 'features/Details/EditDetailsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -31,6 +32,13 @@ const AdminHomeNavigator = () => {
         component={RSVPQuestionsScreen}
         options={{
           tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name='form-select' color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name='EditDetails'
+        component={EditDetailsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => <Feather name='map' color={color} size={size} />,
         }}
       />
       <Tab.Screen
