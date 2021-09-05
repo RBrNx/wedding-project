@@ -1,37 +1,37 @@
-import { Outlines } from 'library/styles';
-import React from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import styled from 'styled-components';
+// import { Outlines } from 'library/styles';
+// import React from 'react';
+// import MapView, { Marker } from 'react-native-maps';
+// import styled from 'styled-components';
 
-const GoogleMapsView = ({ latitude, longitude, title }) => {
-  return (
-    <MapContainer>
-      <VenueMap
-        provider='google'
-        pitchEnabled={false}
-        initialRegion={{
-          latitude,
-          longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        }}
-      >
-        <Marker coordinate={{ latitude, longitude }} title={title} />
-      </VenueMap>
-    </MapContainer>
-  );
-};
+// const GoogleMapsView = ({ latitude, longitude, title }) => {
+//   return (
+//     <MapContainer>
+//       <VenueMap
+//         provider='google'
+//         pitchEnabled={false}
+//         initialRegion={{
+//           latitude,
+//           longitude,
+//           latitudeDelta: 0.005,
+//           longitudeDelta: 0.005,
+//         }}
+//       >
+//         <Marker coordinate={{ latitude, longitude }} title={title} />
+//       </VenueMap>
+//     </MapContainer>
+//   );
+// };
 
-const MapContainer = styled.View`
-  ${Outlines.borderRadius};
-  overflow: hidden;
-`;
+// const MapContainer = styled.View`
+//   ${Outlines.borderRadius};
+//   overflow: hidden;
+// `;
 
-const VenueMap = styled(MapView)`
-  height: 200px;
-  width: 100%;
-  ${Outlines.borderRadius};
-  overflow: hidden;
-`;
+// const VenueMap = styled(MapView)`
+//   height: 200px;
+//   width: 100%;
+//   ${Outlines.borderRadius};
+//   overflow: hidden;
+// `;
 
-export default GoogleMapsView;
+// export default GoogleMapsView;

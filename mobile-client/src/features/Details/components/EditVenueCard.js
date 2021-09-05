@@ -6,7 +6,7 @@ import StandardButton from 'library/components/StandardButton';
 import StandardPressable from 'library/components/StandardPressable';
 import { AntDesign } from '@expo/vector-icons';
 import theme from 'styled-theming';
-import GoogleMapsView from './GoogleMapsView';
+// import GoogleMapsView from './GoogleMapsView';
 
 const EditVenueCard = ({ venue, onPress }) => {
   const { name, address, email, phone, location } = venue || {};
@@ -37,7 +37,7 @@ const EditVenueCard = ({ venue, onPress }) => {
           <VenueInfo>{email}</VenueInfo>
           <VenueInfo>{phone}</VenueInfo>
           <Spacer size={15} />
-          <GoogleMapsView latitude={location.latitude} longitude={location.longitude} title={name} />
+          {/* <GoogleMapsView latitude={location.latitude} longitude={location.longitude} title={name} /> */}
         </>
       )}
     </Card>

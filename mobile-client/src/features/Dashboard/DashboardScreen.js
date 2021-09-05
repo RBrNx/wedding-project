@@ -5,39 +5,39 @@ import Spacer from 'library/components/Spacer';
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components/native';
-import REGISTER_PUSH_TOKEN from 'library/graphql/mutations/registerPushToken.graphql';
+// import REGISTER_PUSH_TOKEN from 'library/graphql/mutations/registerPushToken.graphql';
 import StandardButton from 'library/components/StandardButton';
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-import { Platform } from 'react-native';
-import parseError from 'library/utils/parseError';
-import { AlertType } from 'library/enums';
+// import Constants from 'expo-constants';
+// import * as Notifications from 'expo-notifications';
+// import { Platform } from 'react-native';
+// import parseError from 'library/utils/parseError';
+// import { AlertType } from 'library/enums';
 import DashboardHeader from './components/DashboardHeader';
 import MemoriesCard from './components/MemoriesCard';
 import RegistryCard from './components/RegistryCard';
 import RSVPCard from './components/RSVPCard';
 import ViewRSVPSheet from './components/ViewRSVPSheet';
 import WeddingDetailsCard from './components/WeddingDetailsCard';
-import NotificationAnimation from './components/NotificationAnimation';
+// import NotificationAnimation from './components/NotificationAnimation';
 
 const DashboardScreen = ({ navigation }) => {
   const [showRSVPSheet, setShowRSVPSheet] = useState(false);
-  const [showPermissionCard, setShowPermissionCard] = useState(false);
-  const [registerPushToken, { loading: registeringPushToken }] = useMutation(REGISTER_PUSH_TOKEN);
+  // const [showPermissionCard, setShowPermissionCard] = useState(false);
+  // const [registerPushToken, { loading: registeringPushToken }] = useMutation(REGISTER_PUSH_TOKEN);
   const { currentUser, eventInfo } = useAuth();
-  const { userSettings, updateSetting } = useSettings();
-  const { showAlert } = useAlert();
+  // const { userSettings, updateSetting } = useSettings();
+  // const { showAlert } = useAlert();
   const { firstName, lastName } = currentUser || {};
   const fullName = `${firstName} ${lastName}`;
   const hasSubmittedRSVP = !!currentUser?.rsvpForm;
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
+  // Notifications.setNotificationHandler({
+  //   handleNotification: async () => ({
+  //     shouldShowAlert: true,
+  //     shouldPlaySound: false,
+  //     shouldSetBadge: false,
+  //   }),
+  // });
 
   useFocusEffect(
     useCallback(() => {
@@ -47,54 +47,54 @@ const DashboardScreen = ({ navigation }) => {
     }, []),
   );
 
-  const dismissNotificationRequest = async () => {
-    await updateSetting('pushNotifications', false);
-    setShowPermissionCard(false);
-  };
+  // const dismissNotificationRequest = async () => {
+  //   await updateSetting('pushNotifications', false);
+  //   setShowPermissionCard(false);
+  // };
 
-  const registerPushNotifications = async () => {
-    try {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('User has denied permission for Push Notifications');
-        setShowPermissionCard(false);
-        return;
-      }
+  // const registerPushNotifications = async () => {
+  //   try {
+  //     const { status } = await Notifications.requestPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       console.error('User has denied permission for Push Notifications');
+  //       setShowPermissionCard(false);
+  //       return;
+  //     }
 
-      const { data: token } = await Notifications.getExpoPushTokenAsync();
+  //     const { data: token } = await Notifications.getExpoPushTokenAsync();
 
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: Colours.secondary,
-        });
-      }
+  //     if (Platform.OS === 'android') {
+  //       Notifications.setNotificationChannelAsync('default', {
+  //         name: 'default',
+  //         importance: Notifications.AndroidImportance.MAX,
+  //         vibrationPattern: [0, 250, 250, 250],
+  //         lightColor: Colours.secondary,
+  //       });
+  //     }
 
-      const { data } = await registerPushToken({ variables: { token } });
-      const { success } = data?.registerPushToken;
+  //     const { data } = await registerPushToken({ variables: { token } });
+  //     const { success } = data?.registerPushToken;
 
-      updateSetting('pushNotifications', success);
-      setShowPermissionCard(false);
-    } catch (error) {
-      const { message } = parseError(error);
-      console.log(message);
-      showAlert({ message, type: AlertType.WARNING });
-    }
-  };
+  //     updateSetting('pushNotifications', success);
+  //     setShowPermissionCard(false);
+  //   } catch (error) {
+  //     const { message } = parseError(error);
+  //     console.log(message);
+  //     showAlert({ message, type: AlertType.WARNING });
+  //   }
+  // };
 
-  const askForNotificationPermission = async () => {
-    const { status } = await Notifications.getPermissionsAsync();
+  // const askForNotificationPermission = async () => {
+  //   const { status } = await Notifications.getPermissionsAsync();
 
-    console.log({ status, device: Constants.isDevice });
+  //   console.log({ status, device: Constants.isDevice });
 
-    if (status !== 'granted' && Constants.isDevice) setShowPermissionCard(true);
-  };
+  //   if (status !== 'granted' && Constants.isDevice) setShowPermissionCard(true);
+  // };
 
-  useEffect(() => {
-    if (userSettings.pushNotifications === null) setTimeout(askForNotificationPermission, 3000);
-  }, []);
+  // useEffect(() => {
+  //   if (userSettings.pushNotifications === null) setTimeout(askForNotificationPermission, 3000);
+  // }, []);
 
   return (
     <>
@@ -123,7 +123,7 @@ const DashboardScreen = ({ navigation }) => {
         active={showRSVPSheet}
         onDismiss={() => setShowRSVPSheet(false)}
       />
-      {showPermissionCard && (
+      {/* {showPermissionCard && (
         <PermissionCardBackground>
           <PermissionCard pointerEvents='box-none'>
             <PermissionText>
@@ -142,7 +142,7 @@ const DashboardScreen = ({ navigation }) => {
             <DimissButton text='No thanks' outline onPress={dismissNotificationRequest} />
           </PermissionCard>
         </PermissionCardBackground>
-      )}
+      )} */}
     </>
   );
 };
