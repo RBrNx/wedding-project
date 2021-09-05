@@ -8,9 +8,9 @@ import { Feather } from '@expo/vector-icons';
 import theme from 'styled-theming';
 
 const VenueDetails = ({ venue }) => {
-  const { name, address, email, phone, location, image } = venue || {};
+  const { name, address, email, phone, image } = venue || {};
   const { town, country, postcode } = address || {};
-  const { latitude, longitude } = location || {};
+  // const { latitude, longitude } = location || {};
 
   return (
     <Card>

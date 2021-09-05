@@ -1,12 +1,13 @@
-import { useMutation } from '@apollo/react-hooks';
+// import { useMutation } from '@apollo/react-hooks';
 import { useFocusEffect } from '@react-navigation/native';
-import { useAlert, useAuth, useSettings } from 'context';
+// import { useAlert, useAuth, useSettings } from 'context';
+import { useAuth } from 'context';
 import Spacer from 'library/components/Spacer';
-import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Colours, Layout, Typography } from 'library/styles';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components/native';
 // import REGISTER_PUSH_TOKEN from 'library/graphql/mutations/registerPushToken.graphql';
-import StandardButton from 'library/components/StandardButton';
+// import StandardButton from 'library/components/StandardButton';
 // import Constants from 'expo-constants';
 // import * as Notifications from 'expo-notifications';
 // import { Platform } from 'react-native';
@@ -163,31 +164,31 @@ const HeadingText = styled.Text`
   color: ${Colours.neutral.white};
 `;
 
-const PermissionCardBackground = styled.View`
-  ${Layout.absoluteFill};
-  ${Layout.flexCenter};
-  background-color: rgba(0, 0, 0, 0.8);
-`;
+// const PermissionCardBackground = styled.View`
+//   ${Layout.absoluteFill};
+//   ${Layout.flexCenter};
+//   background-color: rgba(0, 0, 0, 0.8);
+// `;
 
-const PermissionCard = styled.View`
-  width: 90%;
-  background-color: ${Colours.neutral.white};
-  ${Outlines.borderRadius};
-  padding: 15px;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
-`;
+// const PermissionCard = styled.View`
+//   width: 90%;
+//   background-color: ${Colours.neutral.white};
+//   ${Outlines.borderRadius};
+//   padding: 15px;
+//   justify-content: space-between;
+//   align-items: center;
+//   z-index: 2;
+// `;
 
-const PermissionText = styled.Text`
-  ${Typography.body};
-  text-align: center;
-`;
+// const PermissionText = styled.Text`
+//   ${Typography.body};
+//   text-align: center;
+// `;
 
-const DimissButton = styled(StandardButton).attrs(props => ({
-  textStyle: {
-    color: Theme.headerTextColour(props),
-  },
-}))``;
+// const DimissButton = styled(StandardButton).attrs(props => ({
+//   textStyle: {
+//     color: Theme.headerTextColour(props),
+//   },
+// }))``;
 
 export default DashboardScreen;

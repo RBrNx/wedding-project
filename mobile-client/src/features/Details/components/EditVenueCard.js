@@ -9,7 +9,7 @@ import theme from 'styled-theming';
 // import GoogleMapsView from './GoogleMapsView';
 
 const EditVenueCard = ({ venue, onPress }) => {
-  const { name, address, email, phone, location } = venue || {};
+  const { name, address, email, phone } = venue || {};
 
   return (
     <Card>
