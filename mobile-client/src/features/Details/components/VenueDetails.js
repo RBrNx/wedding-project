@@ -6,7 +6,6 @@ import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import StandardPillPressable from 'library/components/StandardPillPressable';
 import { Feather } from '@expo/vector-icons';
 import theme from 'styled-theming';
-import GoogleMapsView from './GoogleMapsView';
 
 const VenueDetails = ({ venue }) => {
   const { name, address, email, phone, location, image } = venue || {};
@@ -34,7 +33,7 @@ const VenueDetails = ({ venue }) => {
       <Spacer size={15} />
       <VenueImage source={{ uri: image }} />
       <Spacer size={15} />
-      {latitude && longitude && <GoogleMapsView latitude={latitude} longitude={longitude} title={name} />}
+      {/* {latitude && longitude && <GoogleMapsView latitude={latitude} longitude={longitude} title={name} />} */}
     </Card>
   );
 };
