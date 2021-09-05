@@ -1,3 +1,12 @@
+## [0.20.1](https://github.com/RBrNx/wedding-project/compare/v0.20.0...v0.20.1) (2021-09-05)
+
+
+### Bug Fixes
+
+* eslint errors ([ba2dc21](https://github.com/RBrNx/wedding-project/commit/ba2dc21ebfe32520db5ea08767e679313d656c23))
+* Outline text colour is now correct ([8231332](https://github.com/RBrNx/wedding-project/commit/8231332d9c91964cf6d09919aed3b0bc1204da5d))
+* temporarily remove Notifications and Maps code as they are breaking in Production ([8ff2f93](https://github.com/RBrNx/wedding-project/commit/8ff2f9338ec9262542650f6f0cfcca55c4c1355a))
+
 # [0.20.0](https://github.com/RBrNx/wedding-project/compare/v0.19.1...v0.20.0) (2021-09-03)
 
 
