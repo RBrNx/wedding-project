@@ -106,6 +106,7 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const handleBarCodeScanned = async ({ data }) => {
+    console.log({ data });
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/invite\/)(?<invitationId>[A-Za-z0-9_-]{12})/g);
@@ -213,7 +214,7 @@ const ScannerScreen = ({ navigation }) => {
             flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
             autoFocus={Camera.Constants.AutoFocus.on}
             barCodeScannerSettings={{
-              barCodeTypes: ['qr'],
+              barCodeTypes: Platform.OS === 'ios' ? undefined : ['qr'],
             }}
             onCameraReady={async () => {
               if (!isRatioSet) {
