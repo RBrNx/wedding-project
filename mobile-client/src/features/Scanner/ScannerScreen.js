@@ -127,6 +127,11 @@ const ScannerScreen = ({ navigation }) => {
     if (status === 'denied' && manuallyTriggered) Linking.openSettings();
   };
 
+  const onSheetDismiss = () => {
+    setShowGuestSignInSheet(false);
+    setScanned(false);
+  };
+
   useEffect(() => {
     askForCameraPermission();
     setTimeout(() => {
@@ -231,11 +236,7 @@ const ScannerScreen = ({ navigation }) => {
         isLoading={isLoading}
       />
       <ScannerButtonCard scannerModeIndex={scannerModeIndex} onButtonPress={index => moveToStep(index)} />
-      <GuestSignInSheet
-        active={showGuestSignInSheet}
-        onDismiss={() => setShowGuestSignInSheet(false)}
-        guestCredentials={guestCredentials}
-      />
+      <GuestSignInSheet active={showGuestSignInSheet} onDismiss={onSheetDismiss} guestCredentials={guestCredentials} />
     </StyledDismissKeyboard>
   );
 };
