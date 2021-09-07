@@ -23,6 +23,9 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR Codes on event invites",
         "NSPhotoLibraryUsageDescription": "This app uses the photo library to allow users to upload photos from their camera roll"
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyDAv40Yq8wyYLSxNyXOYicCAFtlQ2rGztQ"
       }
     },
     "android": {
@@ -35,7 +38,12 @@
         "VIBRATE"
       ],
       "softwareKeyboardLayoutMode": "pan",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDlVrpRYKSfhwh5D883RDZXTeLSMlclbEM"
+        }
+      }
     },
     "androidStatusBar": {
       "barStyle": "light-content"
