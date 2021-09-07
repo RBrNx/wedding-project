@@ -1,3 +1,13 @@
+## [0.20.2](https://github.com/RBrNx/wedding-project/compare/v0.20.1...v0.20.2) (2021-09-07)
+
+
+### Bug Fixes
+
+* add Google Maps API Keys for Android & iOS ([f210305](https://github.com/RBrNx/wedding-project/commit/f21030504c4ca6f0cd024f9b55f31e74e969861d))
+* allow qr code to be rescanned if GuestSignInSheet is dismissed ([c8f8161](https://github.com/RBrNx/wedding-project/commit/c8f8161afaaba2446cfb5e8329acc22d9eb05b05))
+* Barcodes can now be scanned on iOS ([0a97c40](https://github.com/RBrNx/wedding-project/commit/0a97c40ae03d0af637b4247e839f898b2eabd7fe))
+* re-enable GoogleMapsView ([840a105](https://github.com/RBrNx/wedding-project/commit/840a10587e3ea351a3e54d2911a659a9474481c9))
+
 ## [0.20.1](https://github.com/RBrNx/wedding-project/compare/v0.20.0...v0.20.1) (2021-09-05)
 
 
