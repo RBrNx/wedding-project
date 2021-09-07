@@ -1,13 +1,13 @@
 import { Outlines } from 'library/styles';
 import React from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import styled from 'styled-components';
 
 const GoogleMapsView = ({ latitude, longitude, title }) => {
   return (
     <MapContainer>
       <VenueMap
-        provider='google'
+        provider={PROVIDER_GOOGLE}
         pitchEnabled={false}
         initialRegion={{
           latitude,
