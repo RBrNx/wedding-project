@@ -1,3 +1,11 @@
+## [0.20.3](https://github.com/RBrNx/wedding-project/compare/v0.20.2...v0.20.3) (2021-09-08)
+
+
+### Bug Fixes
+
+* add missing getCurrentUser _id value to boostrapQuery to stop memory uploads crashing ([8abdc77](https://github.com/RBrNx/wedding-project/commit/8abdc771b779eba492828bf92aaf4edb6bb60bc6))
+* throw error if invitation can't be found ([a03105f](https://github.com/RBrNx/wedding-project/commit/a03105fad819a54469b3932724e85dd455330661))
+
 ## [0.20.2](https://github.com/RBrNx/wedding-project/compare/v0.20.1...v0.20.2) (2021-09-07)
 
 
