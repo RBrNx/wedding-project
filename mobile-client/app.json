@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "0.20.1",
+    "version": "0.20.2",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,16 +18,19 @@
       "backgroundColor": "#14233c"
     },
     "ios": {
-      "buildNumber": "0.20.1",
+      "buildNumber": "0.20.2",
       "bundleIdentifier": "com.rbrnx.watsonwedding",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR Codes on event invites",
         "NSPhotoLibraryUsageDescription": "This app uses the photo library to allow users to upload photos from their camera roll"
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyDAv40Yq8wyYLSxNyXOYicCAFtlQ2rGztQ"
       }
     },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 19,
+      "versionCode": 20,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -35,7 +38,12 @@
         "VIBRATE"
       ],
       "softwareKeyboardLayoutMode": "pan",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDlVrpRYKSfhwh5D883RDZXTeLSMlclbEM"
+        }
+      }
     },
     "androidStatusBar": {
       "barStyle": "light-content"
