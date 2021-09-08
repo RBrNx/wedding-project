@@ -3,10 +3,7 @@
     "name": "The Watson Wedding (Staging)",
     "slug": "watson-wedding-staging",
     "privacy": "unlisted",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "0.20.2",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
@@ -31,12 +28,7 @@
     "android": {
       "package": "com.rbrnx.watsonwedding",
       "versionCode": 20,
-      "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "VIBRATE"
-      ],
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "VIBRATE"],
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
       "config": {
@@ -51,15 +43,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "extra": {
       "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "staging",
-      "noop": ""
+      "ENV": "staging"
     },
     "hooks": {
       "postPublish": [
