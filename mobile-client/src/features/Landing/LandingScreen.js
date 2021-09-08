@@ -25,7 +25,7 @@ const LandingScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('Scanner')}
       />
       <Spacer size={10} />
-      <StandardButton text='Manage my wedding' outline onPress={() => navigation.navigate('SignIn')} />
+      <ManageButton text='Manage my wedding' outline onPress={() => navigation.navigate('SignIn')} />
     </Container>
   );
 };
@@ -61,5 +61,11 @@ const SubHeadingText = styled.Text`
 const StyledMaterialCommunityIcon = styled(MaterialCommunityIcons)`
   margin-right: 15px;
 `;
+
+const ManageButton = styled(StandardButton).attrs(() => ({
+  textStyle: {
+    color: Colours.neutral.white,
+  },
+}))``;
 
 export default LandingScreen;

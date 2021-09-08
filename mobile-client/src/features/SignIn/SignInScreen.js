@@ -75,6 +75,7 @@ const StyledDismissKeyboard = styled(DismissKeyboard)`
 const SignUpButton = styled(StandardButton).attrs({
   textStyle: {
     paddingVertical: 0,
+    color: Colours.neutral.white,
   },
 })`
   width: 90px;
