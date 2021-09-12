@@ -1,3 +1,11 @@
+# [0.21.0](https://github.com/RBrNx/wedding-project/compare/v0.20.3...v0.21.0) (2021-09-12)
+
+
+### Features
+
+* create api and mobile workflows for production ([ff6a1c6](https://github.com/RBrNx/wedding-project/commit/ff6a1c6bcef0f7108f59d8386dca0e2228bf3f11))
+* update app.json with production values ([f7a93d6](https://github.com/RBrNx/wedding-project/commit/f7a93d63657701ffaa7a0598e6301b817a9e7c4b))
+
 ## [0.20.3](https://github.com/RBrNx/wedding-project/compare/v0.20.2...v0.20.3) (2021-09-08)
 
 
