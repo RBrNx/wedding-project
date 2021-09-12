@@ -6,6 +6,9 @@ const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
     const TempLoginDetailsModel = db.model('TempLoginDetails');
 
     const invitationGroup = await InvitationGroupModel.findOne({ invitationCode });
+
+    if (!invitationGroup) throw new Error('Invitation not found');
+
     const loginDetails = await TempLoginDetailsModel.find({ invitationGroup: invitationGroup._id }).populate('user');
 
     if (!loginDetails?.length)
