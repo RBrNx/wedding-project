@@ -4,7 +4,7 @@ import EmptyMessage from 'library/components/EmptyMessage';
 import ErrorMessage from 'library/components/ErrorMessage';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import { Colours, Layout, Theme } from 'library/styles';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import GET_ALL_INVITATIONS from 'library/graphql/queries/getAllInvitations.graphql';
@@ -16,6 +16,7 @@ import useInvitationMutation from 'library/hooks/useInvitationMutation';
 import parseError from 'library/utils/parseError';
 import { AlertType } from 'library/enums';
 import { useAlert } from 'context';
+import { useSnapPoints } from 'library/hooks';
 import DeletePrompt from './DeletePrompt';
 import CreateInvitationSheet from './CreateInvitationSheet';
 import InvitationCard from './InvitationCard';
@@ -45,6 +46,7 @@ const InvitationFlatlist = ({ scrollPosition }) => {
   const [showCreateInvitationSheet, setShowCreateInvitationSheet] = useState(false);
   const [deleteInvitation, { loading: deletionInProgress }] = useInvitationMutation(DELETE_INVITATION);
   const { loading, error, data } = useQuery(GET_ALL_INVITATIONS);
+  const snapPoints = useSnapPoints();
   const { showAlert } = useAlert();
 
   const onSheetDismiss = () => {
@@ -82,8 +84,6 @@ const InvitationFlatlist = ({ scrollPosition }) => {
       }}
     />
   );
-
-  const snapPoints = useMemo(() => ['45%', '82.5%'], []);
 
   return (
     <>
