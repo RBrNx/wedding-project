@@ -16,6 +16,8 @@ const StandardTextInput = ({
   value,
   placeholder,
   onChangeText,
+  onFocus,
+  onBlur,
   secureTextEntry,
   keyboardType = 'default',
   maxLength,
@@ -32,12 +34,15 @@ const StandardTextInput = ({
   const focusAnimation = useSharedValue(value ? 1 : 0);
   const ContainerComponent = flat ? FlatContainer : Container;
 
-  const onFocus = () => {
+  const handleOnFocus = () => {
+    onFocus?.();
+
     setIsFocused(true);
     focusAnimation.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.exp) });
   };
 
-  const onBlur = () => {
+  const handleOnBlur = () => {
+    onBlur?.();
     if (value) return;
 
     setIsFocused(false);
@@ -88,8 +93,8 @@ const StandardTextInput = ({
           ref={textInput}
           value={value}
           style={inputStyle}
-          onFocus={onFocus}
-          onBlur={onBlur}
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
