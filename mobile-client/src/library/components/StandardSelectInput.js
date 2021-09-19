@@ -24,6 +24,7 @@ const StandardSelectInput = ({
   flat,
   rounded,
   placeholderComponent,
+  error,
 }) => {
   const [isModalShown, setIsModalShown] = useState(false);
   const focusAnimation = useSharedValue(value ? 1 : 0);
@@ -66,6 +67,7 @@ const StandardSelectInput = ({
         isFocused={isModalShown || !!value}
         onPress={() => setIsModalShown(true)}
         rounded={rounded}
+        error={error}
       >
         <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
         <RegularLabel style={regularLabelAnimatedStyles}>{label}</RegularLabel>
@@ -107,7 +109,12 @@ const Container = styled.Pressable`
   padding-top: 26px;
   ${Outlines.borderRadius};
   ${Outlines.boxShadow};
-  border-color: ${props => (props.isFocused ? Colours.secondary : 'transparent')};
+  border-color: ${props => {
+    if (props.isFocused) return Colours.secondary;
+    if (props.error) return Colours.warning;
+
+    return 'transparent';
+  }};
   ${Outlines.inputBorder}
   ${props =>
     props.rounded &&

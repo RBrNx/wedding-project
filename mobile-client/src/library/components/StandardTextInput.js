@@ -28,6 +28,7 @@ const StandardTextInput = ({
   rounded,
   showCharacterCount = false,
   placeholderComponent,
+  error,
 }) => {
   const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
@@ -78,6 +79,7 @@ const StandardTextInput = ({
         isFocused={isFocused}
         onPress={() => textInput.current.focus()}
         rounded={rounded}
+        error={error}
       >
         <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
         <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
@@ -120,7 +122,12 @@ const Container = styled.Pressable`
   padding-top: 26px;
   ${Outlines.borderRadius};
   ${Outlines.boxShadow};
-  border-color: ${props => (props.isFocused ? Colours.secondary : 'transparent')};
+  border-color: ${props => {
+    if (props.isFocused) return Colours.secondary;
+    if (props.error) return Colours.warning;
+
+    return 'transparent';
+  }};
   ${Outlines.inputBorder}
   ${props =>
     props.rounded &&
