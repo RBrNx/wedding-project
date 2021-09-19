@@ -111,7 +111,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
           question: {
             type: formQuestion.type,
             title: formQuestion.title,
-            order: parseInt(formQuestion.order),
+            order: parseInt(formQuestion.order, 10),
             choices,
             isFollowUp: isFollowUpQuestion,
             responseType: 'INDIVIDUAL',
@@ -169,7 +169,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
           question: {
             type: formQuestion.type,
             title: formQuestion.title,
-            order: parseInt(formQuestion.order),
+            order: parseInt(formQuestion.order, 10),
             choices,
             isFollowUp: question.isFollowUp,
             guestType: formQuestion.guestType,
@@ -229,15 +229,36 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
         <FormProvider {...formMethods}>
           <Card>
             <QuestionText>Question Type</QuestionText>
-            <FormInput name='question.type' type='EnumSelect' enumObject={QuestionType} />
+            <FormInput
+              name='question.type'
+              type='EnumSelect'
+              enumObject={QuestionType}
+              rules={{ required: 'Please select a Question Type' }}
+            />
+            <Spacer size={30} />
             <QuestionText>Guest Type</QuestionText>
-            <FormInput name='question.guestType' type='EnumSelect' enumObject={QuestionGuestType} />
+            <FormInput
+              name='question.guestType'
+              type='EnumSelect'
+              enumObject={QuestionGuestType}
+              rules={{ required: 'Please select a Guest Type' }}
+            />
             <Spacer size={30} />
             <QuestionText>What is the title of your question?</QuestionText>
-            <FormInput name='question.title' label='Question Title' />
+            <FormInput
+              name='question.title'
+              label='Question Title'
+              maxLength={250}
+              rules={{ required: 'Please enter a Question Title' }}
+            />
             <Spacer size={30} />
             <QuestionText>What is the order of this question?</QuestionText>
-            <FormInput name='question.order' label='Question Order' />
+            <FormInput
+              name='question.order'
+              label='Question Order'
+              maxLength={2}
+              rules={{ required: 'Please enter a Question Order' }}
+            />
             {isFollowUpQuestion && (
               <>
                 <Spacer size={30} />
@@ -247,6 +268,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
                   type='Select'
                   label='Answer Required'
                   options={parentQuestion.choices}
+                  rules={{ required: 'Please select an answer' }}
                 />
               </>
             )}
@@ -257,10 +279,20 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
               {questionType === QuestionType.ATTENDANCE.value && (
                 <>
                   <QuestionText>What is your Attending label?</QuestionText>
-                  <FormInput name='attendingLabel' label='Attending answer' />
+                  <FormInput
+                    name='attendingLabel'
+                    label='Attending answer'
+                    maxLength={100}
+                    rules={{ required: 'Please enter an Attending Label' }}
+                  />
                   <Spacer size={30} />
                   <QuestionText>What is your Declining label?</QuestionText>
-                  <FormInput name='decliningLabel' label='Declining answer' />
+                  <FormInput
+                    name='decliningLabel'
+                    label='Declining answer'
+                    maxLength={100}
+                    rules={{ required: 'Please enter a Declining Label' }}
+                  />
                 </>
               )}
               {questionChoices
@@ -269,13 +301,15 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
                   const startIndex = questionType === QuestionType.ATTENDANCE.value ? index + 2 : index;
                   const label = `${toOrdinalSuffix(startIndex + 1)} choice`;
 
-                  console.log();
-
                   return (
                     <React.Fragment key={choice.id}>
                       {startIndex >= 1 && <Spacer size={30} />}
                       <ChoiceContainer>
-                        <ChoiceFormInput name={`question.choices.${index}.value`} label={label} />
+                        <ChoiceFormInput
+                          name={`question.choices.${index}.value`}
+                          label={label}
+                          rules={{ required: 'Please enter a value for this Choice' }}
+                        />
                         <DeleteButton size={40} onPress={() => removeQuestionChoice(index)}>
                           <TrashIcon name='trash-2' size={25} />
                         </DeleteButton>
@@ -345,7 +379,6 @@ const QuestionText = styled.Text`
 
 const ChoiceContainer = styled.View`
   flex-direction: row;
-  align-items: center;
 `;
 
 const ChoiceFormInput = styled(FormInput)`
@@ -357,6 +390,7 @@ const DeleteButton = styled(StandardPressable).attrs(props => ({
     backgroundColor: Theme.cardPressed(props),
   },
 }))`
+  margin-top: 10px;
   ${Layout.flexCenter};
   ${props => Layout.round(props.size)}
 `;
