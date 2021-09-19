@@ -7,7 +7,7 @@ import BottomSheetModal from 'library/components/BottomSheetModal';
 import { useAvoidKeyboard, useBottomSheetActionButton } from 'library/hooks';
 import { Feather } from '@expo/vector-icons';
 import { useAlert } from 'context';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { useMutation } from '@apollo/react-hooks';
 import ADD_VENUE_DETAILS from 'library/graphql/mutations/addVenueDetails.graphql';
@@ -17,6 +17,7 @@ import { AlertType } from 'library/enums';
 import { FormProvider, useForm } from 'react-hook-form';
 import FormInput from 'library/components/FormInput';
 import { stripTypenames } from 'library/utils/stripTypenames';
+import { parsePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
 
 const EditVenueSheet = ({ active, onDismiss, venue }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,22 +36,17 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
         },
         email: null,
         phone: null,
-        location: {
-          latitude: null,
-          longitude: null,
-        },
+        location: null,
       },
     },
   });
 
   useEffect(() => {
     if (active && venue) {
+      const { location } = venue;
       const loadedVenue = {
         ...venue,
-        location: {
-          latitude: venue?.location?.latitude?.toString(),
-          longitude: venue?.location?.longitude?.toString(),
-        },
+        location: `${location?.latitude}, ${location?.longitude}`,
       };
       formMethods.setValue('venue', stripTypenames(loadedVenue));
     }
@@ -69,14 +65,16 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
   const saveDetails = async form => {
     try {
       setIsSubmitting(true);
+      const [latitude, longitude] = form.venue.location.split(',');
 
       const { data } = await addVenueDetails({
         variables: {
           input: {
             ...form.venue,
+            phone: parsePhoneNumber(form.venue.phone, 'GB').format('E.164'),
             location: {
-              latitude: parseFloat(form.venue.location.latitude),
-              longitude: parseFloat(form.venue.location.longitude),
+              latitude: parseFloat(latitude),
+              longitude: parseFloat(longitude),
             },
             image: undefined, // Until an image upload has been implemented
           },
@@ -117,30 +115,86 @@ const EditVenueSheet = ({ active, onDismiss, venue }) => {
         <FormProvider {...formMethods}>
           <Card>
             <QuestionText>What is the name of the Venue?</QuestionText>
-            <FormInput name='venue.name' label='Venue Name' />
+            <FormInput
+              name='venue.name'
+              label='Venue Name'
+              maxLength={50}
+              rules={{ required: 'Please enter the name of your Wedding Venue' }}
+            />
           </Card>
           <Spacer size={15} />
           <Card>
-            <QuestionText>What are the town, country and postal code where the Venue is located?</QuestionText>
-            <FormInput name='venue.address.town' label='Town' />
+            <QuestionText>What is the address where the Venue is located?</QuestionText>
+            <FormInput
+              name='venue.address.town'
+              label='Town'
+              maxLength={50}
+              rules={{ required: 'Please enter a Town name' }}
+            />
             <Spacer size={15} />
-            <FormInput name='venue.address.country' label='Country' />
+            <FormInput
+              name='venue.address.country'
+              label='Country'
+              maxLength={50}
+              rules={{ required: 'Please enter a Country name' }}
+            />
             <Spacer size={15} />
-            <FormInput name='venue.address.postcode' label='Postal Code' />
+            <FormInput
+              name='venue.address.postcode'
+              label='Postal Code'
+              maxLength={10}
+              rules={{
+                required: 'Please enter a valid Postcode',
+                pattern: {
+                  value: /^(([A-Z]{1,2}\d[A-Z\d]?|ASCN|STHL|TDCU|BBND|[BFS]IQQ|PCRN|TKCA) ?\d[A-Z]{2}|BFPO ?\d{1,4}|(KY\d|MSR|VG|AI)[ -]?\d{4}|[A-Z]{2} ?\d{2}|GE ?CX|GIR ?0A{2}|SAN ?TA1)$/,
+                  message: 'Please check the format of your Postcode and try again',
+                },
+              }}
+            />
+            <Spacer size={30} />
+            <QuestionText>What are the latitude and longitude of the Venue?</QuestionText>
+            <FormInput
+              name='venue.location'
+              label='Coordinate Location'
+              placeholder='55.8642, 4.2518'
+              keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation' : 'numeric'}
+              maxLength={50}
+              rules={{
+                required: `Please enter the coordinates of the Venue's location in the format: 'latitude, longitude'`,
+                pattern: {
+                  value: /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/,
+                  message: 'Please enter a valid coordinate format',
+                },
+              }}
+            />
           </Card>
           <Spacer size={15} />
           <Card>
             <QuestionText>How can your guests contact the Venue?</QuestionText>
-            <FormInput name='venue.email' label='Email Address' />
+            <FormInput
+              name='venue.email'
+              label='Email Address'
+              keyboardType='email-address'
+              maxLength={50}
+              rules={{
+                required: 'Please enter the email address of the Venue',
+                pattern: {
+                  value: /^\S+@\S+\.\S+$/,
+                  message: 'Please enter an email address in the correct format hello@domain.com',
+                },
+              }}
+            />
             <Spacer size={15} />
-            <FormInput name='venue.phone' label='Phone Number' />
-          </Card>
-          <Spacer size={15} />
-          <Card>
-            <QuestionText>What are the latitude and longitude of the Venue?</QuestionText>
-            <FormInput name='venue.location.latitude' label='Latitude' />
-            <Spacer size={15} />
-            <FormInput name='venue.location.longitude' label='Longitude' />
+            <FormInput
+              name='venue.phone'
+              label='Phone Number'
+              keyboardType='phone-pad'
+              maxLength={15}
+              rules={{
+                required: 'Please enter a contact number for the Venue',
+                validate: v => isValidPhoneNumber(v, 'GB') || 'Please enter a valid phone number',
+              }}
+            />
           </Card>
         </FormProvider>
         <Spacer size={15} />

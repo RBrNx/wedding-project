@@ -115,9 +115,25 @@ const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
                     </DeleteButton>
                   </TitleContainer>
                   <Spacer size={15} />
-                  <FormInput name={`schedule.${index}.time`} label='Time' placeholder='09:00' />
+                  <FormInput
+                    name={`schedule.${index}.time`}
+                    label='Time'
+                    placeholder='09:00'
+                    rules={{
+                      required: 'Please enter a time for this Event',
+                      pattern: {
+                        value: /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/,
+                        message: 'Please enter a time in the format HH:MM, e.g',
+                      },
+                    }}
+                  />
                   <Spacer size={15} />
-                  <FormInput name={`schedule.${index}.name`} label='Name' />
+                  <FormInput
+                    name={`schedule.${index}.name`}
+                    label='Name'
+                    maxLength={100}
+                    rules={{ required: 'Please enter a name for this Event' }}
+                  />
                 </Card>
                 <Spacer size={15} />
               </React.Fragment>

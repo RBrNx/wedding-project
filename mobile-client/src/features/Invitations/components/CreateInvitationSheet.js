@@ -95,7 +95,12 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
         <FormProvider {...formMethods}>
           <Card>
             <QuestionText>What type of invitation do they get?</QuestionText>
-            <FormInput name='type' type='EnumSelect' enumObject={InvitationType} />
+            <FormInput
+              name='type'
+              type='EnumSelect'
+              enumObject={InvitationType}
+              rules={{ required: 'Please select an Invitation Type' }}
+            />
           </Card>
           <Spacer size={15} />
           {fields.map((guest, guestIndex) => {
@@ -111,10 +116,20 @@ const CreateInvitationSheet = ({ active, onDismiss }) => {
                 </ChoiceContainer>
                 <Spacer size={15} />
                 <QuestionText>What is their first name?</QuestionText>
-                <FormInput name={`guests.${guestIndex}.firstName`} label={`Guest's first name`} />
+                <FormInput
+                  name={`guests.${guestIndex}.firstName`}
+                  label={`Guest's first name`}
+                  maxLength={100}
+                  rules={{ required: `Please enter your guest's first Name` }}
+                />
                 <Spacer size={30} />
                 <QuestionText>What is their last name?</QuestionText>
-                <FormInput name={`guests.${guestIndex}.lastName`} label={`Guest's last name`} />
+                <FormInput
+                  name={`guests.${guestIndex}.lastName`}
+                  label={`Guest's last name`}
+                  maxLength={100}
+                  rules={{ required: `Please enter your guest's last name` }}
+                />
                 <Spacer size={30} />
                 <QuestionText>Are they allowed a Plus One?</QuestionText>
                 <SwitchContainer>

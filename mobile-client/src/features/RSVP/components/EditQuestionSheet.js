@@ -256,6 +256,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             <FormInput
               name='question.order'
               label='Question Order'
+              keyboardType='numeric'
               maxLength={2}
               rules={{ required: 'Please enter a Question Order' }}
             />
