@@ -1,3 +1,29 @@
+# [0.22.0](https://github.com/RBrNx/wedding-project/compare/v0.21.0...v0.22.0) (2021-09-27)
+
+
+### Bug Fixes
+
+* hide Loader indicator on SplashScreen if app is ready ([669b12a](https://github.com/RBrNx/wedding-project/commit/669b12a54b3fb92eb1fbdc007f0383d4851e60b3))
+* QuestionCard now only uses margin-bottom for spacing ([06a8bf3](https://github.com/RBrNx/wedding-project/commit/06a8bf3a12550bb0f5de2c00e3e17592ee7d6d8d))
+* remove blurHash from bootstrapQuery ([f0af625](https://github.com/RBrNx/wedding-project/commit/f0af625d60aa7d665e399664a928c994a09cfe72))
+
+
+### Features
+
+* add error messages to FormInput ([0b7d4a6](https://github.com/RBrNx/wedding-project/commit/0b7d4a65963ad5386358155cead83c98de513761))
+* add error state to StandardTextInput and StandardSelectInput ([f76d851](https://github.com/RBrNx/wedding-project/commit/f76d851937c26c0e3b3915c50f6762eb8578d34e))
+* add loading indicator to AnimatedSplashScreen ([52d6aa5](https://github.com/RBrNx/wedding-project/commit/52d6aa5137bbeab4f028774f9da73b7b3c9b948b))
+* add support for StandardEnumSelect and Switch inputs to FormInput component ([d8e1da7](https://github.com/RBrNx/wedding-project/commit/d8e1da7ecacc2e461efe67db0516727911e7af8b))
+* add support for StandardSelectInput to FormInput and remove @gorham/bottom-sheet v4 code ([11e809e](https://github.com/RBrNx/wedding-project/commit/11e809e606fbea73589255c454d457e2a329575b))
+* add validation rules to EditQuestionSheet ([4ce054d](https://github.com/RBrNx/wedding-project/commit/4ce054d7e50c10eea127b41a50b6dbd331a61f9c))
+* add validation, maxLength and keyboardType to all react-hook-form sheets ([246d19e](https://github.com/RBrNx/wedding-project/commit/246d19e13dd7c2ae36dcfd5f17179c1e8587185c))
+* allow FormInput component to handle keyboard events with BottomSheets ([acd3c47](https://github.com/RBrNx/wedding-project/commit/acd3c47f5c1de0b1dd827647231acc127da44ec3))
+* create stripTypenames util function to remove '__typename' from a GQL query's data ([19fd467](https://github.com/RBrNx/wedding-project/commit/19fd46700f9f9db310f77c911e92abcdf54f6c86))
+* implement react-hook-form in CreateInvitationSheet ([b80be64](https://github.com/RBrNx/wedding-project/commit/b80be642bcb1251ceccedbba71ad6194f30548a7))
+* implement react-hook-form into EditSchedule and EditVenue sheets ([7f1fa3e](https://github.com/RBrNx/wedding-project/commit/7f1fa3ef032fcd60f207586f4df0fde040303920))
+* move EnumLabel component into Library and create StandardEnumSelect component ([a62c9e1](https://github.com/RBrNx/wedding-project/commit/a62c9e1ebb9edec08d4d1c7332ecd0a15ac37749))
+* replaced manual initilisation of snapPoints with the useSnapPoints hook ([ae349e9](https://github.com/RBrNx/wedding-project/commit/ae349e9ae15df77d06304a3a6cb8c736d485c689))
+
 # [0.21.0](https://github.com/RBrNx/wedding-project/compare/v0.20.3...v0.21.0) (2021-09-12)
 
 
