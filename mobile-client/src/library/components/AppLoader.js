@@ -3,9 +3,16 @@ import React, { useEffect, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import { useFonts, Muli_400Regular, Muli_700Bold } from '@expo-google-fonts/muli';
-import { useAuth, useSettings } from 'context';
+import { useAuth, useDatastore, useSettings } from 'context';
 import cleanImageCache from 'library/utils/cleanImageCache';
 import AnimatedSplashScreen from './AnimatedSplashScreen';
+
+const getLoadingMessage = ({ authBootstrapped, dataBootstrapped }) => {
+  if (!authBootstrapped) return 'Authenticating';
+  if (!dataBootstrapped) return 'Retrieving event';
+
+  return '';
+};
 
 const AppLoader = ({ children }) => {
   const [isSplashReady, setIsSplashReady] = useState(false);
@@ -13,7 +20,9 @@ const AppLoader = ({ children }) => {
   const [fontsLoaded] = useFonts({ Muli_400Regular, Muli_700Bold });
   const { bootstrapComplete: authBootstrapped } = useAuth();
   const { bootstrapComplete: settingsBootstrapped } = useSettings();
-  const isAppReady = fontsLoaded && authBootstrapped && settingsBootstrapped;
+  const { bootstrapComplete: dataBootstrapped } = useDatastore();
+  const isAppReady = fontsLoaded && authBootstrapped && settingsBootstrapped && dataBootstrapped;
+  const loadingMessage = getLoadingMessage({ authBootstrapped, dataBootstrapped });
 
   const downloadSplash = async () => {
     // eslint-disable-next-line global-require
@@ -28,7 +37,7 @@ const AppLoader = ({ children }) => {
   if (!isSplashReady) {
     return (
       <AppLoading
-        autoHideSplash={false}
+        autoHideSplash
         startAsync={downloadSplash}
         onFinish={() => setIsSplashReady(true)}
         onError={err => console.error(err)}
@@ -37,7 +46,7 @@ const AppLoader = ({ children }) => {
   }
 
   return (
-    <AnimatedSplashScreen splashImage={splashImage} isAppReady={isAppReady}>
+    <AnimatedSplashScreen splashImage={splashImage} isAppReady={isAppReady} loadingMessage={loadingMessage}>
       {children}
     </AnimatedSplashScreen>
   );
