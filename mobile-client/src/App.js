@@ -14,6 +14,7 @@ import AppNavigator from 'navigation/AppNavigator';
 import awsConfig from 'library/utils/awsExports';
 import { registerRootComponent } from 'expo';
 import allSettled from 'promise.allsettled';
+import { DatastoreProvider } from 'context/Datastore';
 
 allSettled.shim();
 
@@ -42,15 +43,17 @@ const App = () => {
     <AppearanceProvider>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <SettingsProvider>
-            <CurrentThemeProvider>
-              <AppLoader>
-                <AlertProvider>
-                  <AppNavigator />
-                </AlertProvider>
-              </AppLoader>
-            </CurrentThemeProvider>
-          </SettingsProvider>
+          <DatastoreProvider>
+            <SettingsProvider>
+              <CurrentThemeProvider>
+                <AppLoader>
+                  <AlertProvider>
+                    <AppNavigator />
+                  </AlertProvider>
+                </AppLoader>
+              </CurrentThemeProvider>
+            </SettingsProvider>
+          </DatastoreProvider>
         </AuthProvider>
       </ApolloProvider>
     </AppearanceProvider>
