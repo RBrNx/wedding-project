@@ -47,11 +47,13 @@ const AnimatedSplashScreen = ({ children, splashImage, isAppReady, loadingMessag
       {!isSplashAnimationComplete && (
         <Container pointerEvents='none' style={animatedContainerStyle}>
           <SplashImage style={animatedSplashStyle} source={splashImage} fadeDuration={0} />
-          <LoadingContainer style={animatedLoaderStyle}>
-            <LoadingIndicator size={50} backgroundColour='#a2a2a2' />
-            <Spacer size={15} />
-            <SplashText>{loadingMessage}</SplashText>
-          </LoadingContainer>
+          {!isAppReady && (
+            <LoadingContainer style={animatedLoaderStyle}>
+              <LoadingIndicator size={50} backgroundColour='#a2a2a2' />
+              <Spacer size={15} />
+              <SplashText>{loadingMessage}</SplashText>
+            </LoadingContainer>
+          )}
         </Container>
       )}
     </>
