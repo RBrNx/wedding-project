@@ -1,0 +1,28 @@
+query {
+  getCurrentUser {
+    _id
+    eventId
+    firstName
+    lastName
+    email
+    role
+    attendanceStatus
+    rsvpForm {
+      question {
+        _id
+        type
+        title
+        label
+        choices {
+          _id
+          label
+          value
+        }
+      }
+      answer {
+        label
+        value
+      }
+    }
+  }
+}

@@ -6,9 +6,9 @@ import ErrorMessage from 'library/components/ErrorMessage';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import StandardActionButton from 'library/components/StandardActionButton';
 import StandardSearchSortBar from 'library/components/StandardSearchSortBar';
-import { useAvoidKeyboard, useDebounceValue } from 'library/hooks';
+import { useAvoidKeyboard, useDebounceValue, useSnapPoints } from 'library/hooks';
 import { Colours, Layout, Theme } from 'library/styles';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import ALL_GUESTS_QUERY from 'library/graphql/queries/getAllGuests.graphql';
@@ -38,6 +38,7 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
   const [searchTerm, setSearchTerm] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const debouncedSearchTerm = useDebounceValue(searchTerm, 500);
+  const snapPoints = useSnapPoints();
   const { loading, error, data } = useQuery(ALL_GUESTS_QUERY, {
     variables: { input: { searchTerm: debouncedSearchTerm } },
     fetchPolicy: 'network-only',
@@ -54,8 +55,6 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
   });
 
   const renderFlatlist = ({ item, index }) => <GuestRow guest={item} index={index} />;
-
-  const snapPoints = useMemo(() => ['45%', '82.5%'], []);
 
   return (
     <>

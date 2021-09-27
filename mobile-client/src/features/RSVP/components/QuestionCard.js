@@ -6,8 +6,8 @@ import { QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import Spacer from 'library/components/Spacer';
 import { css } from 'styled-components/native';
+import EnumLabel from 'library/components/EnumLabel';
 import { getRequiredAnswer } from '../helpers';
-import EnumLabel from './EnumLabel';
 
 const QuestionCard = ({ question, parentQuestion, index, followUp, requiredAnswer, onPress, onAddFollowUp }) => {
   const { type, title, followUpQuestions, guestType } = question;
@@ -74,8 +74,7 @@ const CardContainer = styled(StandardPressable).attrs(props => ({
   flex-direction: row;
   width: 100%;
   padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   align-items: center;
   background-color: ${Theme.card};
   ${Outlines.borderRadius};
@@ -131,7 +130,7 @@ const ConnectionLine = styled.View`
   height: 100%;
   width: 5px;
   position: absolute;
-  top: -10px;
+  top: -30px;
   left: 15%;
   background-color: ${Theme.icon};
 `;
@@ -145,8 +144,7 @@ const Card = styled(StandardPressable).attrs(props => ({
   width: 95%;
   margin-left: 5%;
   padding: 5%;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   background-color: ${Theme.card};
   ${Layout.flexCenter};
   ${Outlines.borderRadius};

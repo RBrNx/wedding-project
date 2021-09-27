@@ -4,14 +4,12 @@ import styled from 'styled-components';
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import Spacer from 'library/components/Spacer';
 import BottomSheetModal from 'library/components/BottomSheetModal';
-import StandardTextInput from 'library/components/StandardTextInput';
 import { useAvoidKeyboard, useBottomSheetActionButton, useQuestionMutation } from 'library/hooks';
 import { Feather } from '@expo/vector-icons';
 import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType, QuestionGuestType, QuestionType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
-import { nanoid } from 'nanoid';
 import CREATE_QUESTION from 'library/graphql/mutations/createQuestion.graphql';
 import UPDATE_QUESTION from 'library/graphql/mutations/updateQuestion.graphql';
 import DELETE_QUESTION from 'library/graphql/mutations/deleteQuestion.graphql';
@@ -19,19 +17,11 @@ import StandardButton from 'library/components/StandardButton';
 import { darken } from 'library/utils/colours';
 import { ActivityIndicator } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
-import StandardSelectInput from 'library/components/StandardSelectInput';
+import { useFieldArray, useForm, useWatch, FormProvider } from 'react-hook-form';
+import FormInput from 'library/components/FormInput';
 import { toOrdinalSuffix } from '../helpers';
-import EnumLabel from './EnumLabel';
 
 const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQuestion, parentQuestion }) => {
-  const [questionType, setQuestionType] = useState(null);
-  const [questionTitle, setQuestionTitle] = useState(null);
-  const [questionGuestType, setQuestionGuestType] = useState(null);
-  const [questionOrder, setQuestionOrder] = useState(null);
-  const [attendingLabel, setAttendingLabel] = useState(null);
-  const [decliningLabel, setDecliningLabel] = useState(null);
-  const [questionChoices, setQuestionChoices] = useState({});
-  const [answerRequired, setAnswerRequired] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createQuestion] = useQuestionMutation(CREATE_QUESTION);
   const [updateQuestion] = useQuestionMutation(UPDATE_QUESTION);
@@ -39,30 +29,45 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const { keyboardHeight } = useAvoidKeyboard();
-  const questionChoiceKeys = Object.keys(questionChoices);
+  const formMethods = useForm({
+    defaultValues: {
+      question: {
+        type: null,
+        title: null,
+        guestType: null,
+        order: null,
+        choices: [{ value: null, order: 0 }],
+      },
+      attendingLabel: null,
+      decliningLabel: null,
+      parentAnswerRequired: null,
+    },
+  });
+  const { fields: questionChoices, append, remove } = useFieldArray({
+    control: formMethods.control,
+    name: `question.choices`,
+  });
+  const questionType = useWatch({ control: formMethods.control, name: 'question.type' });
 
   useEffect(() => {
     if (active && editMode) {
-      setQuestionType(question.type);
-      setQuestionTitle(question.title);
-      setQuestionGuestType(question.guestType);
-      setQuestionOrder(question.order.toString());
-      setAttendingLabel(question.choices.find(choice => choice.value === 'ATTENDING')?.label);
-      setDecliningLabel(question.choices.find(choice => choice.value === 'NOT_ATTENDING')?.label);
+      formMethods.setValue('question.type', question.type);
+      formMethods.setValue('question.title', question.title);
+      formMethods.setValue('question.guestType', question.guestType);
+      formMethods.setValue('question.order', question.order.toString());
+      formMethods.setValue('attendingLabel', question.choices.find(choice => choice.value === 'ATTENDING')?.label);
+      formMethods.setValue('decliningLabel', question.choices.find(choice => choice.value === 'NOT_ATTENDING')?.label);
 
       if (isFollowUpQuestion) {
-        setAnswerRequired(question.requiredAnswer);
+        formMethods.setValue('parentAnswerRequired', question.requiredAnswer);
       }
 
       if (question.choices.length) {
-        const qChoices = {};
-
-        question.choices
+        const qChoices = question.choices
           .filter(choice => !['ATTENDING', 'NOT_ATTENDING'].includes(choice.value))
-          .forEach((choice, index) => {
-            qChoices[choice._id] = { value: choice.label, order: index };
-          });
-        setQuestionChoices(qChoices);
+          .map((choice, index) => ({ value: choice.label, order: index }));
+
+        formMethods.setValue('question.choices', qChoices);
       }
     }
   }, [active, editMode]);
@@ -73,52 +78,44 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
   };
 
   const resetState = () => {
-    setQuestionType(null);
-    setQuestionTitle(null);
-    setQuestionOrder(null);
-    setAttendingLabel(null);
-    setDecliningLabel(null);
-    setAnswerRequired(null);
-    setQuestionChoices({});
+    formMethods.reset();
     setIsSubmitting(false);
   };
 
   const addQuestionChoice = () => {
-    setQuestionChoices({
-      ...questionChoices,
-      [nanoid()]: { value: null, order: questionChoiceKeys.length },
-    });
+    append({ value: null, order: questionChoices.length });
   };
 
-  const removeQuestionChoice = choiceId => {
-    const filteredChoices = Object.fromEntries(Object.entries(questionChoices).filter(([id]) => id !== choiceId));
-    setQuestionChoices(filteredChoices);
+  const removeQuestionChoice = choiceIndex => {
+    remove(choiceIndex);
   };
 
-  const createRSVPQuestion = async () => {
+  const createRSVPQuestion = async form => {
+    const { question: formQuestion, attendingLabel, decliningLabel, parentAnswerRequired } = form;
+
     try {
       setIsSubmitting(true);
       const choices = [
-        ...(questionType === QuestionType.ATTENDANCE.value
+        ...(formQuestion.guestType === QuestionType.ATTENDANCE.value
           ? [
               { value: 'ATTENDING', label: attendingLabel },
               { value: 'NOT_ATTENDING', label: decliningLabel },
             ]
           : []),
-        ...Object.values(questionChoices)
+        ...formQuestion.choices
           .sort((a, b) => a.order - b.order)
           .map((choice, index) => ({ label: choice.value, value: `${index}` })),
       ];
       const { data } = await createQuestion({
         variables: {
           question: {
-            type: questionType,
-            title: questionTitle,
-            order: parseInt(questionOrder),
+            type: formQuestion.type,
+            title: formQuestion.title,
+            order: parseInt(formQuestion.order, 10),
             choices,
             isFollowUp: isFollowUpQuestion,
             responseType: 'INDIVIDUAL',
-            guestType: questionGuestType,
+            guestType: formQuestion.guestType,
           },
         },
       });
@@ -132,7 +129,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
               followUpQuestions: [
                 {
                   question: payload._id,
-                  matchesValue: answerRequired.value,
+                  matchesValue: parentAnswerRequired.value,
                 },
               ],
             },
@@ -149,17 +146,19 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
     }
   };
 
-  const updateRSVPQuestion = async () => {
+  const updateRSVPQuestion = async form => {
+    const { question: formQuestion, attendingLabel, decliningLabel, parentAnswerRequired } = form;
+
     try {
       setIsSubmitting(true);
       const choices = [
-        ...(questionType === QuestionType.ATTENDANCE.value
+        ...(formQuestion.type === QuestionType.ATTENDANCE.value
           ? [
               { value: 'ATTENDING', label: attendingLabel },
               { value: 'NOT_ATTENDING', label: decliningLabel },
             ]
           : []),
-        ...Object.values(questionChoices)
+        ...formQuestion.choices
           .sort((a, b) => a.order - b.order)
           .map((choice, index) => ({ label: choice.value, value: `${index}` })),
       ];
@@ -168,12 +167,12 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
         variables: {
           id: question._id,
           question: {
-            type: questionType,
-            title: questionTitle,
-            order: parseInt(questionOrder),
+            type: formQuestion.type,
+            title: formQuestion.title,
+            order: parseInt(formQuestion.order, 10),
             choices,
             isFollowUp: question.isFollowUp,
-            guestType: questionGuestType,
+            guestType: formQuestion.guestType,
           },
         },
       });
@@ -186,7 +185,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
               followUpQuestions: [
                 {
                   question: question._id,
-                  matchesValue: answerRequired.value,
+                  matchesValue: parentAnswerRequired.value,
                 },
               ],
             },
@@ -219,138 +218,117 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
           icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledIcon name='save' size={22} />}
           containerStyle={{ zIndex: 99 }}
           style={buttonAnimatedStyle}
-          onPress={editMode ? updateRSVPQuestion : createRSVPQuestion}
+          onPress={formMethods.handleSubmit(editMode ? updateRSVPQuestion : createRSVPQuestion)}
         />
       }
     >
-      <StyledBottomSheetScrollView keyboardHeight={keyboardHeight}>
+      <StyledBottomSheetScrollView keyboardHeight={keyboardHeight} keyboardShouldPersistTaps='handled'>
         <Spacer size={15} />
         <ModalTitle>{editMode ? 'Edit' : 'Add'} RSVP Question 🎩</ModalTitle>
         <Spacer size={45} />
-
-        <Card>
-          <QuestionText>Question Type</QuestionText>
-          <QuestionTypeContainer>
-            {Object.keys(QuestionType).map(type => {
-              if (type === 'SONG_REQUEST') return null;
-
-              const isSelected = type === questionType;
-              return (
-                <EnumLabel
-                  key={type}
-                  type={type}
-                  selected={isSelected}
-                  onPress={() => setQuestionType(type)}
-                  enumObject={QuestionType}
-                />
-              );
-            })}
-          </QuestionTypeContainer>
-          <QuestionText>Guest Type</QuestionText>
-          <QuestionTypeContainer>
-            {Object.keys(QuestionGuestType).map(type => {
-              const isSelected = type === questionGuestType;
-              return (
-                <EnumLabel
-                  key={type}
-                  type={type}
-                  selected={isSelected}
-                  onPress={() => setQuestionGuestType(type)}
-                  enumObject={QuestionGuestType}
-                />
-              );
-            })}
-          </QuestionTypeContainer>
-          <Spacer size={30} />
-          <QuestionText>What is the title of your question?</QuestionText>
-          <StandardTextInput
-            label='Question Title'
-            value={questionTitle}
-            onChangeText={value => setQuestionTitle(value)}
-            themeColourOverride='#fff'
-          />
-          <Spacer size={30} />
-          <QuestionText>What is the order of this question?</QuestionText>
-          <StandardTextInput
-            label='Question Order'
-            value={questionOrder}
-            onChangeText={value => setQuestionOrder(value)}
-            themeColourOverride='#fff'
-          />
-          {isFollowUpQuestion && (
-            <>
-              <Spacer size={30} />
-              <QuestionText>What answer to the parent question do you require?</QuestionText>
-              <StandardSelectInput
-                label='Answer Required'
-                value={answerRequired}
-                options={parentQuestion.choices}
-                onChange={value => setAnswerRequired(value)}
-              />
-            </>
-          )}
-        </Card>
-        <Spacer size={15} />
-        {[QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value].includes(questionType) && (
+        <FormProvider {...formMethods}>
           <Card>
-            {questionType === QuestionType.ATTENDANCE.value && (
+            <QuestionText>Question Type</QuestionText>
+            <FormInput
+              name='question.type'
+              type='EnumSelect'
+              enumObject={QuestionType}
+              rules={{ required: 'Please select a Question Type' }}
+            />
+            <Spacer size={30} />
+            <QuestionText>Guest Type</QuestionText>
+            <FormInput
+              name='question.guestType'
+              type='EnumSelect'
+              enumObject={QuestionGuestType}
+              rules={{ required: 'Please select a Guest Type' }}
+            />
+            <Spacer size={30} />
+            <QuestionText>What is the title of your question?</QuestionText>
+            <FormInput
+              name='question.title'
+              label='Question Title'
+              maxLength={250}
+              rules={{ required: 'Please enter a Question Title' }}
+            />
+            <Spacer size={30} />
+            <QuestionText>What is the order of this question?</QuestionText>
+            <FormInput
+              name='question.order'
+              label='Question Order'
+              keyboardType='numeric'
+              maxLength={2}
+              rules={{ required: 'Please enter a Question Order' }}
+            />
+            {isFollowUpQuestion && (
               <>
-                <QuestionText>What is your Attending label?</QuestionText>
-                <StandardTextInput
-                  label='Attending answer'
-                  value={attendingLabel}
-                  onChangeText={value => setAttendingLabel(value)}
-                  themeColourOverride='#fff'
-                />
                 <Spacer size={30} />
-                <QuestionText>What is your Declining label?</QuestionText>
-                <StandardTextInput
-                  label='Declining answer'
-                  value={decliningLabel}
-                  onChangeText={value => setDecliningLabel(value)}
-                  themeColourOverride='#fff'
+                <QuestionText>What answer to the parent question do you require?</QuestionText>
+                <FormInput
+                  name='parentAnswerRequired'
+                  type='Select'
+                  label='Answer Required'
+                  options={parentQuestion.choices}
+                  rules={{ required: 'Please select an answer' }}
                 />
               </>
             )}
-            {Object.entries(questionChoices)
-              .sort(([, a], [, b]) => a.order - b.order)
-              .map(([choiceId], index) => {
-                const startIndex = questionType === QuestionType.ATTENDANCE.value ? index + 2 : index;
-                const label = `${toOrdinalSuffix(startIndex + 1)} choice`;
-                const inputValue = questionChoices[choiceId].value;
-
-                return (
-                  <React.Fragment key={choiceId}>
-                    <Spacer size={30} />
-                    <ChoiceContainer>
-                      <ChoiceInput
-                        label={label}
-                        value={inputValue}
-                        onChangeText={value =>
-                          setQuestionChoices({
-                            ...questionChoices,
-                            [choiceId]: { ...questionChoices[choiceId], value },
-                          })
-                        }
-                        themeColourOverride='#fff'
-                      />
-                      <DeleteButton size={40} onPress={() => removeQuestionChoice(choiceId)}>
-                        <TrashIcon name='trash-2' size={25} />
-                      </DeleteButton>
-                    </ChoiceContainer>
-                  </React.Fragment>
-                );
-              })}
-            <Spacer size={15} />
-            {questionChoiceKeys.length < 5 && (
-              <AddChoiceButton onPress={addQuestionChoice}>
-                <AddChoiceIcon name='plus' size={18} />
-                <ButtonText>Add Choice</ButtonText>
-              </AddChoiceButton>
-            )}
-            <Spacer size={15} />
           </Card>
-        )}
+          <Spacer size={15} />
+          {[QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value].includes(questionType) && (
+            <Card>
+              {questionType === QuestionType.ATTENDANCE.value && (
+                <>
+                  <QuestionText>What is your Attending label?</QuestionText>
+                  <FormInput
+                    name='attendingLabel'
+                    label='Attending answer'
+                    maxLength={100}
+                    rules={{ required: 'Please enter an Attending Label' }}
+                  />
+                  <Spacer size={30} />
+                  <QuestionText>What is your Declining label?</QuestionText>
+                  <FormInput
+                    name='decliningLabel'
+                    label='Declining answer'
+                    maxLength={100}
+                    rules={{ required: 'Please enter a Declining Label' }}
+                  />
+                </>
+              )}
+              {questionChoices
+                .sort((a, b) => a.order - b.order)
+                .map((choice, index) => {
+                  const startIndex = questionType === QuestionType.ATTENDANCE.value ? index + 2 : index;
+                  const label = `${toOrdinalSuffix(startIndex + 1)} choice`;
+
+                  return (
+                    <React.Fragment key={choice.id}>
+                      {startIndex >= 1 && <Spacer size={30} />}
+                      <ChoiceContainer>
+                        <ChoiceFormInput
+                          name={`question.choices.${index}.value`}
+                          label={label}
+                          rules={{ required: 'Please enter a value for this Choice' }}
+                        />
+                        <DeleteButton size={40} onPress={() => removeQuestionChoice(index)}>
+                          <TrashIcon name='trash-2' size={25} />
+                        </DeleteButton>
+                      </ChoiceContainer>
+                    </React.Fragment>
+                  );
+                })}
+              <Spacer size={20} />
+              {questionChoices.length < 5 && (
+                <AddChoiceButton onPress={addQuestionChoice}>
+                  <AddChoiceIcon name='plus' size={18} />
+                  <ButtonText>Add Choice</ButtonText>
+                </AddChoiceButton>
+              )}
+              <Spacer size={15} />
+            </Card>
+          )}
+        </FormProvider>
         <Spacer size={15} />
         {editMode && (
           <DeleteQuestionButton
@@ -400,18 +378,11 @@ const QuestionText = styled.Text`
   margin-bottom: 5px;
 `;
 
-const QuestionTypeContainer = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-`;
-
 const ChoiceContainer = styled.View`
   flex-direction: row;
-  align-items: center;
 `;
 
-const ChoiceInput = styled(StandardTextInput)`
+const ChoiceFormInput = styled(FormInput)`
   flex: 1;
 `;
 
@@ -420,6 +391,7 @@ const DeleteButton = styled(StandardPressable).attrs(props => ({
     backgroundColor: Theme.cardPressed(props),
   },
 }))`
+  margin-top: 10px;
   ${Layout.flexCenter};
   ${props => Layout.round(props.size)}
 `;
