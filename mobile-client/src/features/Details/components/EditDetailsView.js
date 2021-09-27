@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useAvoidKeyboard, useSnapPoints } from 'library/hooks';
 import Spacer from 'library/components/Spacer';
-import { useAuth } from 'context';
+import { useDatastore } from 'context';
 import EditVenueCard from './EditVenueCard';
 import EditScheduleCard from './EditScheduleCard';
 import EditMenuCard from './EditMenuCard';
@@ -17,7 +17,7 @@ const EditDetailsView = ({ scrollPosition }) => {
   const [showEditVenueSheet, setShowEditVenueSheet] = useState(false);
   const [showEditScheduleSheet, setShowEditScheduleSheet] = useState(false);
   const [showEditMenuSheet, setShowEditMenuSheet] = useState(false);
-  const { eventInfo } = useAuth();
+  const { eventInfo } = useDatastore();
   const { keyboardHeight } = useAvoidKeyboard();
   const snapPoints = useSnapPoints();
 

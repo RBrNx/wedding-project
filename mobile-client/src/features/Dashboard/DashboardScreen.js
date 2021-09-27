@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/react-hooks';
 import { useFocusEffect } from '@react-navigation/native';
-import { useAlert, useAuth, useSettings } from 'context';
+import { useAlert, useAuth, useDatastore, useSettings } from 'context';
 import Spacer from 'library/components/Spacer';
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -24,8 +24,9 @@ const DashboardScreen = ({ navigation }) => {
   const [showRSVPSheet, setShowRSVPSheet] = useState(false);
   const [showPermissionCard, setShowPermissionCard] = useState(false);
   const [registerPushToken, { loading: registeringPushToken }] = useMutation(REGISTER_PUSH_TOKEN);
-  const { currentUser, eventInfo } = useAuth();
+  const { currentUser } = useAuth();
   const { userSettings, updateSetting } = useSettings();
+  const { eventInfo } = useDatastore();
   const { showAlert } = useAlert();
   const { firstName, lastName } = currentUser || {};
   const fullName = `${firstName} ${lastName}`;
