@@ -14,7 +14,7 @@ import parseError from 'library/utils/parseError';
 import { useAlert } from 'context';
 import { AlertType, InvitationType } from 'library/enums';
 import useGuestMutation from 'library/hooks/useGuestMutation';
-import EnumLabel from 'features/RSVP/components/EnumLabel';
+import EnumLabel from 'library/components/EnumLabel';
 
 const AddGuestSheet = ({ active, onDismiss }) => {
   const [firstName, setFirstName] = useState(null);

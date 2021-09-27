@@ -9,27 +9,35 @@ import { Feather } from '@expo/vector-icons';
 import { useAlert } from 'context';
 import { ActivityIndicator } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
-import StandardTextInput from 'library/components/StandardTextInput';
 import { useMutation } from '@apollo/react-hooks';
 import ADD_SCHEDULE_DETAILS from 'library/graphql/mutations/addScheduleDetails.graphql';
 import BOOTSTRAP_QUERY from 'library/graphql/queries/bootstrapQuery.graphql';
 import parseError from 'library/utils/parseError';
 import { AlertType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
-import { nanoid } from 'nanoid';
+import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
+import FormInput from 'library/components/FormInput';
+import { stripTypenames } from 'library/utils/stripTypenames';
 
 const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
-  const [scheduleState, setScheduleState] = useState({ [nanoid()]: { name: null, time: null } });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [addScheduleDetails] = useMutation(ADD_SCHEDULE_DETAILS, { refetchQueries: [{ query: BOOTSTRAP_QUERY }] });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const { keyboardHeight } = useAvoidKeyboard();
+  const formMethods = useForm({
+    defaultValues: {
+      schedule: [{ name: null, time: null }],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control: formMethods.control,
+    name: 'schedule',
+  });
 
   useEffect(() => {
     if (active && schedule) {
-      const currentSchedule = Object.fromEntries(schedule.map(({ name, time }) => [nanoid(), { name, time }]));
-      setScheduleState(currentSchedule);
+      formMethods.setValue('schedule', stripTypenames(schedule));
     }
   }, [active]);
 
@@ -39,27 +47,28 @@ const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
   };
 
   const resetState = () => {
-    setScheduleState({ [nanoid()]: { name: null, time: null } });
+    formMethods.reset();
     setIsSubmitting(false);
   };
 
   const addScheduleEvent = () => {
-    setScheduleState({ ...scheduleState, [nanoid()]: { name: null, time: null } });
+    append({ name: null, time: null });
   };
 
-  const deleteScheduleEvent = scheduleEventId => {
-    const filteredSchedule = Object.fromEntries(Object.entries(scheduleState).filter(([id]) => id !== scheduleEventId));
-    setScheduleState(filteredSchedule);
+  const deleteScheduleEvent = eventIndex => {
+    remove(eventIndex);
   };
 
-  const saveSchedule = async () => {
+  const saveSchedule = async form => {
     try {
       setIsSubmitting(true);
+
+      const newSchedule = [...form.schedule].sort((a, b) => a.time.localeCompare(b.time));
 
       const { data } = await addScheduleDetails({
         variables: {
           input: {
-            schedule: Object.values(scheduleState).sort((a, b) => a.time.localeCompare(b.time)),
+            schedule: newSchedule,
           },
         },
       });
@@ -86,7 +95,7 @@ const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
           icon={isSubmitting ? <ActivityIndicator color='#fff' /> : <StyledIcon name='save' size={22} />}
           containerStyle={{ zIndex: 99 }}
           style={buttonAnimatedStyle}
-          onPress={saveSchedule}
+          onPress={formMethods.handleSubmit(saveSchedule)}
         />
       }
     >
@@ -94,46 +103,43 @@ const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
         <Spacer size={15} />
         <ModalTitle>Schedule Details 🍾</ModalTitle>
         <Spacer size={45} />
-        {Object.entries(scheduleState).map(([scheduleItemId, scheduleItem], index) => {
-          const { time, name } = scheduleItem;
-
-          return (
-            <React.Fragment key={scheduleItemId}>
-              <Card>
-                <TitleContainer>
-                  <CardTitle>{`Event ${index + 1}`}</CardTitle>
-                  <DeleteButton size={40} onPress={() => deleteScheduleEvent(scheduleItemId)}>
-                    <TrashIcon name='trash-2' size={25} />
-                  </DeleteButton>
-                </TitleContainer>
+        <FormProvider {...formMethods}>
+          {fields.map((scheduleItem, index) => {
+            return (
+              <React.Fragment key={scheduleItem.id}>
+                <Card>
+                  <TitleContainer>
+                    <CardTitle>{`Event ${index + 1}`}</CardTitle>
+                    <DeleteButton size={40} onPress={() => deleteScheduleEvent(index)}>
+                      <TrashIcon name='trash-2' size={25} />
+                    </DeleteButton>
+                  </TitleContainer>
+                  <Spacer size={15} />
+                  <FormInput
+                    name={`schedule.${index}.time`}
+                    label='Time'
+                    placeholder='09:00'
+                    rules={{
+                      required: 'Please enter a time for this Event',
+                      pattern: {
+                        value: /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/,
+                        message: 'Please enter a time in the format HH:MM, e.g',
+                      },
+                    }}
+                  />
+                  <Spacer size={15} />
+                  <FormInput
+                    name={`schedule.${index}.name`}
+                    label='Name'
+                    maxLength={100}
+                    rules={{ required: 'Please enter a name for this Event' }}
+                  />
+                </Card>
                 <Spacer size={15} />
-                <StandardTextInput
-                  label='Time'
-                  value={time}
-                  placeholder='09:00'
-                  onChangeText={value =>
-                    setScheduleState({
-                      ...scheduleState,
-                      [scheduleItemId]: { ...scheduleState[scheduleItemId], time: value },
-                    })
-                  }
-                />
-                <Spacer size={15} />
-                <StandardTextInput
-                  label='Name'
-                  value={name}
-                  onChangeText={value =>
-                    setScheduleState({
-                      ...scheduleState,
-                      [scheduleItemId]: { ...scheduleState[scheduleItemId], name: value },
-                    })
-                  }
-                />
-              </Card>
-              <Spacer size={15} />
-            </React.Fragment>
-          );
-        })}
+              </React.Fragment>
+            );
+          })}
+        </FormProvider>
         <AddScheduleItemButton onPress={addScheduleEvent}>
           <AddScheduleItemIcon name='plus' size={18} />
           <ButtonText>Add Event</ButtonText>

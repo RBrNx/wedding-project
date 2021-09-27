@@ -16,6 +16,8 @@ const StandardTextInput = ({
   value,
   placeholder,
   onChangeText,
+  onFocus,
+  onBlur,
   secureTextEntry,
   keyboardType = 'default',
   maxLength,
@@ -26,18 +28,22 @@ const StandardTextInput = ({
   rounded,
   showCharacterCount = false,
   placeholderComponent,
+  error,
 }) => {
   const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
   const focusAnimation = useSharedValue(value ? 1 : 0);
   const ContainerComponent = flat ? FlatContainer : Container;
 
-  const onFocus = () => {
+  const handleOnFocus = () => {
+    onFocus?.();
+
     setIsFocused(true);
     focusAnimation.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.exp) });
   };
 
-  const onBlur = () => {
+  const handleOnBlur = () => {
+    onBlur?.();
     if (value) return;
 
     setIsFocused(false);
@@ -73,6 +79,7 @@ const StandardTextInput = ({
         isFocused={isFocused}
         onPress={() => textInput.current.focus()}
         rounded={rounded}
+        error={error}
       >
         <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
         <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
@@ -88,8 +95,8 @@ const StandardTextInput = ({
           ref={textInput}
           value={value}
           style={inputStyle}
-          onFocus={onFocus}
-          onBlur={onBlur}
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
@@ -115,7 +122,12 @@ const Container = styled.Pressable`
   padding-top: 26px;
   ${Outlines.borderRadius};
   ${Outlines.boxShadow};
-  border-color: ${props => (props.isFocused ? Colours.secondary : 'transparent')};
+  border-color: ${props => {
+    if (props.isFocused) return Colours.secondary;
+    if (props.error) return Colours.warning;
+
+    return 'transparent';
+  }};
   ${Outlines.inputBorder}
   ${props =>
     props.rounded &&

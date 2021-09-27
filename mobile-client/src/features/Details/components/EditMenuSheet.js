@@ -17,6 +17,7 @@ import { AlertType } from 'library/enums';
 import StandardPressable from 'library/components/StandardPressable';
 import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
 import FormInput from 'library/components/FormInput';
+import { stripTypenames } from 'library/utils/stripTypenames';
 
 const MenuChoiceForm = ({ courseIndex, control }) => {
   const { fields, append } = useFieldArray({
@@ -27,16 +28,19 @@ const MenuChoiceForm = ({ courseIndex, control }) => {
   return (
     <>
       {fields.map((choice, choiceIndex) => (
-        // eslint-disable-next-line react/no-array-index-key
         <React.Fragment key={choice.id}>
           <FormInput
             name={`menu.${courseIndex}.choices.${choiceIndex}.name`}
             label={`Choice ${choiceIndex + 1} name`}
+            maxLength={100}
+            rules={{ required: 'Please enter a name for this Menu item' }}
           />
           <Spacer size={15} />
           <FormInput
             name={`menu.${courseIndex}.choices.${choiceIndex}.description`}
             label={`Choice ${choiceIndex + 1} description`}
+            maxLength={150}
+            rules={{ required: 'Please enter a description for this Menu item' }}
           />
           <Spacer size={15} />
         </React.Fragment>
@@ -54,7 +58,6 @@ const EditMenuSheet = ({ active, onDismiss, menu }) => {
   const [addMenuDetails] = useMutation(ADD_MENU_DETAILS, { refetchQueries: [{ query: BOOTSTRAP_QUERY }] });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
-  // const { keyboardHeight } = useAvoidKeyboard();
   const formMethods = useForm({
     defaultValues: {
       menu: [
@@ -71,12 +74,7 @@ const EditMenuSheet = ({ active, onDismiss, menu }) => {
 
   useEffect(() => {
     if (active && menu) {
-      const loadedMenu = menu.map(({ name, info, choices }) => ({
-        name,
-        info,
-        choices: choices.map(({ name: choiceName, description }) => ({ name: choiceName, description })),
-      }));
-      formMethods.setValue('menu', loadedMenu);
+      formMethods.setValue('menu', stripTypenames(menu));
     }
   }, [active]);
 
@@ -141,7 +139,7 @@ const EditMenuSheet = ({ active, onDismiss, menu }) => {
                 <Card>
                   <CardTitle>{name}</CardTitle>
                   <Spacer size={15} />
-                  <FormInput name={`menu.${courseIndex}.info`} label='Course Info' />
+                  <FormInput name={`menu.${courseIndex}.info`} label='Course Info (Optional)' maxLength={150} />
                   <Spacer size={25} />
                   <ChoiceTitle>Choices</ChoiceTitle>
                   <MenuChoiceForm courseIndex={courseIndex} control={formMethods.control} />

@@ -10,8 +10,8 @@ import Spacer from 'library/components/Spacer';
 import StandardPressable from './StandardPressable';
 
 const alertTypeMap = {
-  [AlertType.SUCCESS]: { title: 'Yay! Everything worked!', colour: '#21a67a' },
-  [AlertType.WARNING]: { title: 'Uh oh, something went wrong', colour: '#f0a92e' },
+  [AlertType.SUCCESS]: { title: 'Yay! Everything worked!', colour: Colours.success },
+  [AlertType.WARNING]: { title: 'Uh oh, something went wrong', colour: Colours.warning },
 };
 
 const Alert = ({

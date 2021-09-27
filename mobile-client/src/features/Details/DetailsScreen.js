@@ -3,13 +3,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
 import Spacer from 'library/components/Spacer';
-import { useAuth } from 'context';
+import { useDatastore } from 'context';
 import VenueDetails from './components/VenueDetails';
 import WeddingSchedule from './components/WeddingSchedule';
 import WeddingMenu from './components/WeddingMenu';
 
 const DetailsScreen = () => {
-  const { eventInfo } = useAuth();
+  const { eventInfo } = useDatastore();
   const { venue, schedule, menu } = eventInfo || {};
 
   return (
