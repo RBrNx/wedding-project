@@ -21,7 +21,9 @@ import { stripTypenames } from 'library/utils/stripTypenames';
 
 const EditScheduleSheet = ({ active, onDismiss, schedule }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [addScheduleDetails] = useMutation(ADD_SCHEDULE_DETAILS, { refetchQueries: [{ query: BOOTSTRAP_QUERY }] });
+  const [addScheduleDetails] = useMutation(ADD_SCHEDULE_DETAILS, {
+    refetchQueries: [{ query: BOOTSTRAP_QUERY, variables: { filter: { page: 0, limit: 60 } } }],
+  });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const { keyboardHeight } = useAvoidKeyboard();

@@ -55,7 +55,9 @@ const MenuChoiceForm = ({ courseIndex, control }) => {
 
 const EditMenuSheet = ({ active, onDismiss, menu }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [addMenuDetails] = useMutation(ADD_MENU_DETAILS, { refetchQueries: [{ query: BOOTSTRAP_QUERY }] });
+  const [addMenuDetails] = useMutation(ADD_MENU_DETAILS, {
+    refetchQueries: [{ query: BOOTSTRAP_QUERY, variables: { filter: { page: 0, limit: 60 } } }],
+  });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const formMethods = useForm({

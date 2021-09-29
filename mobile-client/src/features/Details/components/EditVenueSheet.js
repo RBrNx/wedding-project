@@ -21,7 +21,9 @@ import { parsePhoneNumber, isValidPhoneNumber } from 'libphonenumber-js';
 
 const EditVenueSheet = ({ active, onDismiss, venue }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [addVenueDetails] = useMutation(ADD_VENUE_DETAILS, { refetchQueries: [{ query: BOOTSTRAP_QUERY }] });
+  const [addVenueDetails] = useMutation(ADD_VENUE_DETAILS, {
+    refetchQueries: [{ query: BOOTSTRAP_QUERY, variables: { filter: { page: 0, limit: 60 } } }],
+  });
   const { sheetPosition, buttonAnimatedStyle } = useBottomSheetActionButton();
   const { showAlert } = useAlert();
   const { keyboardHeight } = useAvoidKeyboard();
