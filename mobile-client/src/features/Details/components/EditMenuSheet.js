@@ -75,7 +75,7 @@ const EditMenuSheet = ({ active, onDismiss, menu }) => {
   });
 
   useEffect(() => {
-    if (active && menu) {
+    if (active && menu?.length) {
       formMethods.setValue('menu', stripTypenames(menu));
     }
   }, [active]);
