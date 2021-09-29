@@ -1,3 +1,11 @@
+## [0.22.1](https://github.com/RBrNx/wedding-project/compare/v0.22.0...v0.22.1) (2021-09-29)
+
+
+### Bug Fixes
+
+* add variables when refetching bootstrap query ([0ad992c](https://github.com/RBrNx/wedding-project/commit/0ad992cbbcc8b9c5faacd9827321e7b4ee72b194))
+* only set menu if it is not empty ([ef3a605](https://github.com/RBrNx/wedding-project/commit/ef3a6057ff22c51246b0bd563a5d268fa3cffa91))
+
 # [0.22.0](https://github.com/RBrNx/wedding-project/compare/v0.21.0...v0.22.0) (2021-09-27)
 
 
