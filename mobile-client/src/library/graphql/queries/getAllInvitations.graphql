@@ -1,5 +1,5 @@
-query ALL_INVITATIONS_QUERY {
-  getAllInvitationGroups {
+query ALL_INVITATIONS_QUERY($filter: FilterInvitationsInput!) {
+  getAllInvitationGroups(filter: $filter) {
     _id
     type
     invitationCode

@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/react-hooks';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import EmptyMessage from 'library/components/EmptyMessage';
 import ErrorMessage from 'library/components/ErrorMessage';
@@ -16,10 +15,11 @@ import useInvitationMutation from 'library/hooks/useInvitationMutation';
 import parseError from 'library/utils/parseError';
 import { AlertType } from 'library/enums';
 import { useAlert } from 'context';
-import { useSnapPoints } from 'library/hooks';
+import { useDebounceValue, useLazyQuery, useSnapPoints } from 'library/hooks';
 import DeletePrompt from './DeletePrompt';
 import CreateInvitationSheet from './CreateInvitationSheet';
 import InvitationCard from './InvitationCard';
+import InvitationFlatlistHeader from './InvitationFlatlistHeader';
 
 const { height } = Dimensions.get('window');
 
@@ -41,13 +41,28 @@ const InvitationRow = ({ invitation, index, onDeletePress }) => {
 
 const InvitationFlatlist = ({ scrollPosition }) => {
   const bottomSheetRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [inviteToDelete, setInviteToDelete] = useState(null);
   const [showCreateInvitationSheet, setShowCreateInvitationSheet] = useState(false);
   const [deleteInvitation, { loading: deletionInProgress }] = useInvitationMutation(DELETE_INVITATION);
-  const { loading, error, data } = useQuery(GET_ALL_INVITATIONS);
+  const debouncedSearchTerm = useDebounceValue(searchTerm, 1000);
+  const [getAllInvitations, { loading, data, error }] = useLazyQuery(GET_ALL_INVITATIONS);
   const snapPoints = useSnapPoints();
   const { showAlert } = useAlert();
+
+  useEffect(
+    () => {
+      const performSearch = async () => {
+        await getAllInvitations({ filter: { searchTerm } });
+      };
+
+      if (debouncedSearchTerm || debouncedSearchTerm === '') {
+        performSearch();
+      }
+    },
+    [debouncedSearchTerm], // Only call effect if debounced search term changes
+  );
 
   const onSheetDismiss = () => {
     setShowCreateInvitationSheet(false);
@@ -99,6 +114,7 @@ const InvitationFlatlist = ({ scrollPosition }) => {
           renderItem={renderFlatlist}
           data={data?.getAllInvitationGroups}
           keyExtractor={item => item._id}
+          ListHeaderComponent={<InvitationFlatlistHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />}
           ListEmptyComponent={
             <ListEmptyContainer>
               {loading && <LoadingIndicator size={50} />}
