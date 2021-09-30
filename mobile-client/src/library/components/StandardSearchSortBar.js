@@ -22,6 +22,7 @@ const Container = styled(StandardPressable)`
   background-color: ${Theme.card};
   align-items: center;
   ${Outlines.borderRadius};
+  ${Outlines.boxShadow};
 `;
 
 const SearchIcon = styled(Ionicons)`
