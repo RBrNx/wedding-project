@@ -7,4 +7,8 @@ const stripNonAlphaChars = string => {
   return string.replace(/\s+/g, '').replace(/'+/g, '').replace(/-+/g, '');
 };
 
-export { mapEnumValues, stripNonAlphaChars };
+const escapeRegExp = string => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+};
+
+export { mapEnumValues, stripNonAlphaChars, escapeRegExp };

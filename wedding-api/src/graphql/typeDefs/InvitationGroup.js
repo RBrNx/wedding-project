@@ -24,9 +24,13 @@ const schema = gql`
     guests: [CreateUserInput!]
   }
 
+  input FilterInvitationsInput {
+    searchTerm: String
+  }
+
   extend type Query {
     getInvitationGroup(id: ID!): InvitationGroup
-    getAllInvitationGroups: [InvitationGroup]
+    getAllInvitationGroups(filter: FilterInvitationsInput!): [InvitationGroup]
   }
 
   extend type Mutation {

@@ -1,3 +1,4 @@
+import { escapeRegExp } from '../../lib/helpers';
 import { createGuestUser, deleteCognitoUser, deleteGuestUser } from '../../lib/helpers/users';
 
 const getInvitationGroup = async (parent, { id }, { db }) => {
@@ -12,13 +13,41 @@ const getInvitationGroup = async (parent, { id }, { db }) => {
   }
 };
 
-const getAllInvitationGroups = async (parent, args, { currentUser, db }) => {
+const getAllInvitationGroups = async (parent, { filter }, { currentUser, db }) => {
   try {
+    const { searchTerm } = filter;
     const InvitationGroupModel = db.model('InvitationGroup');
 
-    const invitationGroups = await InvitationGroupModel.find({ eventId: currentUser.eventId })
-      .populate('guests')
-      .exec();
+    const invitationGroups = await InvitationGroupModel.aggregate([
+      {
+        $match: {
+          eventId: currentUser.eventId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'guests',
+          foreignField: '_id',
+          as: 'guests',
+        },
+      },
+      {
+        $match: {
+          $or: [
+            {
+              'guests.firstName': new RegExp(`${escapeRegExp(searchTerm)}`, 'i'),
+            },
+            {
+              'guests.lastName': new RegExp(`${escapeRegExp(searchTerm)}`, 'i'),
+            },
+            {
+              invitationCode: new RegExp(`${escapeRegExp(searchTerm)}`, 'i'),
+            },
+          ],
+        },
+      },
+    ]);
 
     return invitationGroups;
   } catch (error) {
