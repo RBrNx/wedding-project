@@ -1,3 +1,10 @@
+## [0.22.2](https://github.com/RBrNx/wedding-project/compare/v0.22.1...v0.22.2) (2021-10-02)
+
+
+### Bug Fixes
+
+* only try to submit question choices if its an attendance or multiple choice question ([63d57fc](https://github.com/RBrNx/wedding-project/commit/63d57fcc0136e2dfe425dbf3ef4ef4e9b1b96ea4))
+
 ## [0.22.1](https://github.com/RBrNx/wedding-project/compare/v0.22.0...v0.22.1) (2021-09-29)
 
 
