@@ -1,3 +1,12 @@
+## [0.22.2](https://github.com/RBrNx/wedding-project/compare/v0.22.1...v0.22.2) (2021-10-03)
+
+
+### Bug Fixes
+
+* check `type` property instead of `guestType` when dealing with question choices ([115bff2](https://github.com/RBrNx/wedding-project/commit/115bff2eecabdfa44c1f7311cf04ce6ef2e5cc5a))
+* only try to submit question choices if its an attendance or multiple choice question ([63d57fc](https://github.com/RBrNx/wedding-project/commit/63d57fcc0136e2dfe425dbf3ef4ef4e9b1b96ea4))
+* remove default empty choice ([2213fbf](https://github.com/RBrNx/wedding-project/commit/2213fbfed6c2d3f911073de8ee400a98d9dd993c))
+
 ## [0.22.2](https://github.com/RBrNx/wedding-project/compare/v0.22.1...v0.22.2) (2021-10-02)
 
 

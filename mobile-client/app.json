@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 25,
+      "versionCode": 26,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
