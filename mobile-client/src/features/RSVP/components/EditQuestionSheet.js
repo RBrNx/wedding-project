@@ -97,7 +97,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
     try {
       setIsSubmitting(true);
       const choices = [
-        ...(formQuestion.guestType === QuestionType.ATTENDANCE.value
+        ...(formQuestion.type === QuestionType.ATTENDANCE.value
           ? [
               { value: 'ATTENDING', label: attendingLabel },
               { value: 'NOT_ATTENDING', label: decliningLabel },
