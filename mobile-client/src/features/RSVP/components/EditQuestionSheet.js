@@ -36,7 +36,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
         title: null,
         guestType: null,
         order: null,
-        choices: [{ value: null, order: 0 }],
+        choices: [],
       },
       attendingLabel: null,
       decliningLabel: null,
