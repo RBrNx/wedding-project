@@ -8,9 +8,14 @@ import StandardPressable from 'library/components/StandardPressable';
 import { Feather } from '@expo/vector-icons';
 import { listNames } from '../helpers';
 
-const InvitationCard = ({ invitation, onDeletePress }) => {
+const InvitationCard = ({ invitation, onDeletePress, responseFilter }) => {
   const { guests, type, invitationCode } = invitation;
   const { icon: InvitationTypeIcon } = InvitationType[type];
+  const filteredGuests = guests.filter(guest => !responseFilter.includes(guest.attendanceStatus));
+
+  if (!filteredGuests.length) {
+    return null;
+  }
 
   return (
     <>
@@ -25,7 +30,7 @@ const InvitationCard = ({ invitation, onDeletePress }) => {
       </CardContainer>
       <FollowUpContainer>
         <ConnectionLine />
-        {guests.map(guest => (
+        {filteredGuests.map(guest => (
           <StyledGuestCard guest={guest} invitationCode={invitationCode} key={guest._id} />
         ))}
       </FollowUpContainer>

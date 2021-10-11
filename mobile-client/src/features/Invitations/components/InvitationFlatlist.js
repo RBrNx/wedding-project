@@ -23,7 +23,7 @@ import InvitationFlatlistHeader from './InvitationFlatlistHeader';
 
 const { height } = Dimensions.get('window');
 
-const InvitationRow = ({ invitation, index, onDeletePress }) => {
+const InvitationRow = ({ invitation, index, onDeletePress, responseFilter }) => {
   const translateY = useSharedValue(index < 10 ? 500 : 0);
 
   useEffect(() => {
@@ -34,7 +34,12 @@ const InvitationRow = ({ invitation, index, onDeletePress }) => {
 
   return (
     <CardContainer style={animatedRowStyle}>
-      <InvitationCard invitation={invitation} index={index} onDeletePress={onDeletePress} />
+      <InvitationCard
+        invitation={invitation}
+        index={index}
+        onDeletePress={onDeletePress}
+        responseFilter={responseFilter}
+      />
     </CardContainer>
   );
 };
@@ -45,6 +50,7 @@ const InvitationFlatlist = ({ scrollPosition }) => {
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [inviteToDelete, setInviteToDelete] = useState(null);
   const [showCreateInvitationSheet, setShowCreateInvitationSheet] = useState(false);
+  const [responseFilter, setResponseFilter] = useState([]);
   const [deleteInvitation, { loading: deletionInProgress }] = useInvitationMutation(DELETE_INVITATION);
   const debouncedSearchTerm = useDebounceValue(searchTerm, 1000);
   const [getAllInvitations, { loading, data, error }] = useLazyQuery(GET_ALL_INVITATIONS);
@@ -97,6 +103,7 @@ const InvitationFlatlist = ({ scrollPosition }) => {
         setShowDeletePrompt(true);
         setInviteToDelete(item);
       }}
+      responseFilter={responseFilter}
     />
   );
 
@@ -114,7 +121,15 @@ const InvitationFlatlist = ({ scrollPosition }) => {
           renderItem={renderFlatlist}
           data={data?.getAllInvitationGroups}
           keyExtractor={item => item._id}
-          ListHeaderComponent={<InvitationFlatlistHeader searchTerm={searchTerm} setSearchTerm={setSearchTerm} />}
+          ListHeaderComponent={
+            <InvitationFlatlistHeader
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              invitations={data?.getAllInvitationGroups}
+              responseFilter={responseFilter}
+              setResponseFilter={setResponseFilter}
+            />
+          }
           ListEmptyComponent={
             <ListEmptyContainer>
               {loading && <LoadingIndicator size={50} />}
