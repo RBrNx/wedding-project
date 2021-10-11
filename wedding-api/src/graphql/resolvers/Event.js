@@ -1,4 +1,5 @@
 import { UserRole } from '../../lib/enums';
+import { trimObject } from '../../lib/helpers';
 import signer from '../../lib/helpers/awsSigner';
 import { createCognitoAdminUser, deleteCognitoUser } from '../../lib/helpers/users';
 
@@ -30,7 +31,7 @@ const createEvent = async (parent, { input }, { db }) => {
   let userId;
 
   try {
-    const { name, date, admin } = input;
+    const { name, date, admin } = trimObject(input);
     const { firstName, lastName, email, password } = admin;
 
     session = await db.startSession();
@@ -106,7 +107,7 @@ const addVenueDetails = async (parent, { input }, { currentUser, db }) => {
       {
         venue: {
           ...existingEventDoc.venue,
-          ...input,
+          ...trimObject(input),
         },
       },
       { session, new: true },
@@ -133,6 +134,8 @@ const addVenueDetails = async (parent, { input }, { currentUser, db }) => {
 const addScheduleDetails = async (parent, { input }, { currentUser, db }) => {
   let session;
 
+  const { schedule } = trimObject(input);
+
   try {
     session = await db.startSession();
     session.startTransaction();
@@ -141,7 +144,7 @@ const addScheduleDetails = async (parent, { input }, { currentUser, db }) => {
 
     const eventDoc = await EventModel.findOneAndUpdate(
       { _id: currentUser.eventId },
-      { schedule: [...input.schedule] },
+      { schedule },
       { session, new: true },
     );
 
@@ -166,17 +169,15 @@ const addScheduleDetails = async (parent, { input }, { currentUser, db }) => {
 const addMenuDetails = async (parent, { input }, { currentUser, db }) => {
   let session;
 
+  const { menu } = trimObject(input);
+
   try {
     session = await db.startSession();
     session.startTransaction();
 
     const EventModel = db.model('Event');
 
-    const eventDoc = await EventModel.findOneAndUpdate(
-      { _id: currentUser.eventId },
-      { menu: [...input.menu] },
-      { session, new: true },
-    );
+    const eventDoc = await EventModel.findOneAndUpdate({ _id: currentUser.eventId }, { menu }, { session, new: true });
 
     await session.commitTransaction();
 

@@ -1,6 +1,8 @@
+import { trimObject } from '../../lib/helpers';
+
 const searchTracks = async (parent, { input }, { dataSources }) => {
   try {
-    const { searchTerm } = input;
+    const { searchTerm } = trimObject(input);
     const tracks = await dataSources.spotifyAPI.searchTracks({ searchTerm });
 
     return tracks;

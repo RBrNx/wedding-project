@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { QuestionGuestType, UserRole } from '../../lib/enums';
+import { trimObject } from '../../lib/helpers';
 
 const { ObjectId } = mongoose.Types;
 
@@ -51,7 +52,7 @@ const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
 };
 
 const createQuestion = async (parent, args, { currentUser, db }) => {
-  const { question } = args;
+  const { question } = trimObject(args);
 
   try {
     const QuestionModel = db.model('Question');
@@ -71,7 +72,7 @@ const createQuestion = async (parent, args, { currentUser, db }) => {
 };
 
 const updateQuestion = async (parent, args, { db }) => {
-  const { id, question } = args;
+  const { id, question } = trimObject(args);
   const { followUpQuestions, ...restOfQuestion } = question;
 
   try {

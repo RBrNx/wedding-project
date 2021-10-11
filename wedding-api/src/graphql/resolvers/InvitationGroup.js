@@ -1,4 +1,4 @@
-import { escapeRegExp } from '../../lib/helpers';
+import { escapeRegExp, trimObject } from '../../lib/helpers';
 import { createGuestUser, deleteCognitoUser, deleteGuestUser } from '../../lib/helpers/users';
 
 const getInvitationGroup = async (parent, { id }, { db }) => {
@@ -61,7 +61,7 @@ const createInvitationGroup = async (parent, { invitationGroup }, { currentUser,
 
   try {
     const InvitationGroupModel = db.model('InvitationGroup');
-    const { guests, type } = invitationGroup;
+    const { guests, type } = trimObject(invitationGroup);
 
     session = await db.startSession();
     session.startTransaction();

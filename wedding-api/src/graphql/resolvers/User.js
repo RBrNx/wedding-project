@@ -1,9 +1,10 @@
 import { AttendanceStatus, QuestionType, UserRole } from '../../lib/enums';
+import { trimObject } from '../../lib/helpers';
 import { createCognitoAdminUser, createGuestUser, deleteCognitoUser } from '../../lib/helpers/users';
 
 const getAllGuests = async (parent, { input }, { currentUser, db }) => {
   try {
-    const { searchTerm } = input || {};
+    const { searchTerm } = trimObject(input) || {};
     const UserModel = db.model('User');
 
     const guests = await UserModel.aggregate([

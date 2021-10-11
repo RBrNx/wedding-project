@@ -1,6 +1,8 @@
+import { trimObject } from '../../lib/helpers';
+
 const fetchTempLoginCredentials = async (parent, { input }, { db }) => {
   try {
-    const { invitationCode } = input;
+    const { invitationCode } = trimObject(input);
 
     const InvitationGroupModel = db.model('InvitationGroup');
     const TempLoginDetailsModel = db.model('TempLoginDetails');

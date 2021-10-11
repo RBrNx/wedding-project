@@ -1,8 +1,8 @@
 import { QuestionType } from '../../lib/enums';
+import { trimObject } from '../../lib/helpers';
 
-const submitRSVPForm = async (parent, args, { currentUser, db, dataSources }) => {
-  const { input } = args;
-  const { rsvpForm } = input;
+const submitRSVPForm = async (parent, { input }, { currentUser, db, dataSources }) => {
+  const { rsvpForm } = trimObject(input);
   const { _id, eventId } = currentUser;
 
   try {
