@@ -45,7 +45,7 @@ const submitRSVPForm = async (parent, { input }, { currentUser, db, dataSources 
     }
 
     sendNotificationToAdmins(eventId, {
-      title: `${firstName} ${lastName} has submitted their RSVP!`,
+      title: `${firstName} ${lastName} has ${existingRSVP ? 'updated' : 'submitted'} their RSVP!`,
       body: 'Tap here to see their response',
     });
 
