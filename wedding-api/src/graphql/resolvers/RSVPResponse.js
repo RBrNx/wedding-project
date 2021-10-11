@@ -1,9 +1,10 @@
 import { QuestionType } from '../../lib/enums';
 import { trimObject } from '../../lib/helpers';
+import { sendNotificationToAdmins } from '../../lib/helpers/pushNotifications';
 
 const submitRSVPForm = async (parent, { input }, { currentUser, db, dataSources }) => {
   const { rsvpForm } = trimObject(input);
-  const { _id, eventId } = currentUser;
+  const { _id, eventId, firstName, lastName } = currentUser;
 
   try {
     const RSVPResponseModel = db.model('RSVPResponse');
@@ -42,6 +43,11 @@ const submitRSVPForm = async (parent, { input }, { currentUser, db, dataSources 
         });
       }
     }
+
+    sendNotificationToAdmins(eventId, {
+      title: `${firstName} ${lastName} has submitted their RSVP!`,
+      body: 'Tap here to see their response',
+    });
 
     return {
       success: true,
