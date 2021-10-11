@@ -6,6 +6,7 @@ import EventSchema from '../models/Event';
 import TempLoginDetailsSchema from '../models/TempLoginDetails';
 import RSVPResponseSchema from '../models/RSVPResponse';
 import MemorySchema from '../models/Memory';
+import PushNotificationSchema from '../models/PushNotification';
 
 const { MONGODB_URI } = process.env;
 
@@ -35,6 +36,7 @@ const connectToDatabase = async () => {
       cachedDb.model('Event', EventSchema);
       cachedDb.model('TempLoginDetails', TempLoginDetailsSchema);
       cachedDb.model('Memory', MemorySchema);
+      cachedDb.model('PushNotification', PushNotificationSchema);
     } else console.log('using cachedDb');
     return cachedDb;
   } catch (error) {
