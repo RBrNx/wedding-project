@@ -108,7 +108,7 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "jest": "^26.0.1",
     "prettier": "^1.19.1",
-    "semantic-release": "^17.4.2",
+    "semantic-release": "^19.0.3",
     "semantic-release-expo": "^2.2.3"
   },
   "resolutions": {
