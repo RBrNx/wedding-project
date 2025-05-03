@@ -1,0 +1,15 @@
+mutation($invitationGroup: CreateInvitationGroupInput!) {
+  createInvitationGroup(invitationGroup: $invitationGroup) {
+    success
+    message
+    payload {
+      _id
+      guests {
+        firstName
+        lastName
+      }
+      type
+      invitationCode
+    }
+  }
+}

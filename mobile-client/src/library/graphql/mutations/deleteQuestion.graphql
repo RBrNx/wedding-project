@@ -1,0 +1,16 @@
+mutation($id: ID!) {
+  deleteQuestion(id: $id) {
+    success
+    message
+    payload {
+      type
+      title
+      label
+      responseType
+      choices {
+        label
+        value
+      }
+    }
+  }
+}

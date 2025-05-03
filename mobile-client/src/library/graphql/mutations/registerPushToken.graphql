@@ -1,0 +1,6 @@
+mutation($token: String!) {
+  registerPushToken(token: $token) {
+    success
+    message
+  }
+}

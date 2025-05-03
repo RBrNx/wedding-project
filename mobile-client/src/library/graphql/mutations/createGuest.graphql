@@ -1,0 +1,11 @@
+mutation($guest: CreateUserInput!) {
+  createGuest(guest: $guest) {
+    success
+    message
+    payload {
+      firstName
+      lastName
+      role
+    }
+  }
+}

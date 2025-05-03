@@ -1,0 +1,15 @@
+query searchTracks($input: SearchTrackInput!) {
+  searchTracks(input: $input) {
+    items {
+      id
+      uri
+      name
+      artists
+      albumArt
+      album
+    }
+    limit
+    offset
+    total
+  }
+}
