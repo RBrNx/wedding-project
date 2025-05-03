@@ -53,7 +53,7 @@ disabledDeprecations:
   - CLI_OPTIONS_SCHEMA
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs22.x
   stage: ${opt:stage, 'dev'}
   region: eu-west-2
   memorySize: 512
