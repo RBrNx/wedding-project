@@ -3,7 +3,10 @@
     "name": "The Watson Wedding (Develop)",
     "slug": "watson-wedding-dev",
     "privacy": "unlisted",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "0.20.2",
     "entryPoint": "./src/App.js",
     "orientation": "portrait",
@@ -28,7 +31,12 @@
     "android": {
       "package": "com.rbrnx.watsonwedding",
       "versionCode": 20,
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "VIBRATE"],
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ],
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
       "config": {
@@ -43,12 +51,17 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "extra": {
       "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "dev"
+      "ENV": "dev",
+      "eas": {
+        "projectId": "d0fa9fe6-1dd2-42d7-bb7e-02017298eef6"
+      }
     },
     "hooks": {
       "postPublish": [
