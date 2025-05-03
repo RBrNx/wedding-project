@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Dimensions, Platform, Linking, StatusBar, Keyboard } from 'react-native';
-import { Camera } from 'expo-camera';
+import { CameraView, FlashMode, FocusMode, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
@@ -43,6 +43,7 @@ const ScannerScreen = ({ navigation }) => {
     duration: 200,
     easing: Easing.out(Easing.ease),
   });
+  const [requestPermission] = useCameraPermissions();
 
   const screenRatio = windowHeight / windowWidth;
   const cameraWidth = windowWidth + imagePadding;
@@ -122,7 +123,9 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const askForCameraPermission = async manuallyTriggered => {
-    const { status } = await Camera.requestPermissionsAsync();
+    console.log('Asking for camera permission');
+    const { status } = await requestPermission();
+    console.log('Camera permission status:', status);
     setHasPermission(status === 'granted');
 
     if (status === 'denied' && manuallyTriggered) Linking.openSettings();
@@ -211,8 +214,8 @@ const ScannerScreen = ({ navigation }) => {
             width={cameraWidth}
             ratio={ratio}
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            flashMode={flashEnabled ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
-            autoFocus={Camera.Constants.AutoFocus.on}
+            flashMode={flashEnabled ? FlashMode.on : FlashMode.off}
+            autoFocus={FocusMode.on}
             barCodeScannerSettings={{
               barCodeTypes: Platform.OS === 'ios' ? undefined : ['qr'],
             }}
@@ -280,7 +283,7 @@ const PermissionText = styled.Text`
   text-align: center;
 `;
 
-const StyledCamera = styled(Camera)`
+const StyledCamera = styled(CameraView)`
   ${Layout.absoluteFill};
   width: ${props => props.width}px;
 `;

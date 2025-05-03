@@ -25,7 +25,7 @@ import { getBlob } from '../helpers';
 import ImageAnimation from './ImageAnimation';
 
 const { width } = Dimensions.get('window');
-const { BASE_API_URL } = Constants.manifest.extra;
+const { BASE_API_URL } = Constants.expoConfig.extra;
 const NUM_COLUMNS = 3;
 const THUMBNAIL_SIZE = width / NUM_COLUMNS;
 

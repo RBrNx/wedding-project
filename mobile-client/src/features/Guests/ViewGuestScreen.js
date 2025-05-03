@@ -14,7 +14,7 @@ import { darken } from 'library/utils/colours';
 import useGuestMutation from 'library/hooks/useGuestMutation';
 import DELETE_GUEST from 'library/graphql/mutations/deleteGuest.graphql';
 
-const { BASE_API_URL } = Constants.manifest.extra;
+const { BASE_API_URL } = Constants.expoConfig.extra;
 
 const ViewGuestScreen = ({ route, navigation }) => {
   const [deleteGuest, { loading: deleteInProgress }] = useGuestMutation(DELETE_GUEST);

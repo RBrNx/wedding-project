@@ -62,13 +62,13 @@ const AnimatedSplashScreen = ({ children, splashImage, isAppReady, loadingMessag
 
 const Container = styled(Animated.View)`
   ${Layout.absoluteFill};
-  background-color: ${Constants.manifest.splash.backgroundColor};
+  background-color: ${Constants.expoConfig.splash.backgroundColor};
 `;
 
 const SplashImage = styled(Animated.Image)`
   width: 100%;
   height: 100%;
-  resize-mode: ${Constants.manifest.splash.resizeMode || 'contain'};
+  resize-mode: ${Constants.expoConfig.splash.resizeMode || 'contain'};
 `;
 
 const LoadingContainer = styled(Animated.View)`

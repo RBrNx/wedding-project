@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { useColorScheme } from 'react-native-appearance';
+import { Appearance } from 'react-native';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { Colours, Theme } from 'library/styles';
 import { Theme as ThemeEnum } from 'library/enums';
@@ -18,7 +18,7 @@ const CurrentThemeProvider = ({ children }) => {
 };
 
 const useCurrentThemeProvider = () => {
-  const systemLevelTheme = useColorScheme();
+  const systemLevelTheme = Appearance.getColorScheme();
   const { userSettings } = useSettings();
 
   const currentTheme = useMemo(() => {

@@ -2,13 +2,8 @@
   "expo": {
     "name": "The Watson Wedding (Develop)",
     "slug": "watson-wedding-dev",
-    "privacy": "unlisted",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "0.20.2",
-    "entryPoint": "./src/App.js",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -35,7 +30,8 @@
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
-        "VIBRATE"
+        "VIBRATE",
+        "android.permission.CAMERA"
       ],
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
@@ -51,9 +47,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "extra": {
       "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
@@ -63,18 +57,18 @@
         "projectId": "d0fa9fe6-1dd2-42d7-bb7e-02017298eef6"
       }
     },
-    "hooks": {
-      "postPublish": [
+    "plugins": [
+      [
+        "expo-camera",
         {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "redbarongames",
-            "project": "watson-wedding-mobile",
-            "authToken": "90b31aac9b6c48b0b649a4e32c494d83a9c52d30a0e2444b8b59b1afc0a6ca8f",
-            "setCommits": true
-          }
+          "cameraPermission": "This app uses the camera to scan QR Codes on event invites",
+          "recordAudioAndroid": false
         }
-      ]
-    }
+      ],
+      "expo-asset",
+      "expo-font",
+      "sentry-expo"
+    ],
+    "newArchEnabled": true
   }
 }

@@ -12,6 +12,8 @@ const useAvoidKeyboard = ({
 } = {}) => {
   const avoidKeyboardHeight = useSharedValue(0);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [showListener, setShowListener] = useState(null);
+  const [hideListener, setHideListener] = useState(null);
 
   const defaultShowHandler = event => {
     const { height } = event.endCoordinates;
@@ -32,18 +34,23 @@ const useAvoidKeyboard = ({
     const showEvent = isIOS ? 'keyboardWillShow' : 'keyboardDidShow';
     const hideEvent = isIOS ? 'keyboardWillHide' : 'keyboardDidHide';
 
-    Keyboard.addListener(showEvent, event => {
+    const _showListener = Keyboard.addListener(showEvent, event => {
       defaultShowHandler(event);
       if (handleShow) handleShow(event);
     });
-    Keyboard.addListener(hideEvent, event => {
+    const _hideListener = Keyboard.addListener(hideEvent, event => {
       defaultHideHandler(event);
       if (handleHide) handleHide(event);
     });
 
+    setShowListener(_showListener);
+    setHideListener(_hideListener);
+
     return () => {
-      Keyboard.removeListener(showEvent);
-      Keyboard.removeListener(hideEvent);
+      showListener?.remove();
+      hideListener?.remove();
+      setShowListener(null);
+      setHideListener(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

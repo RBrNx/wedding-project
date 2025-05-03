@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import { Auth } from 'aws-amplify';
 import { createAwsClient } from 'agnostic-aws-signature';
 
-const { BASE_API_URL } = Constants.manifest.extra;
+const { BASE_API_URL } = Constants.expoConfig.extra;
 
 const awsSigV4Fetch = async (uri, options = {}) => {
   const { method, body, headers } = options;

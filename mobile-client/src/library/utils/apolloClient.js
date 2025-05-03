@@ -5,7 +5,7 @@ import Constants from 'expo-constants';
 import { Auth } from 'aws-amplify';
 import awsSigV4Fetch from './awsSigV4Fetch';
 
-const { BASE_API_URL, AUTH_ENDPOINT, UNAUTH_ENDPOINT } = Constants.manifest.extra;
+const { BASE_API_URL, AUTH_ENDPOINT, UNAUTH_ENDPOINT } = Constants.expoConfig.extra;
 
 const httpLink = new HttpLink({
   uri: BASE_API_URL,
