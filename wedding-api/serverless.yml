@@ -3,21 +3,24 @@ app: wedding-project
 service: wedding-api
 
 build:
-  esbuild: false
+  esbuild:
+    bundle: true
+    external:
+      - saslprep
+      - sharp
+    sourcemap:
+      # The sourcemap type to use, options are (inline, linked, or external)
+      type: linked
+      # Whether to set the NODE_OPTIONS on functions to enable sourcemaps on Lambda
+      setNodeOptions: true
 
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
-  - serverless-webpack
   - serverless-offline
   - serverless-domain-manager
   - serverless-iam-roles-per-function
 
 custom:
-  webpack:
-    webpackConfig: ./webpack.config.js
-    includeModules:
-      nodeModulesRelativeDir: '../'
-    packager: 'yarn'
   serverless-offline:
     host: 0.0.0.0
     port: 4000
