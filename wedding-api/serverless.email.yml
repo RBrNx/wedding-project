@@ -2,6 +2,9 @@
 app: wedding-project
 service: wedding-email
 
+build:
+  esbuild: false
+
 # Use the serverless-webpack plugin to transpile ES6
 plugins:
   - serverless-webpack
