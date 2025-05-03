@@ -1,6 +1,0 @@
-mutation($id: ID!) {
-  deleteInvitationGroup(id: $id) {
-    success
-    message
-  }
-}
