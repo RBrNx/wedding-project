@@ -16,14 +16,15 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
+    "@aws-amplify/react-native": "^1.1.9",
     "@expo-google-fonts/muli": "^0.1.0",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^3",
     "@gorhom/portal": "^1.0.7",
-    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-native-community/netinfo": "11.4.1",
+    "@react-native-community/netinfo": "^11.4.1",
     "@react-navigation/bottom-tabs": "^5.11.8",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
@@ -34,7 +35,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
-    "aws-amplify": "^3.3.12",
+    "aws-amplify": "^6.14.4",
     "babel-plugin-module-resolver": "^5.0.2",
     "color": "^3.1.2",
     "dayjs": "^1.10.6",
@@ -71,7 +72,7 @@
     "react-native-confirmation-code-field": "^7.1.0",
     "react-native-dashed-line": "^1.0.0",
     "react-native-gesture-handler": "~2.20.2",
-    "react-native-get-random-values": "~1.11.0",
+    "react-native-get-random-values": "^1.11.0",
     "react-native-maps": "1.18.0",
     "react-native-modal": "^11.5.6",
     "react-native-modal-datetime-picker": "^18.0.0",
@@ -112,8 +113,5 @@
     "prettier": "^1.19.1",
     "semantic-release": "^17.4.2",
     "semantic-release-expo": "^2.2.3"
-  },
-  "resolutions": {
-    "amazon-cognito-identity-js": "4.5.1"
   }
 }

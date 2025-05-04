@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
-import Amplify from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import * as Sentry from 'sentry-expo';
 import client from 'library/utils/apolloClient';
