@@ -21,12 +21,7 @@ const connectToDatabase = async () => {
       cachedDb = await mongoose
         .createConnection(MONGODB_URI, {
           bufferCommands: false,
-          bufferMaxEntries: 0,
-          useNewUrlParser: true,
-          useFindAndModify: false,
-          useCreateIndex: true,
-          poolSize: 10,
-          useUnifiedTopology: true,
+          minPoolSize: 10,
         })
         .asPromise();
 
