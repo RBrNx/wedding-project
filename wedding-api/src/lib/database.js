@@ -18,15 +18,17 @@ const connectToDatabase = async () => {
     if (cachedDb == null) {
       console.log('Creating new database connection');
 
-      cachedDb = await mongoose.createConnection(MONGODB_URI, {
-        bufferCommands: false,
-        bufferMaxEntries: 0,
-        useNewUrlParser: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
-        poolSize: 10,
-        useUnifiedTopology: true,
-      });
+      cachedDb = await mongoose
+        .createConnection(MONGODB_URI, {
+          bufferCommands: false,
+          bufferMaxEntries: 0,
+          useNewUrlParser: true,
+          useFindAndModify: false,
+          useCreateIndex: true,
+          poolSize: 10,
+          useUnifiedTopology: true,
+        })
+        .asPromise();
 
       cachedDb.model('User', UserSchema);
       cachedDb.model('InvitationGroup', InvitationGroupSchema);
