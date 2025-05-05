@@ -11,7 +11,7 @@ const checkAuthenticated = async () => {
   try {
     const session = await Auth.fetchAuthSession();
 
-    return !!session;
+    return !!session.userSub;
   } catch (err) {
     return false;
   }

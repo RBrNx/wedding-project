@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
-import { Layout } from 'library/styles';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import InvitationsIllustration from './components/InvitationsIllustration';
@@ -34,7 +33,6 @@ const InvitationsScreen = () => {
 };
 
 const Container = styled.View`
-  padding-top: ${Layout.statusBarHeight}px;
   flex: 1;
 `;
 

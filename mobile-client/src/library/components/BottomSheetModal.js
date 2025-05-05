@@ -21,7 +21,7 @@ const BottomSheetModal = ({ active, onDismiss, children, outerChildren, animated
       if (avoidKeyboard) bottomSheetModalRef.current?.expand();
     },
     handleHide: () => {
-      if (avoidKeyboard) bottomSheetModalRef.current?.snapTo(0);
+      if (avoidKeyboard) bottomSheetModalRef.current?.snapToIndex(0);
     },
   });
 

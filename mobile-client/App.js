@@ -23,6 +23,7 @@ Amplify.configure({
       userPoolId: awsConfig.cognito.USER_POOL_ID,
       identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
       userPoolClientId: awsConfig.cognito.APP_CLIENT_ID,
+      allowGuestAccess: true,
     },
   },
 });
