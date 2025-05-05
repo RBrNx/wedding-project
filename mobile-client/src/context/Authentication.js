@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import * as Auth from 'aws-amplify/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import client from 'library/utils/apolloClient';
 import FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION from 'library/graphql/mutations/fetchTempLoginCredentials.graphql';
@@ -11,6 +11,13 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const auth = useProviderAuth();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+};
+
+const getCognitoUser = async () => {
+  const cognitoUser = await Auth.getCurrentUser();
+  const attributes = await Auth.fetchUserAttributes();
+
+  return { ...cognitoUser, attributes };
 };
 
 const useProviderAuth = () => {
@@ -30,7 +37,9 @@ const useProviderAuth = () => {
     if (!emailAddress || !password) return null;
 
     const lowercaseEmail = emailAddress.toLowerCase().trim();
-    const cognitoUser = await Auth.signIn(lowercaseEmail, password);
+
+    await Auth.signIn({ username: lowercaseEmail, password });
+    const cognitoUser = await getCognitoUser();
 
     await refetch();
     setUser(cognitoUser);
@@ -76,9 +85,10 @@ const useProviderAuth = () => {
   useEffect(() => {
     const checkForAuthenticatedUser = async () => {
       try {
-        const cognitoUser = await Auth.currentAuthenticatedUser();
+        const cognitoUser = await getCognitoUser();
 
         setUser(cognitoUser);
+        await refetch();
       } catch (err) {
         console.log(err);
         setBootstrapComplete(true);

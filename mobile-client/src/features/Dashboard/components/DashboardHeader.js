@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colours, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
-import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from '@bhavberi/react-native-user-avatar';
 import { useAuth } from 'context';
 
 const DashboardHeader = ({ title, style }) => {

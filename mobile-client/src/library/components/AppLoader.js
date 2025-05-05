@@ -44,6 +44,7 @@ const AppLoader = ({ children }) => {
       } finally {
         // Tell the application to render
         setIsSplashReady(true);
+        await SplashScreen.hideAsync();
         console.log('Splash screen ready', { fontsLoaded, authBootstrapped, settingsBootstrapped, dataBootstrapped });
       }
     }

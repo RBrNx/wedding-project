@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { BlurView } from 'expo-blur';
-import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from '@bhavberi/react-native-user-avatar';
 import Spacer from 'library/components/Spacer';
 import { Image, Platform } from 'react-native';
 

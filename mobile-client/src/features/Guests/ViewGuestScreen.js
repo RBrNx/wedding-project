@@ -1,7 +1,7 @@
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
-import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from '@bhavberi/react-native-user-avatar';
 import Spacer from 'library/components/Spacer';
 import QRCode from 'library/components/QRCode';
 import { GuestResponse } from 'library/enums';
