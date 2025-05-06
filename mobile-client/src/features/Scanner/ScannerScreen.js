@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Dimensions, Platform, Linking, StatusBar, Keyboard } from 'react-native';
-import { CameraView, FlashMode, FocusMode, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
@@ -43,7 +43,7 @@ const ScannerScreen = ({ navigation }) => {
     duration: 200,
     easing: Easing.out(Easing.ease),
   });
-  const [requestPermission] = useCameraPermissions();
+  const [_permission, requestPermission] = useCameraPermissions();
 
   const screenRatio = windowHeight / windowWidth;
   const cameraWidth = windowWidth + imagePadding;
@@ -107,11 +107,11 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const handleBarCodeScanned = async ({ data }) => {
-    console.log({ data });
     setScanned(true);
 
     const invitationRegex = new RegExp(/(?:thewatsonwedding.com\/invite\/)(?<invitationId>[A-Za-z0-9_-]{12})/g);
-    const { invitationId: scannedInvitationId } = invitationRegex.exec(data)?.groups || {};
+    const matches = invitationRegex.exec(data);
+    const [_url, scannedInvitationId] = matches;
 
     if (!scannedInvitationId) {
       setScanned(false);
@@ -123,9 +123,7 @@ const ScannerScreen = ({ navigation }) => {
   };
 
   const askForCameraPermission = async manuallyTriggered => {
-    console.log('Asking for camera permission');
     const { status } = await requestPermission();
-    console.log('Camera permission status:', status);
     setHasPermission(status === 'granted');
 
     if (status === 'denied' && manuallyTriggered) Linking.openSettings();
@@ -213,11 +211,11 @@ const ScannerScreen = ({ navigation }) => {
             ref={cameraRef}
             width={cameraWidth}
             ratio={ratio}
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            flashMode={flashEnabled ? FlashMode.on : FlashMode.off}
-            autoFocus={FocusMode.on}
-            barCodeScannerSettings={{
-              barCodeTypes: Platform.OS === 'ios' ? undefined : ['qr'],
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+            enableTorch={flashEnabled}
+            autoFocus='on'
+            barcodeScannerSettings={{
+              barCodeTypes: ['qr'],
             }}
             onCameraReady={async () => {
               if (!isRatioSet) {

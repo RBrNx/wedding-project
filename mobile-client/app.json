@@ -27,11 +27,10 @@
       "package": "com.rbrnx.watsonwedding",
       "versionCode": 20,
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "VIBRATE",
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.VIBRATE"
       ],
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
@@ -49,7 +48,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "extra": {
-      "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
+      // "BASE_API_URL": "https://dev-api.thewatsonwedding.com/",
+      "BASE_API_URL": "http://192.168.1.65:3000/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
       "ENV": "dev",
