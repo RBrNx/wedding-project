@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -30,15 +30,15 @@ const AnimatedSplashScreen = ({ children, splashImage, isAppReady, loadingMessag
   }, []);
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(splashVisible.value, [1, 0], [1, 0], Extrapolate.CLAMP),
+    opacity: interpolate(splashVisible.value, [1, 0], [1, 0], Extrapolation.CLAMP),
   }));
 
   const animatedSplashStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: interpolate(splashVisible.value, [1, 0], [1, 0], Extrapolate.CLAMP) }],
+    transform: [{ scale: interpolate(splashVisible.value, [1, 0], [1, 0], Extrapolation.CLAMP) }],
   }));
 
   const animatedLoaderStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(loaderVisible.value, [0, 1], [0, 1], Extrapolate.CLAMP),
+    opacity: interpolate(loaderVisible.value, [0, 1], [0, 1], Extrapolation.CLAMP),
   }));
 
   return (
@@ -62,13 +62,13 @@ const AnimatedSplashScreen = ({ children, splashImage, isAppReady, loadingMessag
 
 const Container = styled(Animated.View)`
   ${Layout.absoluteFill};
-  background-color: ${Constants.manifest.splash.backgroundColor};
+  background-color: ${Constants.expoConfig.splash.backgroundColor};
 `;
 
 const SplashImage = styled(Animated.Image)`
   width: 100%;
   height: 100%;
-  resize-mode: ${Constants.manifest.splash.resizeMode || 'contain'};
+  resize-mode: ${Constants.expoConfig.splash.resizeMode || 'contain'};
 `;
 
 const LoadingContainer = styled(Animated.View)`

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
-import Amplify from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import * as Sentry from 'sentry-expo';
 import client from 'library/utils/apolloClient';
@@ -11,15 +11,20 @@ import AppNavigator from 'navigation/AppNavigator';
 import awsConfig from 'library/utils/awsExports';
 import allSettled from 'promise.allsettled';
 import { DatastoreProvider } from 'context/Datastore';
+import AppLoader from 'library/components/AppLoader';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 allSettled.shim();
 
 Amplify.configure({
   Auth: {
-    region: awsConfig.cognito.REGION,
-    userPoolId: awsConfig.cognito.USER_POOL_ID,
-    identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
-    userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID,
+    Cognito: {
+      region: awsConfig.cognito.REGION,
+      userPoolId: awsConfig.cognito.USER_POOL_ID,
+      identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
+      userPoolClientId: awsConfig.cognito.APP_CLIENT_ID,
+      allowGuestAccess: true,
+    },
   },
 });
 
@@ -35,21 +40,23 @@ const App = () => {
   }, []);
 
   return (
-    <ApolloProvider client={client}>
-      <AuthProvider>
-        <DatastoreProvider>
-          <SettingsProvider>
-            <CurrentThemeProvider>
-              {/* <AppLoader> */}
-              <AlertProvider>
-                <AppNavigator />
-              </AlertProvider>
-              {/* </AppLoader> */}
-            </CurrentThemeProvider>
-          </SettingsProvider>
-        </DatastoreProvider>
-      </AuthProvider>
-    </ApolloProvider>
+    <GestureHandlerRootView>
+      <ApolloProvider client={client}>
+        <AuthProvider>
+          <DatastoreProvider>
+            <SettingsProvider>
+              <CurrentThemeProvider>
+                <AppLoader>
+                  <AlertProvider>
+                    <AppNavigator />
+                  </AlertProvider>
+                </AppLoader>
+              </CurrentThemeProvider>
+            </SettingsProvider>
+          </DatastoreProvider>
+        </AuthProvider>
+      </ApolloProvider>
+    </GestureHandlerRootView>
   );
 };
 

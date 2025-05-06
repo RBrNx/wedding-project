@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import {
   Easing,
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -40,7 +40,7 @@ const SpotifyResults = ({ tracks = [], setSelectedSong, selectedSong }) => {
   }, [tracks.length]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    height: interpolate(cardExpansion.value, [0, 1], [0, MAX_HEIGHT], Extrapolate.CLAMP),
+    height: interpolate(cardExpansion.value, [0, 1], [0, MAX_HEIGHT], Extrapolation.CLAMP),
   }));
 
   return (

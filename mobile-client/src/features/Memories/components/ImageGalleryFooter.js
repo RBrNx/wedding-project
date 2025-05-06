@@ -3,7 +3,7 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components';
 import { Colours, Outlines, Typography } from 'library/styles';
 import { LinearGradient } from 'expo-linear-gradient';
-import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from '@bhavberi/react-native-user-avatar';
 import { View } from 'react-native';
 import Spacer from 'library/components/Spacer';
 import { getComplementaryColor, getContrastingTextColor } from 'library/utils/colours';

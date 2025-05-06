@@ -1,4 +1,3 @@
-import { Layout } from 'library/styles';
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import { Portal } from '@gorhom/portal';
@@ -44,7 +43,6 @@ const MemoriesScreen = () => {
 
 const Container = styled.View`
   flex: 1;
-  padding-top: ${Layout.statusBarHeight}px;
 `;
 
 export default MemoriesScreen;

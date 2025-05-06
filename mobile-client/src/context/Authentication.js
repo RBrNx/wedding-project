@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import * as Auth from 'aws-amplify/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import client from 'library/utils/apolloClient';
 import FETCH_TEMP_LOGIN_CREDENTIALS_MUTATION from 'library/graphql/mutations/fetchTempLoginCredentials.graphql';
@@ -13,27 +13,40 @@ const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
+const getCognitoUser = async () => {
+  const cognitoUser = await Auth.getCurrentUser();
+  const attributes = await Auth.fetchUserAttributes();
+
+  return { ...cognitoUser, attributes };
+};
+
 const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
-  const { data: queryData, error, refetch } = useQuery(CURRENT_USER_QUERY, { skip: !user });
-  const currentUser = queryData?.getCurrentUser;
+  const { refetch: fetchCurrentUser } = useQuery(CURRENT_USER_QUERY);
   const isAuthenticated = !!user && !!currentUser;
-
-  if (error) {
-    const { message } = parseError(error);
-    console.error(message);
-  }
 
   const signIn = async (emailAddress, password) => {
     if (!emailAddress || !password) return null;
 
     const lowercaseEmail = emailAddress.toLowerCase().trim();
-    const cognitoUser = await Auth.signIn(lowercaseEmail, password);
 
-    await refetch();
+    await Auth.signIn({ username: lowercaseEmail, password });
+    const cognitoUser = await getCognitoUser();
+
     setUser(cognitoUser);
+
+    if (cognitoUser) {
+      const { data, error } = await fetchCurrentUser();
+      setCurrentUser(data?.getCurrentUser);
+
+      if (error) {
+        const { message } = parseError(error);
+        console.error(message);
+      }
+    }
 
     return cognitoUser;
   };
@@ -76,9 +89,13 @@ const useProviderAuth = () => {
   useEffect(() => {
     const checkForAuthenticatedUser = async () => {
       try {
-        const cognitoUser = await Auth.currentAuthenticatedUser();
-
+        const cognitoUser = await getCognitoUser();
         setUser(cognitoUser);
+
+        if (cognitoUser) {
+          const res = await fetchCurrentUser();
+          setCurrentUser(res.data?.getCurrentUser);
+        }
       } catch (err) {
         console.log(err);
         setBootstrapComplete(true);

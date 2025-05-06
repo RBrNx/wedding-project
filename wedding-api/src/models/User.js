@@ -1,8 +1,8 @@
-import { Schema, Types } from 'mongoose';
+import { Schema } from 'mongoose';
 import { UserRole } from '../lib/enums';
 import { mapEnumValues } from '../lib/helpers';
 
-const { ObjectId } = Types;
+const { ObjectId } = Schema.Types;
 
 const UserSchema = new Schema({
   cognitoUserId: { type: String, required: false, unique: true, sparse: true },
