@@ -1,5 +1,6 @@
 import { Outlines } from 'library/styles';
 import React, { useState } from 'react';
+import { Pressable } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 const StandardPressable = ({ children, style, onPress, raised, pressedStyle, onLayout }) => {
@@ -19,7 +20,7 @@ const StandardPressable = ({ children, style, onPress, raised, pressedStyle, onL
   );
 };
 
-const StyledPressable = styled.Pressable`
+const StyledPressable = styled(Pressable)`
   ${props => props.raised && Outlines.boxShadow}
 `;
 
