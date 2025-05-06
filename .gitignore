@@ -3,3 +3,5 @@
 .webpack
 .vscode
 .DS_STORE
+.history
+.env

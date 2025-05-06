@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -22,7 +22,7 @@ const useCustomScrollbar = scrollY => {
 
   const animatedHandleStyle = useAnimatedStyle(() => {
     const value = scrollY.value * (visibleScrollbarHeight / totalScrollbarHeight);
-    const translateY = interpolate(value, [0, difference], [0, difference], Extrapolate.CLAMP);
+    const translateY = interpolate(value, [0, difference], [0, difference], Extrapolation.CLAMP);
 
     return {
       transform: [{ translateY }],

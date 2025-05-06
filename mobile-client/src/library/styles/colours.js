@@ -1,6 +1,8 @@
 const primary = '#14233c';
 const secondary = '#2991cc';
 const tertiary = '#ff4d56';
+const success = '#21a67a';
+const warning = '#f0a92e';
 const neutral = {
   white: '#fff',
   offWhite: '#f5f5f5',
@@ -14,4 +16,4 @@ const neutral = {
   black: '#000',
 };
 
-export { primary, secondary, tertiary, neutral };
+export { primary, secondary, tertiary, neutral, success, warning };

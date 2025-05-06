@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import Spacer from 'library/components/Spacer';
 import { Colours, Typography } from 'library/styles';
@@ -11,7 +11,7 @@ const ScannerModeHeading = ({ heading, subHeading, scannerModeIndex, index }) =>
   const animatedHeadingStyle = useAnimatedStyle(() => {
     const normalisedAnim = index - scannerModeIndex.value;
 
-    const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
+    const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolation.CLAMP);
 
     return {
       opacity,

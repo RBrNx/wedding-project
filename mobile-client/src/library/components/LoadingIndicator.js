@@ -9,14 +9,14 @@ const indicatorBackground = {
   dark: '#a2a2a2',
 };
 
-const LoadingIndicator = ({ size, style }) => {
+const LoadingIndicator = ({ size, style, backgroundColour }) => {
   const { currentTheme } = useCurrentTheme();
 
   const colorizedSource = useMemo(
     () =>
       colouriseLottie(LoadingAnimation, {
         // Shape Layer 1.Shape 1.Stroke 1
-        'layers.1.shapes.0.it.1.c.k': indicatorBackground[currentTheme],
+        'layers.1.shapes.0.it.1.c.k': backgroundColour || indicatorBackground[currentTheme],
       }),
     [currentTheme],
   );

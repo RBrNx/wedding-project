@@ -4,13 +4,14 @@ import EmptyMessage from 'library/components/EmptyMessage';
 import ErrorMessage from 'library/components/ErrorMessage';
 import LoadingIndicator from 'library/components/LoadingIndicator';
 import { Colours, Layout, Theme } from 'library/styles';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components';
 import GET_RSVP_QUESTIONS from 'library/graphql/queries/getRSVPQuestions.graphql';
 import { Dimensions } from 'react-native';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { Feather } from '@expo/vector-icons';
+import { useSnapPoints } from 'library/hooks';
 import QuestionCard from './QuestionCard';
 import EditQuestionSheet from './EditQuestionSheet';
 
@@ -40,10 +41,7 @@ const QuestionFlatlist = ({ scrollPosition }) => {
   const [editMode, setEditMode] = useState(false);
   const [showAddEditQuestionSheet, setShowAddEditQuestionSheet] = useState(false);
   const { loading, error, data } = useQuery(GET_RSVP_QUESTIONS);
-  // useAvoidKeyboard({
-  //   handleShow: () => bottomSheetRef.current?.expand(),
-  //   handleHide: () => bottomSheetRef.current?.snapTo(0),
-  // });
+  const snapPoints = useSnapPoints();
 
   const onQuestionPress = (question, parentQ) => {
     if (question.isFollowUp) {
@@ -77,8 +75,6 @@ const QuestionFlatlist = ({ scrollPosition }) => {
   const renderFlatlist = ({ item, index }) => (
     <QuestionRow question={item} index={index} onPress={onQuestionPress} onAddFollowUp={onAddFollowUp} />
   );
-
-  const snapPoints = useMemo(() => ['45%', '82.5%'], []);
 
   return (
     <>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Assets } from '@react-navigation/stack';
+import { Assets } from '@react-navigation/elements';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import { Colours } from 'library/styles';

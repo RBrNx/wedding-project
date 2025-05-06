@@ -1,6 +1,6 @@
-import { Schema, Types } from 'mongoose';
+import { Schema } from 'mongoose';
 
-const { ObjectId } = Types;
+const { ObjectId } = Schema.Types;
 
 const TempLoginDetailsSchema = new Schema({
   user: { type: ObjectId, required: true, ref: 'User' },

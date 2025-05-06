@@ -1,15 +1,16 @@
 import Constants from 'expo-constants';
-import { Auth } from 'aws-amplify';
+import * as Auth from 'aws-amplify/auth';
 import { createAwsClient } from 'agnostic-aws-signature';
 
-const { BASE_API_URL } = Constants.manifest.extra;
+const { BASE_API_URL } = Constants.expoConfig.extra;
 
 const awsSigV4Fetch = async (uri, options = {}) => {
   const { method, body, headers } = options;
   const { pathname } = new URL(uri);
 
   try {
-    const { accessKeyId, secretAccessKey, sessionToken } = await Auth.currentUserCredentials();
+    const { credentials } = await Auth.fetchAuthSession();
+    const { accessKeyId, secretAccessKey, sessionToken } = credentials;
 
     const awsClient = createAwsClient(accessKeyId, secretAccessKey, sessionToken, {
       region: 'eu-west-2',

@@ -1,7 +1,7 @@
 import { Colours, Layout, Outlines, Theme, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
-import UserAvatar from 'react-native-user-avatar';
+import UserAvatar from '@bhavberi/react-native-user-avatar';
 import Spacer from 'library/components/Spacer';
 import QRCode from 'library/components/QRCode';
 import { GuestResponse } from 'library/enums';
@@ -14,7 +14,7 @@ import { darken } from 'library/utils/colours';
 import useGuestMutation from 'library/hooks/useGuestMutation';
 import DELETE_GUEST from 'library/graphql/mutations/deleteGuest.graphql';
 
-const { BASE_API_URL } = Constants.manifest.extra;
+const { BASE_API_URL } = Constants.expoConfig.extra;
 
 const ViewGuestScreen = ({ route, navigation }) => {
   const [deleteGuest, { loading: deleteInProgress }] = useGuestMutation(DELETE_GUEST);

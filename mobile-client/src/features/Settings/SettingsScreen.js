@@ -127,7 +127,6 @@ const SettingsScreen = () => {
 
 const StyledDashboardHeader = styled(DashboardHeader)`
   padding-horizontal: 5%;
-  margin-top: ${Layout.statusBarHeight}px;
 `;
 
 const SettingCard = styled(StandardPressable).attrs(props => ({

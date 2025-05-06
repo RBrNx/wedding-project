@@ -7,8 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "0.20.3",
-    "entryPoint": "./src/App.js",
+    "version": "0.22.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -18,7 +17,7 @@
       "backgroundColor": "#14233c"
     },
     "ios": {
-      "buildNumber": "0.20.3",
+      "buildNumber": "0.22.2",
       "bundleIdentifier": "com.rbrnx.watsonwedding",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR Codes on event invites",
@@ -30,12 +29,12 @@
     },
     "android": {
       "package": "com.rbrnx.watsonwedding",
-      "versionCode": 21,
+      "versionCode": 26,
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "VIBRATE"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.VIBRATE"
       ],
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
@@ -55,23 +54,26 @@
       "**/*"
     ],
     "extra": {
-      "BASE_API_URL": "https://api.thewatsonwedding.com/",
+      "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "production"
+      "ENV": "staging".
+      "eas": {
+        "projectId": "d0fa9fe6-1dd2-42d7-bb7e-02017298eef6"
+      }
     },
-    "hooks": {
-      "postPublish": [
+    "plugins": [
+      [
+        "expo-camera",
         {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "redbarongames",
-            "project": "watson-wedding-mobile",
-            "authToken": "90b31aac9b6c48b0b649a4e32c494d83a9c52d30a0e2444b8b59b1afc0a6ca8f",
-            "setCommits": true
-          }
+          "cameraPermission": "This app uses the camera to scan QR Codes on event invites",
+          "recordAudioAndroid": false
         }
-      ]
-    }
+      ],
+      "expo-asset",
+      "expo-font",
+      "sentry-expo"
+    ],
+    "newArchEnabled": true
   }
 }

@@ -1,4 +1,4 @@
-query {
+query bootstrapQuery($filter: MemoryFilterInput!) {
   getEventInfo {
     _id
     name
@@ -31,29 +31,24 @@ query {
       info
     }
   }
-  getCurrentUser {
+  getMemoryAlbums(filter: $filter) {
     _id
-    eventId
-    firstName
-    lastName
-    email
-    role
-    attendanceStatus
-    rsvpForm {
-      question {
+    images {
+      ... on ImageMemory {
         _id
-        type
-        title
-        label
-        choices {
-          _id
-          label
-          value
+        photoId
+        eventId
+        uploadedBy {
+          firstName
+          lastName
         }
-      }
-      answer {
-        label
-        value
+        url
+        thumbnail
+        sortIndex
+        caption
+        dominantColour
+        createdAt
+        updatedAt
       }
     }
   }

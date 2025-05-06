@@ -1,5 +1,5 @@
 import React from 'react';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { SubmitRSVP } from 'library/utils/constants';
 import { Colours, Typography } from 'library/styles';
@@ -8,8 +8,8 @@ import QuestionLoader from './QuestionLoader';
 const RSVPQuestion = ({ question, animIndex, index, isLoading }) => {
   const animatedStepStyle = useAnimatedStyle(() => {
     const normalisedAnim = index - animIndex.value;
-    const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolate.CLAMP);
-    const translateX = interpolate(normalisedAnim, [-0.5, 0, 0.5], [-15, 0, 15], Extrapolate.CLAMP);
+    const opacity = interpolate(normalisedAnim, [-0.5, 0, 0.5], [0, 1, 0], Extrapolation.CLAMP);
+    const translateX = interpolate(normalisedAnim, [-0.5, 0, 0.5], [-15, 0, 15], Extrapolation.CLAMP);
 
     return {
       opacity,

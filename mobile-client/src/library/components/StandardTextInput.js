@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Animated, {
   Easing,
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -16,6 +16,8 @@ const StandardTextInput = ({
   value,
   placeholder,
   onChangeText,
+  onFocus,
+  onBlur,
   secureTextEntry,
   keyboardType = 'default',
   maxLength,
@@ -26,18 +28,22 @@ const StandardTextInput = ({
   rounded,
   showCharacterCount = false,
   placeholderComponent,
+  error,
 }) => {
   const textInput = useRef();
   const [isFocused, setIsFocused] = useState(!!value);
   const focusAnimation = useSharedValue(value ? 1 : 0);
   const ContainerComponent = flat ? FlatContainer : Container;
 
-  const onFocus = () => {
+  const handleOnFocus = () => {
+    onFocus?.();
+
     setIsFocused(true);
     focusAnimation.value = withTiming(1, { duration: 150, easing: Easing.out(Easing.exp) });
   };
 
-  const onBlur = () => {
+  const handleOnBlur = () => {
+    onBlur?.();
     if (value) return;
 
     setIsFocused(false);
@@ -45,16 +51,16 @@ const StandardTextInput = ({
   };
 
   const focusedLabelAnimatedStyles = useAnimatedStyle(() => ({
-    opacity: interpolate(focusAnimation.value, [0, 1], [0, 1], Extrapolate.CLAMP),
-    transform: [{ translateY: interpolate(focusAnimation.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
+    opacity: interpolate(focusAnimation.value, [0, 1], [0, 1], Extrapolation.CLAMP),
+    transform: [{ translateY: interpolate(focusAnimation.value, [0, 1], [15, 0], Extrapolation.CLAMP) }],
   }));
   const regularLabelAnimatedStyles = useAnimatedStyle(() => ({
-    opacity: interpolate(focusAnimation.value, [0, 1], [1, 0], Extrapolate.CLAMP),
-    transform: [{ translateX: interpolate(focusAnimation.value, [0.75, 1], [0, -10], Extrapolate.CLAMP) }],
+    opacity: interpolate(focusAnimation.value, [0, 1], [1, 0], Extrapolation.CLAMP),
+    transform: [{ translateX: interpolate(focusAnimation.value, [0.75, 1], [0, -10], Extrapolation.CLAMP) }],
   }));
   const placeholderAnimatedStyles = useAnimatedStyle(() => {
     let opacity = value ? 0 : focusAnimation.value;
-    let translateX = interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolate.CLAMP);
+    let translateX = interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolation.CLAMP);
     if (rounded) {
       opacity = value ? 0 : 1;
       translateX = 0;
@@ -73,6 +79,7 @@ const StandardTextInput = ({
         isFocused={isFocused}
         onPress={() => textInput.current.focus()}
         rounded={rounded}
+        error={error}
       >
         <FocusedLabel style={focusedLabelAnimatedStyles}>{label?.toUpperCase()}</FocusedLabel>
         <RegularLabel style={regularLabelAnimatedStyles} multiline={multiline}>
@@ -88,8 +95,8 @@ const StandardTextInput = ({
           ref={textInput}
           value={value}
           style={inputStyle}
-          onFocus={onFocus}
-          onBlur={onBlur}
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
@@ -115,7 +122,12 @@ const Container = styled.Pressable`
   padding-top: 26px;
   ${Outlines.borderRadius};
   ${Outlines.boxShadow};
-  border-color: ${props => (props.isFocused ? Colours.secondary : 'transparent')};
+  border-color: ${props => {
+    if (props.isFocused) return Colours.secondary;
+    if (props.error) return Colours.warning;
+
+    return 'transparent';
+  }};
   ${Outlines.inputBorder}
   ${props =>
     props.rounded &&

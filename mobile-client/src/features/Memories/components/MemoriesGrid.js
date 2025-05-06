@@ -1,7 +1,5 @@
-import { useQuery } from '@apollo/react-hooks';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import GET_MEMORY_ALBUMS from 'library/graphql/queries/getMemoryAlbums.graphql';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
 import StandardActionButton from 'library/components/StandardActionButton';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -10,6 +8,7 @@ import { css } from 'styled-components/native';
 import { Dimensions } from 'react-native';
 import { useRefreshControl } from 'library/hooks';
 import { useFocusEffect } from '@react-navigation/native';
+import { useDatastore } from 'context';
 import QuickPreviewModal from './QuickPreviewModal';
 import GridItem from './GridItem';
 import MemoryUploader from './MemoryUploader';
@@ -18,7 +17,6 @@ import MemoriesGridHeader from './MemoriesGridHeader';
 const { width } = Dimensions.get('window');
 const NUM_COLUMNS = 3;
 const THUMBNAIL_SIZE = width / NUM_COLUMNS;
-const loadingData = new Array(30).fill(null).map((_, _id) => ({ _id }));
 
 const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisible, savedCaptions, onUpload }) => {
   const modalVisibility = useSharedValue(0);
@@ -27,9 +25,9 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploads, setUploads] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
-  const { data, loading, refetch } = useQuery(GET_MEMORY_ALBUMS, { variables: { filter: { page: 0, limit: 60 } } });
-  const { renderRefreshControl } = useRefreshControl({ onRefresh: async () => refetch(), offset: 75 });
-  const memories = loading ? loadingData : [...uploads, ...(data?.getMemoryAlbums || [])];
+  const { memoryAlbums, refetchData } = useDatastore();
+  const { renderRefreshControl } = useRefreshControl({ onRefresh: async () => refetchData(), offset: 75 });
+  const memories = [...uploads, ...(memoryAlbums || [])];
   const spareSlots = NUM_COLUMNS - (memories.length % NUM_COLUMNS || NUM_COLUMNS);
   const paddedMemories = [
     ...memories,
@@ -41,7 +39,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
       const refetchMemoriesOnFocus = async () => {
         if (!isFocused) {
           setIsFocused(true);
-          await refetch();
+          await refetchData();
           setUploads([]);
         }
       };
@@ -50,7 +48,7 @@ const MemoriesGrid = ({ setSelectedAlbum, sendImagesForCaptioning, galleryVisibl
       return () => {
         if (isFocused) setIsFocused(false);
       };
-    }, [isFocused, refetch]),
+    }, [isFocused, refetchData]),
   );
 
   const renderMemory = ({ item: album }) => {
