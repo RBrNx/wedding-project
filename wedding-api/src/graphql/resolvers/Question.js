@@ -25,7 +25,7 @@ const getRSVPQuestions = async (parent, args, { currentUser, db }) => {
       return questions;
     }
 
-    const invite = await InvitationGroupModel.findOne({ guests: ObjectId(currentUser._id) });
+    const invite = await InvitationGroupModel.findOne({ guests: new ObjectId(currentUser._id) });
     const validInvitationTypes = [QuestionGuestType.BOTH, invite.type];
 
     const filteredQuestions = questions.reduce((acc, currQuestion) => {
