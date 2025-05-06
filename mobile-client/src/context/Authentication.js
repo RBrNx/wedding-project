@@ -22,16 +22,11 @@ const getCognitoUser = async () => {
 
 const useProviderAuth = () => {
   const [user, setUser] = useState(null); // This stores the Cognito User, not the User in the DB
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSigningOut, setIsSigningOut] = useState(null);
   const [bootstrapComplete, setBootstrapComplete] = useState(false);
-  const { data: queryData, error, refetch } = useQuery(CURRENT_USER_QUERY, { skip: !user });
-  const currentUser = queryData?.getCurrentUser;
+  const { refetch: fetchCurrentUser } = useQuery(CURRENT_USER_QUERY);
   const isAuthenticated = !!user && !!currentUser;
-
-  if (error) {
-    const { message } = parseError(error);
-    console.error(message);
-  }
 
   const signIn = async (emailAddress, password) => {
     if (!emailAddress || !password) return null;
@@ -41,8 +36,17 @@ const useProviderAuth = () => {
     await Auth.signIn({ username: lowercaseEmail, password });
     const cognitoUser = await getCognitoUser();
 
-    await refetch();
     setUser(cognitoUser);
+
+    if (cognitoUser) {
+      const { data, error } = await fetchCurrentUser();
+      setCurrentUser(data?.getCurrentUser);
+
+      if (error) {
+        const { message } = parseError(error);
+        console.error(message);
+      }
+    }
 
     return cognitoUser;
   };
@@ -86,9 +90,12 @@ const useProviderAuth = () => {
     const checkForAuthenticatedUser = async () => {
       try {
         const cognitoUser = await getCognitoUser();
-
         setUser(cognitoUser);
-        await refetch();
+
+        if (cognitoUser) {
+          const res = await fetchCurrentUser();
+          setCurrentUser(res.data?.getCurrentUser);
+        }
       } catch (err) {
         console.log(err);
         setBootstrapComplete(true);
