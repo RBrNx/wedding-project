@@ -4,7 +4,7 @@ Resources:
     Type: AWS::Cognito::IdentityPool
     Properties:
       # Generate a name based on the stage
-      IdentityPoolName: wedding-${self:provider.stage}-identity-pool
+      IdentityPoolName: wedding-${self:custom.subdomain}identity-pool
       # Allow unathenticated users
       AllowUnauthenticatedIdentities: true
       # Link to our User Pool

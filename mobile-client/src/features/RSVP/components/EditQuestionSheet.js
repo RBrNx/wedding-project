@@ -36,7 +36,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
         title: null,
         guestType: null,
         order: null,
-        choices: [{ value: null, order: 0 }],
+        choices: [],
       },
       attendingLabel: null,
       decliningLabel: null,
@@ -48,6 +48,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
     name: `question.choices`,
   });
   const questionType = useWatch({ control: formMethods.control, name: 'question.type' });
+  const questionHasChoices = [QuestionType.ATTENDANCE.value, QuestionType.MULTIPLE_CHOICE.value].includes(questionType);
 
   useEffect(() => {
     if (active && editMode) {
@@ -96,7 +97,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
     try {
       setIsSubmitting(true);
       const choices = [
-        ...(formQuestion.guestType === QuestionType.ATTENDANCE.value
+        ...(formQuestion.type === QuestionType.ATTENDANCE.value
           ? [
               { value: 'ATTENDING', label: attendingLabel },
               { value: 'NOT_ATTENDING', label: decliningLabel },
@@ -112,7 +113,7 @@ const EditQuestionSheet = ({ active, onDismiss, editMode, question, isFollowUpQu
             type: formQuestion.type,
             title: formQuestion.title,
             order: parseInt(formQuestion.order, 10),
-            choices,
+            ...(questionHasChoices && { choices }),
             isFollowUp: isFollowUpQuestion,
             responseType: 'INDIVIDUAL',
             guestType: formQuestion.guestType,

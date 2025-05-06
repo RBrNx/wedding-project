@@ -1,0 +1,58 @@
+name: Deploy API (Production)
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - 'wedding-api/**'
+      - '.github/workflows/deploy-api-production.yml'
+defaults:
+  run:
+    working-directory: ./wedding-api
+jobs:
+  lint:
+    name: Lint API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+      - name: Save Code Linting Report JSON
+        id: linting
+        run: yarn lint:report
+        continue-on-error: true
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          report-json: 'wedding-api/eslint_report.json'
+          only-pr-files: false
+      - name: Exit on error
+        if: steps.linting.outcome != 'success'
+        run: exit 1
+
+  deploy:
+    name: Deploy Production API
+    needs: lint
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install modules
+        run: yarn
+      - name: serverless deploy
+        run: npx serverless deploy --stage=production --verbose
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          MONGODB_URI: ${{ secrets.PRODUCTION_MONGODB_URI }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          EVENT_ID: ${{ secrets.PRODUCTION_EVENT_ID }}
+          CLOUDFRONT_SIGNER_PUBLIC_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PUBLIC_KEY }}
+          CLOUDFRONT_SIGNER_PRIVATE_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PRIVATE_KEY }}
