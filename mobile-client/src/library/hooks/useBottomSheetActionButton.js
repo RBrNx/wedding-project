@@ -1,4 +1,4 @@
-import { Extrapolate, interpolate, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import { Extrapolation, interpolate, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
 const useBottomSheetActionButton = () => {
   const sheetPosition = useSharedValue(0);
@@ -9,8 +9,8 @@ const useBottomSheetActionButton = () => {
   });
 
   const buttonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(buttonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP),
-    transform: [{ scale: interpolate(buttonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP) }],
+    opacity: interpolate(buttonVisibility.value, [0, 1], [0, 1], Extrapolation.CLAMP),
+    transform: [{ scale: interpolate(buttonVisibility.value, [0, 1], [0, 1], Extrapolation.CLAMP) }],
   }));
 
   const resetAnimatedValues = () => {

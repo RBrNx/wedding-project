@@ -2,7 +2,7 @@ import React from 'react';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import FormIllustration from './components/FormIllustration';
 import QuestionFlatlist from './components/QuestionFlatlist';
 
@@ -12,8 +12,8 @@ const RSVPQuestionsScreen = () => {
   const scrollY = useSharedValue(0);
 
   const animatedImageStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0], Extrapolate.CLAMP);
-    const scale = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0.2], Extrapolate.CLAMP);
+    const opacity = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0], Extrapolation.CLAMP);
+    const scale = interpolate(scrollY.value, [height * 0.55, height * 0.175], [1, 0.2], Extrapolation.CLAMP);
 
     return {
       opacity,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Dimensions, Platform, Linking, StatusBar, Keyboard } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { Easing, Extrapolate, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { Easing, Extrapolation, interpolate, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { useAuth, useAlert } from 'context';
 import StandardButton from 'library/components/StandardButton';
@@ -73,7 +73,7 @@ const ScannerScreen = ({ navigation }) => {
     };
   });
   const animatedPermissionStyles = useAnimatedStyle(() => ({
-    opacity: interpolate(scannerModeIndex.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+    opacity: interpolate(scannerModeIndex.value, [0, 1], [1, 0], Extrapolation.CLAMP),
   }));
 
   const startSignIn = async scannedInvitationCode => {

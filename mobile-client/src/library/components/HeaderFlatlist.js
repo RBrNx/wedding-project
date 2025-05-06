@@ -1,5 +1,5 @@
 import React from 'react';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import { Layout } from 'library/styles';
 import { BottomSheet } from 'library/utils/constants';
@@ -21,9 +21,9 @@ const HeaderFlatlist = ({ renderImage, onRefresh, renderItem, data, ListEmptyCom
       scrollY.value,
       [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
       [1, 1, 0],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
-    const scale = interpolate(scrollY.value, [0, HEADER_SCROLL_DISTANCE], [1, 0.2], Extrapolate.CLAMP);
+    const scale = interpolate(scrollY.value, [0, HEADER_SCROLL_DISTANCE], [1, 0.2], Extrapolation.CLAMP);
 
     return {
       opacity,

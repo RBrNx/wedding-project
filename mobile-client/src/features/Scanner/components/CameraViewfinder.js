@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, StatusBar } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import Svg, { Defs, Rect, Mask } from 'react-native-svg';
 import styled from 'styled-components/native';
 import { Layout } from 'library/styles';
@@ -9,11 +9,11 @@ const { width, height } = Dimensions.get('window');
 
 const CameraViewfinder = ({ style, size = 250, scannerModeIndex }) => {
   const squareViewfinderAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scannerModeIndex.value, [0.5, 1], [1, 0], Extrapolate.CLAMP),
+    opacity: interpolate(scannerModeIndex.value, [0.5, 1], [1, 0], Extrapolation.CLAMP),
   }));
 
   const fullViewfinderAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scannerModeIndex.value, [0, 0.5], [0, 1], Extrapolate.CLAMP),
+    opacity: interpolate(scannerModeIndex.value, [0, 0.5], [0, 1], Extrapolation.CLAMP),
   }));
 
   return (

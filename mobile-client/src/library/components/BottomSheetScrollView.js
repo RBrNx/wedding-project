@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RefreshControl, Dimensions } from 'react-native';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -61,7 +61,7 @@ const BottomSheetScrollView = ({
   });
 
   const animatedHandleContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(scrollY.value, [0, collapsedPosition], [collapsedPosition, 0], Extrapolate.CLAMP);
+    const translateY = interpolate(scrollY.value, [0, collapsedPosition], [collapsedPosition, 0], Extrapolation.CLAMP);
 
     return {
       transform: [{ translateY }],
@@ -69,7 +69,7 @@ const BottomSheetScrollView = ({
   });
 
   const animatedScrollbarStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(scrollY.value, [0, collapsedPosition], [collapsedPosition, 0], Extrapolate.CLAMP);
+    const translateY = interpolate(scrollY.value, [0, collapsedPosition], [collapsedPosition, 0], Extrapolation.CLAMP);
 
     return {
       transform: [{ translateY }],

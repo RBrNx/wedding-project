@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   runOnJS,
   useAnimatedStyle,
@@ -34,12 +34,12 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, animationDuration, e
 
   const animatedExpansionStyle = useAnimatedStyle(() => {
     return {
-      width: interpolate(expansion.value, [0, 1], [size, maxExpansionWidth], Extrapolate.CLAMP),
+      width: interpolate(expansion.value, [0, 1], [size, maxExpansionWidth], Extrapolation.CLAMP),
     };
   });
 
   const animatedIconStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(expansion.value, [0, 0.45], [1, 0], Extrapolate.CLAMP);
+    const opacity = interpolate(expansion.value, [0, 0.45], [1, 0], Extrapolation.CLAMP);
 
     return {
       opacity,
@@ -48,8 +48,8 @@ const useAnimatedActionButton = ({ size, maxExpansionWidth, animationDuration, e
 
   const animatedMessageStyle = useAnimatedStyle(() => {
     return {
-      width: interpolate(expansion.value, [0, 0.45, 1], [0, 0, maxExpansionWidth], Extrapolate.CLAMP),
-      opacity: interpolate(expansion.value, [0, 0.65, 1], [0, 0, 1], Extrapolate.CLAMP),
+      width: interpolate(expansion.value, [0, 0.45, 1], [0, 0, maxExpansionWidth], Extrapolation.CLAMP),
+      opacity: interpolate(expansion.value, [0, 0.65, 1], [0, 0, 1], Extrapolation.CLAMP),
     };
   });
 

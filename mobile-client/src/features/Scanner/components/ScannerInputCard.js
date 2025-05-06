@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { ActivityIndicator, Dimensions } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 import StandardTextInput from 'library/components/StandardTextInput';
 import { Colours, Layout, Outlines } from 'library/styles';
@@ -12,8 +12,8 @@ const { height } = Dimensions.get('window');
 
 const ScannerInputCard = ({ scannerModeIndex, invitationId, setInvitationId, onSubmit, isLoading }) => {
   const animatedContainerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: interpolate(scannerModeIndex.value, [0.5, 1], [25, 0], Extrapolate.CLAMP) }],
-    opacity: interpolate(scannerModeIndex.value, [0.5, 1], [0, 1], Extrapolate.CLAMP),
+    transform: [{ translateY: interpolate(scannerModeIndex.value, [0.5, 1], [25, 0], Extrapolation.CLAMP) }],
+    opacity: interpolate(scannerModeIndex.value, [0.5, 1], [0, 1], Extrapolation.CLAMP),
   }));
 
   return (
