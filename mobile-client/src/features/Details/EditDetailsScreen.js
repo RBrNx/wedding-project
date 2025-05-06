@@ -34,7 +34,6 @@ const EditDetailsScreen = () => {
 };
 
 const Container = styled.View`
-  padding-top: ${Layout.statusBarHeight}px;
   flex: 1;
 `;
 

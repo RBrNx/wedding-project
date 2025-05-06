@@ -26,9 +26,9 @@ const NavigationPresets = {
     headerStyle: { backgroundColor: Colours.primary, elevation: 0, shadowOpacity: 0 },
   },
   DefaultTabBar: {
-    activeTintColor: Colours.secondary,
-    showLabel: false,
-    style: {
+    tabBarActiveTintColor: Colours.secondary,
+    tabBarShowLabel: false,
+    tabBarStyle: {
       borderTopWidth: 0,
       ...(Platform.OS === 'android' && { height: 60 }),
     },
