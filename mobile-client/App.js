@@ -2,28 +2,29 @@ import React, { useEffect } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
-import { AppearanceProvider } from 'react-native-appearance';
-import * as SplashScreen from 'expo-splash-screen';
-import Amplify from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import { setStatusBarStyle } from 'expo-status-bar';
 import * as Sentry from 'sentry-expo';
 import client from 'library/utils/apolloClient';
 import { SettingsProvider, AuthProvider, CurrentThemeProvider, AlertProvider } from 'context';
-import AppLoader from 'library/components/AppLoader';
 import AppNavigator from 'navigation/AppNavigator';
 import awsConfig from 'library/utils/awsExports';
-import { registerRootComponent } from 'expo';
 import allSettled from 'promise.allsettled';
 import { DatastoreProvider } from 'context/Datastore';
+import AppLoader from 'library/components/AppLoader';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 allSettled.shim();
 
 Amplify.configure({
   Auth: {
-    region: awsConfig.cognito.REGION,
-    userPoolId: awsConfig.cognito.USER_POOL_ID,
-    identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
-    userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID,
+    Cognito: {
+      region: awsConfig.cognito.REGION,
+      userPoolId: awsConfig.cognito.USER_POOL_ID,
+      identityPoolId: awsConfig.cognito.IDENTITY_POOL_ID,
+      userPoolClientId: awsConfig.cognito.APP_CLIENT_ID,
+      allowGuestAccess: true,
+    },
   },
 });
 
@@ -35,12 +36,11 @@ Sentry.init({
 
 const App = () => {
   useEffect(() => {
-    SplashScreen.preventAutoHideAsync();
     setStatusBarStyle('light');
   }, []);
 
   return (
-    <AppearanceProvider>
+    <GestureHandlerRootView>
       <ApolloProvider client={client}>
         <AuthProvider>
           <DatastoreProvider>
@@ -56,8 +56,8 @@ const App = () => {
           </DatastoreProvider>
         </AuthProvider>
       </ApolloProvider>
-    </AppearanceProvider>
+    </GestureHandlerRootView>
   );
 };
 
-export default registerRootComponent(App);
+export default App;

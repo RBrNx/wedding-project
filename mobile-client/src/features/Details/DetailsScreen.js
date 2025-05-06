@@ -1,4 +1,4 @@
-import { Colours, Layout, Typography } from 'library/styles';
+import { Colours, Typography } from 'library/styles';
 import React from 'react';
 import styled from 'styled-components/native';
 import DashboardHeader from 'features/Dashboard/components/DashboardHeader';
@@ -32,7 +32,6 @@ const DetailsScreen = () => {
 const Container = styled.ScrollView.attrs(() => ({
   contentContainerStyle: {
     paddingHorizontal: '5%',
-    paddingTop: Layout.statusBarHeight,
     paddingBottom: 25,
   },
 }))`

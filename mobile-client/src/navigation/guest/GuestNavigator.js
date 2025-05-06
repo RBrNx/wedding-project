@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 
 const GuestHomeNavigator = () => {
   return (
-    <Tab.Navigator tabBarOptions={NavigationPresets.DefaultTabBar} lazy={false}>
+    <Tab.Navigator screenOptions={{ ...screenOptions, ...NavigationPresets.DefaultTabBar }} lazy={false} s>
       <Tab.Screen
         name='Dashboard'
         component={DashboardScreen}

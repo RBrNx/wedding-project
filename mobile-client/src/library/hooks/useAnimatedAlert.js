@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useWindowDimensions, StatusBar } from 'react-native';
 import {
   Easing,
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -26,7 +26,7 @@ const useAnimatedAlert = ({ position, isVisible, isStatusBarTranslucent, breathi
     const endY =
       position === 'bottom' ? displayHeight - alertHeight - breathingSpace : breathingSpace + statusBarPadding;
 
-    const translateY = interpolate(alertEntrance.value, [0, 1], [startY, endY], Extrapolate.CLAMP);
+    const translateY = interpolate(alertEntrance.value, [0, 1], [startY, endY], Extrapolation.CLAMP);
 
     return {
       transform: [{ translateY }],

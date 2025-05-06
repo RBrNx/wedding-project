@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import {
   Easing,
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useDerivedValue,
@@ -24,16 +24,16 @@ const useMemoryUploader = ({ selectedAssets }) => {
   });
 
   const folderSelectorAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: interpolate(folderSelectorVisibilty.value, [0, 1], [50, 0], Extrapolate.CLAMP) }],
+    transform: [{ translateY: interpolate(folderSelectorVisibilty.value, [0, 1], [50, 0], Extrapolation.CLAMP) }],
   }));
 
   const flatlistAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(opacityBounce.value, [0, 0.5, 1], [1, 0, 1], Extrapolate.CLAMP),
+    opacity: interpolate(opacityBounce.value, [0, 0.5, 1], [1, 0, 1], Extrapolation.CLAMP),
   }));
 
   const uploadButtonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP),
-    transform: [{ scale: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolate.CLAMP) }],
+    opacity: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolation.CLAMP),
+    transform: [{ scale: interpolate(uploadButtonVisibility.value, [0, 1], [0, 1], Extrapolation.CLAMP) }],
   }));
 
   const resetAnimatedValues = () => {

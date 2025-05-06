@@ -51,7 +51,7 @@ const GuestFlatlist = ({ showAddGuestSheet, setShowAddGuestSheet, scrollPosition
   });
   useAvoidKeyboard({
     handleShow: () => bottomSheetRef.current?.expand(),
-    handleHide: () => bottomSheetRef.current?.snapTo(0),
+    handleHide: () => bottomSheetRef.current?.snapToIndex(0),
   });
 
   const renderFlatlist = ({ item, index }) => <GuestRow guest={item} index={index} />;

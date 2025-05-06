@@ -21,6 +21,8 @@ const server = new ApolloServer({
     const currentUser = await getUserFromRequest(requestContext);
     const db = await connectToDatabase();
 
+    console.log({ requestContext });
+
     return {
       headers: event.headers,
       functionName: context.functionName,

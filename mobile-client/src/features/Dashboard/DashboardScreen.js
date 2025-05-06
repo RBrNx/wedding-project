@@ -151,7 +151,6 @@ const DashboardScreen = ({ navigation }) => {
 const Container = styled.ScrollView.attrs(() => ({
   contentContainerStyle: {
     paddingHorizontal: '5%',
-    paddingTop: Layout.statusBarHeight,
     paddingBottom: 25,
   },
 }))`

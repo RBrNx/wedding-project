@@ -1,6 +1,7 @@
 name: Deploy API (Staging)
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - staging
@@ -42,7 +43,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 18.x
       - name: Install modules
         run: yarn
       - name: serverless deploy
@@ -56,3 +57,4 @@ jobs:
           EVENT_ID: ${{ secrets.STAGING_EVENT_ID }}
           CLOUDFRONT_SIGNER_PUBLIC_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PUBLIC_KEY }}
           CLOUDFRONT_SIGNER_PRIVATE_KEY: ${{ secrets.CLOUDFRONT_SIGNER_PRIVATE_KEY }}
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}

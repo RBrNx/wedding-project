@@ -5,7 +5,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 
 const withAnimated = WrappedComponent => {
-  const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  const displayName = WrappedComponent?.displayName || WrappedComponent?.name || 'Component';
 
   class WithAnimated extends React.Component {
     static displayName = `WithAnimated(${displayName})`;

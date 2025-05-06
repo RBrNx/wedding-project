@@ -8,7 +8,7 @@ import StandardActionButton from 'library/components/StandardActionButton';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheetModal from 'library/components/BottomSheetModal';
-import { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { Extrapolation, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
   const scrollY = useSharedValue(0);
@@ -16,8 +16,8 @@ const ViewRSVPSheet = ({ rsvpForm, active, onDismiss }) => {
 
   const animatedActionButtonStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(scrollY.value, [0.2, 1], [0, 1], Extrapolate.CLAMP),
-      transform: [{ translateY: interpolate(scrollY.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
+      opacity: interpolate(scrollY.value, [0.2, 1], [0, 1], Extrapolation.CLAMP),
+      transform: [{ translateY: interpolate(scrollY.value, [0, 1], [15, 0], Extrapolation.CLAMP) }],
     };
   });
 

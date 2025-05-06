@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Animated, {
   Easing,
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -39,16 +39,16 @@ const StandardSelectInput = ({
   };
 
   const focusedLabelAnimatedStyles = useAnimatedStyle(() => ({
-    opacity: interpolate(focusAnimation.value, [0, 1], [0, 1], Extrapolate.CLAMP),
-    transform: [{ translateY: interpolate(focusAnimation.value, [0, 1], [15, 0], Extrapolate.CLAMP) }],
+    opacity: interpolate(focusAnimation.value, [0, 1], [0, 1], Extrapolation.CLAMP),
+    transform: [{ translateY: interpolate(focusAnimation.value, [0, 1], [15, 0], Extrapolation.CLAMP) }],
   }));
   const regularLabelAnimatedStyles = useAnimatedStyle(() => ({
-    opacity: interpolate(focusAnimation.value, [0, 1], [1, 0], Extrapolate.CLAMP),
-    transform: [{ translateX: interpolate(focusAnimation.value, [0.75, 1], [0, -10], Extrapolate.CLAMP) }],
+    opacity: interpolate(focusAnimation.value, [0, 1], [1, 0], Extrapolation.CLAMP),
+    transform: [{ translateX: interpolate(focusAnimation.value, [0.75, 1], [0, -10], Extrapolation.CLAMP) }],
   }));
   const placeholderAnimatedStyles = useAnimatedStyle(() => {
     let opacity = value ? 0 : focusAnimation.value;
-    let translateX = interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolate.CLAMP);
+    let translateX = interpolate(focusAnimation.value, [0, 1], [10, 0], Extrapolation.CLAMP);
     if (rounded) {
       opacity = value ? 0 : 1;
       translateX = 0;

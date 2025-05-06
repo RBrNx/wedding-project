@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -42,7 +42,7 @@ const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyC
       scrollY.value,
       [0, HEADER_SCROLL_DISTANCE],
       [0, -HEADER_SCROLL_DISTANCE],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     return {
@@ -55,7 +55,7 @@ const BottomSheetFlatList = ({ data, onRefresh, onScroll, renderItem, ListEmptyC
       scrollY.value,
       [0, HEADER_SCROLL_DISTANCE],
       [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     return {

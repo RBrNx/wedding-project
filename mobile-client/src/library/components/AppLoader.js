@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 import { Asset } from 'expo-asset';
 import { useFonts, Muli_400Regular, Muli_700Bold } from '@expo-google-fonts/muli';
 import { useAuth, useDatastore, useSettings } from 'context';
@@ -31,18 +31,37 @@ const AppLoader = ({ children }) => {
   };
 
   useEffect(() => {
-    cleanImageCache();
+    async function prepare() {
+      try {
+        // Keep the splash screen visible while we fetch resources
+        console.log('Preparing splash screen');
+        await SplashScreen.preventAutoHideAsync();
+        cleanImageCache();
+        await downloadSplash();
+        console.log('Splash screen prepared');
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setIsSplashReady(true);
+        await SplashScreen.hideAsync();
+        console.log('Splash screen ready', { fontsLoaded, authBootstrapped, settingsBootstrapped, dataBootstrapped });
+      }
+    }
+
+    prepare();
   }, []);
 
   if (!isSplashReady) {
-    return (
-      <AppLoading
-        autoHideSplash
-        startAsync={downloadSplash}
-        onFinish={() => setIsSplashReady(true)}
-        onError={err => console.error(err)}
-      />
-    );
+    // return (
+    //   <AppLoading
+    //     autoHideSplash
+    //     startAsync={downloadSplash}
+    //     onFinish={() => setIsSplashReady(true)}
+    //     onError={err => console.error(err)}
+    //   />
+    // );
+    return null;
   }
 
   return (

@@ -3,11 +3,11 @@ import { BottomSheetModal as Modal, BottomSheetModalProvider } from '@gorhom/bot
 import styled from 'styled-components/native';
 import { Outlines, Theme } from 'library/styles';
 import { useAvoidKeyboard, useBackButton } from 'library/hooks';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated';
 
 const BottomSheetBackdrop = ({ animatedIndex, style }) => {
   const containerAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(animatedIndex.value, [0, 1], [0, 1], Extrapolate.CLAMP),
+    opacity: interpolate(animatedIndex.value, [0, 1], [0, 1], Extrapolation.CLAMP),
   }));
 
   return <StyledBackdrop style={[containerAnimatedStyle, style]} />;
@@ -21,7 +21,7 @@ const BottomSheetModal = ({ active, onDismiss, children, outerChildren, animated
       if (avoidKeyboard) bottomSheetModalRef.current?.expand();
     },
     handleHide: () => {
-      if (avoidKeyboard) bottomSheetModalRef.current?.snapTo(0);
+      if (avoidKeyboard) bottomSheetModalRef.current?.snapToIndex(0);
     },
   });
 
