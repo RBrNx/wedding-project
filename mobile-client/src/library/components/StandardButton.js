@@ -48,7 +48,7 @@ const ButtonText = styled.Text`
   color: ${Colours.neutral.white};
   flex: 1;
   text-align: center;
-  padding-vertical: 15px;
+  padding-vertical: 12px;
   ${props =>
     props.outline &&
     css`

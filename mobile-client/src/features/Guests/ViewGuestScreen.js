@@ -63,7 +63,8 @@ const ViewGuestScreen = ({ route, navigation }) => {
             const { question, answer } = rsvpTuple;
 
             return (
-              <React.Fragment key={question._id}>
+              // eslint-disable-next-line react/no-array-index-key
+              <React.Fragment key={`${index}`}>
                 <QuestionNumber>{`Q${index + 1}`}</QuestionNumber>
                 <Spacer size={5} />
                 <QuestionTitle>{question.title}</QuestionTitle>

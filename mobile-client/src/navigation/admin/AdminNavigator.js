@@ -19,7 +19,7 @@ const screenOptions = {
 
 const AdminHomeNavigator = () => {
   return (
-    <Tab.Navigator tabBarOptions={NavigationPresets.DefaultTabBar}>
+    <Tab.Navigator screenOptions={{ ...screenOptions, ...NavigationPresets.DefaultTabBar }}>
       <Tab.Screen
         name='Invitations'
         component={InvitationsScreen}

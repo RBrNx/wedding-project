@@ -11,6 +11,7 @@ const EnumLabel = ({ type, style, selected, onPress, enumObject }) => {
 
 const StyledPillPressable = styled(StandardPillPressable)`
   border: 2px solid ${props => (props.selected ? Theme.detailTextColour : 'transparent')};
+  margin-right: 4px;
 `;
 
 export default EnumLabel;
