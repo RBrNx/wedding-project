@@ -47,14 +47,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "extra": {
       "BASE_API_URL": "https://staging-api.thewatsonwedding.com/",
       "AUTH_ENDPOINT": "admin",
       "UNAUTH_ENDPOINT": "api",
-      "ENV": "staging".
+      "ENV": "staging",
       "eas": {
         "projectId": "d0fa9fe6-1dd2-42d7-bb7e-02017298eef6"
       }
